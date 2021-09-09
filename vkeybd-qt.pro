@@ -9,11 +9,13 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    button_piano.cpp \
     keyboard_piano.cpp \
     main.cpp \
     main_window.cpp
 
 HEADERS += \
+    button_piano.h \
     keyboard_piano.h \
     main_window.h
 

@@ -4,8 +4,10 @@
 #include <QObject>
 #include <QWidget>
 #include <QDebug>
-#include <QPushButton>
 #include <QMap>
+#include <QPalette>
+
+#include "button_piano.h"
 
 class KeyboardPiano : public QWidget
 {
@@ -16,13 +18,18 @@ public:
     int octaves = 1;
     int button_width_full = 18;
     int button_height_full = 80;
-    int button_width_half = 15;
+    int button_width_half = 14;
     int button_height_half = 50;
+    bool invert_colors = false;
     void drawOneOctave(int offset);
     
     QMap<QString, QPushButton*> list_of_keys;
     
+    QSize size;
+    
 private:
+    void colorizeBlackKeys(QPushButton *button);
+    void colorizeWhiteKeys(QPushButton *button);
     
     
 signals:
