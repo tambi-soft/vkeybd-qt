@@ -18,13 +18,13 @@ void KeyboardPiano::setOctaves(int octaves)
     this->octaves = octaves;
 }
 
-void KeyboardPiano::drawOneOctave(int offset)
+void KeyboardPiano::drawOneOctave(int octave)
 {
     for (int full_tones=0; full_tones < 7; full_tones++)
     {
-        QPushButton *button = new ButtonPiano(this);
+        QPushButton *button = new ButtonPiano(this->notes_full[full_tones], octave, this);
         button->resize(this->button_width_full, this->button_height_full);
-        button->move(offset * 7*(this->button_width_full-1) + ((this->button_width_full-1) * full_tones),
+        button->move(octave * 7*(this->button_width_full-1) + ((this->button_width_full-1) * full_tones),
                      0);
         //button->setGeometry(this->button_width_full * full_tones, 0, this->button_width_full, this->button_height_full);
         
@@ -48,9 +48,9 @@ void KeyboardPiano::drawOneOctave(int offset)
             step = 1;
         }
         
-        QPushButton *button = new QPushButton(this);
+        QPushButton *button = new ButtonPiano(this->notes_half[half_tones], octave, this);
         button->resize(this->button_width_half, this->button_height_half);
-        button->move(offset * 7*(this->button_width_full-1) + ((this->button_width_full-1) * half_tones + this->button_width_full/2 + this->button_width_full * step),
+        button->move(octave * 7*(this->button_width_full-1) + ((this->button_width_full-1) * half_tones + this->button_width_full/2 + this->button_width_full * step),
                      0);
         
         //QPalette pal = button->palette();

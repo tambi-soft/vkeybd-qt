@@ -5,6 +5,7 @@
 #include <QWidget>
 #include <QDebug>
 #include <QMap>
+#include <QList>
 #include <QPalette>
 
 #include "button_piano.h"
@@ -14,14 +15,20 @@ class KeyboardPiano : public QWidget
     Q_OBJECT
 public:
     explicit KeyboardPiano(QWidget *parent = nullptr);
+    
+    QList<QString> notes_full = {"c", "d", "e", "f", "g", "a", "b"};
+    QList<QString> notes_half = {"cis", "dis", "fis", "gis", "ais"};
+    
     void setOctaves(int octaves);
     int octaves = 1;
+    
     int button_width_full = 18;
     int button_height_full = 80;
     int button_width_half = 14;
     int button_height_half = 50;
     bool invert_colors = false;
-    void drawOneOctave(int offset);
+    
+    void drawOneOctave(int octave);
     
     QMap<QString, QPushButton*> list_of_keys;
     
