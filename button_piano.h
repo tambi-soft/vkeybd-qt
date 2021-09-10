@@ -7,6 +7,7 @@
 #include <QWidget>
 #include <QEvent>
 #include <QPair>
+#include <QKeyEvent>
 
 #include "jack_adapter.h"
 
@@ -18,6 +19,10 @@ public:
     JackAdapter *jack;
     QString keycode;
     
+    /*
+    void keyPressEvent(QKeyEvent *ev);
+    void keyReleaseEvent(QKeyEvent *ev);
+    */
     void press();
     void release();
     

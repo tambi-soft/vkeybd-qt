@@ -22,34 +22,40 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *ev)
         QString keycode = "cis1";
         
         QKeyEvent *key = static_cast<QKeyEvent*>(ev);
-        qDebug() << key;
-        
-        if (key->key() == Qt::Key_A)
+        if (!key->isAutoRepeat())
         {
-            keycode = "a1";
-        }
-        else if (key->key() == Qt::Key_B)
-        {
-            keycode = "b1";
-        }
+            qDebug() << key;
         
-        this->piano->keyPressed(keycode);
+            if (key->key() == Qt::Key_A)
+            {
+                keycode = "a1";
+            }
+            else if (key->key() == Qt::Key_B)
+            {
+                keycode = "b1";
+            }
+            this->piano->keyPressed(keycode);
+        }
     }
     else if (ev->type() == QEvent::KeyRelease)
     {
         QString keycode = "cis1";
         
         QKeyEvent *key = static_cast<QKeyEvent*>(ev);
-        if (key->key() == Qt::Key_A)
+        if (!key->isAutoRepeat())
         {
-            keycode = "a1";
+            qDebug() << key;
+            if (key->key() == Qt::Key_A)
+            {
+                keycode = "a1";
+            }
+            else if (key->key() == Qt::Key_B)
+            {
+                keycode = "b1";
+            }
+            
+            this->piano->keyReleased(keycode);
         }
-        else if (key->key() == Qt::Key_B)
-        {
-            keycode = "b1";
-        }
-        
-        this->piano->keyReleased(keycode);
     }
     return QObject::eventFilter(obj, ev);
 }

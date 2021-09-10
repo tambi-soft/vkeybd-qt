@@ -2,6 +2,7 @@
 #define JACKADAPTER_H
 
 #include <QObject>
+#include <QDebug>
 
 #include "jack/jack.h"
 #include "jack/midiport.h"
