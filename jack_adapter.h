@@ -12,8 +12,11 @@ class JackAdapter : public QObject
 public:
     explicit JackAdapter(QObject *parent = nullptr);
     
-    void keyPressEvent(QString note);
-    void keyReleaseEvent(QString note);
+    void keyPressEvent(QString keycode);
+    void keyReleaseEvent(QString keycode);
+
+private:
+    jack_client_t *client;
     
 signals:
     

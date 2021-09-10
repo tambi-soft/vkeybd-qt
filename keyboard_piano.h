@@ -9,6 +9,7 @@
 #include <QPalette>
 
 #include "button_piano.h"
+#include "jack_adapter.h"
 
 class KeyboardPiano : public QWidget
 {
@@ -28,15 +29,20 @@ public:
     int button_height_half = 50;
     bool invert_colors = false;
     
+    JackAdapter *jack = new JackAdapter;
+    
     void drawOneOctave(int octave);
     
-    QMap<QString, QPushButton*> list_of_keys;
+    QMap<QString, ButtonPiano*> list_of_keys;
     
     QSize size;
     
+    void keyPressed(QString keycode);
+    void keyReleased(QString keycode);
+    
 private:
-    void colorizeBlackKeys(QPushButton *button);
-    void colorizeWhiteKeys(QPushButton *button);
+    void colorizeBlackKeys(ButtonPiano *button);
+    void colorizeWhiteKeys(ButtonPiano *button);
     
     
 signals:

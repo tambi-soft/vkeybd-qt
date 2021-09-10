@@ -5,12 +5,12 @@ JackAdapter::JackAdapter(QObject *parent) : QObject(parent)
     
 }
 
-void JackAdapter::keyPressEvent(QString note)
+void JackAdapter::keyPressEvent(QString keycode)
 {
     
 }
 
-void JackAdapter::keyReleaseEvent(QString note)
+void JackAdapter::keyReleaseEvent(QString keycode)
 {
     
 }

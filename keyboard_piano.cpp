@@ -5,12 +5,14 @@ KeyboardPiano::KeyboardPiano(QWidget *parent) : QWidget(parent)
 {
     this->setOctaves(3);
     
-    for (int octaves=0; octaves < this->octaves; octaves++)
+    for (int octave=0; octave < this->octaves; octave++)
     {
-        this->drawOneOctave(octaves);
+        this->drawOneOctave(octave);
     }
     
-    this->size = QSize((button_width_full-1)*7*octaves, button_height_full);
+    this->size = QSize((button_width_full-1)*7*octaves, button_height_full-1);
+    
+    qDebug() << this->list_of_keys;
 }
 
 void KeyboardPiano::setOctaves(int octaves)
@@ -20,13 +22,14 @@ void KeyboardPiano::setOctaves(int octaves)
 
 void KeyboardPiano::drawOneOctave(int octave)
 {
-    for (int full_tones=0; full_tones < 7; full_tones++)
+    for (int full_tone=0; full_tone < 7; full_tone++)
     {
-        QPushButton *button = new ButtonPiano(this->notes_full[full_tones], octave, this);
+        QString keycode = this->notes_full[full_tone] + QString::number(octave);
+        
+        ButtonPiano *button = new ButtonPiano(this->jack, keycode, this);
         button->resize(this->button_width_full, this->button_height_full);
-        button->move(octave * 7*(this->button_width_full-1) + ((this->button_width_full-1) * full_tones),
-                     0);
-        //button->setGeometry(this->button_width_full * full_tones, 0, this->button_width_full, this->button_height_full);
+        button->move(octave * 7*(this->button_width_full-1) + ((this->button_width_full-1) * full_tone),
+                     -1);
         
         if (this->invert_colors == false)
         {
@@ -38,24 +41,24 @@ void KeyboardPiano::drawOneOctave(int octave)
         }
         
         button->show();
+        
+        this->list_of_keys[keycode] = button;
     }
     
-    for (int half_tones=0; half_tones < 5; half_tones++)
+    for (int half_tone=0; half_tone < 5; half_tone++)
     {
+        QString keycode = this->notes_half[half_tone] + QString::number(octave);
+        
         int step = 0;
-        if (half_tones > 1)
+        if (half_tone > 1)
         {
             step = 1;
         }
         
-        QPushButton *button = new ButtonPiano(this->notes_half[half_tones], octave, this);
+        ButtonPiano *button = new ButtonPiano(this->jack, keycode, this);
         button->resize(this->button_width_half, this->button_height_half);
-        button->move(octave * 7*(this->button_width_full-1) + ((this->button_width_full-1) * half_tones + this->button_width_full/2 + this->button_width_full * step),
-                     0);
-        
-        //QPalette pal = button->palette();
-        //pal.setColor(QPalette::Button, QColor(Qt::black));
-        //button->setPalette(pal);
+        button->move(octave * 7*(this->button_width_full-1) + ((this->button_width_full-1) * half_tone + this->button_width_full/2 + this->button_width_full * step),
+                     -1);
         
         if (this->invert_colors == false)
         {
@@ -67,10 +70,12 @@ void KeyboardPiano::drawOneOctave(int octave)
         }
         
         button->show();
+        
+        this->list_of_keys[keycode] = button;
     }
 }
 
-void KeyboardPiano::colorizeBlackKeys(QPushButton *button)
+void KeyboardPiano::colorizeBlackKeys(ButtonPiano *button)
 {
     QString stylesheet = "QPushButton {"
                          "  color: white;"
@@ -88,7 +93,7 @@ void KeyboardPiano::colorizeBlackKeys(QPushButton *button)
     button->setStyleSheet(stylesheet);
 }
 
-void KeyboardPiano::colorizeWhiteKeys(QPushButton *button)
+void KeyboardPiano::colorizeWhiteKeys(ButtonPiano *button)
 {
     QString stylesheet = "QPushButton {"
                          "  color: black;"
@@ -104,4 +109,16 @@ void KeyboardPiano::colorizeWhiteKeys(QPushButton *button)
                          "}";
     
     button->setStyleSheet(stylesheet);
+}
+
+void KeyboardPiano::keyPressed(QString keycode)
+{
+    ButtonPiano *button = this->list_of_keys[keycode];
+    button->press();
+}
+
+void KeyboardPiano::keyReleased(QString keycode)
+{
+    ButtonPiano *button = this->list_of_keys[keycode];
+    button->release();
 }

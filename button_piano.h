@@ -13,14 +13,15 @@
 class ButtonPiano : public QPushButton
 {
 public:
-    ButtonPiano(QString note, int octave, QWidget *parent);
+    ButtonPiano(JackAdapter *jack, QString keycode, QWidget *parent);
     
-    QString note;
-    QString octave;
+    JackAdapter *jack;
+    QString keycode;
+    
+    void press();
+    void release();
     
 protected:
-    JackAdapter *jack = new JackAdapter;
-    bool eventFilter(QObject *obj, QEvent *ev);
 };
 
 #endif // BUTTONPIANO_H

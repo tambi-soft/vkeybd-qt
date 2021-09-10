@@ -1,27 +1,18 @@
 #include "button_piano.h"
 
-ButtonPiano::ButtonPiano(QString note, int octave, QWidget *parent)
+ButtonPiano::ButtonPiano(JackAdapter *jack, QString keycode, QWidget *parent)
     :QPushButton(parent)
 {
-    this->note = note;
-    this->octave = octave;
-    
-    this->installEventFilter(this);
+    this->jack = jack;
+    this->keycode = keycode;
 }
 
-bool ButtonPiano::eventFilter(QObject *obj, QEvent *ev)
+void ButtonPiano::press()
 {
-    if (ev->type() == QEvent::MouseButtonPress)
-    {
-        qDebug() << this->note << " " << this->octave << " pressed";
-        
-        this->jack->keyPressEvent(this->note);
-    }
-    else if (ev->type() == QEvent::MouseButtonRelease)
-    {
-        qDebug() << this->note << " " << this->octave << " released";
-        
-        this->jack->keyReleaseEvent(this->note);
-    }
-    return QObject::eventFilter(obj, ev);
+    this->setDown(true);
+}
+
+void ButtonPiano::release()
+{
+    this->setDown(false);
 }

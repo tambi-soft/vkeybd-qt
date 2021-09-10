@@ -2,6 +2,8 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QKeyEvent>
+
 #include "keyboard_piano.h"
 
 class MainWindow : public QMainWindow
@@ -14,5 +16,11 @@ public:
     
 private:
     KeyboardPiano *piano = new KeyboardPiano;
+    
+    QMap<QString, QString> key_keycode_map = {};
+    
+protected:
+    bool eventFilter(QObject *obj, QEvent *ev);
+    
 };
 #endif // MAINWINDOW_H
