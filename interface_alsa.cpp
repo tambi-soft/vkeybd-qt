@@ -11,14 +11,13 @@
 InterfaceAlsa::InterfaceAlsa(InterfaceAudio *parent) : InterfaceAudio(parent)
 {
     snd_seq_t *seq;
-    /*
+    
     snd_seq_open(&seq, "default", SND_SEQ_OPEN_DUPLEX, 0);
     
     int port;
     port = snd_seq_create_simple_port(seq, "my port",
         SND_SEQ_PORT_CAP_READ | SND_SEQ_PORT_CAP_WRITE,
         SND_SEQ_PORT_TYPE_APPLICATION);
-    */
 }
 
 void InterfaceAlsa::keyPressEvent(QString keycode)

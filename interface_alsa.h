@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <alsa/asoundlib.h>
+#include <alsa/control.h>
 
 class InterfaceAlsa : public InterfaceAudio
 {

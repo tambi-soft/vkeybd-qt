@@ -2,10 +2,12 @@ QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
+#QMAKE_CXXFLAGS += \
+#    asound
+
 CONFIG += \
     c++11 \
-    console 
-    
+    console
 
 # You can make your code fail to compile if it uses deprecated APIs.
 # In order to do so, uncomment the following line.
@@ -32,3 +34,16 @@ HEADERS += \
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+release:DESTDIR = release
+release:OBJECTS_DIR = release/obj
+release:MOC_DIR = release/moc
+release:RCC_DIR = release/rcc
+release:UI_DIR = release/ui
+
+debug:DESTDIR = debug
+debug:OBJECTS_DIR = debug/obj
+debug:MOC_DIR = debug/moc
+debug:RCC_DIR = debug/rcc
+debug:UI_DIR = debug/ui
+
