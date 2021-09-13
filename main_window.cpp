@@ -3,8 +3,9 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
+    this->piano = new KeyboardPiano;
+    
     setCentralWidget(this->piano);
-    //resize(this->piano->size->width(), this->piano->size->height());
     resize(this->piano->size);
     
     this->installEventFilter(this);
@@ -25,7 +26,7 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *ev)
         if (!key->isAutoRepeat())
         {
             qDebug() << key;
-        
+            
             if (key->key() == Qt::Key_A)
             {
                 keycode = "a1";

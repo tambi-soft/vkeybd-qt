@@ -14,8 +14,9 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
     
+    
 private:
-    KeyboardPiano *piano = new KeyboardPiano;
+    KeyboardPiano *piano;
     
     QMap<QString, QString> key_keycode_map = {};
     

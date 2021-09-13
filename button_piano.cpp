@@ -1,9 +1,9 @@
 #include "button_piano.h"
 
-ButtonPiano::ButtonPiano(JackAdapter *jack, QString keycode, QWidget *parent)
+ButtonPiano::ButtonPiano(InterfaceAudio *interface_audio, QString keycode, QWidget *parent)
     :QPushButton(parent)
 {
-    this->jack = jack;
+    this->interface_audio = interface_audio;
     this->keycode = keycode;
 }
 
@@ -21,12 +21,12 @@ void ButtonPiano::keyReleaseEvent(QKeyEvent *ev)
 
 void ButtonPiano::press()
 {
-    this->jack->keyPressEvent(this->keycode);
+    this->interface_audio->keyPressEvent(this->keycode);
     this->setDown(true);
 }
 
 void ButtonPiano::release()
 {
-    this->jack->keyReleaseEvent(this->keycode);
+    this->interface_audio->keyReleaseEvent(this->keycode);
     this->setDown(false);
 }

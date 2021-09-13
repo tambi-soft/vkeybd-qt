@@ -9,14 +9,16 @@
 #include <QPair>
 #include <QKeyEvent>
 
-#include "jack_adapter.h"
+#include "interface_audio.h"
+#include "interface_alsa.h"
+#include "interface_jack.h"
 
 class ButtonPiano : public QPushButton
 {
 public:
-    ButtonPiano(JackAdapter *jack, QString keycode, QWidget *parent);
+    ButtonPiano(InterfaceAudio *interface_audio, QString keycode, QWidget *parent);
     
-    JackAdapter *jack;
+    InterfaceAudio *interface_audio;
     QString keycode;
     
     /*
