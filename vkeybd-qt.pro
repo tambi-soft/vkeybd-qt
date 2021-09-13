@@ -12,6 +12,7 @@ CONFIG += \
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    alsa_adapter.cpp \
     button_piano.cpp \
     jack_adapter.cpp \
     keyboard_piano.cpp \
@@ -19,6 +20,7 @@ SOURCES += \
     main_window.cpp
 
 HEADERS += \
+    alsa_adapter.h \
     button_piano.h \
     jack_adapter.h \
     keyboard_piano.h \
