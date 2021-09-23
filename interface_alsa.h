@@ -9,8 +9,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+//#include </usr/include/alsa/asoundlib.h>
 #include <alsa/asoundlib.h>
+//#include </usr/include/alsa/control.h>
 #include <alsa/control.h>
+//#include </usr/include/alsa/seq.h>
+
+/*
+#include <iostream>
+#include <stdio.h>
+#include <stdlib.h>
+#include </usr/include/alsa/asoundlib.h>
+#include </usr/include/alsa/pcm.h>
+*/
 
 class InterfaceAlsa : public InterfaceAudio
 {
@@ -20,6 +31,8 @@ public:
     
     void keyPressEvent(QString keycode);
     void keyReleaseEvent(QString keycode);
+    
+    QString NAME = "vkeybd-qt";
     
 signals:
     

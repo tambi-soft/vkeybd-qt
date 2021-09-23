@@ -9,6 +9,7 @@
 #include <QPalette>
 
 #include "button_piano.h"
+#include "interface_audio.h"
 #include "interface_alsa.h"
 #include "interface_jack.h"
 
