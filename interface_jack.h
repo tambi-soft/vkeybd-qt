@@ -6,6 +6,8 @@
 
 #include "interface_audio.h"
 
+#include <jack/jack.h>
+
 class InterfaceJack : public InterfaceAudio
 {
     Q_OBJECT

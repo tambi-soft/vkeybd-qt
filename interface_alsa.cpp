@@ -10,7 +10,7 @@
 
 InterfaceAlsa::InterfaceAlsa(InterfaceAudio *parent) : InterfaceAudio(parent)
 {
-    snd_seq_t *seq;
+    
     
     snd_seq_open(&seq, "default", SND_SEQ_OPEN_DUPLEX, 0);
     
@@ -23,6 +23,22 @@ InterfaceAlsa::InterfaceAlsa(InterfaceAudio *parent) : InterfaceAudio(parent)
 void InterfaceAlsa::keyPressEvent(QString keycode)
 {
     qDebug() << "alsa pressed: "+keycode;
+    snd_seq_event_t ev;
+        snd_seq_ev_clear(&ev);
+        snd_seq_ev_set_direct(&ev);
+    
+        /* either */
+        snd_seq_ev_set_dest(&ev, 64, 0); /* send to 64:0 */
+        /* or */
+        snd_seq_ev_set_subs(&ev);        /* send to subscribers of source port */
+    
+        snd_seq_ev_set_noteon(&ev, 0, 60, 127);
+        snd_seq_event_output(seq, &ev);
+    
+        snd_seq_ev_set_noteon(&ev, 0, 67, 127);
+        snd_seq_event_output(seq, &ev);
+    
+        snd_seq_drain_output(seq);
 }
 
 void InterfaceAlsa::keyReleaseEvent(QString keycode)

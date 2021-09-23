@@ -34,6 +34,9 @@ public:
     
     QString NAME = "vkeybd-qt";
     
+private:
+    snd_seq_t *seq;
+    
 signals:
     
 };

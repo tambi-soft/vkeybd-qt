@@ -5,8 +5,8 @@ KeyboardPiano::KeyboardPiano(QWidget *parent) : QWidget(parent)
 {
     this->setOctaves(3);
     
-    this->interface_audio = new InterfaceAlsa;
-    //this->interface_audio = new InterfaceJack;
+    //this->interface_audio = new InterfaceAlsa;
+    this->interface_audio = new InterfaceJack;
     
     for (int octave=0; octave < this->octaves; octave++)
     {
