@@ -25,17 +25,25 @@ SOURCES += \
     interface_alsa.cpp \
     interface_audio.cpp \
     interface_jack.cpp \
+    keyboard_pc.cpp \
     keyboard_piano.cpp \
     main.cpp \
-    main_window.cpp
+    main_window.cpp \
+    midi_channel_selector.cpp \
+    midi_key_selector.cpp \
+    orgelwerk.cpp
 
 HEADERS += \
     button_piano.h \
     interface_alsa.h \
     interface_audio.h \
     interface_jack.h \
+    keyboard_pc.h \
     keyboard_piano.h \
-    main_window.h
+    main_window.h \
+    midi_channel_selector.h \
+    midi_key_selector.h \
+    orgelwerk.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

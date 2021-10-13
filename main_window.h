@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QKeyEvent>
 
+#include "orgelwerk.h"
 #include "keyboard_piano.h"
 
 class MainWindow : public QMainWindow
@@ -17,11 +18,12 @@ public:
     
 private:
     KeyboardPiano *piano;
+    Orgelwerk *werk;
     
     QMap<QString, QString> key_keycode_map = {};
     
 protected:
-    bool eventFilter(QObject *obj, QEvent *ev);
+    //bool eventFilter(QObject *obj, QEvent *ev);
     
 };
 #endif // MAINWINDOW_H
