@@ -3,10 +3,16 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
-    this->piano = new KeyboardPiano;
+    //this->piano = new KeyboardPiano;
+    this->werk = new Orgelwerk;
     
+    /*
     setCentralWidget(this->piano);
     resize(this->piano->size);
+    */
+    
+    setCentralWidget(this->werk);
+    //resize(this->werk->size);
     
     this->installEventFilter(this);
 }
@@ -16,6 +22,7 @@ MainWindow::~MainWindow()
     
 }
 
+/*
 bool MainWindow::eventFilter(QObject *obj, QEvent *ev)
 {
     if (ev->type() == QEvent::KeyPress)
@@ -60,4 +67,4 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *ev)
     }
     return QObject::eventFilter(obj, ev);
 }
-
+*/
