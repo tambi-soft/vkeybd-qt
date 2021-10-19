@@ -9,9 +9,10 @@ class MIDIPitchWheelWorker : public QObject
     Q_OBJECT
     
 public:
-    explicit MIDIPitchWheelWorker(int tether, int pitch, QObject *parent = 0);
+    explicit MIDIPitchWheelWorker(QObject *parent = 0);
     
-    //void setValues(int tether, int pitch);
+    void setValues(int tether, int pitch);
+    
 private:
     QTimer *timer;
     
@@ -51,6 +52,7 @@ private:
     QSlider *slider_pitch;
     
     QThread *thread;
+    MIDIPitchWheelWorker *worker;
     
     void startPitchThread();
     
