@@ -12,11 +12,15 @@ MIDIPitchWheel::MIDIPitchWheel(QWidget *parent) : QWidget(parent)
     this->slider_pitch = new QSlider(Qt::Horizontal, this);
     
     this->slider_tether->setRange(0, 127);
+    this->slider_tether->setTickInterval(64);
+    this->slider_tether->setTickPosition(QSlider::TicksBelow);
     this->slider_tether->setValue(64);
     
     // see the midi-protocol, e.g:
     // https://sites.uci.edu/camp2014/2014/04/30/managing-midi-pitchbend-messages/
     this->slider_pitch->setRange(0, 16383);
+    this->slider_pitch->setTickInterval(8192);
+    this->slider_pitch->setTickPosition(QSlider::TicksBelow);
     this->slider_pitch->setValue(8192);
     
     grid->addWidget(label_tether, 0, 0);
@@ -36,9 +40,12 @@ MIDIPitchWheel::MIDIPitchWheel(QWidget *parent) : QWidget(parent)
             "   width: 20px;"
             "   margin: -15px 0px;"
             "}";
+    // https://stackoverflow.com/questions/27531542/tick-marks-disappear-on-styled-qslider
     this->slider_tether->setStyleSheet(style);
     this->slider_pitch->setStyleSheet(style);
     
+    this->slider_tether->setTracking(false);
+    connect(this->slider_tether, &QSlider::valueChanged, this, &MIDIPitchWheel::startPitchThread);
     this->slider_pitch->setTracking(false);
     connect(this->slider_pitch, &QSlider::valueChanged, this, &MIDIPitchWheel::startPitchThread);
     
