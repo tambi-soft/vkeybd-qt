@@ -6,6 +6,7 @@
 
 #include <QVBoxLayout>
 #include <QGroupBox>
+#include <QScrollArea>
 
 #include "midi_channel_selector.h"
 #include "midi_key_selector.h"

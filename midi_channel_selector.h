@@ -6,6 +6,8 @@
 
 #include <QGridLayout>
 #include <QCheckBox>
+#include <QSpinBox>
+#include <QLabel>
 
 class MIDIChannelSelector : public QWidget
 {
