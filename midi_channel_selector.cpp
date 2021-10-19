@@ -7,32 +7,6 @@ MIDIChannelSelector::MIDIChannelSelector(QWidget *parent) : QWidget(parent)
     
     //grid->setContentsMargins(0, 0, 0, 0);
     
-    /**
-    for (int i=0; i<16; i++)
-    {
-        QCheckBox *check = new QCheckBox(QString::number(i));
-        
-        int row = 0;
-        int column = 0;
-        if (i<8)
-        {
-            column = i;
-        }
-        else
-        {
-            row = 1;
-            column = i-8;
-        }
-        grid->addWidget(check, row, column);
-        this->list_of_checkboxes.append(check);
-        
-        if (i==0)
-        {
-            check->setChecked(true);
-        }
-    }
-    **/
-    
     QLabel *channel_label = new QLabel("Channel");
     QLabel *key_min_label = new QLabel("Key Min");
     QLabel *key_max_label = new QLabel("Key Max");
@@ -53,11 +27,16 @@ MIDIChannelSelector::MIDIChannelSelector(QWidget *parent) : QWidget(parent)
         key_min->setValue(0);
         key_max->setValue(127);
         
+        QComboBox *combo_categories = new QComboBox;
+        QStringList list_categories = MIDISoundsList::getCategories();
+        combo_categories->addItems(list_categories);
+        
         grid->addWidget(check, i, 0);
         //grid->addWidget(key_min_label, i, 1);
         grid->addWidget(key_min, i, 2);
         //grid->addWidget(key_max_label, i, 3);
         grid->addWidget(key_max, i, 4);
+        grid->addWidget(combo_categories, i, 5);
         
         if (i==1)
         {

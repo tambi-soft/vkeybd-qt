@@ -7,7 +7,10 @@
 #include <QGridLayout>
 #include <QCheckBox>
 #include <QSpinBox>
+#include <QComboBox>
 #include <QLabel>
+
+#include "midi_sounds_list.h"
 
 class MIDIChannelSelector : public QWidget
 {

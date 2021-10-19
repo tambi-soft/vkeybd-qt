@@ -34,6 +34,7 @@ SOURCES += \
     midi_channel_selector.cpp \
     midi_key_selector.cpp \
     midi_pitchwheel.cpp \
+    midi_sounds_list.cpp \
     orgelwerk.cpp
 
 HEADERS += \
@@ -49,6 +50,7 @@ HEADERS += \
     midi_channel_selector.h \
     midi_key_selector.h \
     midi_pitchwheel.h \
+    midi_sounds_list.h \
     orgelwerk.h
 
 # Default rules for deployment.
