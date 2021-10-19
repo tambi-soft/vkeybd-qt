@@ -10,6 +10,7 @@
 
 #include "midi_channel_selector.h"
 #include "midi_key_selector.h"
+#include "midi_pitchwheel.h"
 #include "keyboard_piano.h"
 #include "keyboard_pc.h"
 
@@ -22,6 +23,7 @@ public:
 private:
     MIDIChannelSelector *channels;
     MIDIKeySelector *keys;
+    MIDiPitchWheel *pitch;
     KeyboardPiano *piano;
     KeyboardPC *pc;
     
