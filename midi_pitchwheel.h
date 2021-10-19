@@ -1,17 +1,58 @@
 #ifndef MIDIPITCHWHEEL_H
 #define MIDIPITCHWHEEL_H
 
+#include <QThread>
+#include <QTimer>
+
+class MIDIPitchWheelWorker : public QObject
+{
+    Q_OBJECT
+    
+public:
+    explicit MIDIPitchWheelWorker(int tether, int pitch, QObject *parent = 0);
+    
+    //void setValues(int tether, int pitch);
+private:
+    QTimer *timer;
+    
+    int tether;
+    int pitch = 8192;
+    
+    bool sign_positive; // false: -, true: +
+    
+//protected:
+public slots:
+    void tick();
+    
+signals:
+    void movePitchSlider(int step);
+    
+};
+
+
+
 #include <QObject>
 #include <QWidget>
 #include <QGridLayout>
 #include <QSlider>
 #include <QLabel>
+#include <QDebug>
 
-class MIDiPitchWheel : public QWidget
+class MIDIPitchWheel : public QWidget
 {
     Q_OBJECT
 public:
-    explicit MIDiPitchWheel(QWidget *parent = nullptr);
+    explicit MIDIPitchWheel(QWidget *parent = nullptr);
+    
+    void movePitchSlider(int position);
+    
+private:
+    QSlider *slider_tether;
+    QSlider *slider_pitch;
+    
+    QThread *thread;
+    
+    void startPitchThread();
     
 signals:
     

@@ -23,7 +23,7 @@ public:
 private:
     MIDIChannelSelector *channels;
     MIDIKeySelector *keys;
-    MIDiPitchWheel *pitch;
+    MIDIPitchWheel *pitch;
     KeyboardPiano *piano;
     KeyboardPC *pc;
     

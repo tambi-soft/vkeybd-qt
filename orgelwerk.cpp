@@ -4,7 +4,7 @@ Orgelwerk::Orgelwerk(QWidget *parent) : QWidget(parent)
 {
     this->channels = new MIDIChannelSelector;
     this->keys = new MIDIKeySelector;
-    this->pitch = new MIDiPitchWheel;
+    this->pitch = new MIDIPitchWheel;
     this->piano = new KeyboardPiano;
     this->pc = new KeyboardPC;
     
