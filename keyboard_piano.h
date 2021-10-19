@@ -7,6 +7,7 @@
 #include <QMap>
 #include <QList>
 #include <QPalette>
+#include <QPushButton>
 
 #include "button_piano.h"
 #include "interface_audio.h"

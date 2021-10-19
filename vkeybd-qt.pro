@@ -22,6 +22,8 @@ CONFIG += \
 
 SOURCES += \
     button_piano.cpp \
+    input_keyboard_raw.cpp \
+    input_keyboard_raw_thread.cpp \
     interface_alsa.cpp \
     interface_audio.cpp \
     interface_jack.cpp \
@@ -35,6 +37,8 @@ SOURCES += \
 
 HEADERS += \
     button_piano.h \
+    input_keyboard_raw.h \
+    input_keyboard_raw_thread.h \
     interface_alsa.h \
     interface_audio.h \
     interface_jack.h \

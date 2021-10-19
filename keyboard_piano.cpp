@@ -13,9 +13,13 @@ KeyboardPiano::KeyboardPiano(QWidget *parent) : QWidget(parent)
         this->drawOneOctave(octave);
     }
     
-    this->size = QSize((button_width_full-1)*7*octaves, button_height_full-1);
+    this->size = QSize((button_width_full-1)*7*octaves+1, button_height_full-1);
     
-    qDebug() << this->list_of_keys;
+    setMinimumSize(this->size);
+    setMaximumSize(this->size);
+    
+    qDebug() << this->size;
+    //qDebug() << this->list_of_keys;
 }
 
 void KeyboardPiano::setOctaves(int octaves)
@@ -31,8 +35,10 @@ void KeyboardPiano::drawOneOctave(int octave)
         
         ButtonPiano *button = new ButtonPiano(this->interface_audio, keycode, this);
         button->resize(this->button_width_full, this->button_height_full);
-        button->move(octave * 7*(this->button_width_full-1) + ((this->button_width_full-1) * full_tone),
-                     -1);
+        button->move(
+                        octave * 7*(this->button_width_full-1) + ((this->button_width_full-1) * full_tone),
+                        -1
+                    );
         
         if (this->invert_colors == false)
         {
@@ -86,7 +92,6 @@ void KeyboardPiano::colorizeBlackKeys(ButtonPiano *button)
                          "  border-style: outset;"
                          "  border-width: 1px;"
                          "  border-radius: 0px;"
-            
                          "}"
                          "QPushButton:pressed {"
                          "  color: white;"
