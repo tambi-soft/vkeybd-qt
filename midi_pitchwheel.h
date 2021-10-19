@@ -44,6 +44,7 @@ class MIDIPitchWheel : public QWidget
     Q_OBJECT
 public:
     explicit MIDIPitchWheel(QWidget *parent = nullptr);
+    ~MIDIPitchWheel();
     
     void movePitchSlider(int position);
     

@@ -50,14 +50,16 @@ MIDIPitchWheel::MIDIPitchWheel(QWidget *parent) : QWidget(parent)
     connect(this->slider_pitch, &QSlider::valueChanged, this, &MIDIPitchWheel::startPitchThread);
     
     this->worker = new MIDIPitchWheelWorker();
-    //worker->setInterval(30);
-    //worker->setValues(tether, pitch);
     connect(this->worker, &MIDIPitchWheelWorker::movePitchSlider, this, &MIDIPitchWheel::movePitchSlider);
     
     this->thread = new QThread(this);
     this->worker->moveToThread(this->thread);
     this->thread->start();
-    //connect(this->thread, &QThread::started, worker, &MIDIPitchWheelWorker::process);
+}
+
+MIDIPitchWheel::~MIDIPitchWheel()
+{
+    this->thread->exit();
 }
 
 void MIDIPitchWheel::startPitchThread()
@@ -65,17 +67,11 @@ void MIDIPitchWheel::startPitchThread()
     int tether = this->slider_tether->value();
     int pitch = this->slider_pitch->value();
     
-    //if (tether != 0 && !this->thread->isRunning())
-    if (tether != 0)
-    {
-        this->worker->setValues(tether, pitch);
-    }
+    this->worker->setValues(tether, pitch);
 }
 
 void MIDIPitchWheel::movePitchSlider(int position)
 {
-    //qDebug() << "moving slider: " + QString::number(position);
-    
     this->slider_pitch->setValue(position);
 }
 
@@ -108,12 +104,7 @@ void MIDIPitchWheelWorker::setValues(int tether, int pitch)
 
 void MIDIPitchWheelWorker::tick()
 {
-    //while (this->pitch != 8192)
-    if (this->pitch == 8192)
-    {
-        //this->timer->stop();
-    }
-    else
+    if (this->pitch != 8192)
     {
         if (this->pitch < 8192)
         {
