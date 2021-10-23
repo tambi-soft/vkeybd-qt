@@ -2,6 +2,12 @@
 
 Orgelwerk::Orgelwerk(QWidget *parent) : QWidget(parent)
 {
+    drawGUI();
+    initInputThread();
+}
+
+void Orgelwerk::drawGUI()
+{
     this->channels = new MIDIChannelSelector;
     this->keys = new MIDIKeySelector;
     this->pitch = new MIDIPitchWheel;
@@ -40,4 +46,20 @@ Orgelwerk::Orgelwerk(QWidget *parent) : QWidget(parent)
     layout->addWidget(group_keys);
     layout->addWidget(group_pitch);
     layout->addWidget(group_keyboards);
+}
+
+void Orgelwerk::initInputThread()
+{
+    this->thread_input = new QThread(this);
+    this->worker_input = new InputKeyboardRawThread();
+    this->worker_input->moveToThread(this->thread_input);
+    
+    this->thread_input->start();
+    
+    //this->worker_input->start();
+}
+
+Orgelwerk::~Orgelwerk()
+{
+    this->thread_input->exit();
 }
