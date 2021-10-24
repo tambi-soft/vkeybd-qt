@@ -15,6 +15,7 @@ void KeyboardPC::drawButtons()
     
     for (int row = 0; row < sizes.length(); row++)
     {
+        QList<QPushButton*> list_of_buttons_row;
         float offset = 0;
         for (int col = 0; col < sizes.at(row).length(); col++)
         {
@@ -68,8 +69,12 @@ void KeyboardPC::drawButtons()
                                  "}";
             
             button->setStyleSheet(stylesheet);
+            
+            list_of_buttons_row.append(button);
         }
+        this->list_of_buttons.append(list_of_buttons_row);
     }
+    //qDebug() << this->list_of_buttons;
 }
 
 float KeyboardPC::calculateOffset(float row_offset, int row, int col, QList<QList<int>> sizes)
@@ -122,4 +127,44 @@ QList<QList<QString>> KeyboardPC::getButtonLabels()
             {"Ab|G#", "B", "D", "F", "Ab|G#", "B", "D", "F", "Ab|G#", "B", "D" ,"F", "Ab|G#"},
             {"ctrl", "\u2318", "alt", " ", "←", "↓", "↑", "→", "alt", "\u2325", "ctrl"}};
     return list;
+}
+
+QList<QList<int>> KeyboardPC::getButtonKeycodes()
+{
+    QList<QList<int>> list;
+    list = {{16781906, 49, 50, 51, 52, 53, 54, 55, 56, 57, 48, 45, 16781904, 16777219},
+            {16777217, 88, 86, 76, 67, 87, 75, 72, 71, 70, 81, 223, 16781905, 16777220},
+            {16781571, 85, 73, 65, 69, 79, 83, 78, 82, 84, 68, 89, 16781571},
+            {16777252, 0, 220, 214, 196, 80, 90, 66, 77, 44, 46, 74, 16777252},
+            {}};
+    return list;
+}
+
+void KeyboardPC::keyDown(int keycode)
+{
+    QList<QList<int>> keycodes = getButtonKeycodes();
+    for (int row=0; row < keycodes.length(); row++)
+    {
+        for (int col=0; col < keycodes.at(row).length(); col++)
+        {
+            if (keycodes.at(row).at(col) == keycode)
+            {
+                this->list_of_buttons.at(row).at(col)->setDown(true);
+            }
+        }
+    }
+}
+void KeyboardPC::keyUp(int keycode)
+{
+    QList<QList<int>> keycodes = getButtonKeycodes();
+    for (int row=0; row < keycodes.length(); row++)
+    {
+        for (int col=0; col < keycodes.at(row).length(); col++)
+        {
+            if (keycodes.at(row).at(col) == keycode)
+            {
+                this->list_of_buttons.at(row).at(col)->setDown(false);
+            }
+        }
+    }
 }

@@ -23,6 +23,10 @@ public:
     explicit Orgelwerk(QWidget *parent = nullptr);
     ~Orgelwerk();
     
+    void keyDown(int keycode);
+    void keyUp(int keycode);
+    void panicKeyPressed();
+    
 private:
     MIDIChannelSelector *channels;
     MIDIKeySelector *keys;
@@ -33,12 +37,14 @@ private:
     void drawGUI();
     void initInputThread();
     
+    QPushButton *button_panic = new QPushButton;
+    
     //InputKeyboardRaw *input_raw;
     QThread *thread_input;
     InputKeyboardRawThread *worker_input;
     
 private slots:
-    void panicKeyPressed();
+    
     
 protected:
     

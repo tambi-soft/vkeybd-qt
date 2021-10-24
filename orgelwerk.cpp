@@ -44,14 +44,23 @@ void Orgelwerk::drawGUI()
     layout_keyboards->addWidget(this->piano);
     layout_keyboards->addWidget(this->pc);
     
-    QPushButton *button_panic = new QPushButton("Panic!");
-    connect(button_panic, &QPushButton::clicked, this, &Orgelwerk::panicKeyPressed);
+    this->button_panic->setText("Panic!");
+    connect(this->button_panic, &QPushButton::clicked, this, &Orgelwerk::panicKeyPressed);
+    QString stylesheet = "QPushButton {"
+                         "  color: white;"
+                         "  background-color: red;"
+                         "}"
+                         "QPushButton:pressed {"
+                         "  color: white;"
+                         "  background-color: yellow;"
+                         "}";
+    this->button_panic->setStyleSheet(stylesheet);
     
     layout->addWidget(group_channels);
     layout->addWidget(group_keys);
     layout->addWidget(group_pitch);
     layout->addWidget(group_keyboards);
-    layout->addWidget(button_panic);
+    layout->addWidget(this->button_panic);
 }
 
 void Orgelwerk::initInputThread()
@@ -70,7 +79,21 @@ Orgelwerk::~Orgelwerk()
     this->thread_input->exit();
 }
 
+void Orgelwerk::keyDown(int keycode)
+{
+    qDebug() << "keyDown: " + QString::number(keycode);
+    this->pc->keyDown(keycode);
+}
+void Orgelwerk::keyUp(int keycode)
+{
+    qDebug() << "keyUp: " + QString::number(keycode);
+    this->pc->keyUp(keycode);
+}
+
 void Orgelwerk::panicKeyPressed()
 {
-    qDebug() << "PANIC!";
+    qDebug() << "PANIC!" << this->button_panic;
+    this->button_panic->blockSignals(true);
+    this->button_panic->animateClick();
+    this->button_panic->blockSignals(false);
 }

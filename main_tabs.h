@@ -17,6 +17,7 @@ public:
 private:
     QList<int> list_keys;
     QList<QString> list_labels;
+    QList<Orgelwerk*> list_of_tabs;
     
     void addOrganTab(QString label);
 

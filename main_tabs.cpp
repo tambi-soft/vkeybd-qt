@@ -37,27 +37,26 @@ MainTabs::MainTabs(QTabWidget *parent) : QTabWidget(parent)
 
 void MainTabs::addOrganTab(QString label)
 {
-    QWidget *widget = new QWidget;
-    QHBoxLayout *layout = new QHBoxLayout;
-    layout->setContentsMargins(0, 0, 0, 0);
-    widget->setLayout(layout);
-    
-    Orgelwerk *werk1 = new Orgelwerk;
-    //Orgelwerk *werk2 = new Orgelwerk;
-    
-    layout->addWidget(werk1);
-    //layout->addWidget(werk2);
-    
-    addTab(widget, label);
+    Orgelwerk *o = new Orgelwerk;
+    addTab(o, label);
 }
 
 void MainTabs::keyPressEvent(QKeyEvent *ev)
 {
-    for (int i=0; i < this->list_keys.length(); i++)
+    if (ev->key() == Qt::Key_Escape)
     {
-        if (this->list_keys.at(i) == ev->key())
+        qDebug() << currentWidget();
+        Orgelwerk *o = static_cast<Orgelwerk*>(currentWidget());
+        o->panicKeyPressed();
+    }
+    else
+    {
+        for (int i=0; i < this->list_keys.length(); i++)
         {
-            this->setCurrentIndex(i);
+            if (this->list_keys.at(i) == ev->key())
+            {
+                this->setCurrentIndex(i);
+            }
         }
     }
 }
@@ -67,12 +66,20 @@ bool MainTabs::eventFilter(QObject *obj, QEvent *ev)
     {
         QKeyEvent *event = static_cast<QKeyEvent*>(ev);
         
-        qDebug() << "press";
+        if (!event->isAutoRepeat())
+        {
+            Orgelwerk *o = static_cast<Orgelwerk*>(currentWidget());
+            o->keyDown(event->key());
+        }
     }
     else if (ev->type() == QEvent::KeyRelease)
     {
         QKeyEvent *event = static_cast<QKeyEvent*>(ev);
         
-        qDebug() << "release";
+        if (!event->isAutoRepeat())
+        {
+            Orgelwerk *o = static_cast<Orgelwerk*>(currentWidget());
+            o->keyUp(event->key());
+        }
     }
 }
