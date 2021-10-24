@@ -3,6 +3,9 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
+    MenuBar *menu = new MenuBar;
+    setMenuBar(menu);
+    
     //this->piano = new KeyboardPiano;
     //this->werk = new Orgelwerk;
     this->tabs = new MainTabs;

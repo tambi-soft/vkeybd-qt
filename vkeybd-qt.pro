@@ -31,6 +31,7 @@ SOURCES += \
     main.cpp \
     main_tabs.cpp \
     main_window.cpp \
+    menubar.cpp \
     midi_channel_selector.cpp \
     midi_key_selector.cpp \
     midi_pitchwheel.cpp \
@@ -47,6 +48,7 @@ HEADERS += \
     keyboard_piano.h \
     main_tabs.h \
     main_window.h \
+    menubar.h \
     midi_channel_selector.h \
     midi_key_selector.h \
     midi_pitchwheel.h \

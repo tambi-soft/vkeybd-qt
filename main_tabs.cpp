@@ -10,7 +10,15 @@ MainTabs::MainTabs(QTabWidget *parent) : QTabWidget(parent)
 
 void MainTabs::addOrganTab(QString label)
 {
-    Orgelwerk *werk = new Orgelwerk;
+    QWidget *widget = new QWidget;
+    QHBoxLayout *layout = new QHBoxLayout;
+    widget->setLayout(layout);
     
-    addTab(werk, label);
+    Orgelwerk *werk1 = new Orgelwerk;
+    Orgelwerk *werk2 = new Orgelwerk;
+    
+    layout->addWidget(werk1);
+    layout->addWidget(werk2);
+    
+    addTab(widget, label);
 }

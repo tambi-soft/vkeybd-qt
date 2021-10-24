@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QWidget>
 #include <QTabWidget>
+#include <QHBoxLayout>
 
 #include "orgelwerk.h"
 

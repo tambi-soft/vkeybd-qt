@@ -7,6 +7,7 @@
 //#include "orgelwerk.h"
 //#include "keyboard_piano.h"
 #include "main_tabs.h"
+#include "menubar.h"
 
 class MainWindow : public QMainWindow
 {
