@@ -15,7 +15,13 @@ public:
     explicit MainTabs(QTabWidget *parent = nullptr);
     
 private:
+    QList<int> list_keys;
+    QList<QString> list_labels;
+    
     void addOrganTab(QString label);
+
+private slots:
+    void keyPressEvent(QKeyEvent* ev);
     
 signals:
     
