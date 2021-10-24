@@ -5,9 +5,8 @@ MIDIChannelSelector::MIDIChannelSelector(QWidget *parent) : QWidget(parent)
     QGridLayout *grid = new QGridLayout;
     setLayout(grid);
     
-    //grid->setContentsMargins(0, 0, 0, 0);
-    
     QLabel *channel_label = new QLabel("Channel");
+    QLabel *label_volume = new QLabel("Volume");
     QLabel *label_key_shift = new QLabel("Key Shift");
     QLabel *key_min_label = new QLabel("Key Min");
     QLabel *key_max_label = new QLabel("Key Max");
@@ -17,8 +16,9 @@ MIDIChannelSelector::MIDIChannelSelector(QWidget *parent) : QWidget(parent)
     
     
     grid->addWidget(channel_label, 0, 0);
-    grid->addWidget(label_key_shift, 0, 1);
-    grid->addWidget(key_min_label, 0, 2);
+    grid->addWidget(label_volume, 0, 1);
+    grid->addWidget(label_key_shift, 0, 2);
+    grid->addWidget(key_min_label, 0, 3);
     grid->addWidget(key_max_label, 0, 4);
     grid->addWidget(key_shift_label, 0, 5);
     grid->addWidget(portamento_time, 0, 6);
@@ -26,6 +26,13 @@ MIDIChannelSelector::MIDIChannelSelector(QWidget *parent) : QWidget(parent)
     for (int i=1; i<=16; i++)
     {
         QCheckBox *check = new QCheckBox(QString::number(i));
+        
+        QSlider *slider_volume = new QSlider;
+        slider_volume->setOrientation(Qt::Horizontal);
+        slider_volume->setMinimum(0);
+        slider_volume->setMaximum(127);
+        slider_volume->setValue(127);
+        
         MIDIKeyShiftWidget *key_shift = new MIDIKeyShiftWidget;
         QSpinBox *key_min = new QSpinBox();
         QSpinBox *key_max = new QSpinBox();
@@ -47,9 +54,10 @@ MIDIChannelSelector::MIDIChannelSelector(QWidget *parent) : QWidget(parent)
         dial_portamento->setOrientation(Qt::Horizontal);
         
         grid->addWidget(check, i, 0);
-        grid->addWidget(key_shift, i, 1);
+        grid->addWidget(slider_volume, i, 1);
+        grid->addWidget(key_shift, i, 2);
         
-        grid->addWidget(key_min, i, 2);
+        grid->addWidget(key_min, i, 3);
         
         grid->addWidget(key_max, i, 4);
         grid->addWidget(combo_categories, i, 5);

@@ -27,6 +27,8 @@ void Orgelwerk::drawGUI()
     QHBoxLayout *layout_pitch = new QHBoxLayout;
     QVBoxLayout *layout_keyboards = new QVBoxLayout;
     
+    layout_channels->setContentsMargins(0, 0, 0, 0);
+    
     group_channels->setLayout(layout_channels);
     group_keys->setLayout(layout_keys);
     group_pitch->setLayout(layout_pitch);

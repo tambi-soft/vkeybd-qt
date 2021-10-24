@@ -17,7 +17,6 @@ MainTabs::MainTabs(QTabWidget *parent) : QTabWidget(parent)
             int index = addTab(w, "");
             
             setTabEnabled(index, false);
-            
         }
         else
         {
