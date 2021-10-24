@@ -20,6 +20,9 @@ private:
     
     void addOrganTab(QString label);
 
+protected:
+    bool eventFilter(QObject *obj, QEvent *ev);
+    
 private slots:
     void keyPressEvent(QKeyEvent* ev);
     

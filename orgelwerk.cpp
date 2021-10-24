@@ -44,10 +44,14 @@ void Orgelwerk::drawGUI()
     layout_keyboards->addWidget(this->piano);
     layout_keyboards->addWidget(this->pc);
     
+    QPushButton *button_panic = new QPushButton("Panic!");
+    connect(button_panic, &QPushButton::clicked, this, &Orgelwerk::panicKeyPressed);
+    
     layout->addWidget(group_channels);
     layout->addWidget(group_keys);
     layout->addWidget(group_pitch);
     layout->addWidget(group_keyboards);
+    layout->addWidget(button_panic);
 }
 
 void Orgelwerk::initInputThread()
@@ -64,4 +68,9 @@ void Orgelwerk::initInputThread()
 Orgelwerk::~Orgelwerk()
 {
     this->thread_input->exit();
+}
+
+void Orgelwerk::panicKeyPressed()
+{
+    qDebug() << "PANIC!";
 }

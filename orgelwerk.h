@@ -37,6 +37,12 @@ private:
     QThread *thread_input;
     InputKeyboardRawThread *worker_input;
     
+private slots:
+    void panicKeyPressed();
+    
+protected:
+    
+    
 signals:
     
 };

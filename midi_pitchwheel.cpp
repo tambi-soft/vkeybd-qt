@@ -4,6 +4,7 @@ MIDIPitchWheel::MIDIPitchWheel(QWidget *parent) : QWidget(parent)
 {
     QGridLayout *grid = new QGridLayout;
     setLayout(grid);
+    grid->setContentsMargins(0, 0, 0, 0);
     
     QLabel *label_tether = new QLabel("tether strength");
     QLabel *label_pitch = new QLabel("pitch");

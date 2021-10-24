@@ -31,6 +31,8 @@ MainTabs::MainTabs(QTabWidget *parent) : QTabWidget(parent)
             "    background: transparent;"
             "}";
     setStyleSheet(style);
+    
+    installEventFilter(this);
 }
 
 void MainTabs::addOrganTab(QString label)
@@ -41,10 +43,10 @@ void MainTabs::addOrganTab(QString label)
     widget->setLayout(layout);
     
     Orgelwerk *werk1 = new Orgelwerk;
-    Orgelwerk *werk2 = new Orgelwerk;
+    //Orgelwerk *werk2 = new Orgelwerk;
     
     layout->addWidget(werk1);
-    layout->addWidget(werk2);
+    //layout->addWidget(werk2);
     
     addTab(widget, label);
 }
@@ -57,5 +59,20 @@ void MainTabs::keyPressEvent(QKeyEvent *ev)
         {
             this->setCurrentIndex(i);
         }
+    }
+}
+bool MainTabs::eventFilter(QObject *obj, QEvent *ev)
+{
+    if (ev->type() == QEvent::KeyPress)
+    {
+        QKeyEvent *event = static_cast<QKeyEvent*>(ev);
+        
+        qDebug() << "press";
+    }
+    else if (ev->type() == QEvent::KeyRelease)
+    {
+        QKeyEvent *event = static_cast<QKeyEvent*>(ev);
+        
+        qDebug() << "release";
     }
 }
