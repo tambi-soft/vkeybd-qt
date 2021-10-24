@@ -7,6 +7,7 @@
 #include <QGridLayout>
 #include <QCheckBox>
 #include <QSpinBox>
+#include <QDial>
 #include <QComboBox>
 #include <QLabel>
 
@@ -23,6 +24,28 @@ private:
     
 signals:
     
+};
+
+
+
+#include <QHBoxLayout>
+#include <QPushButton>
+#include <QSpinBox>
+
+class MIDIKeyShiftWidget : public QWidget
+{
+    Q_OBJECT
+public:
+    explicit MIDIKeyShiftWidget(QWidget *parent = nullptr);
+    
+private:
+    QSpinBox *spin_key;
+    
+signals:
+    
+private slots:
+    void lowerShiftKeyPressed();
+    void higherShiftKeyPressed();
 };
 
 #endif // MIDICHANNELSELECTOR_H
