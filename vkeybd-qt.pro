@@ -29,6 +29,7 @@ SOURCES += \
     keyboard_pc.cpp \
     keyboard_piano.cpp \
     main.cpp \
+    main_tabs.cpp \
     main_window.cpp \
     midi_channel_selector.cpp \
     midi_key_selector.cpp \
@@ -44,6 +45,7 @@ HEADERS += \
     interface_jack.h \
     keyboard_pc.h \
     keyboard_piano.h \
+    main_tabs.h \
     main_window.h \
     midi_channel_selector.h \
     midi_key_selector.h \

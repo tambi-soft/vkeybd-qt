@@ -4,8 +4,9 @@
 #include <QMainWindow>
 #include <QKeyEvent>
 
-#include "orgelwerk.h"
-#include "keyboard_piano.h"
+//#include "orgelwerk.h"
+//#include "keyboard_piano.h"
+#include "main_tabs.h"
 
 class MainWindow : public QMainWindow
 {
@@ -17,8 +18,9 @@ public:
     
     
 private:
-    KeyboardPiano *piano;
-    Orgelwerk *werk;
+    //KeyboardPiano *piano;
+    //Orgelwerk *werk;
+    MainTabs *tabs;
     
     QMap<QString, QString> key_keycode_map = {};
     

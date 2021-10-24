@@ -4,15 +4,17 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
     //this->piano = new KeyboardPiano;
-    this->werk = new Orgelwerk;
+    //this->werk = new Orgelwerk;
+    this->tabs = new MainTabs;
     
     /*
     setCentralWidget(this->piano);
     resize(this->piano->size);
     */
     
-    setCentralWidget(this->werk);
+    //setCentralWidget(this->werk);
     //resize(this->werk->size);
+    setCentralWidget(this->tabs);
     
     this->installEventFilter(this);
 }
