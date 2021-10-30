@@ -26,6 +26,7 @@ public:
     void keyDown(int keycode);
     void keyUp(int keycode);
     void panicKeyPressed();
+    QPushButton *button_panic = new QPushButton;
     
 private:
     MIDIChannelSelector *channels;
@@ -36,8 +37,6 @@ private:
     
     void drawGUI();
     void initInputThread();
-    
-    QPushButton *button_panic = new QPushButton;
     
     //InputKeyboardRaw *input_raw;
     QThread *thread_input;

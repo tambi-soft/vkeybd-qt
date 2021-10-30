@@ -96,9 +96,9 @@ void Orgelwerk::keyUp(int keycode)
 void Orgelwerk::panicKeyPressed()
 {
     qDebug() << "PANIC!" << this->button_panic;
-    this->button_panic->blockSignals(true);
-    this->button_panic->animateClick();
-    this->button_panic->blockSignals(false);
+    //this->button_panic->blockSignals(true);
+    //this->button_panic->animateClick();
+    //this->button_panic->blockSignals(false);
 }
 
 void Orgelwerk::keyMIDIDown(int midicode)

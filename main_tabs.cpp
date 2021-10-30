@@ -4,7 +4,7 @@ MainTabs::MainTabs(QTabWidget *parent) : QTabWidget(parent)
 {
     setMovable(false);
     
-    this->list_keys = {Qt::Key_F1, Qt::Key_F2, Qt::Key_F3, Qt::Key_F4, -1, Qt::Key_F5, Qt::Key_F6, Qt::Key_F7, Qt::Key_F8, -1, Qt::Key_F9, Qt::Key_F10, Qt::Key_F11, Qt::Key_F12};
+    this->list_function_keys = {Qt::Key_F1, Qt::Key_F2, Qt::Key_F3, Qt::Key_F4, -1, Qt::Key_F5, Qt::Key_F6, Qt::Key_F7, Qt::Key_F8, -1, Qt::Key_F9, Qt::Key_F10, Qt::Key_F11, Qt::Key_F12};
     this->list_labels = {"F1", "F2", "F3", "F4", "spacer", "F5", "F6", "F7", "F8", "spacer", "F9", "F10", "F11", "F12"};
     
     for (int i=0; i < this->list_labels.length(); i++)
@@ -41,25 +41,6 @@ void MainTabs::addOrganTab(QString label)
     addTab(o, label);
 }
 
-void MainTabs::keyPressEvent(QKeyEvent *ev)
-{
-    if (ev->key() == Qt::Key_Escape)
-    {
-        qDebug() << currentWidget();
-        Orgelwerk *o = static_cast<Orgelwerk*>(currentWidget());
-        o->panicKeyPressed();
-    }
-    else
-    {
-        for (int i=0; i < this->list_keys.length(); i++)
-        {
-            if (this->list_keys.at(i) == ev->key())
-            {
-                this->setCurrentIndex(i);
-            }
-        }
-    }
-}
 bool MainTabs::eventFilter(QObject *obj, QEvent *ev)
 {
     Q_UNUSED(obj);
@@ -71,7 +52,25 @@ bool MainTabs::eventFilter(QObject *obj, QEvent *ev)
         if (!event->isAutoRepeat())
         {
             Orgelwerk *o = static_cast<Orgelwerk*>(currentWidget());
-            o->keyDown(event->key());
+            
+            if (event->key() == Qt::Key_Escape)
+            {
+                o->button_panic->animateClick();
+            }
+            if (this->list_function_keys.contains(event->key()))
+            {
+                for (int i=0; i < this->list_function_keys.length(); i++)
+                {
+                    if (this->list_function_keys.at(i) == event->key())
+                    {
+                        this->setCurrentIndex(i);
+                    }
+                }
+            }
+            else
+            {
+                o->keyDown(event->key());
+            }
             
             return true;
         }

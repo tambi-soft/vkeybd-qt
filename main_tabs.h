@@ -15,7 +15,7 @@ public:
     explicit MainTabs(QTabWidget *parent = nullptr);
     
 private:
-    QList<int> list_keys;
+    QList<int> list_function_keys;
     QList<QString> list_labels;
     QList<Orgelwerk*> list_of_tabs;
     
@@ -25,7 +25,6 @@ protected:
     bool eventFilter(QObject *obj, QEvent *ev);
     
 private slots:
-    void keyPressEvent(QKeyEvent* ev);
     
 signals:
     
