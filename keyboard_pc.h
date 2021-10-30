@@ -23,6 +23,7 @@ private:
     QList<QList<QString>> getButtonColors();
     QList<QList<QString>> getButtonLabels();
     QList<QList<int>> getButtonKeycodes();
+    QList<QList<int>> getMIDICodes();
     
     QList<QList<QPushButton*>> list_of_buttons;
     
@@ -30,7 +31,8 @@ private:
     float calculateOffset(float row_offset, int row, int col, QList<QList<int>> sizes);
     
 signals:
-    
+    void MIDIPress(int midicode);
+    void MIDIRelease(int midicode);
 };
 
 #endif // KEYBOARDPC_H

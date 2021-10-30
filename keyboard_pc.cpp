@@ -140,6 +140,17 @@ QList<QList<int>> KeyboardPC::getButtonKeycodes()
     return list;
 }
 
+QList<QList<int>> KeyboardPC::getMIDICodes()
+{
+    QList<QList<int>> list;
+    list = {{8, 11, 14, 17, 20, 23, 26, 29, 32, 35, 38, 41, 44, 47},
+            {9, 12, 15, 18, 21, 24, 27, 30, 33, 36, 39, 42, 45, 48},
+            {10, 13, 16, 19, 22, 25, 28, 31, 34, 37, 40, 43, 46},
+            {8, 11, 14, 17, 20, 23, 26, 29, 32, 35, 38, 41, 44},
+            {}};
+    return list;
+}
+
 void KeyboardPC::keyDown(int keycode)
 {
     QList<QList<int>> keycodes = getButtonKeycodes();
@@ -150,6 +161,9 @@ void KeyboardPC::keyDown(int keycode)
             if (keycodes.at(row).at(col) == keycode)
             {
                 this->list_of_buttons.at(row).at(col)->setDown(true);
+                
+                QList<QList<int>> midicodes = getMIDICodes();
+                emit MIDIPress(midicodes.at(row).at(col));
             }
         }
     }
@@ -164,6 +178,9 @@ void KeyboardPC::keyUp(int keycode)
             if (keycodes.at(row).at(col) == keycode)
             {
                 this->list_of_buttons.at(row).at(col)->setDown(false);
+                
+                QList<QList<int>> midicodes = getMIDICodes();
+                emit MIDIRelease(midicodes.at(row).at(col));
             }
         }
     }

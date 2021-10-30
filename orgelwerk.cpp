@@ -14,6 +14,9 @@ void Orgelwerk::drawGUI()
     this->piano = new KeyboardPiano;
     this->pc = new KeyboardPC;
     
+    connect(this->pc, &KeyboardPC::MIDIPress, this, &Orgelwerk::keyMIDIDown);
+    connect(this->pc, &KeyboardPC::MIDIRelease, this, &Orgelwerk::keyMIDIUp);
+    
     QVBoxLayout *layout = new QVBoxLayout;
     setLayout(layout);
     
@@ -96,4 +99,13 @@ void Orgelwerk::panicKeyPressed()
     this->button_panic->blockSignals(true);
     this->button_panic->animateClick();
     this->button_panic->blockSignals(false);
+}
+
+void Orgelwerk::keyMIDIDown(int midicode)
+{
+    this->piano->keyPressed(midicode);
+}
+void Orgelwerk::keyMIDIUp(int midicode)
+{
+    this->piano->keyReleased(midicode);
 }

@@ -44,7 +44,8 @@ private:
     InputKeyboardRawThread *worker_input;
     
 private slots:
-    
+    void keyMIDIDown(int midicode);
+    void keyMIDIUp(int midicode);
     
 protected:
     

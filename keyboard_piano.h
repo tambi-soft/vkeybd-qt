@@ -37,12 +37,15 @@ public:
     
     void drawOneOctave(int octave);
     
-    QMap<QString, ButtonPiano*> list_of_keys;
+    //QMap<QString, ButtonPiano*> list_of_keys;
+    //QList<ButtonPiano*> list_of_keys_full;
+    //QList<ButtonPiano*> list_of_keys_half;
+    QMap<int, ButtonPiano*> list_of_keys_midi;
     
     QSize size;
     
-    void keyPressed(QString keycode);
-    void keyReleased(QString keycode);
+    void keyPressed(int midicode);
+    void keyReleased(int midicode);
     
 private:
     void colorizeBlackKeys(ButtonPiano *button);

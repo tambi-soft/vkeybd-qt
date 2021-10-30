@@ -16,15 +16,10 @@
 class ButtonPiano : public QPushButton
 {
 public:
-    ButtonPiano(InterfaceAudio *interface_audio, QString keycode, QWidget *parent);
+    ButtonPiano(InterfaceAudio *interface_audio, QWidget *parent);
     
     InterfaceAudio *interface_audio;
-    QString keycode;
     
-    /*
-    void keyPressEvent(QKeyEvent *ev);
-    void keyReleaseEvent(QKeyEvent *ev);
-    */
     void press();
     void release();
     

@@ -29,11 +29,12 @@ void KeyboardPiano::setOctaves(int octaves)
 
 void KeyboardPiano::drawOneOctave(int octave)
 {
+    QList<int> midi_codes_full = {12, 14, 16, 17, 19, 21, 23};
+    QList<int> midi_codes_half = {13, 15, 18, 20, 22};
+    
     for (int full_tone=0; full_tone < 7; full_tone++)
     {
-        QString keycode = this->notes_full[full_tone] + QString::number(octave);
-        
-        ButtonPiano *button = new ButtonPiano(this->interface_audio, keycode, this);
+        ButtonPiano *button = new ButtonPiano(this->interface_audio, this);
         button->resize(this->button_width_full, this->button_height_full);
         button->move(
                         octave * 7*(this->button_width_full-1) + ((this->button_width_full-1) * full_tone),
@@ -51,20 +52,19 @@ void KeyboardPiano::drawOneOctave(int octave)
         
         button->show();
         
-        this->list_of_keys[keycode] = button;
+        int code = midi_codes_full.at(full_tone);
+        this->list_of_keys_midi[code + (octave * 12)] = button;
     }
     
     for (int half_tone=0; half_tone < 5; half_tone++)
     {
-        QString keycode = this->notes_half[half_tone] + QString::number(octave);
-        
         int step = 0;
         if (half_tone > 1)
         {
             step = 1;
         }
         
-        ButtonPiano *button = new ButtonPiano(this->interface_audio, keycode, this);
+        ButtonPiano *button = new ButtonPiano(this->interface_audio, this);
         button->resize(this->button_width_half, this->button_height_half);
         button->move(octave * 7*(this->button_width_full-1) + ((this->button_width_full-1) * half_tone + this->button_width_full/2 + this->button_width_full * step),
                      -1);
@@ -80,7 +80,8 @@ void KeyboardPiano::drawOneOctave(int octave)
         
         button->show();
         
-        this->list_of_keys[keycode] = button;
+        int code = midi_codes_half.at(half_tone);
+        this->list_of_keys_midi[code + (octave * 12)] = button;
     }
 }
 
@@ -119,14 +120,22 @@ void KeyboardPiano::colorizeWhiteKeys(ButtonPiano *button)
     button->setStyleSheet(stylesheet);
 }
 
-void KeyboardPiano::keyPressed(QString keycode)
+void KeyboardPiano::keyPressed(int midicode)
 {
-    ButtonPiano *button = this->list_of_keys[keycode];
-    button->press();
+    if (this->list_of_keys_midi.contains(midicode))
+    {
+        ButtonPiano *button = this->list_of_keys_midi[midicode];
+        
+        button->press();
+    }
 }
 
-void KeyboardPiano::keyReleased(QString keycode)
+void KeyboardPiano::keyReleased(int midicode)
 {
-    ButtonPiano *button = this->list_of_keys[keycode];
-    button->release();
+    if (this->list_of_keys_midi.contains(midicode))
+    {
+        ButtonPiano *button = this->list_of_keys_midi[midicode];
+        
+        button->release();
+    }
 }

@@ -62,6 +62,8 @@ void MainTabs::keyPressEvent(QKeyEvent *ev)
 }
 bool MainTabs::eventFilter(QObject *obj, QEvent *ev)
 {
+    Q_UNUSED(obj);
+    
     if (ev->type() == QEvent::KeyPress)
     {
         QKeyEvent *event = static_cast<QKeyEvent*>(ev);
@@ -70,6 +72,8 @@ bool MainTabs::eventFilter(QObject *obj, QEvent *ev)
         {
             Orgelwerk *o = static_cast<Orgelwerk*>(currentWidget());
             o->keyDown(event->key());
+            
+            return true;
         }
     }
     else if (ev->type() == QEvent::KeyRelease)
@@ -80,6 +84,10 @@ bool MainTabs::eventFilter(QObject *obj, QEvent *ev)
         {
             Orgelwerk *o = static_cast<Orgelwerk*>(currentWidget());
             o->keyUp(event->key());
+            
+            return true;
         }
     }
+    
+    return false;
 }

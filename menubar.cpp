@@ -13,6 +13,8 @@ void MenuBar::addFileMenu()
     connect(exitAction, &QAction::triggered, this, &MenuBar::quitApplication);
         
     QAction *save = new QAction();
+    
+    
     QMenu *menu = addMenu("&File");
     menu->addAction(exitAction);
 }
