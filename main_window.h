@@ -26,7 +26,7 @@ private:
     QMap<QString, QString> key_keycode_map = {};
     
 protected:
-    bool eventFilter(QObject *obj, QEvent *ev);
+    //bool eventFilter(QObject *obj, QEvent *ev);
     
 };
 #endif // MAINWINDOW_H

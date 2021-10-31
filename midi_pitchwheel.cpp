@@ -88,11 +88,11 @@ void MIDIPitchWheel::movePitchWheel(int key)
     {
         value = 12288;
     }
-    else if (key == Qt::Key_Up)
+    else if (key == Qt::Key_Down)
     {
         value = 0;
     }
-    else if (key == Qt::Key_Down)
+    else if (key == Qt::Key_Up)
     {
         value = 16384;
     }

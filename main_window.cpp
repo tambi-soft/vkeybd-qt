@@ -19,7 +19,7 @@ MainWindow::MainWindow(QWidget *parent)
     //resize(this->werk->size);
     setCentralWidget(this->tabs);
     
-    this->installEventFilter(this);
+    //this->installEventFilter(this);
 }
 
 MainWindow::~MainWindow()
@@ -27,6 +27,7 @@ MainWindow::~MainWindow()
     
 }
 
+/*
 bool MainWindow::eventFilter(QObject *obj, QEvent *ev)
 {
     if (ev->type() == QEvent::KeyPress)
@@ -35,7 +36,7 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *ev)
         return this->tabs->callEventFilter(obj, ev);
     }
 }
-
+*/
 /*
 bool MainWindow::eventFilter(QObject *obj, QEvent *ev)
 {
