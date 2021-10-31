@@ -80,6 +80,7 @@ bool MainTabs::eventFilter(QObject *obj, QEvent *ev)
             }
             // use the arrow-keys to operate the pitch-wheel
             else if (event->key() == Qt::Key_Left | event->key() == Qt::Key_Right | event->key() == Qt::Key_Up | event->key() == Qt::Key_Down)
+            //else if (event->key() == Qt::Key_Up | event->key() == Qt::Key_Down)
             {
                 o->movePitchWheel(event->key());
                 return true;

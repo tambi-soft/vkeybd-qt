@@ -6,12 +6,12 @@
 
 #include <interface_audio.h>
 
-class MIDIPitchWheelWorker : public QObject
+class MIDIPitchWheelResetWorker : public QObject
 {
     Q_OBJECT
     
 public:
-    explicit MIDIPitchWheelWorker(QObject *parent = 0);
+    explicit MIDIPitchWheelResetWorker(QObject *parent = 0);
     
     void setValues(int tether, int pitch);
     
@@ -45,24 +45,24 @@ class MIDIPitchWheel : public QWidget
 {
     Q_OBJECT
 public:
-    explicit MIDIPitchWheel(InterfaceAudio *interface_audio, QWidget *parent = nullptr);
+    explicit MIDIPitchWheel(QWidget *parent = nullptr);
     ~MIDIPitchWheel();
     
     void movePitchWheel(int key);
     
 private:
-    InterfaceAudio *interface_audio;
     QSlider *slider_tether;
     QSlider *slider_pitch;
     
     QThread *thread;
-    MIDIPitchWheelWorker *worker;
+    MIDIPitchWheelResetWorker *worker;
     
     void startPitchThread();
     void movePitchSlider(int position);
+    void sliderMoved(int position);
     
 signals:
-    
+    void pitchWheelMoved(int position);
 };
 
 #endif // MIDIPITCHWHEEL_H

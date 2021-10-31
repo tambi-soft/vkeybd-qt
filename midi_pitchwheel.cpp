@@ -1,9 +1,7 @@
 #include "midi_pitchwheel.h"
 
-MIDIPitchWheel::MIDIPitchWheel(InterfaceAudio *interface_audio, QWidget *parent) : QWidget(parent)
+MIDIPitchWheel::MIDIPitchWheel(QWidget *parent) : QWidget(parent)
 {
-    this->interface_audio = interface_audio;
-    
     QGridLayout *grid = new QGridLayout;
     setLayout(grid);
     grid->setContentsMargins(0, 0, 0, 0);
@@ -51,9 +49,10 @@ MIDIPitchWheel::MIDIPitchWheel(InterfaceAudio *interface_audio, QWidget *parent)
     connect(this->slider_tether, &QSlider::valueChanged, this, &MIDIPitchWheel::startPitchThread);
     this->slider_pitch->setTracking(false);
     connect(this->slider_pitch, &QSlider::valueChanged, this, &MIDIPitchWheel::startPitchThread);
+    connect(this->slider_pitch, &QSlider::sliderMoved, this, &MIDIPitchWheel::sliderMoved);
     
-    this->worker = new MIDIPitchWheelWorker();
-    connect(this->worker, &MIDIPitchWheelWorker::movePitchSlider, this, &MIDIPitchWheel::movePitchSlider);
+    this->worker = new MIDIPitchWheelResetWorker();
+    connect(this->worker, &MIDIPitchWheelResetWorker::movePitchSlider, this, &MIDIPitchWheel::movePitchSlider);
     
     this->thread = new QThread(this);
     this->worker->moveToThread(this->thread);
@@ -77,7 +76,12 @@ void MIDIPitchWheel::movePitchSlider(int position)
 {
     this->slider_pitch->setValue(position);
     
-    //this->interface_audio->keyPitchbendEvent(position);
+    emit pitchWheelMoved(position);
+}
+
+void MIDIPitchWheel::sliderMoved(int position)
+{
+    emit pitchWheelMoved(position);
 }
 
 void MIDIPitchWheel::movePitchWheel(int key)
@@ -107,17 +111,17 @@ void MIDIPitchWheel::movePitchWheel(int key)
 
 
 
-MIDIPitchWheelWorker::MIDIPitchWheelWorker(QObject *parent) : QObject(parent)
+MIDIPitchWheelResetWorker::MIDIPitchWheelResetWorker(QObject *parent) : QObject(parent)
 {
     this->timer = new QTimer(this);
     this->timer->setInterval(30);
     this->timer->setTimerType(Qt::PreciseTimer);
-    connect(this->timer, &QTimer::timeout, this, &MIDIPitchWheelWorker::tick, Qt::DirectConnection);
+    connect(this->timer, &QTimer::timeout, this, &MIDIPitchWheelResetWorker::tick, Qt::DirectConnection);
     
     this->timer->start();
 }
 
-void MIDIPitchWheelWorker::setValues(int tether, int pitch)
+void MIDIPitchWheelResetWorker::setValues(int tether, int pitch)
 {
     this->tether = tether;
     this->pitch = pitch;
@@ -132,7 +136,7 @@ void MIDIPitchWheelWorker::setValues(int tether, int pitch)
     }
 }
 
-void MIDIPitchWheelWorker::tick()
+void MIDIPitchWheelResetWorker::tick()
 {
     if (this->pitch != 8192)
     {
