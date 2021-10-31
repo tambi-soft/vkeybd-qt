@@ -82,8 +82,8 @@ bool MainTabs::eventFilter(QObject *obj, QEvent *ev)
             else if (event->key() == Qt::Key_Left | event->key() == Qt::Key_Right | event->key() == Qt::Key_Up | event->key() == Qt::Key_Down)
             //else if (event->key() == Qt::Key_Up | event->key() == Qt::Key_Down)
             {
-                o->movePitchWheel(event->key());
-                return true;
+                //o->movePitchWheel(event->key());
+                o->pitch->pitchKeyPressed(event->key());
             }
             // input for the virtual keyboard(s)
             else
@@ -101,7 +101,15 @@ bool MainTabs::eventFilter(QObject *obj, QEvent *ev)
         if (!event->isAutoRepeat())
         {
             Orgelwerk *o = static_cast<Orgelwerk*>(currentWidget());
-            o->keyUp(event->key());
+            
+            if (event->key() == Qt::Key_Left | event->key() == Qt::Key_Right | event->key() == Qt::Key_Up | event->key() == Qt::Key_Down)
+            {
+                o->pitch->pitchKeyReleased();
+            }
+            else
+            {
+                o->keyUp(event->key());
+            }
             
             return true;
         }

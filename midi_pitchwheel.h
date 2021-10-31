@@ -13,13 +13,17 @@ class MIDIPitchWheelResetWorker : public QObject
 public:
     explicit MIDIPitchWheelResetWorker(QObject *parent = 0);
     
-    void setValues(int tether, int pitch);
+    void setTether(int tether);
+    void setPitch(int pitch);
+    void keyDown(int direction); // direction is either -1, 0, 1
+    void keyUp();
     
 private:
     QTimer *timer;
     
     int tether;
     int pitch = 8192;
+    int direction = 0; // direction is either -1, 0, 1
     
     bool sign_positive; // false: -, true: +
     
@@ -49,6 +53,8 @@ public:
     ~MIDIPitchWheel();
     
     void movePitchWheel(int key);
+    void pitchKeyPressed(int key);
+    void pitchKeyReleased();
     
 private:
     QSlider *slider_tether;

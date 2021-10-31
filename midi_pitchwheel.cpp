@@ -69,7 +69,8 @@ void MIDIPitchWheel::startPitchThread()
     int tether = this->slider_tether->value();
     int pitch = this->slider_pitch->value();
     
-    this->worker->setValues(tether, pitch);
+    this->worker->setTether(tether);
+    this->worker->setPitch(pitch);
 }
 
 void MIDIPitchWheel::movePitchSlider(int position)
@@ -108,6 +109,31 @@ void MIDIPitchWheel::movePitchWheel(int key)
     this->slider_pitch->setValue(value);
     //startPitchThread();
 }
+void MIDIPitchWheel::pitchKeyPressed(int key)
+{
+    int tether = this->slider_tether->value();
+    int pitch = this->slider_pitch->value();
+    
+    this->worker->setTether(tether);
+    this->worker->setPitch(pitch);
+    
+    int direction = 0;
+    if (key == Qt::Key_Left)
+    {
+        direction = -1;
+    }
+    else if (key == Qt::Key_Right)
+    {
+        direction = 1;
+    }
+    this->slider_pitch->blockSignals(true);
+    this->worker->keyDown(direction);
+}
+void MIDIPitchWheel::pitchKeyReleased()
+{
+    this->slider_pitch->blockSignals(false);
+    this->worker->keyUp();
+}
 
 
 
@@ -121,9 +147,12 @@ MIDIPitchWheelResetWorker::MIDIPitchWheelResetWorker(QObject *parent) : QObject(
     this->timer->start();
 }
 
-void MIDIPitchWheelResetWorker::setValues(int tether, int pitch)
+void MIDIPitchWheelResetWorker::setTether(int tether)
 {
     this->tether = tether;
+}
+void MIDIPitchWheelResetWorker::setPitch(int pitch)
+{
     this->pitch = pitch;
     
     if (this->pitch < 8192)
@@ -136,24 +165,53 @@ void MIDIPitchWheelResetWorker::setValues(int tether, int pitch)
     }
 }
 
+void MIDIPitchWheelResetWorker::keyDown(int direction)
+{
+    this->direction = direction;
+    
+    if (this->direction < 0)
+    {
+        this->sign_positive = false;
+    }
+    else if (this->direction > 0)
+    {
+        this->sign_positive = true;
+    }
+}
+void MIDIPitchWheelResetWorker::keyUp()
+{
+    this->direction = 0;
+}
+
 void MIDIPitchWheelResetWorker::tick()
 {
-    if (this->pitch != 8192)
+    if (this->direction == 0)
     {
-        if (this->pitch < 8192)
+        // reset pitch wheel
+        if (this->pitch != 8192)
         {
-            this->pitch = this->pitch + this->tether*25;
+            if (this->pitch < 8192)
+            {
+                this->pitch = this->pitch + this->tether*25;
+            }
+            else if (this->pitch > 8192)
+            {
+                this->pitch = this->pitch - this->tether*25;
+            }
+            
+            // if we shoot over 8192 we set pitch to 8192 and quit
+            if ((this->sign_positive && this->pitch < 8192) || (!this->sign_positive && this->pitch > 8192))
+            {
+                this->pitch = 8192;
+            }
+            
+            emit movePitchSlider(this->pitch);
         }
-        else if (this->pitch > 8192)
-        {
-            this->pitch = this->pitch - this->tether*25;
-        }
-        
-        // if we shoot over 8192 we set pitch to 8192 and quit
-        if ((this->sign_positive && this->pitch < 8192) || (!this->sign_positive && this->pitch > 8192))
-        {
-            this->pitch = 8192;
-        }
+    }
+    else
+    {
+        // pitch wheel moved as long as key pressed
+        this->pitch = this->pitch + this->direction * this->tether*25;
         
         emit movePitchSlider(this->pitch);
     }

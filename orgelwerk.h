@@ -33,13 +33,13 @@ public:
     QPushButton *button_panic = new QPushButton;
     void movePitchWheel(int key);
     
-private:
     MIDIChannelSelector *channels;
     MIDIKeySelector *keys;
     MIDIPitchWheel *pitch;
     KeyboardPiano *piano;
     KeyboardPC *pc;
     
+private:
     void drawGUI();
     void initInputThread();
     
