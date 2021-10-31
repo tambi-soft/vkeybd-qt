@@ -112,13 +112,21 @@ void Orgelwerk::keyMIDIDown(int midicode)
 {
     this->piano->keyPressed(midicode);
     
-    this->interface_audio->keyPressEvent(midicode);
+    QList<int> list_of_keys = this->keys->getListOfSelectedKeys();
+    for (int i=0; i < list_of_keys.length(); i++)
+    {
+        this->interface_audio->keyPressEvent(midicode + list_of_keys.at(i) - 12);
+    }
 }
 void Orgelwerk::keyMIDIUp(int midicode)
 {
     this->piano->keyReleased(midicode);
     
-    this->interface_audio->keyReleaseEvent(midicode);
+    QList<int> list_of_keys = this->keys->getListOfSelectedKeys();
+    for (int i=0; i < list_of_keys.length(); i++)
+    {
+        this->interface_audio->keyReleaseEvent(midicode + list_of_keys.at(i) - 12);
+    }
 }
 
 void Orgelwerk::movePitchWheel(int key)

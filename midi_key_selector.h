@@ -13,8 +13,10 @@ class MIDIKeySelector : public QWidget
 public:
     explicit MIDIKeySelector(QWidget *parent = nullptr);
     
+    QList<int> getListOfSelectedKeys();
+    
 private:
-    QList<QString> labels;
+    QList<int> labels;
     QList<QCheckBox*> list_of_checkboxes;
     
 signals:

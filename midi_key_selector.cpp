@@ -7,11 +7,11 @@ MIDIKeySelector::MIDIKeySelector(QWidget *parent) : QWidget(parent)
     
     layout->setContentsMargins(0, 0, 0, 0);
     
-    this->labels << "0" << "12" << "24" << "36" << "48" << "60" << "72" << "84";
+    this->labels = {0, 12, 24, 36, 48, 60, 72, 84};
     
     for (int i=0; i<8; i++)
     {
-        QCheckBox *check = new QCheckBox(labels.at(i));
+        QCheckBox *check = new QCheckBox(QString::number(labels.at(i)));
         
         layout->addWidget(check);
         
@@ -26,5 +26,21 @@ MIDIKeySelector::MIDIKeySelector(QWidget *parent) : QWidget(parent)
                              "}";
         
         check->setStyleSheet(stylesheet);
+        
+        this->list_of_checkboxes.append(check);
     }
+}
+
+QList<int> MIDIKeySelector::getListOfSelectedKeys()
+{
+    QList<int> result;
+    for (int i=0; i < this->list_of_checkboxes.length(); i++)
+    {
+        QCheckBox *check = this->list_of_checkboxes.at(i);
+        if (check->isChecked())
+        {
+            result.append(this->labels.at(i));
+        }
+    }
+    return result;
 }
