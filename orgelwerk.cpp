@@ -1,8 +1,8 @@
 #include "orgelwerk.h"
 
-Orgelwerk::Orgelwerk(QWidget *parent) : QWidget(parent)
+Orgelwerk::Orgelwerk(QString label, QWidget *parent) : QWidget(parent)
 {
-    this->interface_audio = new InterfaceAlsa;
+    this->interface_audio = new InterfaceAlsa(label);
     //this->interface_audio = new InterfaceJack;
     
     drawGUI();
@@ -13,7 +13,7 @@ void Orgelwerk::drawGUI()
 {
     this->channels = new MIDIChannelSelector;
     this->keys = new MIDIKeySelector;
-    this->pitch = new MIDIPitchWheel;
+    this->pitch = new MIDIPitchWheel(this->interface_audio);
     this->piano = new KeyboardPiano;
     this->pc = new KeyboardPC;
     
@@ -98,10 +98,14 @@ void Orgelwerk::keyUp(int keycode)
 
 void Orgelwerk::panicKeyPressed()
 {
-    qDebug() << "PANIC!" << this->button_panic;
-    //this->button_panic->blockSignals(true);
-    //this->button_panic->animateClick();
-    //this->button_panic->blockSignals(false);
+    for (int i=0; i <= 127; i++)
+    {
+        this->piano->keyReleased(i);
+    }
+    
+    this->pc->allKeysUp();
+    
+    this->interface_audio->keyPanicEvent();
 }
 
 void Orgelwerk::keyMIDIDown(int midicode)

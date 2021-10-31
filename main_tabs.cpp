@@ -7,7 +7,9 @@ MainTabs::MainTabs(QTabWidget *parent) : QTabWidget(parent)
     this->list_function_keys = {Qt::Key_F1, Qt::Key_F2, Qt::Key_F3, Qt::Key_F4, -1, Qt::Key_F5, Qt::Key_F6, Qt::Key_F7, Qt::Key_F8, -1, Qt::Key_F9, Qt::Key_F10, Qt::Key_F11, Qt::Key_F12};
     this->list_labels = {"F1", "F2", "F3", "F4", "spacer", "F5", "F6", "F7", "F8", "spacer", "F9", "F10", "F11", "F12"};
     
-    for (int i=0; i < this->list_labels.length(); i++)
+    int number_of_tabs = this->list_labels.length();
+    //int number_of_tabs = 1;
+    for (int i=0; i < number_of_tabs; i++)
     {
         if (this->list_labels.at(i) == "spacer")
         {
@@ -40,7 +42,7 @@ MainTabs::MainTabs(QTabWidget *parent) : QTabWidget(parent)
 
 void MainTabs::addOrganTab(QString label)
 {
-    Orgelwerk *o = new Orgelwerk;
+    Orgelwerk *o = new Orgelwerk(label);
     addTab(o, label);
 }
 

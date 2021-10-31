@@ -14,6 +14,7 @@
 //#include </usr/include/alsa/control.h>
 #include <alsa/control.h>
 //#include </usr/include/alsa/seq.h>
+#include <alsa/seq.h>
 
 /*
 #include <iostream>
@@ -27,15 +28,19 @@ class InterfaceAlsa : public InterfaceAudio
 {
     Q_OBJECT
 public:
-    explicit InterfaceAlsa(InterfaceAudio *parent = nullptr);
+    explicit InterfaceAlsa(QString label, InterfaceAudio *parent = nullptr);
     
     void keyPressEvent(int midicode);
     void keyReleaseEvent(int midicode);
+    void keyPanicEvent();
+    void keyPitchbendEvent(int pitch);
     
     QString NAME = "vkeybd-qt";
     
 private:
+    QString label;
     snd_seq_t *seq;
+    snd_seq_event_t ev;
     
 signals:
     

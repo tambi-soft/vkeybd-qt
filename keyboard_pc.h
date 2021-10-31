@@ -17,6 +17,7 @@ public:
     
     void keyDown(int keycode);
     void keyUp(int keycode);
+    void allKeysUp();
     
 private:
     QList<QList<int>> getButtonSizes();

@@ -14,3 +14,13 @@ void InterfaceAudio::keyReleaseEvent(int midicode)
 {
     Q_UNUSED(midicode);
 }
+
+void InterfaceAudio::keyPanicEvent()
+{
+    
+}
+
+void InterfaceAudio::keyPitchbendEvent(int pitch)
+{
+    Q_UNUSED(pitch);
+}

@@ -4,6 +4,8 @@
 #include <QThread>
 #include <QTimer>
 
+#include <interface_audio.h>
+
 class MIDIPitchWheelWorker : public QObject
 {
     Q_OBJECT
@@ -43,12 +45,13 @@ class MIDIPitchWheel : public QWidget
 {
     Q_OBJECT
 public:
-    explicit MIDIPitchWheel(QWidget *parent = nullptr);
+    explicit MIDIPitchWheel(InterfaceAudio *interface_audio, QWidget *parent = nullptr);
     ~MIDIPitchWheel();
     
     void movePitchWheel(int key);
     
 private:
+    InterfaceAudio *interface_audio;
     QSlider *slider_tether;
     QSlider *slider_pitch;
     

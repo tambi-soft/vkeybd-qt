@@ -1,7 +1,9 @@
 #include "midi_pitchwheel.h"
 
-MIDIPitchWheel::MIDIPitchWheel(QWidget *parent) : QWidget(parent)
+MIDIPitchWheel::MIDIPitchWheel(InterfaceAudio *interface_audio, QWidget *parent) : QWidget(parent)
 {
+    this->interface_audio = interface_audio;
+    
     QGridLayout *grid = new QGridLayout;
     setLayout(grid);
     grid->setContentsMargins(0, 0, 0, 0);
@@ -74,6 +76,8 @@ void MIDIPitchWheel::startPitchThread()
 void MIDIPitchWheel::movePitchSlider(int position)
 {
     this->slider_pitch->setValue(position);
+    
+    this->interface_audio->keyPitchbendEvent(position);
 }
 
 void MIDIPitchWheel::movePitchWheel(int key)

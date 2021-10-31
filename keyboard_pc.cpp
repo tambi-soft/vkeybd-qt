@@ -185,3 +185,15 @@ void KeyboardPC::keyUp(int keycode)
         }
     }
 }
+
+void KeyboardPC::allKeysUp()
+{
+    QList<QList<int>> keycodes = getButtonKeycodes();
+    for (int row=0; row < keycodes.length(); row++)
+    {
+        for (int col=0; col < keycodes.at(row).length(); col++)
+        {
+            this->list_of_buttons.at(row).at(col)->setDown(false);
+        }
+    }
+}

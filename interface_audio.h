@@ -11,6 +11,8 @@ public:
     
     virtual void keyPressEvent(int midicode);
     virtual void keyReleaseEvent(int midicode);
+    virtual void keyPanicEvent();
+    virtual void keyPitchbendEvent(int pitch);
     
 signals:
     
