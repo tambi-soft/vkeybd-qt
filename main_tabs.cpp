@@ -53,10 +53,12 @@ bool MainTabs::eventFilter(QObject *obj, QEvent *ev)
         {
             Orgelwerk *o = static_cast<Orgelwerk*>(currentWidget());
             
+            // bind esc as the panic-key
             if (event->key() == Qt::Key_Escape)
             {
                 o->button_panic->animateClick();
             }
+            // activate desired tab by pressing an f-key
             if (this->list_function_keys.contains(event->key()))
             {
                 for (int i=0; i < this->list_function_keys.length(); i++)
@@ -67,6 +69,7 @@ bool MainTabs::eventFilter(QObject *obj, QEvent *ev)
                     }
                 }
             }
+            // input for the virtual keyboard(s)
             else
             {
                 o->keyDown(event->key());
