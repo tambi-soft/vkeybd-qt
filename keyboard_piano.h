@@ -10,9 +10,6 @@
 #include <QPushButton>
 
 #include "button_piano.h"
-#include "interface_audio.h"
-#include "interface_alsa.h"
-#include "interface_jack.h"
 
 class KeyboardPiano : public QWidget
 {
@@ -31,9 +28,6 @@ public:
     int button_width_half = 14;
     int button_height_half = 50;
     bool invert_colors = false;
-    
-    //JackAdapter *jack = new JackAdapter;
-    InterfaceAudio *interface_audio;
     
     void drawOneOctave(int octave);
     

@@ -5,9 +5,6 @@ KeyboardPiano::KeyboardPiano(QWidget *parent) : QWidget(parent)
 {
     this->setOctaves(3);
     
-    //this->interface_audio = new InterfaceAlsa;
-    this->interface_audio = new InterfaceJack;
-    
     for (int octave=0; octave < this->octaves; octave++)
     {
         this->drawOneOctave(octave);
@@ -34,7 +31,7 @@ void KeyboardPiano::drawOneOctave(int octave)
     
     for (int full_tone=0; full_tone < 7; full_tone++)
     {
-        ButtonPiano *button = new ButtonPiano(this->interface_audio, this);
+        ButtonPiano *button = new ButtonPiano(this);
         button->resize(this->button_width_full, this->button_height_full);
         button->move(
                         octave * 7*(this->button_width_full-1) + ((this->button_width_full-1) * full_tone),
@@ -64,7 +61,7 @@ void KeyboardPiano::drawOneOctave(int octave)
             step = 1;
         }
         
-        ButtonPiano *button = new ButtonPiano(this->interface_audio, this);
+        ButtonPiano *button = new ButtonPiano(this);
         button->resize(this->button_width_half, this->button_height_half);
         button->move(octave * 7*(this->button_width_full-1) + ((this->button_width_full-1) * half_tone + this->button_width_full/2 + this->button_width_full * step),
                      -1);

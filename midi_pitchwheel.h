@@ -46,7 +46,7 @@ public:
     explicit MIDIPitchWheel(QWidget *parent = nullptr);
     ~MIDIPitchWheel();
     
-    void movePitchSlider(int position);
+    void movePitchWheel(int key);
     
 private:
     QSlider *slider_tether;
@@ -56,6 +56,7 @@ private:
     MIDIPitchWheelWorker *worker;
     
     void startPitchThread();
+    void movePitchSlider(int position);
     
 signals:
     

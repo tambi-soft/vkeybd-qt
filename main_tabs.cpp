@@ -32,6 +32,9 @@ MainTabs::MainTabs(QTabWidget *parent) : QTabWidget(parent)
             "}";
     setStyleSheet(style);
     
+    // otherwise keys like tab and arrows are used for default behaviour
+    grabKeyboard();
+    
     installEventFilter(this);
 }
 
@@ -41,6 +44,10 @@ void MainTabs::addOrganTab(QString label)
     addTab(o, label);
 }
 
+bool MainTabs::callEventFilter(QObject *obj, QEvent *ev)
+{
+    return eventFilter(obj, ev);
+}
 bool MainTabs::eventFilter(QObject *obj, QEvent *ev)
 {
     Q_UNUSED(obj);
@@ -59,7 +66,7 @@ bool MainTabs::eventFilter(QObject *obj, QEvent *ev)
                 o->button_panic->animateClick();
             }
             // activate desired tab by pressing an f-key
-            if (this->list_function_keys.contains(event->key()))
+            else if (this->list_function_keys.contains(event->key()))
             {
                 for (int i=0; i < this->list_function_keys.length(); i++)
                 {
@@ -68,6 +75,12 @@ bool MainTabs::eventFilter(QObject *obj, QEvent *ev)
                         this->setCurrentIndex(i);
                     }
                 }
+            }
+            // use the arrow-keys to operate the pitch-wheel
+            else if (event->key() == Qt::Key_Left | event->key() == Qt::Key_Right | event->key() == Qt::Key_Up | event->key() == Qt::Key_Down)
+            {
+                o->movePitchWheel(event->key());
+                return true;
             }
             // input for the virtual keyboard(s)
             else

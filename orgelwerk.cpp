@@ -2,6 +2,9 @@
 
 Orgelwerk::Orgelwerk(QWidget *parent) : QWidget(parent)
 {
+    //this->interface_audio = new InterfaceAlsa;
+    this->interface_audio = new InterfaceJack;
+    
     drawGUI();
     initInputThread();
 }
@@ -108,4 +111,9 @@ void Orgelwerk::keyMIDIDown(int midicode)
 void Orgelwerk::keyMIDIUp(int midicode)
 {
     this->piano->keyReleased(midicode);
+}
+
+void Orgelwerk::movePitchWheel(int key)
+{
+    this->pitch->movePitchWheel(key);
 }

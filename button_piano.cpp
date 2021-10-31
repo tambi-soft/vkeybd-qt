@@ -1,9 +1,9 @@
 #include "button_piano.h"
 
-ButtonPiano::ButtonPiano(InterfaceAudio *interface_audio, QWidget *parent)
+ButtonPiano::ButtonPiano(QWidget *parent)
     :QPushButton(parent)
 {
-    this->interface_audio = interface_audio;
+    
 }
 
 void ButtonPiano::press()

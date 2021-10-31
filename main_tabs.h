@@ -14,6 +14,8 @@ class MainTabs : public QTabWidget
 public:
     explicit MainTabs(QTabWidget *parent = nullptr);
     
+    bool callEventFilter(QObject *obj, QEvent *ev);
+    
 private:
     QList<int> list_function_keys;
     QList<QString> list_labels;

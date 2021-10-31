@@ -9,16 +9,10 @@
 #include <QPair>
 #include <QKeyEvent>
 
-#include "interface_audio.h"
-#include "interface_alsa.h"
-#include "interface_jack.h"
-
 class ButtonPiano : public QPushButton
 {
 public:
-    ButtonPiano(InterfaceAudio *interface_audio, QWidget *parent);
-    
-    InterfaceAudio *interface_audio;
+    ButtonPiano(QWidget *parent);
     
     void press();
     void release();

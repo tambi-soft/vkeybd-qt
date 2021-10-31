@@ -27,6 +27,15 @@ MainWindow::~MainWindow()
     
 }
 
+bool MainWindow::eventFilter(QObject *obj, QEvent *ev)
+{
+    if (ev->type() == QEvent::KeyPress)
+    {
+        qDebug() << "TTTTTTTTTTTTTTTTTTTTTTTTTTTTT";
+        return this->tabs->callEventFilter(obj, ev);
+    }
+}
+
 /*
 bool MainWindow::eventFilter(QObject *obj, QEvent *ev)
 {

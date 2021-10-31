@@ -76,6 +76,31 @@ void MIDIPitchWheel::movePitchSlider(int position)
     this->slider_pitch->setValue(position);
 }
 
+void MIDIPitchWheel::movePitchWheel(int key)
+{
+    int value = 0;
+    
+    if (key == Qt::Key_Left)
+    {
+        value = 4096;
+    }
+    else if (key == Qt::Key_Right)
+    {
+        value = 12288;
+    }
+    else if (key == Qt::Key_Up)
+    {
+        value = 0;
+    }
+    else if (key == Qt::Key_Down)
+    {
+        value = 16384;
+    }
+    
+    this->slider_pitch->setValue(value);
+    //startPitchThread();
+}
+
 
 
 MIDIPitchWheelWorker::MIDIPitchWheelWorker(QObject *parent) : QObject(parent)

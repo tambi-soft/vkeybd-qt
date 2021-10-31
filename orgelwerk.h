@@ -16,6 +16,10 @@
 #include "keyboard_pc.h"
 #include "input_keyboard_raw_thread.h"
 
+#include "interface_audio.h"
+#include "interface_alsa.h"
+#include "interface_jack.h"
+
 class Orgelwerk : public QWidget
 {
     Q_OBJECT
@@ -27,6 +31,7 @@ public:
     void keyUp(int keycode);
     void panicKeyPressed();
     QPushButton *button_panic = new QPushButton;
+    void movePitchWheel(int key);
     
 private:
     MIDIChannelSelector *channels;
@@ -41,6 +46,8 @@ private:
     //InputKeyboardRaw *input_raw;
     QThread *thread_input;
     InputKeyboardRawThread *worker_input;
+    
+    InterfaceAudio *interface_audio;
     
 private slots:
     void keyMIDIDown(int midicode);
