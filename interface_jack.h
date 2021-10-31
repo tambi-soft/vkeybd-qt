@@ -14,8 +14,8 @@ class InterfaceJack : public InterfaceAudio
 public:
     explicit InterfaceJack(InterfaceAudio *parent = nullptr);
     
-    void keyPressEvent(QString keycode);
-    void keyReleaseEvent(QString keycode);
+    void keyPressEvent(int midicode);
+    void keyReleaseEvent(int midicode);
     
 signals:
     

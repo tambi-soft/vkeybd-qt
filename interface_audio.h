@@ -9,8 +9,8 @@ class InterfaceAudio : public QObject
 public:
     explicit InterfaceAudio(QObject *parent = nullptr);
     
-    virtual void keyPressEvent(QString keycode);
-    virtual void keyReleaseEvent(QString keycode);
+    virtual void keyPressEvent(int midicode);
+    virtual void keyReleaseEvent(int midicode);
     
 signals:
     

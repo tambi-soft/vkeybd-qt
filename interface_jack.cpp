@@ -5,12 +5,12 @@ InterfaceJack::InterfaceJack(InterfaceAudio *parent) : InterfaceAudio(parent)
     
 }
 
-void InterfaceJack::keyPressEvent(QString keycode)
+void InterfaceJack::keyPressEvent(int midicode)
 {
-    qDebug() << "jack pressed: "+keycode;
+    qDebug() << "jack pressed: "+QString::number(midicode);
 }
 
-void InterfaceJack::keyReleaseEvent(QString keycode)
+void InterfaceJack::keyReleaseEvent(int midicode)
 {
-    qDebug() << "jack released: "+keycode;
+    qDebug() << "jack released: "+QString::number(midicode);
 }

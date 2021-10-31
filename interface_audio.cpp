@@ -5,12 +5,12 @@ InterfaceAudio::InterfaceAudio(QObject *parent) : QObject(parent)
     
 }
 
-void InterfaceAudio::keyPressEvent(QString /*keycode*/)
+void InterfaceAudio::keyPressEvent(int midicode)
 {
-    
+    Q_UNUSED(midicode);
 }
 
-void InterfaceAudio::keyReleaseEvent(QString /*keycode*/)
+void InterfaceAudio::keyReleaseEvent(int midicode)
 {
-    
+    Q_UNUSED(midicode);
 }

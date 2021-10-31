@@ -20,9 +20,9 @@ InterfaceAlsa::InterfaceAlsa(InterfaceAudio *parent) : InterfaceAudio(parent)
         SND_SEQ_PORT_TYPE_APPLICATION);
 }
 
-void InterfaceAlsa::keyPressEvent(QString keycode)
+void InterfaceAlsa::keyPressEvent(int midicode)
 {
-    qDebug() << "alsa pressed: "+keycode;
+    qDebug() << "alsa pressed: "+QString::number(midicode);
     snd_seq_event_t ev;
         snd_seq_ev_clear(&ev);
         snd_seq_ev_set_direct(&ev);
@@ -41,8 +41,8 @@ void InterfaceAlsa::keyPressEvent(QString keycode)
         snd_seq_drain_output(seq);
 }
 
-void InterfaceAlsa::keyReleaseEvent(QString keycode)
+void InterfaceAlsa::keyReleaseEvent(int midicode)
 {
-    qDebug() << "alsa released: "+keycode;
+    qDebug() << "alsa released: "+QString::number(midicode);
 }
 
