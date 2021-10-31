@@ -26,7 +26,7 @@ InterfaceAlsa::InterfaceAlsa(QString label, InterfaceAudio *parent) : InterfaceA
     snd_seq_ev_set_direct(&ev);
 }
 
-void InterfaceAlsa::keyPressEvent(int midicode)
+void InterfaceAlsa::keyPressEvent(int channel, int midicode)
 {
     qDebug() << "alsa pressed: "+QString::number(midicode);
     
@@ -35,31 +35,31 @@ void InterfaceAlsa::keyPressEvent(int midicode)
     /* or */
     snd_seq_ev_set_subs(&ev);        /* send to subscribers of source port */
 
-    snd_seq_ev_set_noteon(&ev, 0, midicode, 127);
+    snd_seq_ev_set_noteon(&ev, channel, midicode, 127);
     snd_seq_event_output(seq, &ev);
     
     snd_seq_drain_output(seq);
 }
 
-void InterfaceAlsa::keyReleaseEvent(int midicode)
+void InterfaceAlsa::keyReleaseEvent(int channel, int midicode)
 {
-    snd_seq_ev_set_noteoff(&ev, 0, midicode, 127);
+    snd_seq_ev_set_noteoff(&ev, channel, midicode, 127);
     
     snd_seq_event_output(seq, &ev);
     snd_seq_drain_output(seq);
 }
 
-void InterfaceAlsa::keyPanicEvent()
+void InterfaceAlsa::keyPanicEvent(int channel)
 {
-    snd_seq_ev_set_controller(&ev, 0, MIDI_CTL_ALL_NOTES_OFF, 127);
+    snd_seq_ev_set_controller(&ev, channel, MIDI_CTL_ALL_NOTES_OFF, 127);
     
     snd_seq_event_output(seq, &ev);
     snd_seq_drain_output(seq);
 }
 
-void InterfaceAlsa::keyPitchbendEvent(int pitch)
+void InterfaceAlsa::keyPitchbendEvent(int channel, int pitch)
 {
-    snd_seq_ev_set_pitchbend(&ev, 0, pitch);
+    snd_seq_ev_set_pitchbend(&ev, channel, pitch);
     
     snd_seq_event_output(seq, &ev);
     snd_seq_drain_output(seq);

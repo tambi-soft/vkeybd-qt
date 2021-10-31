@@ -105,28 +105,63 @@ void Orgelwerk::panicKeyPressed()
     
     this->pc->allKeysUp();
     
-    this->interface_audio->keyPanicEvent();
+    QList<QMap<QString,int>> list_of_channels = this->channels->getListOfActivatedChannels();
+    for (int c=0; c < list_of_channels.length(); c++)
+    {
+        this->interface_audio->keyPanicEvent(list_of_channels.at(c)["cha333nnel"]);
+    }
 }
 
-void Orgelwerk::keyMIDIDown(int midicode)
+void Orgelwerk::keyMIDIHelper(int midicode, QString mode)
 {
-    this->piano->keyPressed(midicode);
+    if (mode == "down")
+    {
+        this->piano->keyPressed(midicode);
+    }
+    else
+    {
+        this->piano->keyReleased(midicode);
+    }
+    
+    // -12: The lower full octave on the keyboard is in the midi-range of 12 - 23 for beeing able to add some even deeper notes to the left. Therefore we get an offset of 12 we have to compensate here
+    midicode = midicode - 12;
+    
+    QList<QMap<QString,int>> list_of_channels = this->channels->getListOfActivatedChannels();
     
     QList<int> list_of_keys = this->keys->getListOfSelectedKeys();
-    for (int i=0; i < list_of_keys.length(); i++)
+    for (int k=0; k < list_of_keys.length(); k++)
     {
-        this->interface_audio->keyPressEvent(midicode + list_of_keys.at(i) - 12);
+        for (int c=0; c < list_of_channels.length(); c++)
+        {
+            int channel = list_of_channels.at(c)["channel"];
+            int key_shift = list_of_channels.at(c)["key_shift"];
+            int key_min = list_of_channels.at(c)["key_min"];
+            int key_max = list_of_channels.at(c)["key_max"]; 
+            
+            int m_code = midicode + list_of_keys.at(k);
+            int m_code_shifted = m_code + key_shift;
+            
+            if (key_min <= m_code && key_max >= m_code)
+            {
+                if (mode == "down")
+                {
+                    this->interface_audio->keyPressEvent(channel, m_code_shifted);
+                }
+                else
+                {
+                    this->interface_audio->keyReleaseEvent(channel, m_code_shifted);
+                }
+            }
+        }
     }
+}
+void Orgelwerk::keyMIDIDown(int midicode)
+{
+    keyMIDIHelper(midicode, "down");
 }
 void Orgelwerk::keyMIDIUp(int midicode)
 {
-    this->piano->keyReleased(midicode);
-    
-    QList<int> list_of_keys = this->keys->getListOfSelectedKeys();
-    for (int i=0; i < list_of_keys.length(); i++)
-    {
-        this->interface_audio->keyReleaseEvent(midicode + list_of_keys.at(i) - 12);
-    }
+    keyMIDIHelper(midicode, "up");
 }
 
 void Orgelwerk::movePitchWheel(int key)

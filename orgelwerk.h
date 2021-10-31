@@ -49,6 +49,8 @@ private:
     
     InterfaceAudio *interface_audio;
     
+    void keyMIDIHelper(int midicode, QString mode);
+    
 private slots:
     void keyMIDIDown(int midicode);
     void keyMIDIUp(int midicode);

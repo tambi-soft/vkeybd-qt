@@ -5,22 +5,25 @@ InterfaceAudio::InterfaceAudio(QObject *parent) : QObject(parent)
     
 }
 
-void InterfaceAudio::keyPressEvent(int midicode)
+void InterfaceAudio::keyPressEvent(int channel, int midicode)
 {
+    Q_UNUSED(channel);
     Q_UNUSED(midicode);
 }
 
-void InterfaceAudio::keyReleaseEvent(int midicode)
+void InterfaceAudio::keyReleaseEvent(int channel, int midicode)
 {
+    Q_UNUSED(channel);
     Q_UNUSED(midicode);
 }
 
-void InterfaceAudio::keyPanicEvent()
+void InterfaceAudio::keyPanicEvent(int channel)
 {
-    
+    Q_UNUSED(channel);
 }
 
-void InterfaceAudio::keyPitchbendEvent(int pitch)
+void InterfaceAudio::keyPitchbendEvent(int channel, int pitch)
 {
+    Q_UNUSED(channel);
     Q_UNUSED(pitch);
 }

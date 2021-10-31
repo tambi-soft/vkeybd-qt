@@ -30,10 +30,10 @@ class InterfaceAlsa : public InterfaceAudio
 public:
     explicit InterfaceAlsa(QString label, InterfaceAudio *parent = nullptr);
     
-    void keyPressEvent(int midicode);
-    void keyReleaseEvent(int midicode);
-    void keyPanicEvent();
-    void keyPitchbendEvent(int pitch);
+    void keyPressEvent(int channel, int midicode);
+    void keyReleaseEvent(int channel, int midicode);
+    void keyPanicEvent(int channel);
+    void keyPitchbendEvent(int channel, int pitch);
     
     QString NAME = "vkeybd-qt";
     

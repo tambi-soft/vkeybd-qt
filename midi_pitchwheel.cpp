@@ -77,7 +77,7 @@ void MIDIPitchWheel::movePitchSlider(int position)
 {
     this->slider_pitch->setValue(position);
     
-    this->interface_audio->keyPitchbendEvent(position);
+    //this->interface_audio->keyPitchbendEvent(position);
 }
 
 void MIDIPitchWheel::movePitchWheel(int key)

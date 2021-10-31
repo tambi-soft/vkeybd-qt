@@ -74,8 +74,43 @@ MIDIChannelSelector::MIDIChannelSelector(QWidget *parent) : QWidget(parent)
                              "}";
         
         check->setStyleSheet(stylesheet);
+        
+        this->list_of_checkboxes.append(check);
+        this->list_of_keyshifts.append(key_shift);
+        this->list_of_key_mins.append(key_min);
+        this->list_of_key_maxs.append(key_max);
     }
 }
+
+QList<QMap<QString,int>> MIDIChannelSelector::getListOfActivatedChannels()
+{
+    QList<QMap<QString,int>> result;
+    
+    for (int i=0; i < this->list_of_checkboxes.length(); i++)
+    {
+        QCheckBox *check = this->list_of_checkboxes.at(i);
+        if (check->isChecked())
+        {
+            QMap<QString,int> map;
+            
+            map["channel"] = i;
+            
+            int key_shift = this->list_of_keyshifts.at(i)->spin_key->value();
+            map["key_shift"] = key_shift;
+            
+            int key_min = this->list_of_key_mins.at(i)->value();
+            map["key_min"] = key_min;
+            
+            int key_max = this->list_of_key_maxs.at(i)->value();
+            map["key_max"] = key_max;
+            
+            result.append(map);
+        }
+    }
+    
+    return result;
+}
+
 
 
 
