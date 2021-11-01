@@ -140,7 +140,7 @@ void MIDIPitchWheel::pitchKeyReleased()
 MIDIPitchWheelResetWorker::MIDIPitchWheelResetWorker(QObject *parent) : QObject(parent)
 {
     this->timer = new QTimer(this);
-    this->timer->setInterval(30);
+    this->timer->setInterval(3);
     this->timer->setTimerType(Qt::PreciseTimer);
     connect(this->timer, &QTimer::timeout, this, &MIDIPitchWheelResetWorker::tick, Qt::DirectConnection);
     
@@ -192,11 +192,11 @@ void MIDIPitchWheelResetWorker::tick()
         {
             if (this->pitch < 8192)
             {
-                this->pitch = this->pitch + this->tether*25;
+                this->pitch = this->pitch + this->tether;
             }
             else if (this->pitch > 8192)
             {
-                this->pitch = this->pitch - this->tether*25;
+                this->pitch = this->pitch - this->tether;
             }
             
             // if we shoot over 8192 we set pitch to 8192 and quit
@@ -211,7 +211,7 @@ void MIDIPitchWheelResetWorker::tick()
     else
     {
         // pitch wheel moved as long as key pressed
-        this->pitch = this->pitch + this->direction * this->tether*25;
+        this->pitch = this->pitch + this->direction * this->tether;
         
         emit movePitchSlider(this->pitch);
     }
