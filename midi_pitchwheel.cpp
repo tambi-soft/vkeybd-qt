@@ -51,8 +51,8 @@ MIDIPitchWheel::MIDIPitchWheel(QWidget *parent) : QWidget(parent)
     connect(this->slider_pitch, &QSlider::valueChanged, this, &MIDIPitchWheel::startPitchThread);
     connect(this->slider_pitch, &QSlider::sliderMoved, this, &MIDIPitchWheel::sliderMoved);
     
-    this->worker = new MIDIPitchWheelResetWorker();
-    connect(this->worker, &MIDIPitchWheelResetWorker::movePitchSlider, this, &MIDIPitchWheel::movePitchSlider);
+    this->worker = new MIDIPitchWheelWorker();
+    connect(this->worker, &MIDIPitchWheelWorker::movePitchSlider, this, &MIDIPitchWheel::movePitchSlider);
     
     this->thread = new QThread(this);
     this->worker->moveToThread(this->thread);
@@ -137,21 +137,21 @@ void MIDIPitchWheel::pitchKeyReleased()
 
 
 
-MIDIPitchWheelResetWorker::MIDIPitchWheelResetWorker(QObject *parent) : QObject(parent)
+MIDIPitchWheelWorker::MIDIPitchWheelWorker(QObject *parent) : QObject(parent)
 {
     this->timer = new QTimer(this);
     this->timer->setInterval(3);
     this->timer->setTimerType(Qt::PreciseTimer);
-    connect(this->timer, &QTimer::timeout, this, &MIDIPitchWheelResetWorker::tick, Qt::DirectConnection);
+    connect(this->timer, &QTimer::timeout, this, &MIDIPitchWheelWorker::tick, Qt::DirectConnection);
     
     this->timer->start();
 }
 
-void MIDIPitchWheelResetWorker::setTether(int tether)
+void MIDIPitchWheelWorker::setTether(int tether)
 {
     this->tether = tether;
 }
-void MIDIPitchWheelResetWorker::setPitch(int pitch)
+void MIDIPitchWheelWorker::setPitch(int pitch)
 {
     this->pitch = pitch;
     
@@ -165,7 +165,7 @@ void MIDIPitchWheelResetWorker::setPitch(int pitch)
     }
 }
 
-void MIDIPitchWheelResetWorker::keyDown(int direction)
+void MIDIPitchWheelWorker::keyDown(int direction)
 {
     this->direction = direction;
     
@@ -178,12 +178,12 @@ void MIDIPitchWheelResetWorker::keyDown(int direction)
         this->sign_positive = true;
     }
 }
-void MIDIPitchWheelResetWorker::keyUp()
+void MIDIPitchWheelWorker::keyUp()
 {
     this->direction = 0;
 }
 
-void MIDIPitchWheelResetWorker::tick()
+void MIDIPitchWheelWorker::tick()
 {
     if (this->direction == 0)
     {
