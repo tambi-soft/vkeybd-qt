@@ -1,2 +1,2 @@
 # vkeybd-qt
-MIDI-Software controller with a lot of functions
+MIDI-Software controller for the PC-Keyboard with a lot of functions
