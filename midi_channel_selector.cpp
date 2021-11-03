@@ -10,7 +10,7 @@ MIDIChannelSelector::MIDIChannelSelector(QWidget *parent) : QWidget(parent)
     QLabel *label_key_shift = new QLabel("Key Shift");
     QLabel *key_min_label = new QLabel("Key Min");
     QLabel *key_max_label = new QLabel("Key Max");
-    QLabel *key_shift_label = new QLabel("Key Shift");
+    QLabel *label_instrument_bank = new QLabel("Instrument Bank");
     QLabel *portamento_time = new QLabel("Port. Time");
     portamento_time->setToolTip("Portamento Time");
     
@@ -20,7 +20,7 @@ MIDIChannelSelector::MIDIChannelSelector(QWidget *parent) : QWidget(parent)
     grid->addWidget(label_key_shift, 0, 2);
     grid->addWidget(key_min_label, 0, 3);
     grid->addWidget(key_max_label, 0, 4);
-    grid->addWidget(key_shift_label, 0, 5);
+    grid->addWidget(label_instrument_bank, 0, 5);
     grid->addWidget(portamento_time, 0, 6);
     
     for (int i=1; i<=16; i++)
