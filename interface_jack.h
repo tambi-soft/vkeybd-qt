@@ -13,9 +13,11 @@ class InterfaceJack : public InterfaceAudio
     Q_OBJECT
 public:
     explicit InterfaceJack(InterfaceAudio *parent = nullptr);
+    ~InterfaceJack();
     
     void keyPressEvent(int midicode);
     void keyReleaseEvent(int midicode);
+    void setProgramChangeEvent(int channel, int program);
     
 signals:
     

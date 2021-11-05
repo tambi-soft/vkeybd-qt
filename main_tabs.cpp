@@ -8,7 +8,7 @@ MainTabs::MainTabs(QTabWidget *parent) : QTabWidget(parent)
     this->list_labels = {"F1", "F2", "F3", "F4", "spacer", "F5", "F6", "F7", "F8", "spacer", "F9", "F10", "F11", "F12"};
     
     int number_of_tabs = this->list_labels.length();
-    //int number_of_tabs = 1;
+    //number_of_tabs = 4;
     for (int i=0; i < number_of_tabs; i++)
     {
         if (this->list_labels.at(i) == "spacer")

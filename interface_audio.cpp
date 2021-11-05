@@ -5,6 +5,11 @@ InterfaceAudio::InterfaceAudio(QObject *parent) : QObject(parent)
     
 }
 
+InterfaceAudio::~InterfaceAudio()
+{
+    
+}
+
 void InterfaceAudio::keyPressEvent(int channel, int midicode)
 {
     Q_UNUSED(channel);
@@ -26,4 +31,17 @@ void InterfaceAudio::keyPitchbendEvent(int channel, int pitch)
 {
     Q_UNUSED(channel);
     Q_UNUSED(pitch);
+}
+
+void InterfaceAudio::setProgramChangeEvent(int channel, int program, int bank)
+{
+    Q_UNUSED(channel);
+    Q_UNUSED(program);
+    Q_UNUSED(bank);
+}
+
+void InterfaceAudio::setVolumeChangeEvent(int channel, int volume)
+{
+    Q_UNUSED(channel);
+    Q_UNUSED(volume);
 }

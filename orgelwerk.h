@@ -55,6 +55,7 @@ private slots:
     void keyMIDIDown(int midicode);
     void keyMIDIUp(int midicode);
     void pitchWheelMoved(int pitch);
+    void volumeChanged(int channel, int volume);
     
 protected:
     

@@ -29,11 +29,14 @@ class InterfaceAlsa : public InterfaceAudio
     Q_OBJECT
 public:
     explicit InterfaceAlsa(QString label, InterfaceAudio *parent = nullptr);
+    ~InterfaceAlsa();
     
     void keyPressEvent(int channel, int midicode);
     void keyReleaseEvent(int channel, int midicode);
     void keyPanicEvent(int channel);
     void keyPitchbendEvent(int channel, int pitch);
+    void setProgramChangeEvent(int channel, int program, int bank);
+    void setVolumeChangeEvent(int channel, int volume);
     
     QString NAME = "vkeybd-qt";
     
@@ -41,6 +44,8 @@ private:
     QString label;
     snd_seq_t *seq;
     snd_seq_event_t ev;
+    
+    void sendEvent(bool drain);
     
 signals:
     

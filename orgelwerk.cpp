@@ -17,6 +17,8 @@ void Orgelwerk::drawGUI()
     this->piano = new KeyboardPiano;
     this->pc = new KeyboardPC;
     
+    connect(this->channels, &MIDIChannelSelector::volumeChanged, this, &Orgelwerk::volumeChanged);
+    
     connect(this->pitch, &MIDIPitchWheel::pitchWheelMoved, this, &Orgelwerk::pitchWheelMoved);
     
     connect(this->pc, &KeyboardPC::MIDIPress, this, &Orgelwerk::keyMIDIDown);
@@ -178,4 +180,9 @@ void Orgelwerk::movePitchWheel(int key)
 void Orgelwerk::pitchWheelMoved(int pitch)
 {
     keyMIDIHelper(pitch, "pitch");
+}
+
+void Orgelwerk::volumeChanged(int channel, int volume)
+{
+    this->interface_audio->setVolumeChangeEvent(channel, volume);
 }

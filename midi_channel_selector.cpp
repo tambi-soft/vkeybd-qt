@@ -10,7 +10,8 @@ MIDIChannelSelector::MIDIChannelSelector(QWidget *parent) : QWidget(parent)
     QLabel *label_key_shift = new QLabel("Key Shift");
     QLabel *key_min_label = new QLabel("Key Min");
     QLabel *key_max_label = new QLabel("Key Max");
-    QLabel *label_instrument_bank = new QLabel("Instrument Bank");
+    QLabel *label_instrument_group = new QLabel("Instrument Group");
+    QLabel *label_instrument = new QLabel("Instrument");
     QLabel *portamento_time = new QLabel("Port. Time");
     portamento_time->setToolTip("Portamento Time");
     
@@ -20,8 +21,9 @@ MIDIChannelSelector::MIDIChannelSelector(QWidget *parent) : QWidget(parent)
     grid->addWidget(label_key_shift, 0, 2);
     grid->addWidget(key_min_label, 0, 3);
     grid->addWidget(key_max_label, 0, 4);
-    grid->addWidget(label_instrument_bank, 0, 5);
-    grid->addWidget(portamento_time, 0, 6);
+    grid->addWidget(label_instrument_group, 0, 5);
+    grid->addWidget(label_instrument, 0, 6);
+    grid->addWidget(portamento_time, 0, 7);
     
     for (int i=1; i<=16; i++)
     {
@@ -32,6 +34,7 @@ MIDIChannelSelector::MIDIChannelSelector(QWidget *parent) : QWidget(parent)
         slider_volume->setMinimum(0);
         slider_volume->setMaximum(127);
         slider_volume->setValue(127);
+        connect(slider_volume, &QSlider::valueChanged, this, [this, i, slider_volume]{ MIDIChannelSelector::volumeSliderMoved(i, slider_volume->value()); });
         
         MIDIKeyShiftWidget *key_shift = new MIDIKeyShiftWidget;
         QSpinBox *key_min = new QSpinBox();
@@ -44,9 +47,11 @@ MIDIChannelSelector::MIDIChannelSelector(QWidget *parent) : QWidget(parent)
         key_min->setValue(0);
         key_max->setValue(127);
         
-        QComboBox *combo_categories = new QComboBox;
-        QStringList list_categories = MIDISoundsList::getCategories();
-        combo_categories->addItems(list_categories);
+        QComboBox *combo_instrument_group = new QComboBox;
+        QStringList list_instrument_group = MIDISoundsList::getCategories();
+        combo_instrument_group->addItems(list_instrument_group);
+        
+        QComboBox *combo_instrument = new QComboBox;
         
         //QDial *dial_portamento = new QDial();
         //dial_portamento->resize(20, 20);
@@ -60,8 +65,9 @@ MIDIChannelSelector::MIDIChannelSelector(QWidget *parent) : QWidget(parent)
         grid->addWidget(key_min, i, 3);
         
         grid->addWidget(key_max, i, 4);
-        grid->addWidget(combo_categories, i, 5);
-        grid->addWidget(dial_portamento, i, 6);
+        grid->addWidget(combo_instrument_group, i, 5);
+        grid->addWidget(combo_instrument, i, 6);
+        grid->addWidget(dial_portamento, i, 7);
         
         if (i==1)
         {
@@ -109,6 +115,11 @@ QList<QMap<QString,int>> MIDIChannelSelector::getListOfActivatedChannels()
     }
     
     return result;
+}
+
+void MIDIChannelSelector::volumeSliderMoved(int channel, int volume)
+{
+    emit volumeChanged(channel, volume);
 }
 
 

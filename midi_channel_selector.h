@@ -56,8 +56,10 @@ private:
     QList<QSpinBox*> list_of_key_mins;
     QList<QSpinBox*> list_of_key_maxs;
     
-signals:
+    void volumeSliderMoved(int channel, int volume);
     
+signals:
+    void volumeChanged(int channel, int volume);
 };
 
 #endif // MIDICHANNELSELECTOR_H
