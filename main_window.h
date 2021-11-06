@@ -23,10 +23,14 @@ private:
     //Orgelwerk *werk;
     MainTabs *tabs;
     
+    bool grabbing = false;
+    bool ctrl_down = false;
+    QPushButton *button_grab;
+    
     QMap<QString, QString> key_keycode_map = {};
     
 protected:
-    //bool eventFilter(QObject *obj, QEvent *ev);
+    bool eventFilter(QObject *obj, QEvent *ev);
     
 private slots:
     void grabButtonClicked();

@@ -13,7 +13,9 @@ MainWindow::MainWindow(QWidget *parent)
     //this->piano = new KeyboardPiano;
     //this->werk = new Orgelwerk;
     
-    QPushButton *button_grab = new QPushButton("Grab Keyboard");
+    this->button_grab = new QPushButton("Grab Keyboard");
+    connect(button_grab, &QPushButton::clicked, this, &MainWindow::grabButtonClicked);
+    
     this->tabs = new MainTabs;
     
     l->addWidget(button_grab);
@@ -29,7 +31,7 @@ MainWindow::MainWindow(QWidget *parent)
     //setCentralWidget(this->tabs);
     setCentralWidget(w);
     
-    //this->installEventFilter(this);
+    this->installEventFilter(this);
 }
 
 MainWindow::~MainWindow()
@@ -37,64 +39,79 @@ MainWindow::~MainWindow()
     
 }
 
-/*
 bool MainWindow::eventFilter(QObject *obj, QEvent *ev)
 {
     if (ev->type() == QEvent::KeyPress)
     {
-        qDebug() << "TTTTTTTTTTTTTTTTTTTTTTTTTTTTT";
-        return this->tabs->callEventFilter(obj, ev);
-    }
-}
-*/
-/*
-bool MainWindow::eventFilter(QObject *obj, QEvent *ev)
-{
-    if (ev->type() == QEvent::KeyPress)
-    {
-        QString keycode = "cis1";
+        QKeyEvent *event = static_cast<QKeyEvent*>(ev);
         
-        QKeyEvent *key = static_cast<QKeyEvent*>(ev);
-        if (!key->isAutoRepeat())
+        if (!event->isAutoRepeat())
         {
-            qDebug() << key;
-            
-            if (key->key() == Qt::Key_A)
+            if (event->key() == Qt::Key_Control)
             {
-                keycode = "a1";
+                this->ctrl_down = true;
             }
-            else if (key->key() == Qt::Key_B)
+            else if (event->key() == Qt::Key_Shift)
             {
-                keycode = "b1";
+                if (this->ctrl_down)
+                {
+                    grabButtonClicked();
+                }
             }
-            this->piano->keyPressed(keycode);
+            else
+            {
+                return this->tabs->callEventFilter(obj, ev);
+            }
         }
     }
     else if (ev->type() == QEvent::KeyRelease)
     {
-        QString keycode = "cis1";
+        QKeyEvent *event = static_cast<QKeyEvent*>(ev);
         
-        QKeyEvent *key = static_cast<QKeyEvent*>(ev);
-        if (!key->isAutoRepeat())
+        if (!event->isAutoRepeat())
         {
-            qDebug() << key;
-            if (key->key() == Qt::Key_A)
+            if (event->key() == Qt::Key_Control)
             {
-                keycode = "a1";
+                this->ctrl_down = false;
             }
-            else if (key->key() == Qt::Key_B)
+            else
             {
-                keycode = "b1";
+                return this->tabs->callEventFilter(obj, ev);
             }
-            
-            this->piano->keyReleased(keycode);
         }
     }
-    return QObject::eventFilter(obj, ev);
+    
+    return false;
 }
-*/
 
 void MainWindow::grabButtonClicked()
 {
+    //Orgelwerk *o = static_cast<Orgelwerk*>(currentWidget());
     
+    if (this->grabbing)
+    {
+        this->grabbing = false;
+        releaseKeyboard();
+        
+        //o->button_grab->setDown(false);
+        QString stylesheet = "QPushButton {"
+                             "  color: black;"
+                             "  background-color: white;"
+                             "}";
+        //o->button_grab->setStyleSheet(stylesheet);
+        this->button_grab->setStyleSheet(stylesheet);
+    }
+    else
+    {
+        this->grabbing = true;
+        grabKeyboard();
+        
+        //o->button_grab->setDown(true);
+        QString stylesheet = "QPushButton {"
+                             "  color: white;"
+                             "  background-color: black;"
+                             "}";
+        //o->button_grab->setStyleSheet(stylesheet);
+        this->button_grab->setStyleSheet(stylesheet);
+    }
 }

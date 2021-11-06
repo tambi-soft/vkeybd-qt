@@ -55,8 +55,8 @@ void Orgelwerk::drawGUI()
     layout_keyboards->addWidget(this->piano);
     layout_keyboards->addWidget(this->pc);
     
-    this->button_grab->setText("Grab Keyboard");
-    connect(this->button_grab, &QPushButton::clicked, this, &Orgelwerk::grabKeyboardPressed);
+    //this->button_grab->setText("Grab Keyboard");
+    //connect(this->button_grab, &QPushButton::clicked, this, &Orgelwerk::grabKeyboardPressed);
     
     this->button_panic->setText("Panic!");
     connect(this->button_panic, &QPushButton::clicked, this, &Orgelwerk::panicKeyPressed);
@@ -74,7 +74,7 @@ void Orgelwerk::drawGUI()
     layout->addWidget(group_keys);
     layout->addWidget(group_pitch);
     layout->addWidget(group_keyboards);
-    layout->addWidget(this->button_grab);
+    //layout->addWidget(this->button_grab);
     layout->addWidget(this->button_panic);
 }
 
@@ -197,7 +197,9 @@ void Orgelwerk::instrumentChanged(int channel, int program, int bank)
     this->interface_audio->setProgramChangeEvent(channel, program, bank);
 }
 
+/*
 void Orgelwerk::grabKeyboardPressed()
 {
     emit grabKeyboardPressedSignal();
 }
+*/

@@ -22,9 +22,6 @@ private:
     QList<Orgelwerk*> list_of_tabs;
     
     void addOrganTab(QString label);
-    
-    bool grabbing = false;
-    void toggleKeyboardGrab();
 
 protected:
     bool eventFilter(QObject *obj, QEvent *ev);

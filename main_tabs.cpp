@@ -43,7 +43,7 @@ MainTabs::MainTabs(QTabWidget *parent) : QTabWidget(parent)
 void MainTabs::addOrganTab(QString label)
 {
     Orgelwerk *o = new Orgelwerk(label);
-    connect(o, &Orgelwerk::grabKeyboardPressedSignal, this, &MainTabs::toggleKeyboardGrab);
+    //connect(o, &Orgelwerk::grabKeyboardPressedSignal, this, &MainTabs::toggleKeyboardGrab);
     addTab(o, label);
 }
 
@@ -119,34 +119,4 @@ bool MainTabs::eventFilter(QObject *obj, QEvent *ev)
     }
     
     return false;
-}
-
-void MainTabs::toggleKeyboardGrab()
-{
-    Orgelwerk *o = static_cast<Orgelwerk*>(currentWidget());
-    
-    if (this->grabbing)
-    {
-        this->grabbing = false;
-        releaseKeyboard();
-        
-        //o->button_grab->setDown(false);
-        QString stylesheet = "QPushButton {"
-                             "  color: black;"
-                             "  background-color: white;"
-                             "}";
-        o->button_grab->setStyleSheet(stylesheet);
-    }
-    else
-    {
-        this->grabbing = true;
-        grabKeyboard();
-        
-        //o->button_grab->setDown(true);
-        QString stylesheet = "QPushButton {"
-                             "  color: white;"
-                             "  background-color: black;"
-                             "}";
-        o->button_grab->setStyleSheet(stylesheet);
-    }
 }
