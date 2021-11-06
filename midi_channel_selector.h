@@ -51,15 +51,22 @@ public:
     QList<QMap<QString, int> > getListOfActivatedChannels();
     
 private:
+    MIDISoundsList *midi_sounds_list = new MIDISoundsList;
+    
     QList<QCheckBox*> list_of_checkboxes;
     QList<MIDIKeyShiftWidget*> list_of_keyshifts;
     QList<QSpinBox*> list_of_key_mins;
     QList<QSpinBox*> list_of_key_maxs;
     
+    
+private slots:
     void volumeSliderMoved(int channel, int volume);
+    void instrumentGroupChanged(int channel, QComboBox *combo_group, QComboBox *combo_instrument);
+    void instrumentChanged(int channel, QComboBox *combo_instrument);
     
 signals:
-    void volumeChanged(int channel, int volume);
+    void volumeChangedSignal(int channel, int volume);
+    void instrumentChangedSignal(int channel, int program, int bank);
 };
 
 #endif // MIDICHANNELSELECTOR_H

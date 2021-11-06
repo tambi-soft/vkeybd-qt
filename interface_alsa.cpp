@@ -85,6 +85,7 @@ void InterfaceAlsa::keyPitchbendEvent(int channel, int pitch)
 
 void InterfaceAlsa::setProgramChangeEvent(int channel, int program, int bank)
 {
+    qDebug() << "alsa program change event: "+QString::number(channel);
     snd_seq_ev_set_controller(&this->ev, channel, MIDI_CTL_MSB_BANK, 121);
     sendEvent(false);
     snd_seq_ev_set_controller(&this->ev, channel, MIDI_CTL_LSB_BANK, bank);

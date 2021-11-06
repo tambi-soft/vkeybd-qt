@@ -66,7 +66,7 @@ Patch   Bank    MSB     Program     Name
 15      1       8       14          Church Bell
 15      2                           Carillon
 
-16      0       0       15          Duclimer/Santur
+16      0       0       15          Dulcimer/Santur
 
 Organ:
 
@@ -186,7 +186,7 @@ Patch   Bank    MSB     Program     Name
 49      1                           Orchestra Strings
 49      2                           60's Strings
 
-50      0                           Slow String Ensembple
+50      0                           Slow String Ensemble
 
 51      0                           Synth Strings 1
 51      1                           Synth Strings 3
@@ -440,3 +440,108 @@ Patch   Bank    MSB     Program     Name
 128     1                           Machine Gun
 128     2                           Lasergun
 128     3                           Explosion
+
+
+QList<QString> list;
+    list = {
+        "Acoustic Grand Piano",
+        "Bright Acoustic Piano",
+        "Electric Grand Piano",
+        "Honky-tonk Piano",
+        "Rhodes Piano",
+        "Chorused Electric Piano",
+        "Harpsichord",
+        "Clavinet",
+        "Celesta",
+        "Glockenspiel",
+        "Music Box",
+        "Vibraphone",
+        "Marimba",
+        "Xylophone",
+        "Tubular Bell",
+        "Dulcimer/Santur",
+        "Drawbar Organ",
+        "Percussive B3 Organ",
+        "Rock Organ",
+        "Church Organ 1",
+        "Reed Organ",
+        "French Accordion",
+        "Harmonica",
+        "Bandoneon",
+        "Nylon-String Guitar",
+        "Steel-String Guitar",
+        "Jazz Guitar",
+        "Clean Electric Guitar",
+        "Muted Electric Guitar",
+        "Overdriven Guitar",
+        "Distortion Guitar",
+        "Guitar Harmonics",
+        "Acoustic Bass",
+        "Fingered Bass",
+        "Picked Bass",
+        "Fretless Bass",
+        "Slap Bass 1",
+        "Slap Bass 2",
+        "Synth Bass 1",
+        "Synth Bass 2",
+        "Violin",
+        "Viola",
+        "Cello",
+        "Contrabass",
+        "Tremolo Strings",
+        "Pizzicato Strings",
+        "Harp",
+        "Timpani",
+        "String Ensemble",
+        "Slow String Ensemble",
+        "Synth Strings 1",
+        "Synth Strings 2",
+        "Choir Aahs",
+        "Voice Oohs",
+        "Synth Voice",
+        "Orchestra Hit",
+        "Trumpet",
+        "Trombone",
+        "Tuba",
+        "Muted Trumpet",
+        "French Horns",
+        "Brass Section 1",
+        "Synth Brass 1",
+        "Synth Brass 2",
+        "Soprano Sax",
+        "Alto Sax",
+        "Tenor Sax",
+        "Baritone Sax",
+        "Oboe",
+        "English Horn",
+        "Bassoon",
+        "Clarinet",
+        "Piccolo",
+        "Flute",
+        "Recorder",
+        "Pan Flute",
+        "Bottle Blow",
+        "Shakuhachi",
+        "Whistle",
+        "Ocarina",
+        "Square Lead",
+        "Saw Lead",
+        "Synth Calliope",
+        "Chiffer Lead",
+        "Charang",
+        "Solo Synth vox",
+        "5th Saw Wave",
+        "Bass & Lead",
+        "Fantasia Pad",
+        "Warm Pad",
+        "Polysynth Pad",
+        "Space Voice Pad",
+        "Bowed Glass Pad",
+        "Metal Pad",
+        "Halo Pad",
+        "Sweep Pad",
+        "Ice Rain",
+        "Soundtrack",
+        "Crystal",
+        
+    };

@@ -48,10 +48,16 @@ MIDIChannelSelector::MIDIChannelSelector(QWidget *parent) : QWidget(parent)
         key_max->setValue(127);
         
         QComboBox *combo_instrument_group = new QComboBox;
-        QStringList list_instrument_group = MIDISoundsList::getCategories();
+        //QStringList list_instrument_group = MIDISoundsList::getCategories();
+        QList<QString> list_instrument_group = this->midi_sounds_list->getInstrumentGroups();
         combo_instrument_group->addItems(list_instrument_group);
         
         QComboBox *combo_instrument = new QComboBox;
+        QList<QString> list_instrument = this->midi_sounds_list->getInstrumentsForGroupMIDIv1(list_instrument_group.at(0));
+        combo_instrument->addItems(list_instrument);
+        
+        connect(combo_instrument_group, &QComboBox::currentTextChanged, this, [this, i, combo_instrument_group, combo_instrument]{ MIDIChannelSelector::instrumentGroupChanged(i-1, combo_instrument_group, combo_instrument); });
+        connect(combo_instrument, &QComboBox::currentTextChanged, this, [this, i, combo_instrument]{ MIDIChannelSelector::instrumentChanged(i-1, combo_instrument); });
         
         //QDial *dial_portamento = new QDial();
         //dial_portamento->resize(20, 20);
@@ -119,7 +125,34 @@ QList<QMap<QString,int>> MIDIChannelSelector::getListOfActivatedChannels()
 
 void MIDIChannelSelector::volumeSliderMoved(int channel, int volume)
 {
-    emit volumeChanged(channel, volume);
+    emit volumeChangedSignal(channel, volume);
+}
+
+void MIDIChannelSelector::instrumentGroupChanged(int channel, QComboBox *combo_group, QComboBox *combo_instrument)
+{
+    combo_instrument->blockSignals(true);
+    combo_instrument->clear();
+    
+    QString group = combo_group->currentText();
+    QList<QString> instruments = this->midi_sounds_list->getInstrumentsForGroupMIDIv1(group);
+    //QList<QString> instruments = this->midi_sounds_list->getInstrumentsForGroupMIDIv2(group);
+    
+    combo_instrument->addItems(instruments);
+    combo_instrument->blockSignals(false);
+    
+    instrumentChanged(channel, combo_instrument);
+}
+
+void MIDIChannelSelector::instrumentChanged(int channel, QComboBox *combo_instrument)
+{
+    QString name = combo_instrument->currentText();
+    qDebug() << "changed: "+name;
+    
+    QList<int> codes = this->midi_sounds_list->getMIDICodesForInstrument(name);
+    int program = codes.at(0) - 1;
+    int bank = codes.at(1);
+    
+    emit instrumentChangedSignal(channel, program, bank);
 }
 
 
