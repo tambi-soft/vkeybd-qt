@@ -196,10 +196,3 @@ void Orgelwerk::instrumentChanged(int channel, int program, int bank)
 {
     this->interface_audio->setProgramChangeEvent(channel, program, bank);
 }
-
-/*
-void Orgelwerk::grabKeyboardPressed()
-{
-    emit grabKeyboardPressedSignal();
-}
-*/

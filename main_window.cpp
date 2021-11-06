@@ -10,9 +10,6 @@ MainWindow::MainWindow(QWidget *parent)
     QVBoxLayout *l = new QVBoxLayout;
     w->setLayout(l);
     
-    //this->piano = new KeyboardPiano;
-    //this->werk = new Orgelwerk;
-    
     this->button_grab = new QPushButton("Grab Keyboard");
     connect(button_grab, &QPushButton::clicked, this, &MainWindow::grabButtonClicked);
     
@@ -21,14 +18,6 @@ MainWindow::MainWindow(QWidget *parent)
     l->addWidget(button_grab);
     l->addWidget(this->tabs);
     
-    /*
-    setCentralWidget(this->piano);
-    resize(this->piano->size);
-    */
-    
-    //setCentralWidget(this->werk);
-    //resize(this->werk->size);
-    //setCentralWidget(this->tabs);
     setCentralWidget(w);
     
     this->installEventFilter(this);
@@ -86,19 +75,15 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *ev)
 
 void MainWindow::grabButtonClicked()
 {
-    //Orgelwerk *o = static_cast<Orgelwerk*>(currentWidget());
-    
     if (this->grabbing)
     {
         this->grabbing = false;
         releaseKeyboard();
         
-        //o->button_grab->setDown(false);
         QString stylesheet = "QPushButton {"
                              "  color: black;"
                              "  background-color: white;"
                              "}";
-        //o->button_grab->setStyleSheet(stylesheet);
         this->button_grab->setStyleSheet(stylesheet);
     }
     else
@@ -106,12 +91,10 @@ void MainWindow::grabButtonClicked()
         this->grabbing = true;
         grabKeyboard();
         
-        //o->button_grab->setDown(true);
         QString stylesheet = "QPushButton {"
                              "  color: white;"
                              "  background-color: black;"
                              "}";
-        //o->button_grab->setStyleSheet(stylesheet);
         this->button_grab->setStyleSheet(stylesheet);
     }
 }

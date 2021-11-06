@@ -58,13 +58,12 @@ private slots:
     void pitchWheelMoved(int pitch);
     void volumeChanged(int channel, int volume);
     void instrumentChanged(int channel, int program, int bank);
-    //void grabKeyboardPressed();
     
 protected:
     
     
 signals:
-    void grabKeyboardPressedSignal();
+    
 };
 
 #endif // ORGELWERK_H

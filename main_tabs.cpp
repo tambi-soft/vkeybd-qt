@@ -34,16 +34,12 @@ MainTabs::MainTabs(QTabWidget *parent) : QTabWidget(parent)
             "}";
     setStyleSheet(style);
     
-    // otherwise keys like tab and arrows are used for default behaviour
-    //grabKeyboard();
-    
     installEventFilter(this);
 }
 
 void MainTabs::addOrganTab(QString label)
 {
     Orgelwerk *o = new Orgelwerk(label);
-    //connect(o, &Orgelwerk::grabKeyboardPressedSignal, this, &MainTabs::toggleKeyboardGrab);
     addTab(o, label);
 }
 
