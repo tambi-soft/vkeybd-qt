@@ -21,6 +21,9 @@ MainWindow::MainWindow(QWidget *parent)
     setCentralWidget(w);
     
     this->installEventFilter(this);
+    
+    int width = this->width();
+    resize(width, 900);
 }
 
 MainWindow::~MainWindow()
@@ -45,6 +48,8 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *ev)
                 if (this->ctrl_down)
                 {
                     grabButtonClicked();
+                    
+                    return true;
                 }
             }
             else
@@ -79,6 +84,7 @@ void MainWindow::grabButtonClicked()
     {
         this->grabbing = false;
         releaseKeyboard();
+        releaseMouse();
         
         QString stylesheet = "QPushButton {"
                              "  color: black;"
@@ -90,6 +96,7 @@ void MainWindow::grabButtonClicked()
     {
         this->grabbing = true;
         grabKeyboard();
+        grabMouse();
         
         QString stylesheet = "QPushButton {"
                              "  color: white;"
