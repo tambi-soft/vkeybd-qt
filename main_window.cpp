@@ -6,9 +6,18 @@ MainWindow::MainWindow(QWidget *parent)
     MenuBar *menu = new MenuBar;
     setMenuBar(menu);
     
+    QWidget *w = new QWidget;
+    QVBoxLayout *l = new QVBoxLayout;
+    w->setLayout(l);
+    
     //this->piano = new KeyboardPiano;
     //this->werk = new Orgelwerk;
+    
+    QPushButton *button_grab = new QPushButton("Grab Keyboard");
     this->tabs = new MainTabs;
+    
+    l->addWidget(button_grab);
+    l->addWidget(this->tabs);
     
     /*
     setCentralWidget(this->piano);
@@ -17,7 +26,8 @@ MainWindow::MainWindow(QWidget *parent)
     
     //setCentralWidget(this->werk);
     //resize(this->werk->size);
-    setCentralWidget(this->tabs);
+    //setCentralWidget(this->tabs);
+    setCentralWidget(w);
     
     //this->installEventFilter(this);
 }
@@ -83,3 +93,8 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *ev)
     return QObject::eventFilter(obj, ev);
 }
 */
+
+void MainWindow::grabButtonClicked()
+{
+    
+}

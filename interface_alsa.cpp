@@ -97,7 +97,7 @@ void InterfaceAlsa::setProgramChangeEvent(int channel, int program, int bank)
 void InterfaceAlsa::setVolumeChangeEvent(int channel, int volume)
 {
     qDebug() << "channel: "+QString::number(channel)+" volume: "+QString::number(volume);
-    snd_seq_ev_set_controller(&ev, channel, MIDI_CTL_MSB_MAIN_VOLUME, volume);
+    snd_seq_ev_set_controller(&ev, channel, MIDI_CTL_LSB_MAIN_VOLUME, volume);
     
     snd_seq_event_output(seq, &ev);
     snd_seq_drain_output(seq);

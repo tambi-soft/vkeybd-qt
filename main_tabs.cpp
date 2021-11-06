@@ -35,7 +35,7 @@ MainTabs::MainTabs(QTabWidget *parent) : QTabWidget(parent)
     setStyleSheet(style);
     
     // otherwise keys like tab and arrows are used for default behaviour
-    grabKeyboard();
+    //grabKeyboard();
     
     installEventFilter(this);
 }
@@ -43,6 +43,7 @@ MainTabs::MainTabs(QTabWidget *parent) : QTabWidget(parent)
 void MainTabs::addOrganTab(QString label)
 {
     Orgelwerk *o = new Orgelwerk(label);
+    connect(o, &Orgelwerk::grabKeyboardPressedSignal, this, &MainTabs::toggleKeyboardGrab);
     addTab(o, label);
 }
 
@@ -66,6 +67,7 @@ bool MainTabs::eventFilter(QObject *obj, QEvent *ev)
             if (event->key() == Qt::Key_Escape)
             {
                 o->button_panic->animateClick();
+                return true;
             }
             // activate desired tab by pressing an f-key
             else if (this->list_function_keys.contains(event->key()))
@@ -75,6 +77,7 @@ bool MainTabs::eventFilter(QObject *obj, QEvent *ev)
                     if (this->list_function_keys.at(i) == event->key())
                     {
                         this->setCurrentIndex(i);
+                        return true;
                     }
                 }
             }
@@ -84,14 +87,14 @@ bool MainTabs::eventFilter(QObject *obj, QEvent *ev)
             {
                 //o->movePitchWheel(event->key());
                 o->pitch->pitchKeyPressed(event->key());
+                return true;
             }
             // input for the virtual keyboard(s)
             else
             {
                 o->keyDown(event->key());
+                return true;
             }
-            
-            return true;
         }
     }
     else if (ev->type() == QEvent::KeyRelease)
@@ -105,15 +108,45 @@ bool MainTabs::eventFilter(QObject *obj, QEvent *ev)
             if (event->key() == Qt::Key_Left | event->key() == Qt::Key_Right | event->key() == Qt::Key_Up | event->key() == Qt::Key_Down)
             {
                 o->pitch->pitchKeyReleased();
+                return true;
             }
             else
             {
                 o->keyUp(event->key());
+                return true;
             }
-            
-            return true;
         }
     }
     
     return false;
+}
+
+void MainTabs::toggleKeyboardGrab()
+{
+    Orgelwerk *o = static_cast<Orgelwerk*>(currentWidget());
+    
+    if (this->grabbing)
+    {
+        this->grabbing = false;
+        releaseKeyboard();
+        
+        //o->button_grab->setDown(false);
+        QString stylesheet = "QPushButton {"
+                             "  color: black;"
+                             "  background-color: white;"
+                             "}";
+        o->button_grab->setStyleSheet(stylesheet);
+    }
+    else
+    {
+        this->grabbing = true;
+        grabKeyboard();
+        
+        //o->button_grab->setDown(true);
+        QString stylesheet = "QPushButton {"
+                             "  color: white;"
+                             "  background-color: black;"
+                             "}";
+        o->button_grab->setStyleSheet(stylesheet);
+    }
 }

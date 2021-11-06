@@ -28,5 +28,8 @@ private:
 protected:
     //bool eventFilter(QObject *obj, QEvent *ev);
     
+private slots:
+    void grabButtonClicked();
+    
 };
 #endif // MAINWINDOW_H

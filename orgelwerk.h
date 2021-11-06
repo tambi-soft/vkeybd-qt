@@ -30,6 +30,7 @@ public:
     void keyDown(int keycode);
     void keyUp(int keycode);
     void panicKeyPressed();
+    QPushButton *button_grab = new QPushButton;
     QPushButton *button_panic = new QPushButton;
     void movePitchWheel(int key);
     
@@ -57,12 +58,13 @@ private slots:
     void pitchWheelMoved(int pitch);
     void volumeChanged(int channel, int volume);
     void instrumentChanged(int channel, int program, int bank);
+    void grabKeyboardPressed();
     
 protected:
     
     
 signals:
-    
+    void grabKeyboardPressedSignal();
 };
 
 #endif // ORGELWERK_H
