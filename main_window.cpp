@@ -74,6 +74,13 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *ev)
             }
         }
     }
+    else if (ev->type() == QEvent::MouseButtonPress)
+    {
+        if (this->grabbing)
+        {
+            grabButtonClicked();
+        }
+    }
     
     return false;
 }
@@ -84,6 +91,7 @@ void MainWindow::grabButtonClicked()
     {
         this->grabbing = false;
         releaseKeyboard();
+        // to avoid to mess around with the os like blocking taskbar-items, we need to grab the mouse aswell
         releaseMouse();
         
         QString stylesheet = "QPushButton {"
@@ -91,6 +99,7 @@ void MainWindow::grabButtonClicked()
                              "  background-color: white;"
                              "}";
         this->button_grab->setStyleSheet(stylesheet);
+        this->button_grab->setText("Grab Keyboard");
     }
     else
     {
@@ -103,5 +112,6 @@ void MainWindow::grabButtonClicked()
                              "  background-color: black;"
                              "}";
         this->button_grab->setStyleSheet(stylesheet);
+        this->button_grab->setText("Grabing Keyboard. Hit Ctrl+Shift or Click Mouse to stop.");
     }
 }
