@@ -45,3 +45,15 @@ void InterfaceAudio::setVolumeChangeEvent(int channel, int volume)
     Q_UNUSED(channel);
     Q_UNUSED(volume);
 }
+
+void InterfaceAudio::setAttackChanged(int channel, int value)
+{
+    Q_UNUSED(channel);
+    Q_UNUSED(value);
+}
+
+void InterfaceAudio::setReleaseChanged(int channel, int value)
+{
+    Q_UNUSED(channel);
+    Q_UNUSED(value);
+}

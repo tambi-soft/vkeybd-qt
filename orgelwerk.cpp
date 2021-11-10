@@ -11,7 +11,7 @@ Orgelwerk::Orgelwerk(QString label, QWidget *parent) : QWidget(parent)
 
 void Orgelwerk::drawGUI()
 {
-    this->channels = new MIDIChannelSelector;
+    this->channels = new MIDIChannelSelector(this->interface_audio);
     this->keys = new MIDIKeySelector;
     this->pitch = new MIDIPitchWheel();
     this->piano = new KeyboardPiano;

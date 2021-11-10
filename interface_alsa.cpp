@@ -99,8 +99,23 @@ void InterfaceAlsa::setVolumeChangeEvent(int channel, int volume)
     qDebug() << "channel: "+QString::number(channel)+" volume: "+QString::number(volume);
     snd_seq_ev_set_controller(&ev, channel, MIDI_CTL_LSB_MAIN_VOLUME, volume);
     
-    snd_seq_event_output(seq, &ev);
-    snd_seq_drain_output(seq);
+    sendEvent(true);
+}
+
+void InterfaceAlsa::setAttackChanged(int channel, int value)
+{
+    qDebug() << "attack"+QString::number(value);
+    snd_seq_ev_set_controller(&this->ev, channel, MIDI_CTL_SC4_ATTACK_TIME, value);
+    
+    sendEvent(true);
+}
+
+void InterfaceAlsa::setReleaseChanged(int channel, int value)
+{
+    qDebug() << "release"+QString::number(value);
+    snd_seq_ev_set_controller(&this->ev, channel, MIDI_CTL_SC3_RELEASE_TIME, value);
+    
+    sendEvent(true);
 }
 
 void InterfaceAlsa::sendEvent(bool drain)

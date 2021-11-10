@@ -8,6 +8,7 @@
 //#include "keyboard_piano.h"
 #include "main_tabs.h"
 #include "menubar.h"
+#include "db_adapter.h"
 
 class MainWindow : public QMainWindow
 {

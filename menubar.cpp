@@ -7,16 +7,32 @@ MenuBar::MenuBar(QMenuBar *parent) : QMenuBar(parent)
 
 void MenuBar::addFileMenu()
 {
+    QMenu *menuFile = addMenu("&File");
+    
     QAction *exitAction = new QAction(QIcon::fromTheme("application-exit"), "&Exit");
     exitAction->setShortcut(QKeySequence::fromString("Ctrl+Q"));
     exitAction->setStatusTip("Exit Application");
     connect(exitAction, &QAction::triggered, this, &MenuBar::quitApplication);
         
-    QAction *save = new QAction();
+    QAction *saveAction = new QAction(QIcon::fromTheme("application-save"), "&Save");
+    saveAction->setShortcut(QKeySequence::fromString("Ctrl+S"));
+    
+    menuFile->addAction(saveAction);
+    menuFile->addAction(exitAction);
     
     
-    QMenu *menu = addMenu("&File");
-    menu->addAction(exitAction);
+    
+    QMenu *menuTools = addMenu("&Tools");
+    
+    QAction *actionResetAll = new QAction();
+    
+    QAction *actionResetTab = new QAction();
+    
+    QAction *actionCopyTab = new QAction();
+    
+    QAction *actionPasteTab = new QAction();
+    
+    
 }
 
 void MenuBar::quitApplication()

@@ -37,6 +37,8 @@ public:
     void keyPitchbendEvent(int channel, int pitch);
     void setProgramChangeEvent(int channel, int program, int bank);
     void setVolumeChangeEvent(int channel, int volume);
+    void setAttackChanged(int channel, int value);
+    void setReleaseChanged(int channel, int value);
     
     QString NAME = "vkeybd-qt";
     

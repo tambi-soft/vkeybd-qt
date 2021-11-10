@@ -41,17 +41,19 @@ private slots:
 #include <QLabel>
 
 #include "midi_sounds_list.h"
+#include "interface_audio.h"
 
 class MIDIChannelSelector : public QWidget
 {
     Q_OBJECT
 public:
-    explicit MIDIChannelSelector(QWidget *parent = nullptr);
+    explicit MIDIChannelSelector(InterfaceAudio *audio, QWidget *parent = nullptr);
     
     QList<QMap<QString, int> > getListOfActivatedChannels();
     
 private:
     MIDISoundsList *midi_sounds_list = new MIDISoundsList;
+    InterfaceAudio *audio;
     
     QList<QCheckBox*> list_of_checkboxes;
     QList<MIDIKeyShiftWidget*> list_of_keyshifts;
@@ -63,6 +65,8 @@ private slots:
     void volumeSliderMoved(int channel, int volume);
     void instrumentGroupChanged(int channel, QComboBox *combo_group, QComboBox *combo_instrument);
     void instrumentChanged(int channel, QComboBox *combo_instrument);
+    void attackChanged(int channel, QSlider *slider);
+    void releaseChanged(int channel, QSlider *slider);
     
 signals:
     void volumeChangedSignal(int channel, int volume);

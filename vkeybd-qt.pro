@@ -1,4 +1,5 @@
-QT       += core gui
+QT  += core gui\
+    sql
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -22,6 +23,7 @@ CONFIG += \
 
 SOURCES += \
     button_piano.cpp \
+    db_adapter.cpp \
     input_keyboard_raw_thread.cpp \
     interface_alsa.cpp \
     interface_audio.cpp \
@@ -40,6 +42,7 @@ SOURCES += \
 
 HEADERS += \
     button_piano.h \
+    db_adapter.h \
     input_keyboard_raw_thread.h \
     interface_alsa.h \
     interface_audio.h \
