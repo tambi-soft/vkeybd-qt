@@ -63,6 +63,7 @@ private:
     
 private slots:
     void volumeSliderMoved(int channel, int volume);
+    void panSliderMoved(int channel, int value);
     void instrumentGroupChanged(int channel, QComboBox *combo_group, QComboBox *combo_instrument);
     void instrumentChanged(int channel, QComboBox *combo_instrument);
     void portamentoChanged(int channel, QSlider *slider);

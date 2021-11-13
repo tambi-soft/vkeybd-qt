@@ -9,6 +9,7 @@ MIDIChannelSelector::MIDIChannelSelector(InterfaceAudio *audio, QWidget *parent)
     
     QLabel *channel_label = new QLabel("Channel");
     QLabel *label_volume = new QLabel("Volume");
+    QLabel *label_pan = new QLabel("Pan");
     QLabel *label_key_shift = new QLabel("Key Shift");
     QLabel *key_min_label = new QLabel("Key Min");
     QLabel *key_max_label = new QLabel("Key Max");
@@ -22,14 +23,15 @@ MIDIChannelSelector::MIDIChannelSelector(InterfaceAudio *audio, QWidget *parent)
     
     grid->addWidget(channel_label, 0, 0);
     grid->addWidget(label_volume, 0, 1);
-    grid->addWidget(label_key_shift, 0, 2);
-    grid->addWidget(key_min_label, 0, 3);
-    grid->addWidget(key_max_label, 0, 4);
-    grid->addWidget(label_instrument_group, 0, 5);
-    grid->addWidget(label_instrument, 0, 6);
-    grid->addWidget(portamento_time, 0, 7);
-    grid->addWidget(label_attack, 0, 8);
-    grid->addWidget(label_release, 0, 9);
+    grid->addWidget(label_pan, 0, 2);
+    grid->addWidget(label_key_shift, 0, 3);
+    grid->addWidget(key_min_label, 0, 4);
+    grid->addWidget(key_max_label, 0, 5);
+    grid->addWidget(label_instrument_group, 0, 6);
+    grid->addWidget(label_instrument, 0, 7);
+    grid->addWidget(portamento_time, 0, 8);
+    grid->addWidget(label_attack, 0, 9);
+    grid->addWidget(label_release, 0, 10);
     
     for (int i=1; i<=16; i++)
     {
@@ -41,6 +43,27 @@ MIDIChannelSelector::MIDIChannelSelector(InterfaceAudio *audio, QWidget *parent)
         slider_volume->setMaximum(127);
         slider_volume->setValue(127);
         connect(slider_volume, &QSlider::valueChanged, this, [this, i, slider_volume]{ MIDIChannelSelector::volumeSliderMoved(i-1, slider_volume->value()); });
+        
+        QSlider *slider_pan = new QSlider;
+        slider_pan->setOrientation(Qt::Horizontal);
+        slider_pan->setRange(0, 127);
+        slider_pan->setValue(65);
+        connect(slider_pan, &QSlider::valueChanged, this, [this, i, slider_pan]{ MIDIChannelSelector::panSliderMoved(i-1, slider_pan->value()); });
+        //slider_pan->setStyleSheet("QSlider::groove:horizontal {background-color:red;}");
+        QString style_pan = "QSlider::groove:horizontal {"
+                "border: 1px solid #999999;"
+                "height: 20px;"
+                "background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #B1B1B1, stop:1 #c4c4c4);"
+                "margin: 2px 0;"
+                "}"
+                "QSlider::handle:horizontal {"
+                "background: qlineargradient(x1:0, y1:0, x2:1, y2:1, stop:0 #b4b4b4, stop:1 #8f8f8f);"
+                "border: 1px solid #5c5c5c;"
+                "width: 15px;"
+                "margin: -2px 0px;"
+                "}";
+        slider_pan->setStyleSheet(style_pan);
+        connect(slider_pan, &QSlider::sliderPressed, this, [slider_pan]{ slider_pan->setValue(65); });
         
         MIDIKeyShiftWidget *key_shift = new MIDIKeyShiftWidget;
         QSpinBox *key_min = new QSpinBox();
@@ -84,17 +107,18 @@ MIDIChannelSelector::MIDIChannelSelector(InterfaceAudio *audio, QWidget *parent)
         
         grid->addWidget(check, i, 0);
         grid->addWidget(slider_volume, i, 1);
-        grid->addWidget(key_shift, i, 2);
+        grid->addWidget(slider_pan, i, 2);
+        grid->addWidget(key_shift, i, 3);
         
-        grid->addWidget(key_min, i, 3);
+        grid->addWidget(key_min, i, 4);
+        grid->addWidget(key_max, i, 5);
         
-        grid->addWidget(key_max, i, 4);
-        grid->addWidget(combo_instrument_group, i, 5);
-        grid->addWidget(combo_instrument, i, 6);
-        grid->addWidget(slider_portamento, i, 7);
+        grid->addWidget(combo_instrument_group, i, 6);
+        grid->addWidget(combo_instrument, i, 7);
+        grid->addWidget(slider_portamento, i, 8);
         
-        grid->addWidget(slider_attack, i, 8);
-        grid->addWidget(slider_release, i, 9);
+        grid->addWidget(slider_attack, i, 9);
+        grid->addWidget(slider_release, i, 10);
         
         if (i==1)
         {
@@ -147,6 +171,11 @@ QList<QMap<QString,int>> MIDIChannelSelector::getListOfActivatedChannels()
 void MIDIChannelSelector::volumeSliderMoved(int channel, int volume)
 {
     emit volumeChangedSignal(channel, volume);
+}
+
+void MIDIChannelSelector::panSliderMoved(int channel, int value)
+{
+    this->audio->setPanChangeEvent(channel, value);
 }
 
 void MIDIChannelSelector::instrumentGroupChanged(int channel, QComboBox *combo_group, QComboBox *combo_instrument)

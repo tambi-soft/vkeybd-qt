@@ -86,7 +86,6 @@ void InterfaceAlsa::keyPitchbendEvent(int channel, int pitch)
 
 void InterfaceAlsa::setProgramChangeEvent(int channel, int program, int bank)
 {
-    qDebug() << "alsa program change event: "+QString::number(channel);
     snd_seq_ev_set_controller(&this->ev, channel, MIDI_CTL_MSB_BANK, 121);
     sendEvent(false);
     snd_seq_ev_set_controller(&this->ev, channel, MIDI_CTL_LSB_BANK, bank);
@@ -97,10 +96,17 @@ void InterfaceAlsa::setProgramChangeEvent(int channel, int program, int bank)
 
 void InterfaceAlsa::setVolumeChangeEvent(int channel, int volume)
 {
-    qDebug() << "channel: "+QString::number(channel)+" volume: "+QString::number(volume);
     snd_seq_ev_set_controller(&ev, channel, MIDI_CTL_MSB_MAIN_VOLUME, volume); // CC 7
-    
     sendEvent(true);
+}
+
+void InterfaceAlsa::setPanChangeEvent(int channel, int value)
+{
+    snd_seq_ev_set_controller(&ev, channel, MIDI_CTL_MSB_PAN, value);
+    sendEvent(true);
+    
+    qDebug() << MIDI_CTL_LSB_PAN;
+    qDebug() << MIDI_CTL_MSB_PAN;
 }
 
 void InterfaceAlsa::setPortamentoChanged(int channel, int value)
