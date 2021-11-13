@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QObject>
 #include <QKeyEvent>
 
 //#include "orgelwerk.h"
@@ -32,6 +33,7 @@ private:
     
 protected:
     bool eventFilter(QObject *obj, QEvent *ev);
+    bool nativeEventFilter(const QByteArray &eventType, void *message, long *);
     
 private slots:
     void grabButtonClicked();

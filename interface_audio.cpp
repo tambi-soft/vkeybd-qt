@@ -46,6 +46,12 @@ void InterfaceAudio::setVolumeChangeEvent(int channel, int volume)
     Q_UNUSED(volume);
 }
 
+void InterfaceAudio::setPortamentoChanged(int channel, int value)
+{
+    Q_UNUSED(channel);
+    Q_UNUSED(value);
+}
+
 void InterfaceAudio::setAttackChanged(int channel, int value)
 {
     Q_UNUSED(channel);

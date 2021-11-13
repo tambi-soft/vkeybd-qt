@@ -40,7 +40,7 @@ MIDIChannelSelector::MIDIChannelSelector(InterfaceAudio *audio, QWidget *parent)
         slider_volume->setMinimum(0);
         slider_volume->setMaximum(127);
         slider_volume->setValue(127);
-        connect(slider_volume, &QSlider::valueChanged, this, [this, i, slider_volume]{ MIDIChannelSelector::volumeSliderMoved(i, slider_volume->value()); });
+        connect(slider_volume, &QSlider::valueChanged, this, [this, i, slider_volume]{ MIDIChannelSelector::volumeSliderMoved(i-1, slider_volume->value()); });
         
         MIDIKeyShiftWidget *key_shift = new MIDIKeyShiftWidget;
         QSpinBox *key_min = new QSpinBox();
@@ -67,18 +67,20 @@ MIDIChannelSelector::MIDIChannelSelector(InterfaceAudio *audio, QWidget *parent)
         
         //QDial *dial_portamento = new QDial();
         //dial_portamento->resize(20, 20);
-        QSlider *dial_portamento = new QSlider;
-        dial_portamento->setOrientation(Qt::Horizontal);
+        QSlider *slider_portamento = new QSlider;
+        slider_portamento->setOrientation(Qt::Horizontal);
+        slider_portamento->setRange(0, 127);
+        connect(slider_portamento, &QSlider::valueChanged, this, [this, i, slider_portamento]{ MIDIChannelSelector::portamentoChanged(i-1, slider_portamento); });
         
         QSlider *slider_attack = new QSlider;
         slider_attack->setOrientation(Qt::Horizontal);
         slider_attack->setRange(0, 127);
-        connect(slider_attack, &QSlider::valueChanged, this, [this, i, slider_attack]{ MIDIChannelSelector::attackChanged(i, slider_attack); });
+        connect(slider_attack, &QSlider::valueChanged, this, [this, i, slider_attack]{ MIDIChannelSelector::attackChanged(i-1, slider_attack); });
         
         QSlider *slider_release = new QSlider;
         slider_release->setOrientation(Qt::Horizontal);
         slider_release->setRange(0, 127);
-        connect(slider_release, &QSlider::valueChanged, this, [this, i, slider_release]{ MIDIChannelSelector::releaseChanged(i, slider_release); });
+        connect(slider_release, &QSlider::valueChanged, this, [this, i, slider_release]{ MIDIChannelSelector::releaseChanged(i-1, slider_release); });
         
         grid->addWidget(check, i, 0);
         grid->addWidget(slider_volume, i, 1);
@@ -89,7 +91,7 @@ MIDIChannelSelector::MIDIChannelSelector(InterfaceAudio *audio, QWidget *parent)
         grid->addWidget(key_max, i, 4);
         grid->addWidget(combo_instrument_group, i, 5);
         grid->addWidget(combo_instrument, i, 6);
-        grid->addWidget(dial_portamento, i, 7);
+        grid->addWidget(slider_portamento, i, 7);
         
         grid->addWidget(slider_attack, i, 8);
         grid->addWidget(slider_release, i, 9);
@@ -153,8 +155,8 @@ void MIDIChannelSelector::instrumentGroupChanged(int channel, QComboBox *combo_g
     combo_instrument->clear();
     
     QString group = combo_group->currentText();
-    QList<QString> instruments = this->midi_sounds_list->getInstrumentsForGroupMIDIv1(group);
-    //QList<QString> instruments = this->midi_sounds_list->getInstrumentsForGroupMIDIv2(group);
+    //QList<QString> instruments = this->midi_sounds_list->getInstrumentsForGroupMIDIv1(group);
+    QList<QString> instruments = this->midi_sounds_list->getInstrumentsForGroupMIDIv2(group);
     
     combo_instrument->addItems(instruments);
     combo_instrument->blockSignals(false);
@@ -172,6 +174,11 @@ void MIDIChannelSelector::instrumentChanged(int channel, QComboBox *combo_instru
     int bank = codes.at(1);
     
     emit instrumentChangedSignal(channel, program, bank);
+}
+
+void MIDIChannelSelector::portamentoChanged(int channel, QSlider *slider)
+{
+    this->audio->setPortamentoChanged(channel, slider->value());
 }
 
 void MIDIChannelSelector::attackChanged(int channel, QSlider *slider)

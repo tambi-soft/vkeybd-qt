@@ -20,7 +20,8 @@ MainWindow::MainWindow(QWidget *parent)
     
     setCentralWidget(w);
     
-    this->installEventFilter(this);
+    //this->installEventFilter(this);
+    //installNativeEventFilter(this);
     
     int width = this->width();
     resize(width, 900);
@@ -82,6 +83,11 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *ev)
         }
     }
     
+    return false;
+}
+
+bool MainWindow::nativeEventFilter(const QByteArray &eventType, void *message, long *)
+{
     return false;
 }
 

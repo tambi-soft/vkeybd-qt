@@ -16,6 +16,7 @@ public:
     virtual void keyPitchbendEvent(int channel, int pitch);
     virtual void setProgramChangeEvent(int channel, int program, int bank);
     virtual void setVolumeChangeEvent(int channel, int volume);
+    virtual void setPortamentoChanged(int channel, int value);
     virtual void setAttackChanged(int channel, int value);
     virtual void setReleaseChanged(int channel, int value);
     

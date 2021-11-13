@@ -72,6 +72,7 @@ void InterfaceAlsa::keyReleaseEvent(int channel, int midicode)
 void InterfaceAlsa::keyPanicEvent(int channel)
 {
     snd_seq_ev_set_controller(&ev, channel, MIDI_CTL_ALL_NOTES_OFF, 127);
+    snd_seq_ev_set_controller(&ev, channel, MIDI_CTL_ALL_SOUNDS_OFF, 127);
     
     sendEvent(true);
 }
@@ -97,9 +98,32 @@ void InterfaceAlsa::setProgramChangeEvent(int channel, int program, int bank)
 void InterfaceAlsa::setVolumeChangeEvent(int channel, int volume)
 {
     qDebug() << "channel: "+QString::number(channel)+" volume: "+QString::number(volume);
-    snd_seq_ev_set_controller(&ev, channel, MIDI_CTL_LSB_MAIN_VOLUME, volume);
+    snd_seq_ev_set_controller(&ev, channel, MIDI_CTL_MSB_MAIN_VOLUME, volume); // CC 7
     
     sendEvent(true);
+}
+
+void InterfaceAlsa::setPortamentoChanged(int channel, int value)
+{
+    if (value > 0)
+    {
+        snd_seq_ev_set_controller(&this->ev, channel, MIDI_CTL_PORTAMENTO, 127); // CC 5
+        sendEvent(true);
+    }
+    else
+    {
+        snd_seq_ev_set_controller(&this->ev, channel, MIDI_CTL_PORTAMENTO, 0); // CC 5
+        sendEvent(true);
+    }
+    
+    snd_seq_ev_set_controller(&this->ev, channel, MIDI_CTL_MSB_PORTAMENTO_TIME, value); // CC 65
+    sendEvent(true);
+    
+    qDebug() << "";
+    qDebug() << MIDI_CTL_PORTAMENTO;
+    qDebug() << MIDI_CTL_PORTAMENTO_CONTROL;
+    qDebug() << MIDI_CTL_LSB_PORTAMENTO_TIME;
+    qDebug() << MIDI_CTL_MSB_PORTAMENTO_TIME;
 }
 
 void InterfaceAlsa::setAttackChanged(int channel, int value)

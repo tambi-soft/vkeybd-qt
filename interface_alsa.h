@@ -37,6 +37,7 @@ public:
     void keyPitchbendEvent(int channel, int pitch);
     void setProgramChangeEvent(int channel, int program, int bank);
     void setVolumeChangeEvent(int channel, int volume);
+    void setPortamentoChanged(int channel, int value);
     void setAttackChanged(int channel, int value);
     void setReleaseChanged(int channel, int value);
     
