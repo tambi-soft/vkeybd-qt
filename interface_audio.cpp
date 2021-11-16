@@ -27,6 +27,11 @@ void InterfaceAudio::keyPanicEvent(int channel)
     Q_UNUSED(channel);
 }
 
+void InterfaceAudio::keyStopAllEvent(int channel)
+{
+    Q_UNUSED(channel);
+}
+
 void InterfaceAudio::keyPitchbendEvent(int channel, int pitch)
 {
     Q_UNUSED(channel);

@@ -31,6 +31,7 @@ public:
     void keyPressEvent(int channel, int midicode);
     void keyReleaseEvent(int channel, int midicode);
     void keyPanicEvent(int channel);
+    void keyStopAllEvent(int channel);
     void keyPitchbendEvent(int channel, int pitch);
     void keySustainEvent(int channel, bool pressed);
     void setProgramChangeEvent(int channel, int program, int bank);

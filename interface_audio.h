@@ -13,6 +13,7 @@ public:
     virtual void keyPressEvent(int channel, int midicode);
     virtual void keyReleaseEvent(int channel, int midicode);
     virtual void keyPanicEvent(int channel);
+    virtual void keyStopAllEvent(int channel);
     virtual void keyPitchbendEvent(int channel, int pitch);
     virtual void keySustainEvent(int channel, bool pressed);
     virtual void setProgramChangeEvent(int channel, int program, int bank);

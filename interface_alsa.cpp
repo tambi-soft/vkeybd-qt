@@ -70,8 +70,12 @@ void InterfaceAlsa::keyReleaseEvent(int channel, int midicode)
 void InterfaceAlsa::keyPanicEvent(int channel)
 {
     snd_seq_ev_set_controller(&ev, channel, MIDI_CTL_ALL_NOTES_OFF, 127);
+    sendEvent(true);
+}
+
+void InterfaceAlsa::keyStopAllEvent(int channel)
+{
     snd_seq_ev_set_controller(&ev, channel, MIDI_CTL_ALL_SOUNDS_OFF, 127);
-    
     sendEvent(true);
 }
 

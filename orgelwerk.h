@@ -30,7 +30,7 @@ public:
     void keyDown(int keycode);
     void keyUp(int keycode);
     void panicKeyPressed();
-    //QPushButton *button_grab = new QPushButton;
+    void stopAllPressed();
     QPushButton *button_panic = new QPushButton;
     void movePitchWheel(int key);
     void keySustain(bool pressed);

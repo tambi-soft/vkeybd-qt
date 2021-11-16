@@ -120,6 +120,14 @@ void Orgelwerk::panicKeyPressed()
         this->interface_audio->keyPanicEvent(list_of_channels.at(c)["channel"]);
     }
 }
+void Orgelwerk::stopAllPressed()
+{
+    QList<QMap<QString,int>> list_of_channels = this->channels->getListOfActivatedChannels();
+    for (int c=0; c < list_of_channels.length(); c++)
+    {
+        this->interface_audio->keyStopAllEvent(list_of_channels.at(c)["channel"]);
+    }
+}
 
 void Orgelwerk::keyMIDIHelper(int midicode, QString mode)
 {

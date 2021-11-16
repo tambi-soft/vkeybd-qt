@@ -65,6 +65,10 @@ bool MainTabs::eventFilter(QObject *obj, QEvent *ev)
                 o->button_panic->animateClick();
                 return true;
             }
+            else if (event->key() == Qt::Key_Delete)
+            {
+                o->stopAllPressed();
+            }
             else if (event->key() == Qt::Key_Space)
             {
                 o->keySustain(true);
