@@ -54,6 +54,11 @@ void KeyboardPC::drawButtons()
                 color = "black";
                 background_color = "grey";
             }
+            else if (colors.at(row).at(col) == "gold")
+            {
+                color = "#000000";
+                background_color = "#ffd700";
+            }
             QString stylesheet = "QPushButton {"
                                  "  color: "+ color +";"
                                  "  background-color: "+ background_color + ";"
@@ -114,7 +119,7 @@ QList<QList<QString>> KeyboardPC::getButtonColors()
             {"g", "w", "b", "b", "w", "w", "b", "b", "w", "w", "b", "b", "w", "w"},
             {"g", "b", "w", "w", "b", "b", "w", "w", "b", "b", "w", "w", "b"},
             {"g", "w", "w", "w", "b", "w", "w", "w", "b", "w", "w", "w", "b"},
-            {"g", "g", "g", "g", "g", "g", "g", "g", "g", "g", "g"}};
+            {"g", "gold", "gold", "gold", "gold", "g", "g", "g", "g", "g", "g"}};
     return list;
 }
 
@@ -125,7 +130,7 @@ QList<QList<QString>> KeyboardPC::getButtonLabels()
             {"A", "C", "Eb|D#", "Gb|F#", "A", "C", "Eb|D#", "Gb|F#", "A", "C", "Eb|D#", "Gb|F#", "A", "C"},
             {"Bb|A#", "Db|C#", "E", "G", "Bb|A#", "Db|C#", "E", "G", "Bb|A#", "Db|C#", "E", "G", "Bb|A#"},
             {"Ab|G#", "B", "D", "F", "Ab|G#", "B", "D", "F", "Ab|G#", "B", "D" ,"F", "Ab|G#"},
-            {"ctrl", "\u2318", "alt", " ", "←", "↓", "↑", "→", "alt", "\u2325", "ctrl"}};
+            {"ctrl", "\u2318", "sostenuto", "sustain", "sostenuto", "↓", "↑", "→", "alt", "\u2325", "ctrl"}};
     return list;
 }
 
@@ -136,7 +141,7 @@ QList<QList<int>> KeyboardPC::getButtonKeycodesDown()
             {16777217, 88, 86, 76, 67, 87, 75, 72, 71, 70, 81, 223, 16781905, 16777220},
             {16781571, 85, 73, 65, 69, 79, 83, 78, 82, 84, 68, 89, 16781571},
             {16777252, 0, 220, 214, 196, 80, 90, 66, 77, 44, 46, 74, 16777248},
-            {}};
+            {-1, 16777299, 16777251, 32, 16777251, -1, -1, -1, -1, -1, -1}};
     return list;
 }
 QList<QList<int>> KeyboardPC::getButtonKeycodesUp()
@@ -146,7 +151,7 @@ QList<QList<int>> KeyboardPC::getButtonKeycodesUp()
             {16777217, 88, 86, 76, 67, 87, 75, 72, 71, 70, 81, 223, 16781905, 16777220},
             {16781571, 85, 73, 65, 69, 79, 83, 78, 82, 84, 68, 89, 16781571},
             {16777252, 0, 220, 214, 196, 80, 90, 66, 77, 44, 46, 74, 16777252},
-            {}};
+            {-1, 16777299, 16777251, 32, 16777251, -1, -1, -1, -1, -1, -1}};
     return list;
 }
 
@@ -157,7 +162,7 @@ QList<QList<int>> KeyboardPC::getMIDICodes()
             {9, 12, 15, 18, 21, 24, 27, 30, 33, 36, 39, 42, 45, 48},
             {10, 13, 16, 19, 22, 25, 28, 31, 34, 37, 40, 43, 46},
             {8, 11, 14, 17, 20, 23, 26, 29, 32, 35, 38, 41, 44},
-            {}};
+            {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1}};
     return list;
 }
 
@@ -173,7 +178,10 @@ void KeyboardPC::keyDown(int keycode)
                 this->list_of_buttons.at(row).at(col)->setDown(true);
                 
                 QList<QList<int>> midicodes = getMIDICodes();
-                emit MIDIPress(midicodes.at(row).at(col));
+                if (midicodes.at(row).at(col) > -1)
+                {
+                    emit MIDIPress(midicodes.at(row).at(col));
+                }
             }
         }
     }
@@ -190,7 +198,10 @@ void KeyboardPC::keyUp(int keycode)
                 this->list_of_buttons.at(row).at(col)->setDown(false);
                 
                 QList<QList<int>> midicodes = getMIDICodes();
-                emit MIDIRelease(midicodes.at(row).at(col));
+                if (midicodes.at(row).at(col) > -1)
+                {
+                    emit MIDIRelease(midicodes.at(row).at(col));
+                }
             }
         }
     }

@@ -33,6 +33,7 @@ public:
     //QPushButton *button_grab = new QPushButton;
     QPushButton *button_panic = new QPushButton;
     void movePitchWheel(int key);
+    void keySustain(bool pressed);
     
     MIDIChannelSelector *channels;
     MIDIKeySelector *keys;

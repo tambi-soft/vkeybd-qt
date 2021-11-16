@@ -65,6 +65,12 @@ bool MainTabs::eventFilter(QObject *obj, QEvent *ev)
                 o->button_panic->animateClick();
                 return true;
             }
+            else if (event->key() == Qt::Key_Space)
+            {
+                o->keySustain(true);
+                o->keyDown(Qt::Key_Space);
+                return true;
+            }
             // activate desired tab by pressing an f-key
             else if (this->list_function_keys.contains(event->key()))
             {
@@ -101,7 +107,13 @@ bool MainTabs::eventFilter(QObject *obj, QEvent *ev)
         {
             Orgelwerk *o = static_cast<Orgelwerk*>(currentWidget());
             
-            if (event->key() == Qt::Key_Left | event->key() == Qt::Key_Right | event->key() == Qt::Key_Up | event->key() == Qt::Key_Down)
+            if (event->key() == Qt::Key_Space)
+            {
+                o->keySustain(false);
+                o->keyUp(Qt::Key_Space);
+                return true;
+            }
+            else if (event->key() == Qt::Key_Left | event->key() == Qt::Key_Right | event->key() == Qt::Key_Up | event->key() == Qt::Key_Down)
             {
                 o->pitch->pitchKeyReleased();
                 return true;

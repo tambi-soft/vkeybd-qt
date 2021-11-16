@@ -82,6 +82,18 @@ void InterfaceAlsa::keyPitchbendEvent(int channel, int pitch)
     sendEvent(true);
 }
 
+void InterfaceAlsa::keySustainEvent(int channel, bool pressed)
+{
+    int systain_value = 0;
+    if (pressed)
+    {
+        systain_value = 127;
+    }
+    
+    snd_seq_ev_set_controller(&this->ev, channel, MIDI_CTL_SUSTAIN, systain_value);
+    sendEvent(true);
+}
+
 void InterfaceAlsa::setProgramChangeEvent(int channel, int program, int bank)
 {
     snd_seq_ev_set_controller(&this->ev, channel, MIDI_CTL_MSB_BANK, 121);

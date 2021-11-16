@@ -33,6 +33,12 @@ void InterfaceAudio::keyPitchbendEvent(int channel, int pitch)
     Q_UNUSED(pitch);
 }
 
+void InterfaceAudio::keySustainEvent(int channel, bool pressed)
+{
+    Q_UNUSED(channel);
+    Q_UNUSED(pressed);
+}
+
 void InterfaceAudio::setProgramChangeEvent(int channel, int program, int bank)
 {
     Q_UNUSED(channel);

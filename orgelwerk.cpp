@@ -187,6 +187,16 @@ void Orgelwerk::pitchWheelMoved(int pitch)
     keyMIDIHelper(pitch, "pitch");
 }
 
+void Orgelwerk::keySustain(bool pressed)
+{
+    QList<QMap<QString,int>> list_of_channels = this->channels->getListOfActivatedChannels();
+    for (int c=0; c < list_of_channels.length(); c++)
+    {
+        int channel = list_of_channels.at(c)["channel"];
+        this->interface_audio->keySustainEvent(channel, pressed);
+    }
+}
+
 void Orgelwerk::volumeChanged(int channel, int volume)
 {
     this->interface_audio->setVolumeChangeEvent(channel, volume);

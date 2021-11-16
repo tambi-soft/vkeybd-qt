@@ -32,6 +32,7 @@ public:
     void keyReleaseEvent(int channel, int midicode);
     void keyPanicEvent(int channel);
     void keyPitchbendEvent(int channel, int pitch);
+    void keySustainEvent(int channel, bool pressed);
     void setProgramChangeEvent(int channel, int program, int bank);
     void setVolumeChangeEvent(int channel, int volume);
     void setPanChangeEvent(int channel, int value);
