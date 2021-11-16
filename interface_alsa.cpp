@@ -115,7 +115,7 @@ void InterfaceAlsa::keySoftEvent(int channel, bool pressed, int volume)
 {
     if (pressed)
     {
-        volume = volume / 2;
+        volume = volume / 2 + volume / 4;
     }
     
     //snd_seq_ev_set_controller(&this->ev, channel, MIDI_CTL_SOFT_PEDAL, systain_value); // CC 67
