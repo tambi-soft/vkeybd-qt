@@ -43,6 +43,7 @@ MIDIChannelSelector::MIDIChannelSelector(InterfaceAudio *audio, QWidget *parent)
         slider_volume->setMaximum(127);
         slider_volume->setValue(127);
         connect(slider_volume, &QSlider::valueChanged, this, [this, i, slider_volume]{ MIDIChannelSelector::volumeSliderMoved(i-1, slider_volume->value()); });
+        this->list_of_volume_sliders.append(slider_volume);
         
         QSlider *slider_pan = new QSlider;
         slider_pan->setOrientation(Qt::Horizontal);
@@ -160,6 +161,9 @@ QList<QMap<QString,int>> MIDIChannelSelector::getListOfActivatedChannels()
             
             int key_max = this->list_of_key_maxs.at(i)->value();
             map["key_max"] = key_max;
+            
+            int volume = this->list_of_volume_sliders.at(i)->value();
+            map["volume"] = volume;
             
             result.append(map);
         }

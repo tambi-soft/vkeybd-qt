@@ -98,6 +98,31 @@ void InterfaceAlsa::keySustainEvent(int channel, bool pressed)
     sendEvent(true);
 }
 
+void InterfaceAlsa::keySostenutoEvent(int channel, bool pressed)
+{
+    qDebug() << "sostenuto";
+    int systain_value = 0;
+    if (pressed)
+    {
+        systain_value = 127;
+    }
+    
+    snd_seq_ev_set_controller(&this->ev, channel, MIDI_CTL_SOSTENUTO, systain_value);
+    sendEvent(true);
+}
+
+void InterfaceAlsa::keySoftEvent(int channel, bool pressed, int volume)
+{
+    if (pressed)
+    {
+        volume = volume / 2;
+    }
+    
+    //snd_seq_ev_set_controller(&this->ev, channel, MIDI_CTL_SOFT_PEDAL, systain_value); // CC 67
+    snd_seq_ev_set_controller(&ev, channel, MIDI_CTL_MSB_MAIN_VOLUME, volume); // CC 7
+    sendEvent(true);
+}
+
 void InterfaceAlsa::setProgramChangeEvent(int channel, int program, int bank)
 {
     snd_seq_ev_set_controller(&this->ev, channel, MIDI_CTL_MSB_BANK, 121);

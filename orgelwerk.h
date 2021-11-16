@@ -34,6 +34,8 @@ public:
     QPushButton *button_panic = new QPushButton;
     void movePitchWheel(int key);
     void keySustain(bool pressed);
+    void keySostenuto(bool pressed);
+    void keySoft(bool pressed);
     
     MIDIChannelSelector *channels;
     MIDIKeySelector *keys;

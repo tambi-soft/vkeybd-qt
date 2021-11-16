@@ -205,6 +205,27 @@ void Orgelwerk::keySustain(bool pressed)
     }
 }
 
+void Orgelwerk::keySostenuto(bool pressed)
+{
+    QList<QMap<QString,int>> list_of_channels = this->channels->getListOfActivatedChannels();
+    for (int c=0; c < list_of_channels.length(); c++)
+    {
+        int channel = list_of_channels.at(c)["channel"];
+        this->interface_audio->keySostenutoEvent(channel, pressed);
+    }
+}
+
+void Orgelwerk::keySoft(bool pressed)
+{
+    QList<QMap<QString,int>> list_of_channels = this->channels->getListOfActivatedChannels();
+    for (int c=0; c < list_of_channels.length(); c++)
+    {
+        int channel = list_of_channels.at(c)["channel"];
+        int volume = list_of_channels.at(c)["volume"];
+        this->interface_audio->keySoftEvent(channel, pressed, volume);
+    }
+}
+
 void Orgelwerk::volumeChanged(int channel, int volume)
 {
     this->interface_audio->setVolumeChangeEvent(channel, volume);

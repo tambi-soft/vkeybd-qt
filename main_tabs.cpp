@@ -75,6 +75,19 @@ bool MainTabs::eventFilter(QObject *obj, QEvent *ev)
                 o->keyDown(Qt::Key_Space);
                 return true;
             }
+            else if (event->key() == Qt::Key_Alt)
+            {
+                o->keySostenuto(true);
+                o->keyDown(Qt::Key_Alt);
+                return true;
+            }
+            else if (event->key() == Qt::Key_Super_L || event->key() == Qt::Key_Super_R)
+            {
+                o->keySoft(true);
+                o->keyDown(Qt::Key_Super_L);
+                o->keyDown(Qt::Key_Super_R);
+                return true;
+            }
             // activate desired tab by pressing an f-key
             else if (this->list_function_keys.contains(event->key()))
             {
@@ -115,6 +128,19 @@ bool MainTabs::eventFilter(QObject *obj, QEvent *ev)
             {
                 o->keySustain(false);
                 o->keyUp(Qt::Key_Space);
+                return true;
+            }
+            else if (event->key() == Qt::Key_Alt)
+            {
+                o->keySostenuto(false);
+                o->keyUp(Qt::Key_Alt);
+                return true;
+            }
+            else if (event->key() == Qt::Key_Super_L || event->key() == Qt::Key_Super_R)
+            {
+                o->keySoft(false);
+                o->keyUp(Qt::Key_Super_L);
+                o->keyUp(Qt::Key_Super_R);
                 return true;
             }
             else if (event->key() == Qt::Key_Left | event->key() == Qt::Key_Right | event->key() == Qt::Key_Up | event->key() == Qt::Key_Down)

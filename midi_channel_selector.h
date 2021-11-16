@@ -59,7 +59,7 @@ private:
     QList<MIDIKeyShiftWidget*> list_of_keyshifts;
     QList<QSpinBox*> list_of_key_mins;
     QList<QSpinBox*> list_of_key_maxs;
-    
+    QList<QSlider*> list_of_volume_sliders;
     
 private slots:
     void volumeSliderMoved(int channel, int volume);

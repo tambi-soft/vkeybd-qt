@@ -130,7 +130,7 @@ QList<QList<QString>> KeyboardPC::getButtonLabels()
             {"A", "C", "Eb|D#", "Gb|F#", "A", "C", "Eb|D#", "Gb|F#", "A", "C", "Eb|D#", "Gb|F#", "A", "C"},
             {"Bb|A#", "Db|C#", "E", "G", "Bb|A#", "Db|C#", "E", "G", "Bb|A#", "Db|C#", "E", "G", "Bb|A#"},
             {"Ab|G#", "B", "D", "F", "Ab|G#", "B", "D", "F", "Ab|G#", "B", "D" ,"F", "Ab|G#"},
-            {"ctrl", "\u2318", "sostenuto", "sustain", "sostenuto", "↓", "↑", "→", "alt", "\u2325", "ctrl"}};
+            {"ctrl", "soft", "sostenuto", "sustain", "sostenuto", "↓", "↑", "→", "alt", "\u2325", "ctrl"}};
     return list;
 }
 

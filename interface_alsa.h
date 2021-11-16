@@ -34,6 +34,8 @@ public:
     void keyStopAllEvent(int channel);
     void keyPitchbendEvent(int channel, int pitch);
     void keySustainEvent(int channel, bool pressed);
+    void keySostenutoEvent(int channel, bool pressed);
+    void keySoftEvent(int channel, bool pressed, int volume);
     void setProgramChangeEvent(int channel, int program, int bank);
     void setVolumeChangeEvent(int channel, int volume);
     void setPanChangeEvent(int channel, int value);
