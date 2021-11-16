@@ -9,11 +9,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-//#include </usr/include/alsa/asoundlib.h>
 #include <alsa/asoundlib.h>
-//#include </usr/include/alsa/control.h>
 #include <alsa/control.h>
-//#include </usr/include/alsa/seq.h>
 #include <alsa/seq.h>
 
 /*

@@ -11,7 +11,8 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 #    -lasound
 #    asound
     
-LIBS += -lasound
+LIBS += -lasound \
+    -ljack
 
 CONFIG += \
     c++11 \

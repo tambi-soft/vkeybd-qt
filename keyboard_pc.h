@@ -23,7 +23,9 @@ private:
     QList<QList<int>> getButtonSizes();
     QList<QList<QString>> getButtonColors();
     QList<QList<QString>> getButtonLabels();
-    QList<QList<int>> getButtonKeycodes();
+    // some keys can have different codes on up or down (e.g. Shift-Keys on German Neo2)
+    QList<QList<int>> getButtonKeycodesDown();
+    QList<QList<int>> getButtonKeycodesUp();
     QList<QList<int>> getMIDICodes();
     
     QList<QList<QPushButton*>> list_of_buttons;

@@ -8,11 +8,9 @@
  * https://www.alsa-project.org/alsa-doc/alsa-lib/seq.html
  */
 
-InterfaceAlsa::InterfaceAlsa(QString label, InterfaceAudio *parent) : InterfaceAudio(parent)
+InterfaceAlsa::InterfaceAlsa(QString label, InterfaceAudio *parent) : InterfaceAudio(label, parent)
 {
-    this->label = label;
-    
-    qDebug() << "init interface alsa: "+this->label;
+    this->label = "alsa-midi-"+label;
     
     snd_seq_open(&seq, "default", SND_SEQ_OPEN_DUPLEX, 0);
     snd_seq_set_client_name(seq, this->NAME.toLatin1());

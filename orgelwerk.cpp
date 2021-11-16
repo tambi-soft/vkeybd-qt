@@ -3,7 +3,7 @@
 Orgelwerk::Orgelwerk(QString label, QWidget *parent) : QWidget(parent)
 {
     this->interface_audio = new InterfaceAlsa(label);
-    //this->interface_audio = new InterfaceJack;
+    //this->interface_audio = new InterfaceJack(label);
     
     drawGUI();
     initInputThread();
@@ -101,7 +101,7 @@ void Orgelwerk::keyDown(int keycode)
 }
 void Orgelwerk::keyUp(int keycode)
 {
-    qDebug() << "keyUp: " + QString::number(keycode);
+    qDebug() << "keyUp:   " + QString::number(keycode);
     this->pc->keyUp(keycode);
 }
 

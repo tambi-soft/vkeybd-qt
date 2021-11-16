@@ -1,8 +1,8 @@
 #include "interface_audio.h"
 
-InterfaceAudio::InterfaceAudio(QObject *parent) : QObject(parent)
+InterfaceAudio::InterfaceAudio(QString label, QObject *parent) : QObject(parent)
 {
-    
+    Q_UNUSED(label);
 }
 
 InterfaceAudio::~InterfaceAudio()

@@ -111,9 +111,9 @@ QList<QList<QString>> KeyboardPC::getButtonColors()
 {
     QList<QList<QString>> list;
     list = {{"b", "w", "w", "w", "b", "w", "w", "w", "b", "w", "w", "w", "b", "w"},
-            {"w", "w", "b", "b", "w", "w", "b", "b", "w", "w", "b", "b", "w", "g"},
-            {"b", "b", "w", "w", "b", "b", "w", "w", "b", "b", "w", "w", "g"},
-            {"b", "w", "w", "w", "b", "w", "w", "w", "b", "w", "w", "w", "b"},
+            {"g", "w", "b", "b", "w", "w", "b", "b", "w", "w", "b", "b", "w", "w"},
+            {"g", "b", "w", "w", "b", "b", "w", "w", "b", "b", "w", "w", "b"},
+            {"g", "w", "w", "w", "b", "w", "w", "w", "b", "w", "w", "w", "b"},
             {"g", "g", "g", "g", "g", "g", "g", "g", "g", "g", "g"}};
     return list;
 }
@@ -129,7 +129,17 @@ QList<QList<QString>> KeyboardPC::getButtonLabels()
     return list;
 }
 
-QList<QList<int>> KeyboardPC::getButtonKeycodes()
+QList<QList<int>> KeyboardPC::getButtonKeycodesDown()
+{
+    QList<QList<int>> list;
+    list = {{16781906, 49, 50, 51, 52, 53, 54, 55, 56, 57, 48, 45, 16781904, 16777219},
+            {16777217, 88, 86, 76, 67, 87, 75, 72, 71, 70, 81, 223, 16781905, 16777220},
+            {16781571, 85, 73, 65, 69, 79, 83, 78, 82, 84, 68, 89, 16781571},
+            {16777252, 0, 220, 214, 196, 80, 90, 66, 77, 44, 46, 74, 16777248},
+            {}};
+    return list;
+}
+QList<QList<int>> KeyboardPC::getButtonKeycodesUp()
 {
     QList<QList<int>> list;
     list = {{16781906, 49, 50, 51, 52, 53, 54, 55, 56, 57, 48, 45, 16781904, 16777219},
@@ -153,7 +163,7 @@ QList<QList<int>> KeyboardPC::getMIDICodes()
 
 void KeyboardPC::keyDown(int keycode)
 {
-    QList<QList<int>> keycodes = getButtonKeycodes();
+    QList<QList<int>> keycodes = getButtonKeycodesDown();
     for (int row=0; row < keycodes.length(); row++)
     {
         for (int col=0; col < keycodes.at(row).length(); col++)
@@ -170,7 +180,7 @@ void KeyboardPC::keyDown(int keycode)
 }
 void KeyboardPC::keyUp(int keycode)
 {
-    QList<QList<int>> keycodes = getButtonKeycodes();
+    QList<QList<int>> keycodes = getButtonKeycodesUp();
     for (int row=0; row < keycodes.length(); row++)
     {
         for (int col=0; col < keycodes.at(row).length(); col++)
@@ -188,7 +198,7 @@ void KeyboardPC::keyUp(int keycode)
 
 void KeyboardPC::allKeysUp()
 {
-    QList<QList<int>> keycodes = getButtonKeycodes();
+    QList<QList<int>> keycodes = getButtonKeycodesUp();
     for (int row=0; row < keycodes.length(); row++)
     {
         for (int col=0; col < keycodes.at(row).length(); col++)

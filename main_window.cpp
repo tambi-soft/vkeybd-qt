@@ -7,16 +7,16 @@ MainWindow::MainWindow(QWidget *parent)
     setMenuBar(menu);
     
     QWidget *w = new QWidget;
-    QVBoxLayout *l = new QVBoxLayout;
-    w->setLayout(l);
+    QVBoxLayout *layout = new QVBoxLayout;
+    w->setLayout(layout);
     
     this->button_grab = new QPushButton("Grab Keyboard");
     connect(button_grab, &QPushButton::clicked, this, &MainWindow::grabButtonClicked);
     
     this->tabs = new MainTabs;
     
-    l->addWidget(button_grab);
-    l->addWidget(this->tabs);
+    layout->addWidget(button_grab);
+    layout->addWidget(this->tabs);
     
     setCentralWidget(w);
     
