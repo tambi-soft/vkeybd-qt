@@ -20,7 +20,7 @@ MainWindow::MainWindow(QWidget *parent)
     
     setCentralWidget(w);
     
-    //this->installEventFilter(this);
+    this->installEventFilter(this);
     //installNativeEventFilter(this);
     
     int width = this->width();
