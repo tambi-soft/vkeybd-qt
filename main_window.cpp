@@ -6,9 +6,9 @@ MainWindow::MainWindow(QWidget *parent)
     MenuBar *menu = new MenuBar;
     setMenuBar(menu);
     
-    QWidget *w = new QWidget;
+    QWidget *widget = new QWidget;
     QVBoxLayout *layout = new QVBoxLayout;
-    w->setLayout(layout);
+    widget->setLayout(layout);
     
     this->button_grab = new QPushButton("Grab Keyboard");
     connect(button_grab, &QPushButton::clicked, this, &MainWindow::grabButtonClicked);
@@ -18,7 +18,7 @@ MainWindow::MainWindow(QWidget *parent)
     layout->addWidget(button_grab);
     layout->addWidget(this->tabs);
     
-    setCentralWidget(w);
+    setCentralWidget(widget);
     
     this->installEventFilter(this);
     //installNativeEventFilter(this);

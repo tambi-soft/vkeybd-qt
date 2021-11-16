@@ -40,19 +40,19 @@ MIDIPitchWheel::MIDIPitchWheel(QWidget *parent) : QWidget(parent)
     
     QString style = "QSlider::groove:horizontal {"
             "   border: 1px solid;"
-            "   height: 10px;"
+            "   height: 5px;"
             "   margin: 0px;"
             "}"
             "QSlider::handle:horizontal {"
             "   background-color: black;"
             "   border: 1px solid;"
-            "   height: 40px;"
-            "   width: 20px;"
+            "   height: 10px;"
+            "   width: 15px;"
             "   margin: -15px 0px;"
             "}";
     // https://stackoverflow.com/questions/27531542/tick-marks-disappear-on-styled-qslider
     //this->slider_tether->setStyleSheet(style);
-    //this->slider_pitch->setStyleSheet(style);
+    this->slider_pitch->setStyleSheet(style);
     
     this->slider_tether->setTracking(false);
     connect(this->slider_tether, &QSlider::valueChanged, this, &MIDIPitchWheel::startPitchThread);
