@@ -48,7 +48,7 @@ MIDIChannelSelector::MIDIChannelSelector(InterfaceAudio *audio, QWidget *parent)
         QSlider *slider_pan = new QSlider;
         slider_pan->setOrientation(Qt::Horizontal);
         slider_pan->setRange(0, 127);
-        slider_pan->setValue(65);
+        slider_pan->setValue(64);
         connect(slider_pan, &QSlider::valueChanged, this, [this, i, slider_pan]{ MIDIChannelSelector::panSliderMoved(i-1, slider_pan->value()); });
         //slider_pan->setStyleSheet("QSlider::groove:horizontal {background-color:red;}");
         QString style_pan = "QSlider::groove:horizontal {"
@@ -64,7 +64,7 @@ MIDIChannelSelector::MIDIChannelSelector(InterfaceAudio *audio, QWidget *parent)
                 "margin: -2px 0px;"
                 "}";
         slider_pan->setStyleSheet(style_pan);
-        connect(slider_pan, &QSlider::sliderPressed, this, [slider_pan]{ slider_pan->setValue(65); });
+        connect(slider_pan, &QSlider::sliderPressed, this, [slider_pan]{ slider_pan->setValue(64); });
         
         MIDIKeyShiftWidget *key_shift = new MIDIKeyShiftWidget;
         QSpinBox *key_min = new QSpinBox();

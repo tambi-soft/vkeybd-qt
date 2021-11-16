@@ -27,7 +27,8 @@ void KeyboardPC::drawButtons()
                         );
             
             QPushButton *button = new QPushButton(this);
-            button->setText(labels.at(row).at(col));
+            QString button_text = labels.at(row).at(col);
+            button->setText(button_text.replace("|", "\n"));
             
             button->resize(
                             sizes.at(row).at(col) * this->button_scale,
@@ -62,7 +63,7 @@ void KeyboardPC::drawButtons()
             QString stylesheet = "QPushButton {"
                                  "  color: "+ color +";"
                                  "  background-color: "+ background_color + ";"
-                                 "  font-size: 5pt;"
+                                 "  font-size: 6pt;"
                                  "  border-style: outset;"
                                  "  border-width: 1px;"
                                  "  border-color: black;"
@@ -130,7 +131,7 @@ QList<QList<QString>> KeyboardPC::getButtonLabels()
             {"A", "C", "Eb|D#", "Gb|F#", "A", "C", "Eb|D#", "Gb|F#", "A", "C", "Eb|D#", "Gb|F#", "A", "C"},
             {"Bb|A#", "Db|C#", "E", "G", "Bb|A#", "Db|C#", "E", "G", "Bb|A#", "Db|C#", "E", "G", "Bb|A#"},
             {"Ab|G#", "B", "D", "F", "Ab|G#", "B", "D", "F", "Ab|G#", "B", "D" ,"F", "Ab|G#"},
-            {"ctrl", "soft", "sostenuto", "sustain", "sostenuto", "↓", "↑", "→", "alt", "\u2325", "ctrl"}};
+            {"ctrl", "soft", "soste\nnuto", "sustain", "soste\nnuto", "↓", "↑", "→", "alt", "\u2325", "ctrl"}};
     return list;
 }
 
