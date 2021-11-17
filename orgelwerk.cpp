@@ -17,9 +17,6 @@ void Orgelwerk::drawGUI()
     this->piano = new KeyboardPiano;
     this->pc = new KeyboardPC;
     
-    connect(this->channels, &MIDIChannelSelector::volumeChangedSignal, this, &Orgelwerk::volumeChanged);
-    connect(this->channels, &MIDIChannelSelector::instrumentChangedSignal, this, &Orgelwerk::instrumentChanged);
-    
     connect(this->pitch, &MIDIPitchWheel::pitchWheelMoved, this, &Orgelwerk::pitchWheelMoved);
     
     connect(this->pc, &KeyboardPC::MIDIPress, this, &Orgelwerk::keyMIDIDown);
@@ -224,14 +221,4 @@ void Orgelwerk::keySoft(bool pressed)
         int volume = list_of_channels.at(c)["volume"];
         this->interface_audio->keySoftEvent(channel, pressed, volume);
     }
-}
-
-void Orgelwerk::volumeChanged(int channel, int volume)
-{
-    this->interface_audio->setVolumeChangeEvent(channel, volume);
-}
-
-void Orgelwerk::instrumentChanged(int channel, int program, int bank)
-{
-    this->interface_audio->setProgramChangeEvent(channel, program, bank);
 }

@@ -174,7 +174,7 @@ QList<QMap<QString,int>> MIDIChannelSelector::getListOfActivatedChannels()
 
 void MIDIChannelSelector::volumeSliderMoved(int channel, int volume)
 {
-    emit volumeChangedSignal(channel, volume);
+    this->audio->setVolumeChangeEvent(channel, volume);
 }
 
 void MIDIChannelSelector::panSliderMoved(int channel, int value)
@@ -206,7 +206,7 @@ void MIDIChannelSelector::instrumentChanged(int channel, QComboBox *combo_instru
     int program = codes.at(0) - 1;
     int bank = codes.at(1);
     
-    emit instrumentChangedSignal(channel, program, bank);
+    this->audio->setProgramChangeEvent(channel, program, bank);
 }
 
 void MIDIChannelSelector::portamentoChanged(int channel, QSlider *slider)

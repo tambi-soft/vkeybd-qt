@@ -71,8 +71,7 @@ private slots:
     void releaseChanged(int channel, QSlider *slider);
     
 signals:
-    void volumeChangedSignal(int channel, int volume);
-    void instrumentChangedSignal(int channel, int program, int bank);
+    
 };
 
 #endif // MIDICHANNELSELECTOR_H
