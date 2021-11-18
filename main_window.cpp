@@ -118,6 +118,6 @@ void MainWindow::grabButtonClicked()
                              "  background-color: black;"
                              "}";
         this->button_grab->setStyleSheet(stylesheet);
-        this->button_grab->setText("Grabing Keyboard. Hit Ctrl+Shift or Click Mouse to stop.");
+        this->button_grab->setText("Grabbing Keyboard. Hit Ctrl+Shift or Click Mouse to stop.");
     }
 }
