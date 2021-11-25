@@ -67,7 +67,14 @@ void Orgelwerk::drawGUI()
                          "}";
     this->button_panic->setStyleSheet(stylesheet);
     
+    QLabel *label_volume_master = new QLabel("Master Volume");
+    this->slider_volume_master = new QSlider(Qt::Horizontal, this);
+    this->slider_volume_master->setRange(0, 100);
+    this->slider_volume_master->setValue(100);
+    
     layout->addWidget(group_channels);
+    layout->addWidget(label_volume_master);
+    layout->addWidget(this->slider_volume_master);
     layout->addWidget(group_keys);
     layout->addWidget(group_pitch);
     layout->addWidget(group_keyboards);

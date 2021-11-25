@@ -47,6 +47,8 @@ private:
     void drawGUI();
     void initInputThread();
     
+    QSlider *slider_volume_master;
+    
     //InputKeyboardRaw *input_raw;
     QThread *thread_input;
     InputKeyboardRawThread *worker_input;
