@@ -8,6 +8,10 @@
 #include <QGroupBox>
 #include <QScrollArea>
 #include <QThread>
+#include <QPixmap>
+#include <QIcon>
+#include <QDialog>
+#include <QSizePolicy>
 
 #include "midi_channel_selector.h"
 #include "midi_key_selector.h"
@@ -48,6 +52,7 @@ private:
     void initInputThread();
     
     QSlider *slider_volume_master;
+    QPushButton *button_channels;
     
     //InputKeyboardRaw *input_raw;
     QThread *thread_input;
@@ -56,11 +61,13 @@ private:
     InterfaceAudio *interface_audio;
     
     void keyMIDIHelper(int midicode, QString mode);
+    void updateChannelsSchreenschot();
     
 private slots:
     void keyMIDIDown(int midicode);
     void keyMIDIUp(int midicode);
     void pitchWheelMoved(int pitch);
+    void showChannelDetails();
     
 protected:
     

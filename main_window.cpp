@@ -23,8 +23,8 @@ MainWindow::MainWindow(QWidget *parent)
     this->installEventFilter(this);
     //installNativeEventFilter(this);
     
-    int width = this->width();
-    resize(width, 900);
+    //int width = this->width();
+    //resize(width, 900);
 }
 
 MainWindow::~MainWindow()
@@ -118,6 +118,6 @@ void MainWindow::grabButtonClicked()
                              "  background-color: black;"
                              "}";
         this->button_grab->setStyleSheet(stylesheet);
-        this->button_grab->setText("Grabbing Keyboard. Hit Ctrl+Shift or Click Mouse to stop.");
+        this->button_grab->setText("Grabbing Keyboard. Hit Ctrl+Shift or Click to stop.");
     }
 }
