@@ -51,6 +51,8 @@ private:
     void drawGUI();
     void initInputThread();
     
+    QGridLayout *grid;
+    
     QSlider *slider_volume_master;
     QPushButton *button_channels;
     
@@ -61,13 +63,19 @@ private:
     InterfaceAudio *interface_audio;
     
     void keyMIDIHelper(int midicode, QString mode);
+    
+    // shows midi_channel_selector as a preview with a button to click to show the real widget
+    // (saves screen space)
+    void showChannelsImage(int grid_row);
+    // shows directly the real widget (needs more screen space)
+    void showChannelsReal(int grid_row);
     void updateChannelsSchreenschot();
     
 private slots:
     void keyMIDIDown(int midicode);
     void keyMIDIUp(int midicode);
     void pitchWheelMoved(int pitch);
-    void showChannelDetails();
+    void showChannelDetails(bool update_preview=false);
     
 protected:
     

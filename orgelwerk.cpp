@@ -22,38 +22,21 @@ void Orgelwerk::drawGUI()
     connect(this->pc, &KeyboardPC::MIDIPress, this, &Orgelwerk::keyMIDIDown);
     connect(this->pc, &KeyboardPC::MIDIRelease, this, &Orgelwerk::keyMIDIUp);
     
-    QVBoxLayout *layout = new QVBoxLayout;
-    setLayout(layout);
+    this->grid = new QGridLayout;
+    setLayout(this->grid);
     
-    QGroupBox *group_channels_pixmap = new QGroupBox("Channels");
-    //QGroupBox *group_channels = new QGroupBox("Channels");
     QGroupBox *group_keys = new QGroupBox("Keys");
     QGroupBox *group_pitch = new QGroupBox("Pitch");
     QGroupBox *group_keyboards = new QGroupBox("Keyboards");
     
-    QVBoxLayout *layout_channels_pixmap = new QVBoxLayout;
-    //QVBoxLayout *layout_channels = new QVBoxLayout;
     QVBoxLayout *layout_keys = new QVBoxLayout;
     QHBoxLayout *layout_pitch = new QHBoxLayout;
     QVBoxLayout *layout_keyboards = new QVBoxLayout;
     
-    layout_channels_pixmap->setContentsMargins(0, 0, 0, 0);
-    //layout_channels->setContentsMargins(0, 0, 0, 0);
-    
-    group_channels_pixmap->setLayout(layout_channels_pixmap);
-    //group_channels->setLayout(layout_channels);
     group_keys->setLayout(layout_keys);
     group_pitch->setLayout(layout_pitch);
     group_keyboards->setLayout(layout_keyboards);
     
-    QScrollArea *scroll_channels = new QScrollArea;
-    scroll_channels->setWidget(this->channels);
-    
-    this->button_channels = new QPushButton;
-    connect(this->button_channels, &QPushButton::clicked, this, &Orgelwerk::showChannelDetails);
-    
-    layout_channels_pixmap->addWidget(this->button_channels);
-    //layout_channels->addWidget(scroll_channels);
     layout_keys->addWidget(this->keys);
     layout_pitch->addWidget(this->pitch);
     layout_keyboards->addWidget(this->piano);
@@ -79,26 +62,47 @@ void Orgelwerk::drawGUI()
     this->slider_volume_master->setRange(0, 100);
     this->slider_volume_master->setValue(100);
     
-    layout->addWidget(group_channels_pixmap);
-    //layout->addWidget(group_channels);
-    layout->addWidget(label_volume_master);
-    layout->addWidget(this->slider_volume_master);
-    layout->addWidget(group_keys);
-    layout->addWidget(group_pitch);
-    layout->addWidget(group_keyboards);
-    //layout->addWidget(this->button_grab);
-    layout->addWidget(this->button_panic);
+    showChannelsReal(0);
+    showChannelsImage(1);
+    
+    this->grid->addWidget(label_volume_master, 2, 0);
+    this->grid->addWidget(this->slider_volume_master, 3, 0);
+    this->grid->addWidget(group_keys, 4, 0);
+    this->grid->addWidget(group_pitch, 5, 0);
+    this->grid->addWidget(group_keyboards, 6, 0);
+    this->grid->addWidget(this->button_panic, 7, 0);
+    
+    this->grid->setSizeConstraint( QLayout::SetFixedSize );
+}
+
+void Orgelwerk::showChannelsReal(int grid_row)
+{
+    QGroupBox *group_channels = new QGroupBox("Channels");
+    QVBoxLayout *layout_channels = new QVBoxLayout;
+    group_channels->setLayout(layout_channels);
+    layout_channels->setContentsMargins(0, 0, 0, 0);
+    
+    QScrollArea *scroll_channels = new QScrollArea;
+    scroll_channels->setWidget(this->channels);
+    
+    layout_channels->addWidget(scroll_channels);
+    
+    this->grid->addWidget(group_channels, grid_row, 0);
+}
+void Orgelwerk::showChannelsImage(int grid_row)
+{
+    this->button_channels = new QPushButton;
+    connect(this->button_channels, &QPushButton::clicked, this, [this]{ this->showChannelDetails(true); });
+    
+    QGroupBox *group_channels_pixmap = new QGroupBox("Channels");
+    QVBoxLayout *layout_channels_pixmap = new QVBoxLayout;
+    layout_channels_pixmap->setContentsMargins(0, 0, 0, 0);
+    group_channels_pixmap->setLayout(layout_channels_pixmap);
+    layout_channels_pixmap->addWidget(this->button_channels);
+    
+    this->grid->addWidget(group_channels_pixmap, grid_row, 0);
     
     updateChannelsSchreenschot();
-    
-    /*
-    QRect rect;
-    rect.setWidth(400);
-    rect.setHeight(400);
-    setGeometry(rect);
-    setSizePolicy(QSizePolicy::Fixed);
-    */
-    layout->setSizeConstraint( QLayout::SetFixedSize );
 }
 
 void Orgelwerk::initInputThread()
@@ -249,7 +253,7 @@ void Orgelwerk::keySoft(bool pressed)
     }
 }
 
-void Orgelwerk::showChannelDetails()
+void Orgelwerk::showChannelDetails(bool update_preview)
 {
     QDialog *dialog = new QDialog();
     QVBoxLayout *layout_dialog = new QVBoxLayout;
@@ -261,7 +265,11 @@ void Orgelwerk::showChannelDetails()
     
     dialog->exec();
     
-    updateChannelsSchreenschot();
+    if (update_preview)
+    {
+        updateChannelsSchreenschot();
+    }
+    
 }
 
 void Orgelwerk::updateChannelsSchreenschot()
