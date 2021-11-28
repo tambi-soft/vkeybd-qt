@@ -63,8 +63,7 @@ void Orgelwerk::drawGUI()
     this->slider_volume_master->setValue(100);
     
     showChannelsReal(0);
-    showChannelsImage(1);
-    
+    //showChannelsImage(1);
     this->grid->addWidget(label_volume_master, 2, 0);
     this->grid->addWidget(this->slider_volume_master, 3, 0);
     this->grid->addWidget(group_keys, 4, 0);
@@ -72,7 +71,7 @@ void Orgelwerk::drawGUI()
     this->grid->addWidget(group_keyboards, 6, 0);
     this->grid->addWidget(this->button_panic, 7, 0);
     
-    this->grid->setSizeConstraint( QLayout::SetFixedSize );
+    //this->grid->setSizeConstraint( QLayout::SetFixedSize );
 }
 
 void Orgelwerk::showChannelsReal(int grid_row)
@@ -82,10 +81,14 @@ void Orgelwerk::showChannelsReal(int grid_row)
     group_channels->setLayout(layout_channels);
     layout_channels->setContentsMargins(0, 0, 0, 0);
     
-    QScrollArea *scroll_channels = new QScrollArea;
+    this->scroll_channels = new QScrollArea;
     scroll_channels->setWidget(this->channels);
     
+    QPushButton *button_channels_dialog = new QPushButton("Show in own Window");
+    connect(button_channels_dialog, &QPushButton::clicked, this, [this]{ this->showChannelDetails(false); });
+    
     layout_channels->addWidget(scroll_channels);
+    //layout_channels->addWidget(button_channels_dialog);
     
     this->grid->addWidget(group_channels, grid_row, 0);
 }
@@ -102,7 +105,7 @@ void Orgelwerk::showChannelsImage(int grid_row)
     
     this->grid->addWidget(group_channels_pixmap, grid_row, 0);
     
-    updateChannelsSchreenschot();
+    updateChannelsSchreenshot();
 }
 
 void Orgelwerk::initInputThread()
@@ -256,10 +259,16 @@ void Orgelwerk::keySoft(bool pressed)
 void Orgelwerk::showChannelDetails(bool update_preview)
 {
     QDialog *dialog = new QDialog();
+    connect(dialog, &QDialog::rejected, this, &Orgelwerk::channelsDialogRejected);
     QVBoxLayout *layout_dialog = new QVBoxLayout;
     layout_dialog->setMargin(0);
     dialog->setLayout(layout_dialog);
-    layout_dialog->addWidget(this->channels);
+    
+    //QWidget *channel_details = this->scroll_channels->takeWidget();
+    //layout_dialog->addWidget(channel_details);
+    //layout_dialog->addWidget(this->channels);
+    //layout_dialog->addWidget(this->scroll_channels);
+    //layout_dialog->setGeometry(this->scroll_channels->geometry());
     
     dialog->layout()->setSizeConstraint( QLayout::SetFixedSize );
     
@@ -267,19 +276,35 @@ void Orgelwerk::showChannelDetails(bool update_preview)
     
     if (update_preview)
     {
-        updateChannelsSchreenschot();
+        updateChannelsSchreenshot();
     }
     
+    //if (this->scroll_channels != nullptr)
+    //{
+    qDebug() << "||==||";
+    qDebug() << this->scroll_channels;
+    
+    //layout_dialog->deleteLater();
+    //dialog->deleteLater();
+    
+        //this->scroll_channels->setWidget(this->channels);
+    //}
+    //this->channels->show();
 }
 
-void Orgelwerk::updateChannelsSchreenschot()
+void Orgelwerk::channelsDialogRejected()
+{
+    qDebug() << "rejected";
+    qDebug() << this->channels;
+    this->scroll_channels->setWidget(this->channels);
+    //this->scroll_channels->widget()->show();
+    this->scroll_channels->show();
+    this->channels->show();
+}
+
+void Orgelwerk::updateChannelsSchreenshot()
 {
     QPixmap channels_pixmap = this->channels->grab();
-    /*
-    QRect rect;
-    rect.setWidth(600);
-    this->button_channels->setGeometry(rect);
-    */
     
     float w = channels_pixmap.width();
     float h = channels_pixmap.height();

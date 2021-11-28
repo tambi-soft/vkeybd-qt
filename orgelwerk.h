@@ -55,6 +55,7 @@ private:
     
     QSlider *slider_volume_master;
     QPushButton *button_channels;
+    QScrollArea *scroll_channels;
     
     //InputKeyboardRaw *input_raw;
     QThread *thread_input;
@@ -69,13 +70,14 @@ private:
     void showChannelsImage(int grid_row);
     // shows directly the real widget (needs more screen space)
     void showChannelsReal(int grid_row);
-    void updateChannelsSchreenschot();
+    void updateChannelsSchreenshot();
     
 private slots:
     void keyMIDIDown(int midicode);
     void keyMIDIUp(int midicode);
     void pitchWheelMoved(int pitch);
     void showChannelDetails(bool update_preview=false);
+    void channelsDialogRejected();
     
 protected:
     
