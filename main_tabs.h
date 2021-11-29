@@ -21,7 +21,7 @@ private:
     QList<QString> list_labels;
     QList<Orgelwerk*> list_of_tabs;
     
-    void addOrganTab(QString label);
+    void addOrganTab(QString label, int number_of_orgelwerks=1);
 
 protected:
     bool eventFilter(QObject *obj, QEvent *ev);

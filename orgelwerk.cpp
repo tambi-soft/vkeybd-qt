@@ -65,8 +65,8 @@ void Orgelwerk::drawGUI()
     this->slider_volume_master->setValue(100);
     connect(this->slider_volume_master, &QSlider::valueChanged, this, &Orgelwerk::volumeSliderMoved);
     
-    showChannelsReal(0);
-    //showChannelsImage(1);
+    //showChannelsReal(0);
+    showChannelsImage(1);
     this->grid->addWidget(label_volume_master, 2, 0);
     this->grid->addWidget(this->slider_volume_master, 3, 0);
     this->grid->addWidget(group_keys, 4, 0);
@@ -91,7 +91,7 @@ void Orgelwerk::showChannelsReal(int grid_row)
     connect(button_channels_dialog, &QPushButton::clicked, this, [this]{ this->showChannelDetails(false); });
     
     layout_channels->addWidget(scroll_channels);
-    //layout_channels->addWidget(button_channels_dialog);
+    layout_channels->addWidget(button_channels_dialog);
     
     this->grid->addWidget(group_channels, grid_row, 0);
 }
@@ -274,7 +274,7 @@ void Orgelwerk::showChannelDetails(bool update_preview)
     
     //QWidget *channel_details = this->scroll_channels->takeWidget();
     //layout_dialog->addWidget(channel_details);
-    //layout_dialog->addWidget(this->channels);
+    layout_dialog->addWidget(this->channels);
     //layout_dialog->addWidget(this->scroll_channels);
     //layout_dialog->setGeometry(this->scroll_channels->geometry());
     
@@ -290,7 +290,7 @@ void Orgelwerk::showChannelDetails(bool update_preview)
     //if (this->scroll_channels != nullptr)
     //{
     qDebug() << "||==||";
-    qDebug() << this->scroll_channels;
+    //3qDebug() << this->scroll_channels;
     
     //layout_dialog->deleteLater();
     //dialog->deleteLater();
@@ -303,11 +303,13 @@ void Orgelwerk::showChannelDetails(bool update_preview)
 void Orgelwerk::channelsDialogRejected()
 {
     qDebug() << "rejected";
+    /*
     qDebug() << this->channels;
     this->scroll_channels->setWidget(this->channels);
     //this->scroll_channels->widget()->show();
     this->scroll_channels->show();
     this->channels->show();
+    */
 }
 
 void Orgelwerk::updateChannelsSchreenshot()

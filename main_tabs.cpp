@@ -22,7 +22,7 @@ MainTabs::MainTabs(QTabWidget *parent) : QTabWidget(parent)
         }
         else
         {
-            addOrganTab(this->list_labels.at(i));
+            addOrganTab(this->list_labels.at(i), 1);
         }
     }
     
@@ -37,10 +37,32 @@ MainTabs::MainTabs(QTabWidget *parent) : QTabWidget(parent)
     installEventFilter(this);
 }
 
-void MainTabs::addOrganTab(QString label)
+void MainTabs::addOrganTab(QString label, int number_of_orgelwerks)
 {
+    /*
     Orgelwerk *o = new Orgelwerk(label);
     addTab(o, label);
+    */
+    
+    QWidget *widget = new QWidget;
+    QHBoxLayout *layout = new QHBoxLayout;
+    widget->setLayout(layout);
+    layout->setContentsMargins(0, 0, 0, 0);
+    
+    //QList<Orgelwerk*> list_of_orgelwerks;
+    QString midi_port_label = label;
+    for (int i=0; i < number_of_orgelwerks; i++)
+    {
+        if (number_of_orgelwerks > 1)
+        {
+            midi_port_label = label + "-" + QString::number(i);
+        }
+        Orgelwerk *o = new Orgelwerk(midi_port_label);
+        //list_of_orgelwerks.append(o);
+        layout->addWidget(o);
+    }
+    
+    addTab(widget, label);
 }
 
 bool MainTabs::callEventFilter(QObject *obj, QEvent *ev)
@@ -57,7 +79,8 @@ bool MainTabs::eventFilter(QObject *obj, QEvent *ev)
         
         if (!event->isAutoRepeat())
         {
-            Orgelwerk *o = static_cast<Orgelwerk*>(currentWidget());
+            //Orgelwerk *o = static_cast<Orgelwerk*>(currentWidget());
+            Orgelwerk *o = static_cast<Orgelwerk*>(currentWidget()->layout()->itemAt(0)->widget());
             
             // bind esc as the panic-key
             if (event->key() == Qt::Key_Escape)
@@ -122,7 +145,8 @@ bool MainTabs::eventFilter(QObject *obj, QEvent *ev)
         
         if (!event->isAutoRepeat())
         {
-            Orgelwerk *o = static_cast<Orgelwerk*>(currentWidget());
+            //Orgelwerk *o = static_cast<Orgelwerk*>(currentWidget());
+            Orgelwerk *o = static_cast<Orgelwerk*>(currentWidget()->layout()->itemAt(0)->widget());
             
             if (event->key() == Qt::Key_Space)
             {
