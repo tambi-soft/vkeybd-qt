@@ -287,6 +287,18 @@ void MIDIChannelSelector::releaseChanged(int channel, QSlider *slider)
     this->audio->setReleaseChanged(channel, slider->value());
 }
 
+void MIDIChannelSelector::resendMIDIControls()
+{
+    QList<QMap<QString,int>> channels = getListOfActivatedChannels();
+    for (int i=0; i < channels.length(); i++)
+    {
+        int channel = channels.at(i)["channel"];
+        
+        volumeSliderMoved(channel, channels.at(i)["volume"]);
+        
+    }
+}
+
 
 
 

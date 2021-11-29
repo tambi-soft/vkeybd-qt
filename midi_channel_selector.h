@@ -51,6 +51,7 @@ public:
     
     QList<QMap<QString, int> > getListOfActivatedChannels();
     void volumeDCAChanged(int value);
+    void resendMIDIControls();
     
 private:
     MIDISoundsList *midi_sounds_list = new MIDISoundsList;

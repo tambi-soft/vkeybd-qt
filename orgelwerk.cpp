@@ -66,7 +66,8 @@ void Orgelwerk::drawGUI()
     connect(this->slider_volume_master, &QSlider::valueChanged, this, &Orgelwerk::volumeSliderMoved);
     
     //showChannelsReal(0);
-    showChannelsImage(1);
+    //showChannelsImage(1);
+    showChannelsSummary(1);
     this->grid->addWidget(label_volume_master, 2, 0);
     this->grid->addWidget(this->slider_volume_master, 3, 0);
     this->grid->addWidget(group_keys, 4, 0);
@@ -109,6 +110,85 @@ void Orgelwerk::showChannelsImage(int grid_row)
     this->grid->addWidget(group_channels_pixmap, grid_row, 0);
     
     updateChannelsSchreenshot();
+}
+void Orgelwerk::showChannelsSummary(int grid_row)
+{
+    this->channels_summary_grid = new QGridLayout;
+    
+    QGroupBox *group_channels = new QGroupBox("Channels");
+    QGridLayout *layout_channels = new QGridLayout;
+    group_channels->setLayout(layout_channels);
+    
+    QScrollArea *scroll = new QScrollArea;
+    //QWidget *scroll_widget = new QWidget;
+    //scroll->setWidget(scroll_widget);
+    //scroll_widget->setLayout(this->channels_summary_grid);
+    scroll->setLayout(this->channels_summary_grid);
+    
+    QPushButton *button_channels_dialog = new QPushButton("Edit MIDI Channels");
+    connect(button_channels_dialog, &QPushButton::clicked, this, [this]{ this->showChannelDetails(false); });
+    
+    QPushButton *button_resend_midi = new QPushButton("Resend MIDI Settings");
+    connect(button_resend_midi, &QPushButton::clicked, this, &Orgelwerk::resendMIDIControls);
+    
+    layout_channels->addWidget(scroll, 0, 0, 1, 2);
+    layout_channels->addWidget(button_channels_dialog, 1, 0);
+    layout_channels->addWidget(button_resend_midi, 1, 1);
+    
+    this->grid->addWidget(group_channels, grid_row, 0);
+    
+    channelsSummaryUpdate();
+}
+void Orgelwerk::channelsSummaryUpdate()
+{
+    //QGridLayout *grid = static_cast<QGridLayout*>(this->group_channels->layout()->takeAt(0));
+    //QGridLayout *grid = this->channels_summary_grid;
+    
+    QLayoutItem *item;
+    while ((item = this->channels_summary_grid->takeAt(0)) != nullptr)
+    {
+        delete item->widget();
+        delete item;
+    }
+    
+    QLabel *label_channel_number = new QLabel("<b>Channel</b>");
+    QLabel *label_volume = new QLabel("<b>Volume</b>");
+    QLabel *label_key_shift = new QLabel("<b>Key Shift</b>");
+    QLabel *label_key_min = new QLabel("<b>Key Min</b>");
+    QLabel *label_key_max = new QLabel("<b>Key Max</b>");
+    
+    this->channels_summary_grid->addWidget(label_channel_number, 0, 0);
+    this->channels_summary_grid->addWidget(label_volume, 0, 1);
+    this->channels_summary_grid->addWidget(label_key_shift, 0, 2);
+    this->channels_summary_grid->addWidget(label_key_min, 0, 3);
+    this->channels_summary_grid->addWidget(label_key_max, 0, 4);
+    
+    QList<QMap<QString,int>> list_of_channels = this->channels->getListOfActivatedChannels();
+    for (int i=0; i < list_of_channels.length(); i++)
+    {
+        QLabel *label_channel_ = new QLabel(QString::number(list_of_channels.at(i)["channel"]));
+        QLabel *label_volume_ = new QLabel(QString::number(list_of_channels.at(i)["volume"]));
+        QLabel *label_key_shift_ = new QLabel(QString::number(list_of_channels.at(i)["key_shift"]));
+        QLabel *label_key_min_ = new QLabel(QString::number(list_of_channels.at(i)["key_min"]));
+        QLabel *label_key_max_ = new QLabel(QString::number(list_of_channels.at(i)["key_max"]));
+        
+        int j = i+1;
+        
+        this->channels_summary_grid->addWidget(label_channel_, j, 0);
+        this->channels_summary_grid->addWidget(label_volume_, j, 1);
+        this->channels_summary_grid->addWidget(label_key_shift_, j, 2);
+        this->channels_summary_grid->addWidget(label_key_min_, j, 3);
+        this->channels_summary_grid->addWidget(label_key_max_, j, 4);
+    }
+    
+    for (int i=0; i < this->channels_summary_grid->count(); i++)
+    {
+        QLabel *label = static_cast<QLabel*>(this->channels_summary_grid->itemAt(i)->widget());
+        QString stylesheet = "QLabel {"
+                             "  font-size: 6pt;"
+                             "}";
+        label->setStyleSheet(stylesheet);
+    }
 }
 
 void Orgelwerk::initInputThread()
@@ -303,6 +383,8 @@ void Orgelwerk::showChannelDetails(bool update_preview)
 void Orgelwerk::channelsDialogRejected()
 {
     qDebug() << "rejected";
+    channelsSummaryUpdate();
+    
     /*
     qDebug() << this->channels;
     this->scroll_channels->setWidget(this->channels);
@@ -331,4 +413,9 @@ void Orgelwerk::updateChannelsSchreenshot()
     QIcon ButtonIcon(channels_pixmap);
     this->button_channels->setIcon(ButtonIcon);
     this->button_channels->setIconSize(channels_pixmap.rect().size());
+}
+
+void Orgelwerk::resendMIDIControls()
+{
+    this->channels->resendMIDIControls();
 }
