@@ -53,6 +53,7 @@ private:
     
     QGridLayout *grid;
     
+    QLabel *label_volume_master;
     QSlider *slider_volume_master;
     QPushButton *button_channels;
     QScrollArea *scroll_channels;

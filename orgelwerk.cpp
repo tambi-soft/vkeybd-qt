@@ -57,7 +57,7 @@ void Orgelwerk::drawGUI()
                          "}";
     this->button_panic->setStyleSheet(stylesheet);
     
-    QLabel *label_volume_master = new QLabel("Master Volume (DCA)");
+    this->label_volume_master = new QLabel("Master Volume (DCA): 100%");
     this->slider_volume_master = new QSlider(Qt::Horizontal, this);
     this->slider_volume_master->setRange(0, 120);
     this->slider_volume_master->setTickInterval(20);
@@ -342,6 +342,11 @@ void Orgelwerk::keySoft(bool pressed)
 void Orgelwerk::volumeSliderMoved(int value)
 {
     this->channels->volumeDCAChanged(value);
+    
+    QString label = this->label_volume_master->text().split(":").at(0);
+    label += ": " + QString::number(value) + "%";
+    
+    this->label_volume_master->setText(label);
 }
 
 void Orgelwerk::showChannelDetails(bool update_preview)
