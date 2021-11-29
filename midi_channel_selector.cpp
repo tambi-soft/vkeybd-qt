@@ -15,6 +15,8 @@ MIDIChannelSelector::MIDIChannelSelector(InterfaceAudio *audio, QWidget *parent)
     QLabel *key_max_label = new QLabel("Key Max");
     QLabel *label_instrument_group = new QLabel("Instrument Group");
     QLabel *label_instrument = new QLabel("Instrument");
+    QLabel *label_midi_group = new QLabel("MSB");
+    QLabel *label_midi_bank = new QLabel("LSB");
     QLabel *portamento_time = new QLabel("Port. Time");
     portamento_time->setToolTip("Portamento Time");
     QLabel *label_attack = new QLabel("Attack");
@@ -29,9 +31,11 @@ MIDIChannelSelector::MIDIChannelSelector(InterfaceAudio *audio, QWidget *parent)
     grid->addWidget(key_max_label, 0, 5);
     grid->addWidget(label_instrument_group, 0, 6);
     grid->addWidget(label_instrument, 0, 7);
-    grid->addWidget(portamento_time, 0, 8);
-    grid->addWidget(label_attack, 0, 9);
-    grid->addWidget(label_release, 0, 10);
+    grid->addWidget(label_midi_group, 0, 8);
+    grid->addWidget(label_midi_bank, 0, 9);
+    grid->addWidget(portamento_time, 0, 10);
+    grid->addWidget(label_attack, 0, 11);
+    grid->addWidget(label_release, 0, 12);
     
     for (int i=1; i<=16; i++)
     {
@@ -89,6 +93,12 @@ MIDIChannelSelector::MIDIChannelSelector(InterfaceAudio *audio, QWidget *parent)
         connect(combo_instrument_group, &QComboBox::currentTextChanged, this, [this, i, combo_instrument_group, combo_instrument]{ MIDIChannelSelector::instrumentGroupChanged(i-1, combo_instrument_group, combo_instrument); });
         connect(combo_instrument, &QComboBox::currentTextChanged, this, [this, i, combo_instrument]{ MIDIChannelSelector::instrumentChanged(i-1, combo_instrument); });
         
+        QSpinBox *midi_group = new QSpinBox;
+        QSpinBox *midi_bank = new QSpinBox;
+        midi_group->setRange(0, 127);
+        midi_bank->setRange(0, 127);
+        connect(midi_group, &QSpinBox::textChanged, this, [this, i, midi_group, midi_bank]{ MIDIChannelSelector::instrumentChangedNumeric(i-1, midi_group->value(), midi_bank->value()); });
+        
         //QDial *dial_portamento = new QDial();
         //dial_portamento->resize(20, 20);
         QSlider *slider_portamento = new QSlider;
@@ -116,10 +126,13 @@ MIDIChannelSelector::MIDIChannelSelector(InterfaceAudio *audio, QWidget *parent)
         
         grid->addWidget(combo_instrument_group, i, 6);
         grid->addWidget(combo_instrument, i, 7);
-        grid->addWidget(slider_portamento, i, 8);
+        grid->addWidget(midi_group, i, 8);
+        grid->addWidget(midi_bank, i, 9);
         
-        grid->addWidget(slider_attack, i, 9);
-        grid->addWidget(slider_release, i, 10);
+        grid->addWidget(slider_portamento, i, 10);
+        
+        grid->addWidget(slider_attack, i, 11);
+        grid->addWidget(slider_release, i, 12);
         
         if (i==1)
         {
@@ -137,6 +150,10 @@ MIDIChannelSelector::MIDIChannelSelector(InterfaceAudio *audio, QWidget *parent)
         this->list_of_keyshifts.append(key_shift);
         this->list_of_key_mins.append(key_min);
         this->list_of_key_maxs.append(key_max);
+        this->list_of_instrument_groups.append(combo_instrument_group);
+        this->list_of_instrument_banks.append(combo_instrument);
+        this->list_of_msb.append(midi_group);
+        this->list_of_lsb.append(midi_bank);
     }
 }
 
@@ -174,7 +191,26 @@ QList<QMap<QString,int>> MIDIChannelSelector::getListOfActivatedChannels()
 
 void MIDIChannelSelector::volumeSliderMoved(int channel, int volume)
 {
+    volume = volume * this->volume_dca / 100;
+    if (volume > 127)
+    {
+        volume = 127;
+    }
+    
     this->audio->setVolumeChangeEvent(channel, volume);
+}
+void MIDIChannelSelector::volumeDCAChanged(int value)
+{
+    this->volume_dca = value;
+    
+    QList<QMap<QString,int>> channels = getListOfActivatedChannels();
+    for (int i=0; i < channels.length(); i++)
+    {
+        int channel = channels.at(i)["channel"];
+        int volume = channels.at(i)["volume"];
+        
+        volumeSliderMoved(channel, volume);
+    }
 }
 
 void MIDIChannelSelector::panSliderMoved(int channel, int value)
@@ -200,13 +236,40 @@ void MIDIChannelSelector::instrumentGroupChanged(int channel, QComboBox *combo_g
 void MIDIChannelSelector::instrumentChanged(int channel, QComboBox *combo_instrument)
 {
     QString name = combo_instrument->currentText();
-    qDebug() << "changed: "+name;
-    
-    QList<int> codes = this->midi_sounds_list->getMIDICodesForInstrument(name);
-    int program = codes.at(0) - 1;
-    int bank = codes.at(1);
-    
+    //if (name != (new MIDISoundsList())->BANK_NO_NAME)
+    //{
+        qDebug() << "changed: "+name;
+        
+        QList<int> codes = this->midi_sounds_list->getMIDICodesForInstrument(name);
+        int program = codes.at(0) - 1;
+        int bank = codes.at(1);
+        
+        this->audio->setProgramChangeEvent(channel, program, bank);
+        
+        // change msb and lsb spinbox accordingly but not send signals
+        this->list_of_msb.at(channel)->blockSignals(true);
+        this->list_of_msb.at(channel)->setValue(program);
+        this->list_of_msb.at(channel)->blockSignals(false);
+        
+        this->list_of_lsb.at(channel)->blockSignals(true);
+        this->list_of_lsb.at(channel)->setValue(bank);
+        this->list_of_lsb.at(channel)->blockSignals(false);
+    //}
+}
+
+void MIDIChannelSelector::instrumentChangedNumeric(int channel, int program, int bank)
+{
+    qDebug() << "changed: "+QString::number(channel)+" "+QString::number(bank);
     this->audio->setProgramChangeEvent(channel, program, bank);
+    
+    // change spin boxes for group and bank accordingly
+    this->list_of_instrument_groups.at(channel)->blockSignals(true);
+    this->list_of_instrument_groups.at(channel)->setCurrentIndex(program);
+    this->list_of_instrument_groups.at(channel)->blockSignals(false);
+    
+    this->list_of_instrument_banks.at(channel)->blockSignals(true);
+    this->list_of_instrument_banks.at(channel)->setCurrentIndex(bank);
+    this->list_of_instrument_banks.at(channel)->blockSignals(true);
 }
 
 void MIDIChannelSelector::portamentoChanged(int channel, QSlider *slider)

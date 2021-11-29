@@ -79,6 +79,8 @@ QList<QString> MIDISoundsList::getInstrumentsForGroupHelper(QString group, bool 
         }
     }
     
+    //result.append(this->BANK_NO_NAME);
+    
     return result;
 }
 QList<QVariant> MIDISoundsList::splitLine(QString line)
@@ -143,6 +145,15 @@ QList<int> MIDISoundsList::getMIDICodesForInstrument(QString instrument)
             break;
         }
     }
+    
+    return result;
+}
+
+QString MIDISoundsList::getGroupNameForNumber(int number)
+{
+    QString result = "";
+    
+    
     
     return result;
 }

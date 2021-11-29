@@ -18,6 +18,9 @@ public:
     QList<QString> getInstrumentsForGroupMIDIv1(QString group);
     QList<QString> getInstrumentsForGroupMIDIv2(QString group);
     QList<int>  getMIDICodesForInstrument(QString instrument);
+    QString getGroupNameForNumber(int number);
+    
+    //QString BANK_NO_NAME = "[None]";
     
 private:
     QList<QString> list_of_groups;

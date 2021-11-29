@@ -78,6 +78,7 @@ private slots:
     void pitchWheelMoved(int pitch);
     void showChannelDetails(bool update_preview=false);
     void channelsDialogRejected();
+    void volumeSliderMoved(int value);
     
 protected:
     

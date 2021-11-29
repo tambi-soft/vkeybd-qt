@@ -13,7 +13,7 @@ void Orgelwerk::drawGUI()
 {
     this->channels = new MIDIChannelSelector(this->interface_audio);
     this->keys = new MIDIKeySelector;
-    this->pitch = new MIDIPitchWheel();
+    this->pitch = new MIDIPitchWheel;
     this->piano = new KeyboardPiano;
     this->pc = new KeyboardPC;
     
@@ -57,10 +57,13 @@ void Orgelwerk::drawGUI()
                          "}";
     this->button_panic->setStyleSheet(stylesheet);
     
-    QLabel *label_volume_master = new QLabel("Master Volume");
+    QLabel *label_volume_master = new QLabel("Master Volume (DCA)");
     this->slider_volume_master = new QSlider(Qt::Horizontal, this);
-    this->slider_volume_master->setRange(0, 100);
+    this->slider_volume_master->setRange(0, 120);
+    this->slider_volume_master->setTickInterval(20);
+    this->slider_volume_master->setTickPosition(QSlider::TicksBelow);
     this->slider_volume_master->setValue(100);
+    connect(this->slider_volume_master, &QSlider::valueChanged, this, &Orgelwerk::volumeSliderMoved);
     
     showChannelsReal(0);
     //showChannelsImage(1);
@@ -254,6 +257,11 @@ void Orgelwerk::keySoft(bool pressed)
         int volume = list_of_channels.at(c)["volume"];
         this->interface_audio->keySoftEvent(channel, pressed, volume);
     }
+}
+
+void Orgelwerk::volumeSliderMoved(int value)
+{
+    this->channels->volumeDCAChanged(value);
 }
 
 void Orgelwerk::showChannelDetails(bool update_preview)
