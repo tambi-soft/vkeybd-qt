@@ -317,6 +317,10 @@ bool MIDIChannelSelector::eventFilter(QObject *obj, QEvent *ev)
             
             return false;
         }
+        else if (event->key() == Qt::Key_Escape)
+        {
+            return false;
+        }
         else
         {
             emit eventFiltered(obj, ev);
