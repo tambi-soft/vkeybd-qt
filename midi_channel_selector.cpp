@@ -155,6 +155,8 @@ MIDIChannelSelector::MIDIChannelSelector(InterfaceAudio *audio, QWidget *parent)
         this->list_of_msb.append(midi_group);
         this->list_of_lsb.append(midi_bank);
     }
+    
+    installEventFilter(this);
 }
 
 QList<QMap<QString,int>> MIDIChannelSelector::getListOfActivatedChannels()
@@ -297,6 +299,28 @@ void MIDIChannelSelector::resendMIDIControls()
         volumeSliderMoved(channel, channels.at(i)["volume"]);
         
     }
+}
+
+bool MIDIChannelSelector::eventFilter(QObject *obj, QEvent *ev)
+{
+    if (ev->type() == QEvent::KeyPress || ev->type() == QEvent::KeyRelease)
+    {
+        QKeyEvent *event = static_cast<QKeyEvent*>(ev);
+        if (event->key() == Qt::Key_Return || event->key() == Qt::Key_Enter)
+        {
+            setFocus();
+            
+            return false;
+        }
+        else
+        {
+            emit eventFiltered(obj, ev);
+            
+            return true;
+        }
+    }
+    
+    return false;
 }
 
 

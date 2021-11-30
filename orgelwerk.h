@@ -86,9 +86,10 @@ private slots:
     void resendMIDIControls();
     
 protected:
-    
+    bool eventFilter(QObject *obj, QEvent *ev);
     
 signals:
+    void eventFiltered(QObject *obj, QEvent *ev);
     
 };
 

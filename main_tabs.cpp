@@ -56,7 +56,10 @@ void MainTabs::addOrganTab(QString label, int number_of_orgelwerks)
         {
             midi_port_label = label + "-" + QString::number(i);
         }
+        
         Orgelwerk *o = new Orgelwerk(midi_port_label);
+        connect(o, &Orgelwerk::eventFiltered, this, &MainTabs::eventFilter);
+        
         layout->addWidget(o);
     }
     

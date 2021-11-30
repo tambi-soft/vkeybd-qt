@@ -7,6 +7,8 @@ Orgelwerk::Orgelwerk(QString label, QWidget *parent) : QWidget(parent)
     
     drawGUI();
     initInputThread();
+    
+    installEventFilter(this);
 }
 
 void Orgelwerk::drawGUI()
@@ -16,6 +18,8 @@ void Orgelwerk::drawGUI()
     this->pitch = new MIDIPitchWheel;
     this->piano = new KeyboardPiano;
     this->pc = new KeyboardPC;
+    
+    connect(this->channels, &MIDIChannelSelector::eventFiltered, this, &Orgelwerk::eventFilter);
     
     connect(this->pitch, &MIDIPitchWheel::pitchWheelMoved, this, &Orgelwerk::pitchWheelMoved);
     
@@ -423,4 +427,16 @@ void Orgelwerk::updateChannelsSchreenshot()
 void Orgelwerk::resendMIDIControls()
 {
     this->channels->resendMIDIControls();
+}
+
+bool Orgelwerk::eventFilter(QObject *obj, QEvent *ev)
+{
+    if (ev->type() == QEvent::KeyPress || ev->type() == QEvent::KeyRelease)
+    {
+        emit eventFiltered(obj, ev);
+        
+        return true;
+    }
+    
+    return false;
 }

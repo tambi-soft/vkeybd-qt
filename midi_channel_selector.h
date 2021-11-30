@@ -39,6 +39,8 @@ private slots:
 #include <QDial>
 #include <QComboBox>
 #include <QLabel>
+#include <QEvent>
+#include <QKeyEvent>
 
 #include "midi_sounds_list.h"
 #include "interface_audio.h"
@@ -69,6 +71,9 @@ private:
     QList<QSpinBox*> list_of_msb;
     QList<QSpinBox*> list_of_lsb;
     
+protected:
+    bool eventFilter(QObject *obj, QEvent *ev);
+    
 private slots:
     void volumeSliderMoved(int channel, int volume);
     void panSliderMoved(int channel, int value);
@@ -80,7 +85,7 @@ private slots:
     void releaseChanged(int channel, QSlider *slider);
     
 signals:
-    
+    void eventFiltered(QObject *obj, QEvent *ev);
 };
 
 #endif // MIDICHANNELSELECTOR_H
