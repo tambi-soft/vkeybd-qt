@@ -7,7 +7,7 @@ MenuBar::MenuBar(QMenuBar *parent) : QMenuBar(parent)
 
 void MenuBar::addFileMenu()
 {
-    QMenu *menuFile = addMenu("&File");
+    QMenu *menuFile = addMenu("File");
     
     QAction *exitAction = new QAction(QIcon::fromTheme("application-exit"), "Exit");
     //exitAction->setShortcut(QKeySequence::fromString("Ctrl+Q"));

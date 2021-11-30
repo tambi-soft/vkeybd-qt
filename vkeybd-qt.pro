@@ -36,6 +36,7 @@ SOURCES += \
     main_window.cpp \
     menubar.cpp \
     midi_channel_selector.cpp \
+    midi_channels_summary.cpp \
     midi_key_selector.cpp \
     midi_pitchwheel.cpp \
     midi_sounds_list.cpp \
@@ -54,6 +55,7 @@ HEADERS += \
     main_window.h \
     menubar.h \
     midi_channel_selector.h \
+    midi_channels_summary.h \
     midi_key_selector.h \
     midi_pitchwheel.h \
     midi_sounds_list.h \
