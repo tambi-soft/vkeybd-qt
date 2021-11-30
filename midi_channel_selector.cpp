@@ -162,6 +162,11 @@ void MIDIChannelSelector::drawGUI()
         this->list_of_msb.append(midi_group);
         this->list_of_lsb.append(midi_bank);
     }
+    
+    QPushButton *button_test_note = new QPushButton("Play Test Note");
+    connect(button_test_note, &QPushButton::pressed, this, &MIDIChannelSelector::playTestNote);
+    connect(button_test_note, &QPushButton::released, this, &MIDIChannelSelector::stopTestNote);
+    grid->addWidget(button_test_note, 17, 0, 1, 13);
 }
 
 QList<QMap<QString,int>> MIDIChannelSelector::getListOfActivatedChannels()
@@ -330,6 +335,23 @@ bool MIDIChannelSelector::eventFilter(QObject *obj, QEvent *ev)
     }
     
     return false;
+}
+
+void MIDIChannelSelector::playTestNote()
+{
+    QList<QMap<QString,int>> channels = getListOfActivatedChannels();
+    for (int i=0; i < channels.length(); i++)
+    {
+        this->audio->keyPressEvent(i, 60);
+    }
+}
+void MIDIChannelSelector::stopTestNote()
+{
+    QList<QMap<QString,int>> channels = getListOfActivatedChannels();
+    for (int i=0; i < channels.length(); i++)
+    {
+        this->audio->keyReleaseEvent(i, 60);
+    }
 }
 
 

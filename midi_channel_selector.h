@@ -85,6 +85,8 @@ private slots:
     void portamentoChanged(int channel, QSlider *slider);
     void attackChanged(int channel, QSlider *slider);
     void releaseChanged(int channel, QSlider *slider);
+    void playTestNote();
+    void stopTestNote();
     
 signals:
     void eventFiltered(QObject *obj, QEvent *ev);
