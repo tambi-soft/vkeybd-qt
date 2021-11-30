@@ -119,7 +119,12 @@ bool MainTabs::eventFilter(QObject *obj, QEvent *ev)
                 {
                     if (this->list_function_keys.at(i) == event->key())
                     {
+                        // send "all keys of" on old tab
+                        o->panicKeyPressed();
+                        
+                        // activate new tab
                         this->setCurrentIndex(i);
+                        
                         return true;
                     }
                 }
