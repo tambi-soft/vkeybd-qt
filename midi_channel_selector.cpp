@@ -4,6 +4,13 @@ MIDIChannelSelector::MIDIChannelSelector(InterfaceAudio *audio, QWidget *parent)
 {
     this->audio = audio;
     
+    drawGUI();
+    
+    installEventFilter(this);
+}
+
+void MIDIChannelSelector::drawGUI()
+{
     QGridLayout *grid = new QGridLayout;
     setLayout(grid);
     
@@ -155,8 +162,6 @@ MIDIChannelSelector::MIDIChannelSelector(InterfaceAudio *audio, QWidget *parent)
         this->list_of_msb.append(midi_group);
         this->list_of_lsb.append(midi_bank);
     }
-    
-    installEventFilter(this);
 }
 
 QList<QMap<QString,int>> MIDIChannelSelector::getListOfActivatedChannels()
@@ -349,6 +354,9 @@ MIDIKeyShiftWidget::MIDIKeyShiftWidget(QWidget *parent) : QWidget(parent)
     layout->addWidget(button_lower);
     layout->addWidget(this->spin_key);
     layout->addWidget(button_higher);
+    
+    button_lower->setFocusPolicy(Qt::NoFocus);
+    button_higher->setFocusPolicy(Qt::NoFocus);
 }
 
 void MIDIKeyShiftWidget::lowerShiftKeyPressed()

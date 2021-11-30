@@ -61,6 +61,8 @@ private:
     
     int volume_dca = 100;
     
+    void drawGUI();
+    
     QList<QCheckBox*> list_of_checkboxes;
     QList<MIDIKeyShiftWidget*> list_of_keyshifts;
     QList<QSpinBox*> list_of_key_mins;
