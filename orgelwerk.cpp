@@ -16,38 +16,25 @@ void Orgelwerk::drawGUI()
     this->channels = new MIDIChannelSelector(this->interface_audio);
     this->keys = new MIDIKeySelector;
     this->pitch = new MIDIPitchWheel;
-    this->piano = new KeyboardPiano;
-    this->pc = new KeyboardPC;
     
     connect(this->channels, &MIDIChannelSelector::eventFiltered, this, &Orgelwerk::eventFilter);
     
     connect(this->pitch, &MIDIPitchWheel::pitchWheelMoved, this, &Orgelwerk::pitchWheelMoved);
-    
-    connect(this->pc, &KeyboardPC::MIDIPress, this, &Orgelwerk::keyMIDIDown);
-    connect(this->pc, &KeyboardPC::MIDIRelease, this, &Orgelwerk::keyMIDIUp);
     
     this->grid = new QGridLayout;
     setLayout(this->grid);
     
     QGroupBox *group_keys = new QGroupBox("Keys");
     QGroupBox *group_pitch = new QGroupBox("Pitch");
-    QGroupBox *group_keyboards = new QGroupBox("Keyboards");
     
     QVBoxLayout *layout_keys = new QVBoxLayout;
     QHBoxLayout *layout_pitch = new QHBoxLayout;
-    QVBoxLayout *layout_keyboards = new QVBoxLayout;
     
     group_keys->setLayout(layout_keys);
     group_pitch->setLayout(layout_pitch);
-    group_keyboards->setLayout(layout_keyboards);
     
     layout_keys->addWidget(this->keys);
     layout_pitch->addWidget(this->pitch);
-    layout_keyboards->addWidget(this->piano);
-    layout_keyboards->addWidget(this->pc);
-    
-    //this->button_grab->setText("Grab Keyboard");
-    //connect(this->button_grab, &QPushButton::clicked, this, &Orgelwerk::grabKeyboardPressed);
     
     this->button_panic->setText("Panic!");
     connect(this->button_panic, &QPushButton::clicked, this, &Orgelwerk::panicKeyPressed);
@@ -76,10 +63,26 @@ void Orgelwerk::drawGUI()
     this->grid->addWidget(this->slider_volume_master, 3, 0);
     this->grid->addWidget(group_keys, 4, 0);
     this->grid->addWidget(group_pitch, 5, 0);
-    this->grid->addWidget(group_keyboards, 6, 0);
-    this->grid->addWidget(this->button_panic, 7, 0);
+    //drawPianoKeyboard(6);
+    drawPCKeyboard(7);
+    this->grid->addWidget(this->button_panic, 10, 0);
     
     //this->grid->setSizeConstraint( QLayout::SetFixedSize );
+}
+
+void Orgelwerk::drawPianoKeyboard(int grid_row)
+{
+    this->piano = new KeyboardPiano;
+    
+    this->grid->addWidget(this->piano, grid_row, 0);
+}
+void Orgelwerk::drawPCKeyboard(int grid_row)
+{
+    this->pc = new KeyboardPC;
+    connect(this->pc, &KeyboardPC::MIDIPress, this, &Orgelwerk::keyMIDIDown);
+    connect(this->pc, &KeyboardPC::MIDIRelease, this, &Orgelwerk::keyMIDIUp);
+    
+    this->grid->addWidget(this->pc, grid_row, 0);
 }
 
 void Orgelwerk::showChannelsReal(int grid_row)
@@ -174,9 +177,12 @@ void Orgelwerk::keyUp(int keycode)
 
 void Orgelwerk::panicKeyPressed()
 {
-    for (int i=0; i <= 127; i++)
+    if (this->piano)
     {
-        this->piano->keyReleased(i);
+        for (int i=0; i <= 127; i++)
+        {
+            this->piano->keyReleased(i);
+        }
     }
     
     this->pc->allKeysUp();
@@ -198,13 +204,16 @@ void Orgelwerk::stopAllPressed()
 
 void Orgelwerk::keyMIDIHelper(int midicode, QString mode)
 {
-    if (mode == "down")
+    if (this->piano)
     {
-        this->piano->keyPressed(midicode);
-    }
-    else if (mode == "up")
-    {
-        this->piano->keyReleased(midicode);
+        if (mode == "down")
+        {
+            this->piano->keyPressed(midicode);
+        }
+        else if (mode == "up")
+        {
+            this->piano->keyReleased(midicode);
+        }
     }
     
     // -12: The lower full octave on the keyboard is in the midi-range of 12 - 23 for beeing able to add some even deeper notes to the left. Therefore we get an offset of 12 we have to compensate here

@@ -50,6 +50,8 @@ public:
     
 private:
     void drawGUI();
+    void drawPianoKeyboard(int grid_row);
+    void drawPCKeyboard(int grid_row);
     void initInputThread();
     
     QGridLayout *grid;
