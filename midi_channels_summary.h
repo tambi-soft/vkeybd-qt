@@ -3,6 +3,11 @@
 
 #include <QObject>
 #include <QWidget>
+#include <QGroupBox>
+#include <QGridLayout>
+#include <QPushButton>
+#include <QLabel>
+#include <QMap>
 
 class MIDIChannelsSummary : public QWidget
 {
@@ -11,6 +16,11 @@ public:
     explicit MIDIChannelsSummary(QWidget *parent = nullptr);
     
     void showData(QList<QMap<QString,int>> data);
+    void clearData();
+    void styleLabels();
+    
+private:
+    QGridLayout *grid;
     
 signals:
     

@@ -23,6 +23,7 @@
 #include "interface_audio.h"
 #include "interface_alsa.h"
 #include "interface_jack.h"
+#include "midi_channels_summary.h"
 
 class Orgelwerk : public QWidget
 {
@@ -57,7 +58,7 @@ private:
     QSlider *slider_volume_master;
     QPushButton *button_channels;
     QScrollArea *scroll_channels;
-    QGridLayout *channels_summary_grid;
+    MIDIChannelsSummary *midi_channels_summary;
     
     //InputKeyboardRaw *input_raw;
     QThread *thread_input;

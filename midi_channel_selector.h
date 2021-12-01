@@ -44,7 +44,6 @@ private slots:
 
 #include "midi_sounds_list.h"
 #include "interface_audio.h"
-#include "midi_channels_summary.h"
 
 class MIDIChannelSelector : public QWidget
 {
