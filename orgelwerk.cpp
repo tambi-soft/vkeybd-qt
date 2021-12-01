@@ -63,13 +63,20 @@ void Orgelwerk::drawGUI()
     this->grid->addWidget(this->slider_volume_master, 3, 0);
     this->grid->addWidget(group_keys, 4, 0);
     this->grid->addWidget(group_pitch, 5, 0);
-    //drawPianoKeyboard(6);
-    drawPCKeyboard(7);
+    drawNotesKeyboard(6);
+    //drawPianoKeyboard(7);
+    drawPCKeyboard(8);
     this->grid->addWidget(this->button_panic, 10, 0);
     
     //this->grid->setSizeConstraint( QLayout::SetFixedSize );
 }
 
+void Orgelwerk::drawNotesKeyboard(int grid_row)
+{
+    this->notes = new KeyboardNotes;
+    
+    this->grid->addWidget(this->notes, grid_row, 0);
+}
 void Orgelwerk::drawPianoKeyboard(int grid_row)
 {
     this->piano = new KeyboardPiano;
@@ -179,10 +186,12 @@ void Orgelwerk::panicKeyPressed()
 {
     if (this->piano)
     {
-        for (int i=0; i <= 127; i++)
-        {
-            this->piano->keyReleased(i);
-        }
+        this->piano->allKeysUp();
+    }
+    
+    if (this->notes)
+    {
+        this->notes->allKeysUp();
     }
     
     this->pc->allKeysUp();
@@ -204,19 +213,32 @@ void Orgelwerk::stopAllPressed()
 
 void Orgelwerk::keyMIDIHelper(int midicode, QString mode)
 {
-    if (this->piano)
+    if (mode == "down")
     {
-        if (mode == "down")
+        if (this->notes) 
+        {
+            this->notes->keyPressed(midicode);
+        }
+        if (this->piano)
         {
             this->piano->keyPressed(midicode);
         }
-        else if (mode == "up")
+    }
+    else if (mode == "up")
+    {
+        if (this->notes)
+        {
+            this->notes->keyReleased(midicode);
+        }
+        if (this->piano)
         {
             this->piano->keyReleased(midicode);
         }
     }
     
-    // -12: The lower full octave on the keyboard is in the midi-range of 12 - 23 for beeing able to add some even deeper notes to the left. Therefore we get an offset of 12 we have to compensate here
+    // -12: The lower full octave on the keyboard is in the midi-range of 12 - 23.
+    // For being able to add some even deeper notes to the left.
+    // Therefore we get an offset of 12 we have to compensate here.
     int keycode = midicode - 12;
     
     QList<QMap<QString,int>> list_of_channels = this->channels->getListOfActivatedChannels();

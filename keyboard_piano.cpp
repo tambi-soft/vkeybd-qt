@@ -136,3 +136,11 @@ void KeyboardPiano::keyReleased(int midicode)
         button->release();
     }
 }
+
+void KeyboardPiano::allKeysUp()
+{
+    for (int i=0; i <= 127; i++)
+    {
+        keyReleased(i);
+    }
+}

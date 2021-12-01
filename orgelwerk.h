@@ -18,6 +18,8 @@
 #include "midi_pitchwheel.h"
 #include "keyboard_piano.h"
 #include "keyboard_pc.h"
+#include "keyboard_notes.h"
+
 #include "input_keyboard_raw_thread.h"
 
 #include "interface_audio.h"
@@ -45,11 +47,13 @@ public:
     MIDIChannelSelector *channels;
     MIDIKeySelector *keys;
     MIDIPitchWheel *pitch;
-    KeyboardPiano *piano;
-    KeyboardPC *pc;
+    KeyboardNotes *notes = nullptr;
+    KeyboardPiano *piano = nullptr;
+    KeyboardPC *pc = nullptr;
     
 private:
     void drawGUI();
+    void drawNotesKeyboard(int grid_row);
     void drawPianoKeyboard(int grid_row);
     void drawPCKeyboard(int grid_row);
     void initInputThread();

@@ -40,6 +40,7 @@ public:
     
     void keyPressed(int midicode);
     void keyReleased(int midicode);
+    void allKeysUp();
     
 private:
     void colorizeBlackKeys(ButtonPiano *button);

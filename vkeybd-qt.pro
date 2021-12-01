@@ -29,6 +29,7 @@ SOURCES += \
     interface_alsa.cpp \
     interface_audio.cpp \
     interface_jack.cpp \
+    keyboard_notes.cpp \
     keyboard_pc.cpp \
     keyboard_piano.cpp \
     main.cpp \
@@ -49,6 +50,7 @@ HEADERS += \
     interface_alsa.h \
     interface_audio.h \
     interface_jack.h \
+    keyboard_notes.h \
     keyboard_pc.h \
     keyboard_piano.h \
     main_tabs.h \
