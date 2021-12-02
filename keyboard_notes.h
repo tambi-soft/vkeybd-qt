@@ -28,8 +28,9 @@ public:
 private:
     QGraphicsView *view;
     QGraphicsScene *scene;
+    QList<int> list_notes_half;
     QMap<int, QGraphicsEllipseItem*> map_of_notes_full;
-    QMap<int, QGraphicsEllipseItem*> map_of_notes_half;
+    //QMap<int, QGraphicsEllipseItem*> map_of_notes_half;
     
     void drawGUI();
     
