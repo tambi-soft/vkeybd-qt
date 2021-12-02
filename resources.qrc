@@ -1,0 +1,12 @@
+<RCC>
+    <qresource prefix="/">
+        <file alias="gpl">LICENSE</file>
+        
+        <file alias="bass_violin">assets/svg/bass_violin.svg</file>
+        <file alias="clef_bass">assets/svg/clef_bass.svg</file>
+        <file alias="clef_violin">assets/svg/clef_violin.svg</file>
+        <file alias="flat">assets/svg/flat.svg</file>
+        <file alias="sharp">assets/svg/sharp.svg</file>
+        <file alias="note_whole">assets/svg/note_whole.svg</file>
+    </qresource>
+</RCC>

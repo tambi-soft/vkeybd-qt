@@ -64,7 +64,7 @@ void Orgelwerk::drawGUI()
     this->grid->addWidget(group_keys, 4, 0);
     this->grid->addWidget(group_pitch, 5, 0);
     drawNotesKeyboard(6);
-    //drawPianoKeyboard(7);
+    drawPianoKeyboard(7);
     drawPCKeyboard(8);
     this->grid->addWidget(this->button_panic, 10, 0);
     

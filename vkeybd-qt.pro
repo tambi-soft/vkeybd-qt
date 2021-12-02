@@ -1,5 +1,6 @@
 QT  += core gui\
-    sql
+    sql\
+    svg
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -62,6 +63,9 @@ HEADERS += \
     midi_pitchwheel.h \
     midi_sounds_list.h \
     orgelwerk.h
+
+RESOURCES += \
+    resources.qrc
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
