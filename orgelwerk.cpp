@@ -213,29 +213,6 @@ void Orgelwerk::stopAllPressed()
 
 void Orgelwerk::keyMIDIHelper(int midicode, QString mode)
 {
-    if (mode == "down")
-    {
-        if (this->notes) 
-        {
-            this->notes->keyPressed(midicode);
-        }
-        if (this->piano)
-        {
-            this->piano->keyPressed(midicode);
-        }
-    }
-    else if (mode == "up")
-    {
-        if (this->notes)
-        {
-            this->notes->keyReleased(midicode);
-        }
-        if (this->piano)
-        {
-            this->piano->keyReleased(midicode);
-        }
-    }
-    
     // -12: The lower full octave on the keyboard is in the midi-range of 12 - 23.
     // For being able to add some even deeper notes to the left.
     // Therefore we get an offset of 12 we have to compensate here.
@@ -261,16 +238,41 @@ void Orgelwerk::keyMIDIHelper(int midicode, QString mode)
                 if (mode == "down")
                 {
                     this->interface_audio->keyPressEvent(channel, m_code_shifted);
+                    
+                    if (this->notes) 
+                    {
+                        this->notes->keyPressed(m_code_shifted);
+                    }
                 }
                 else if (mode == "up")
                 {
                     this->interface_audio->keyReleaseEvent(channel, m_code_shifted);
+                    
+                    if (this->notes)
+                    {
+                        this->notes->keyReleased(m_code_shifted);
+                    }
                 }
                 else if (mode == "pitch")
                 {
                     this->interface_audio->keyPitchbendEvent(channel, midicode);
                 }
             }
+        }
+    }
+    
+    if (mode == "down")
+    {
+        if (this->piano)
+        {
+            this->piano->keyPressed(midicode);
+        }
+    }
+    else if (mode == "up")
+    {
+        if (this->piano)
+        {
+            this->piano->keyReleased(midicode);
         }
     }
 }

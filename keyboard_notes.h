@@ -13,6 +13,8 @@
 #include <QBrush>
 #include <QList>
 
+#include <QDebug>
+
 class KeyboardNotes : public QWidget
 {
     Q_OBJECT
@@ -27,6 +29,7 @@ private:
     QGraphicsView *view;
     QGraphicsScene *scene;
     QMap<int, QGraphicsEllipseItem*> map_of_notes_full;
+    QMap<int, QGraphicsEllipseItem*> map_of_notes_half;
     
     void drawGUI();
     

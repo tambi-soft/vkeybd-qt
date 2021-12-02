@@ -37,6 +37,7 @@ InterfaceAlsa::~InterfaceAlsa()
 
 void InterfaceAlsa::keyPressEvent(int channel, int midicode)
 {
+    qDebug() << "ALSA: "+QString::number(midicode);
     /* either */
     //snd_seq_ev_set_dest(&ev, 64, 0); /* send to 64:0 */
     /* or */
