@@ -65,8 +65,38 @@ void KeyboardNotes::drawGUI()
         y_start -= 2.5;
     }
     
+    qreal x_sharp = 0;
+    qreal y_sharp = 110;
+    for (int i=0; i < list_notes_full.length(); i++)
+    {
+        QGraphicsSvgItem *sharp = new QGraphicsSvgItem(":sharp");
+        sharp->setPos(x_sharp, y_sharp);
+        this->scene->addItem(sharp);
+        
+        sharp->hide();
+        
+        this->map_of_sharps[list_notes_full.at(i)] = sharp;
+        
+        x_sharp += 4*2;
+        y_sharp -= 2.5*2;
+    }
     
-    
+    qreal x_flat = -10;
+    qreal y_flat = 102;
+    for (int i=0; i < list_notes_full.length(); i++)
+    {
+        QGraphicsSvgItem *flat = new QGraphicsSvgItem(":flat");
+        flat->setScale(.07);
+        flat->setPos(x_flat, y_flat);
+        this->scene->addItem(flat);
+        
+        flat->hide();
+        
+        this->map_of_flats[list_notes_full.at(i)] = flat;
+        
+        x_flat += 4*2;
+        y_flat -= 2.5*2;
+    }
 }
 
 void KeyboardNotes::keyPressed(int midicode)
@@ -78,7 +108,11 @@ void KeyboardNotes::keyPressed(int midicode)
     }
     else if (this->list_notes_half.contains(midicode))
     {
+        keyPressed(midicode-1);
+        keyPressed(midicode+1);
         
+        this->map_of_sharps[midicode-1]->show();
+        this->map_of_flats[midicode+1]->show();
     }
 }
 void KeyboardNotes::keyReleased(int midicode)
@@ -89,7 +123,11 @@ void KeyboardNotes::keyReleased(int midicode)
     }
     else if (this->list_notes_half.contains(midicode))
     {
+        keyReleased(midicode-1);
+        keyReleased(midicode+1);
         
+        this->map_of_sharps[midicode-1]->hide();
+        this->map_of_flats[midicode+1]->hide();
     }
 }
 void KeyboardNotes::allKeysUp()

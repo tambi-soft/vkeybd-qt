@@ -30,6 +30,8 @@ private:
     QGraphicsScene *scene;
     QList<int> list_notes_half;
     QMap<int, QGraphicsEllipseItem*> map_of_notes_full;
+    QMap<int, QGraphicsSvgItem*> map_of_sharps;
+    QMap<int, QGraphicsSvgItem*> map_of_flats;
     //QMap<int, QGraphicsEllipseItem*> map_of_notes_half;
     
     void drawGUI();
