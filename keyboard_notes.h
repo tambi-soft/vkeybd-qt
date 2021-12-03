@@ -28,13 +28,17 @@ public:
 private:
     QGraphicsView *view;
     QGraphicsScene *scene;
+    QList<int> list_notes_full;
     QList<int> list_notes_half;
     QMap<int, QGraphicsEllipseItem*> map_of_notes_full;
     QMap<int, QGraphicsSvgItem*> map_of_sharps;
     QMap<int, QGraphicsSvgItem*> map_of_flats;
+    QMap<int, QList<QGraphicsLineItem*>> map_of_auxiliary_lines;
     //QMap<int, QGraphicsEllipseItem*> map_of_notes_half;
     
     void drawGUI();
+    void drawAuxiliaryLines(int note);
+    void showHideAuxiliaryLines(int midicode, bool show);
     
 signals:
     
