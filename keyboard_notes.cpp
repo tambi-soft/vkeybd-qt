@@ -247,9 +247,31 @@ void KeyboardNotes::showHideAuxiliaryLines(int midicode, bool show)
 }
 void KeyboardNotes::allKeysUp()
 {
-    QList<int> keys = this->map_of_notes_full.keys();
-    for (int i=0; i < keys.length(); i++)
+    QList<int> keys_full = this->map_of_notes_full.keys();
+    for (int i=0; i < keys_full.length(); i++)
     {
-        this->map_of_notes_full[keys.at(i)]->hide();
+        this->map_of_notes_full[keys_full.at(i)]->hide();
+    }
+    
+    QList<int> keys_sharps = this->map_of_sharps.keys();
+    for (int i=0; i < keys_sharps.length(); i++)
+    {
+        this->map_of_sharps[keys_sharps.at(i)]->hide();
+    }
+    
+    QList<int> keys_flats = this->map_of_flats.keys();
+    for (int i=0; i < keys_flats.length(); i++)
+    {
+        this->map_of_flats[keys_sharps.at(i)]->hide();
+    }
+    
+    QList<int> keys_lines = this->map_of_auxiliary_lines.keys();
+    for (int i=0; i < keys_lines.length(); i++)
+    {
+        QList<QGraphicsLineItem*> lines = this->map_of_auxiliary_lines[keys_lines.at(i)];
+        for (int j=0; j < lines.length(); j++)
+        {
+            lines.at(j)->hide();
+        }
     }
 }
