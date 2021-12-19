@@ -133,8 +133,8 @@ bool MainTabs::eventFilter(QObject *obj, QEvent *ev)
                         this->setCurrentIndex(i);
                         
                         // current widget changed, need to update
-                        o = static_cast<Orgelwerk*>(currentWidget()->layout()->itemAt(0)->widget());
-                        o->resendMIDIControls();
+                        //o = static_cast<Orgelwerk*>(currentWidget()->layout()->itemAt(0)->widget());
+                        //o->resendMIDIControls();
                         
                         return true;
                     }
