@@ -345,24 +345,48 @@ void MIDIChannelSelector::resendMIDIControls()
 
 bool MIDIChannelSelector::eventFilter(QObject *obj, QEvent *ev)
 {
-    if (ev->type() == QEvent::KeyPress || ev->type() == QEvent::KeyRelease)
+    if (ev->type() == QEvent::KeyPress)//|| ev->type() == QEvent::KeyRelease)
     {
         QKeyEvent *event = static_cast<QKeyEvent*>(ev);
-        if (event->key() == Qt::Key_Return || event->key() == Qt::Key_Enter)
+        
+        if (event->isAutoRepeat() == false)
         {
-            setFocus();
-            
-            return false;
-        }
-        else if (event->key() == Qt::Key_Escape)
-        {
-            return false;
-        }
-        else
-        {
-            emit eventFiltered(obj, ev);
-            
-            return true;
+            if (event->key() == Qt::Key_Return || event->key() == Qt::Key_Enter)
+            {
+                setFocus();
+                
+                return false;
+            }
+            else if (event->key() >= Qt::Key_0 && event->key() <= Qt::Key_9)
+            {
+                int channel_number = event->key() - Qt::Key_0;
+                
+                if (event->modifiers() & Qt::AltModifier)
+                {
+                    channel_number += 10;
+                }
+                else if (event->key() == Qt::Key_0)
+                {
+                    channel_number = 10;
+                }
+                
+                if (channel_number <= this->list_of_checkboxes.length())
+                {
+                    this->list_of_checkboxes.at(channel_number-1)->toggle();
+                }
+                
+                return true;
+            }
+            else if (event->key() == Qt::Key_Escape)
+            {
+                return false;
+            }
+            else
+            {
+                emit eventFiltered(obj, ev);
+                
+                return true;
+            }
         }
     }
     
