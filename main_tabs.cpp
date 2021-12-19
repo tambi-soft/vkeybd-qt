@@ -83,7 +83,6 @@ bool MainTabs::eventFilter(QObject *obj, QEvent *ev)
             //Orgelwerk *o = static_cast<Orgelwerk*>(currentWidget());
             Orgelwerk *o = static_cast<Orgelwerk*>(currentWidget()->layout()->itemAt(0)->widget());
             
-            // bind esc as the panic-key
             if (event->key() == Qt::Key_Escape)
             {
                 o->button_panic->animateClick();
@@ -91,7 +90,11 @@ bool MainTabs::eventFilter(QObject *obj, QEvent *ev)
             }
             else if (event->key() == Qt::Key_Delete)
             {
-                o->stopAllPressed();
+                o->button_stop_all->animateClick();
+            }
+            else if (event->key() == Qt::Key_Menu)
+            {
+                qDebug() << "Context-Key!";
             }
             else if (event->key() == Qt::Key_Space)
             {

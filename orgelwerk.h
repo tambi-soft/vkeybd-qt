@@ -39,6 +39,7 @@ public:
     void panicKeyPressed();
     void stopAllPressed();
     QPushButton *button_panic = new QPushButton;
+    QPushButton *button_stop_all = new QPushButton;
     void movePitchWheel(int key);
     void keySustain(bool pressed);
     void keySostenuto(bool pressed);

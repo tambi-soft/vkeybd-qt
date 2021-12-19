@@ -41,6 +41,7 @@ private slots:
 #include <QLabel>
 #include <QEvent>
 #include <QKeyEvent>
+#include <QVariant>
 
 #include "midi_sounds_list.h"
 #include "interface_audio.h"
@@ -51,7 +52,7 @@ class MIDIChannelSelector : public QWidget
 public:
     explicit MIDIChannelSelector(InterfaceAudio *audio, QWidget *parent = nullptr);
     
-    QList<QMap<QString, int> > getListOfActivatedChannels();
+    QList<QMap<QString, QVariant> > getListOfActivatedChannels();
     void volumeDCAChanged(int value);
     void resendMIDIControls();
     
@@ -68,10 +69,14 @@ private:
     QList<QSpinBox*> list_of_key_mins;
     QList<QSpinBox*> list_of_key_maxs;
     QList<QSlider*> list_of_volume_sliders;
+    QList<QSlider*> list_of_pan_sliders;
     QList<QComboBox*> list_of_instrument_groups;
     QList<QComboBox*> list_of_instrument_banks;
     QList<QSpinBox*> list_of_msb;
     QList<QSpinBox*> list_of_lsb;
+    QList<QSlider*> list_of_portamentos;
+    QList<QSlider*> list_of_attacks;
+    QList<QSlider*> list_of_releases;
     
 protected:
     bool eventFilter(QObject *obj, QEvent *ev);
@@ -80,11 +85,11 @@ private slots:
     void volumeSliderMoved(int channel, int volume);
     void panSliderMoved(int channel, int value);
     void instrumentGroupChanged(int channel, QComboBox *combo_group, QComboBox *combo_instrument);
-    void instrumentChanged(int channel, QComboBox *combo_instrument);
+    void instrumentChanged(int channel, QString instrument);
     void instrumentChangedNumeric(int channel, int program, int bank);
-    void portamentoChanged(int channel, QSlider *slider);
-    void attackChanged(int channel, QSlider *slider);
-    void releaseChanged(int channel, QSlider *slider);
+    void portamentoChanged(int channel, int value);
+    void attackChanged(int channel, int value);
+    void releaseChanged(int channel, int value);
     void playTestNote();
     void stopTestNote();
     

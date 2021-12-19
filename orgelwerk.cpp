@@ -36,17 +36,29 @@ void Orgelwerk::drawGUI()
     layout_keys->addWidget(this->keys);
     layout_pitch->addWidget(this->pitch);
     
-    this->button_panic->setText("Panic!");
+    this->button_panic->setText("Panic! [Esc]");
     connect(this->button_panic, &QPushButton::clicked, this, &Orgelwerk::panicKeyPressed);
-    QString stylesheet = "QPushButton {"
+    QString stylesheet_panic = "QPushButton {"
                          "  color: white;"
-                         "  background-color: red;"
+                         "  background-color: darkred;"
                          "}"
                          "QPushButton:pressed {"
                          "  color: white;"
                          "  background-color: yellow;"
                          "}";
-    this->button_panic->setStyleSheet(stylesheet);
+    this->button_panic->setStyleSheet(stylesheet_panic);
+    
+    this->button_stop_all->setText("Stop All [Del]");
+    connect(this->button_stop_all, &QPushButton::clicked, this, &Orgelwerk::stopAllPressed);
+    QString stylesheet_stop = "QPushButton {"
+                         "  color: white;"
+                         "  background-color: darkorange;"
+                         "}"
+                         "QPushButton:pressed {"
+                         "  color: white;"
+                         "  background-color: yellow;"
+                         "}";
+    this->button_stop_all->setStyleSheet(stylesheet_stop);
     
     this->label_volume_master = new QLabel("Master Volume (DCA): 100%");
     this->slider_volume_master = new QSlider(Qt::Horizontal, this);
@@ -59,14 +71,15 @@ void Orgelwerk::drawGUI()
     //showChannelsReal(0);
     //showChannelsImage(1);
     showChannelsSummary(1);
-    this->grid->addWidget(label_volume_master, 2, 0);
-    this->grid->addWidget(this->slider_volume_master, 3, 0);
-    this->grid->addWidget(group_keys, 4, 0);
-    this->grid->addWidget(group_pitch, 5, 0);
+    this->grid->addWidget(label_volume_master, 2, 0, 1, 2);
+    this->grid->addWidget(this->slider_volume_master, 3, 0, 1, 2);
+    this->grid->addWidget(group_keys, 4, 0, 1, 2);
+    this->grid->addWidget(group_pitch, 5, 0, 1, 2);
     drawNotesKeyboard(6);
     //drawPianoKeyboard(7);
     drawPCKeyboard(8);
     this->grid->addWidget(this->button_panic, 10, 0);
+    this->grid->addWidget(this->button_stop_all, 10, 1);
     
     //this->grid->setSizeConstraint( QLayout::SetFixedSize );
 }
@@ -75,13 +88,13 @@ void Orgelwerk::drawNotesKeyboard(int grid_row)
 {
     this->notes = new KeyboardNotes;
     
-    this->grid->addWidget(this->notes, grid_row, 0);
+    this->grid->addWidget(this->notes, grid_row, 0, 1, 2);
 }
 void Orgelwerk::drawPianoKeyboard(int grid_row)
 {
     this->piano = new KeyboardPiano;
     
-    this->grid->addWidget(this->piano, grid_row, 0);
+    this->grid->addWidget(this->piano, grid_row, 0, 1, 2);
 }
 void Orgelwerk::drawPCKeyboard(int grid_row)
 {
@@ -89,7 +102,7 @@ void Orgelwerk::drawPCKeyboard(int grid_row)
     connect(this->pc, &KeyboardPC::MIDIPress, this, &Orgelwerk::keyMIDIDown);
     connect(this->pc, &KeyboardPC::MIDIRelease, this, &Orgelwerk::keyMIDIUp);
     
-    this->grid->addWidget(this->pc, grid_row, 0);
+    this->grid->addWidget(this->pc, grid_row, 0, 1, 2);
 }
 
 void Orgelwerk::showChannelsReal(int grid_row)
@@ -108,7 +121,7 @@ void Orgelwerk::showChannelsReal(int grid_row)
     layout_channels->addWidget(scroll_channels);
     layout_channels->addWidget(button_channels_dialog);
     
-    this->grid->addWidget(group_channels, grid_row, 0);
+    this->grid->addWidget(group_channels, grid_row, 0, 1, 2);
 }
 void Orgelwerk::showChannelsImage(int grid_row)
 {
@@ -121,7 +134,7 @@ void Orgelwerk::showChannelsImage(int grid_row)
     group_channels_pixmap->setLayout(layout_channels_pixmap);
     layout_channels_pixmap->addWidget(this->button_channels);
     
-    this->grid->addWidget(group_channels_pixmap, grid_row, 0);
+    this->grid->addWidget(group_channels_pixmap, grid_row, 0, 1, 2);
     
     updateChannelsSchreenshot();
 }
@@ -144,13 +157,13 @@ void Orgelwerk::showChannelsSummary(int grid_row)
     layout_channels->addWidget(button_channels_dialog, 1, 0);
     layout_channels->addWidget(button_resend_midi, 1, 1);
     
-    this->grid->addWidget(group_channels, grid_row, 0);
+    this->grid->addWidget(group_channels, grid_row, 0, 1, 2);
     
     channelsSummaryUpdate();
 }
 void Orgelwerk::channelsSummaryUpdate()
 {
-    QList<QMap<QString,int>> data = this->channels->getListOfActivatedChannels();
+    QList<QMap<QString,QVariant>> data = this->channels->getListOfActivatedChannels();
     
     this->midi_channels_summary->showData(data);
 }
@@ -196,18 +209,18 @@ void Orgelwerk::panicKeyPressed()
     
     this->pc->allKeysUp();
     
-    QList<QMap<QString,int>> list_of_channels = this->channels->getListOfActivatedChannels();
+    QList<QMap<QString,QVariant>> list_of_channels = this->channels->getListOfActivatedChannels();
     for (int c=0; c < list_of_channels.length(); c++)
     {
-        this->interface_audio->keyPanicEvent(list_of_channels.at(c)["channel"]);
+        this->interface_audio->keyPanicEvent(list_of_channels.at(c)["channel"].toInt());
     }
 }
 void Orgelwerk::stopAllPressed()
 {
-    QList<QMap<QString,int>> list_of_channels = this->channels->getListOfActivatedChannels();
+    QList<QMap<QString,QVariant>> list_of_channels = this->channels->getListOfActivatedChannels();
     for (int c=0; c < list_of_channels.length(); c++)
     {
-        this->interface_audio->keyStopAllEvent(list_of_channels.at(c)["channel"]);
+        this->interface_audio->keyStopAllEvent(list_of_channels.at(c)["channel"].toInt());
     }
 }
 
@@ -218,17 +231,17 @@ void Orgelwerk::keyMIDIHelper(int midicode, QString mode)
     // Therefore we get an offset of 12 we have to compensate here.
     int keycode = midicode - 12;
     
-    QList<QMap<QString,int>> list_of_channels = this->channels->getListOfActivatedChannels();
+    QList<QMap<QString,QVariant>> list_of_channels = this->channels->getListOfActivatedChannels();
     
     QList<int> list_of_keys = this->keys->getListOfSelectedKeys();
     for (int k=0; k < list_of_keys.length(); k++)
     {
         for (int c=0; c < list_of_channels.length(); c++)
         {
-            int channel = list_of_channels.at(c)["channel"];
-            int key_shift = list_of_channels.at(c)["key_shift"];
-            int key_min = list_of_channels.at(c)["key_min"];
-            int key_max = list_of_channels.at(c)["key_max"]; 
+            int channel = list_of_channels.at(c)["channel"].toInt();
+            int key_shift = list_of_channels.at(c)["key_shift"].toInt();
+            int key_min = list_of_channels.at(c)["key_min"].toInt();
+            int key_max = list_of_channels.at(c)["key_max"].toInt(); 
             
             int m_code = keycode + list_of_keys.at(k);
             int m_code_shifted = m_code + key_shift;
@@ -297,31 +310,31 @@ void Orgelwerk::pitchWheelMoved(int pitch)
 
 void Orgelwerk::keySustain(bool pressed)
 {
-    QList<QMap<QString,int>> list_of_channels = this->channels->getListOfActivatedChannels();
+    QList<QMap<QString,QVariant>> list_of_channels = this->channels->getListOfActivatedChannels();
     for (int c=0; c < list_of_channels.length(); c++)
     {
-        int channel = list_of_channels.at(c)["channel"];
+        int channel = list_of_channels.at(c)["channel"].toInt();
         this->interface_audio->keySustainEvent(channel, pressed);
     }
 }
 
 void Orgelwerk::keySostenuto(bool pressed)
 {
-    QList<QMap<QString,int>> list_of_channels = this->channels->getListOfActivatedChannels();
+    QList<QMap<QString,QVariant>> list_of_channels = this->channels->getListOfActivatedChannels();
     for (int c=0; c < list_of_channels.length(); c++)
     {
-        int channel = list_of_channels.at(c)["channel"];
+        int channel = list_of_channels.at(c)["channel"].toInt();
         this->interface_audio->keySostenutoEvent(channel, pressed);
     }
 }
 
 void Orgelwerk::keySoft(bool pressed)
 {
-    QList<QMap<QString,int>> list_of_channels = this->channels->getListOfActivatedChannels();
+    QList<QMap<QString,QVariant>> list_of_channels = this->channels->getListOfActivatedChannels();
     for (int c=0; c < list_of_channels.length(); c++)
     {
-        int channel = list_of_channels.at(c)["channel"];
-        int volume = list_of_channels.at(c)["volume"];
+        int channel = list_of_channels.at(c)["channel"].toInt();
+        int volume = list_of_channels.at(c)["volume"].toInt();
         this->interface_audio->keySoftEvent(channel, pressed, volume);
     }
 }

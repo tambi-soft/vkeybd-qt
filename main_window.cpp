@@ -12,6 +12,11 @@ MainWindow::MainWindow(QWidget *parent)
     
     this->button_grab = new QPushButton("Grab Keyboard");
     connect(button_grab, &QPushButton::clicked, this, &MainWindow::grabButtonClicked);
+    QString stylesheet = "QPushButton {"
+                         "  color: white;"
+                         "  background-color: darkgreen;"
+                         "}";
+    this->button_grab->setStyleSheet(stylesheet);
     
     this->tabs = new MainTabs;
     
@@ -101,8 +106,8 @@ void MainWindow::grabButtonClicked()
         releaseMouse();
         
         QString stylesheet = "QPushButton {"
-                             "  color: black;"
-                             "  background-color: white;"
+                             "  color: white;"
+                             "  background-color: darkgreen;"
                              "}";
         this->button_grab->setStyleSheet(stylesheet);
         this->button_grab->setText("Grab Keyboard");

@@ -8,6 +8,7 @@
 #include <QPushButton>
 #include <QLabel>
 #include <QMap>
+#include <QVariant>
 
 class MIDIChannelsSummary : public QWidget
 {
@@ -15,7 +16,7 @@ class MIDIChannelsSummary : public QWidget
 public:
     explicit MIDIChannelsSummary(QWidget *parent = nullptr);
     
-    void showData(QList<QMap<QString,int>> data);
+    void showData(QList<QMap<QString, QVariant> > data);
     void clearData();
     void styleLabels();
     

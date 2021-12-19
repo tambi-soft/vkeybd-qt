@@ -76,6 +76,7 @@ void MIDIChannelSelector::drawGUI()
                 "}";
         slider_pan->setStyleSheet(style_pan);
         connect(slider_pan, &QSlider::sliderPressed, this, [slider_pan]{ slider_pan->setValue(64); });
+        this->list_of_pan_sliders.append(slider_pan);
         
         MIDIKeyShiftWidget *key_shift = new MIDIKeyShiftWidget;
         QSpinBox *key_min = new QSpinBox();
@@ -98,7 +99,7 @@ void MIDIChannelSelector::drawGUI()
         combo_instrument->addItems(list_instrument);
         
         connect(combo_instrument_group, &QComboBox::currentTextChanged, this, [this, i, combo_instrument_group, combo_instrument]{ MIDIChannelSelector::instrumentGroupChanged(i-1, combo_instrument_group, combo_instrument); });
-        connect(combo_instrument, &QComboBox::currentTextChanged, this, [this, i, combo_instrument]{ MIDIChannelSelector::instrumentChanged(i-1, combo_instrument); });
+        connect(combo_instrument, &QComboBox::currentTextChanged, this, [this, i, combo_instrument]{ MIDIChannelSelector::instrumentChanged(i-1, combo_instrument->currentText()); });
         
         QSpinBox *midi_group = new QSpinBox;
         QSpinBox *midi_bank = new QSpinBox;
@@ -111,17 +112,20 @@ void MIDIChannelSelector::drawGUI()
         QSlider *slider_portamento = new QSlider;
         slider_portamento->setOrientation(Qt::Horizontal);
         slider_portamento->setRange(0, 127);
-        connect(slider_portamento, &QSlider::valueChanged, this, [this, i, slider_portamento]{ MIDIChannelSelector::portamentoChanged(i-1, slider_portamento); });
+        connect(slider_portamento, &QSlider::valueChanged, this, [this, i, slider_portamento]{ MIDIChannelSelector::portamentoChanged(i-1, slider_portamento->value()); });
+        this->list_of_portamentos.append(slider_portamento);
         
         QSlider *slider_attack = new QSlider;
         slider_attack->setOrientation(Qt::Horizontal);
         slider_attack->setRange(0, 127);
-        connect(slider_attack, &QSlider::valueChanged, this, [this, i, slider_attack]{ MIDIChannelSelector::attackChanged(i-1, slider_attack); });
+        connect(slider_attack, &QSlider::valueChanged, this, [this, i, slider_attack]{ MIDIChannelSelector::attackChanged(i-1, slider_attack->value()); });
+        this->list_of_attacks.append(slider_attack);
         
         QSlider *slider_release = new QSlider;
         slider_release->setOrientation(Qt::Horizontal);
         slider_release->setRange(0, 127);
-        connect(slider_release, &QSlider::valueChanged, this, [this, i, slider_release]{ MIDIChannelSelector::releaseChanged(i-1, slider_release); });
+        connect(slider_release, &QSlider::valueChanged, this, [this, i, slider_release]{ MIDIChannelSelector::releaseChanged(i-1, slider_release->value()); });
+        this->list_of_releases.append(slider_release);
         
         grid->addWidget(check, i, 0);
         grid->addWidget(slider_volume, i, 1);
@@ -169,18 +173,24 @@ void MIDIChannelSelector::drawGUI()
     grid->addWidget(button_test_note, 17, 0, 1, 13);
 }
 
-QList<QMap<QString,int>> MIDIChannelSelector::getListOfActivatedChannels()
+QList<QMap<QString,QVariant>> MIDIChannelSelector::getListOfActivatedChannels()
 {
-    QList<QMap<QString,int>> result;
+    QList<QMap<QString,QVariant>> result;
     
     for (int i=0; i < this->list_of_checkboxes.length(); i++)
     {
         QCheckBox *check = this->list_of_checkboxes.at(i);
         if (check->isChecked())
         {
-            QMap<QString,int> map;
+            QMap<QString,QVariant> map;
             
             map["channel"] = i;
+            
+            int volume = this->list_of_volume_sliders.at(i)->value();
+            map["volume"] = volume;
+            
+            int pan = this->list_of_pan_sliders.at(i)->value();
+            map["pan"] = pan;
             
             int key_shift = this->list_of_keyshifts.at(i)->spin_key->value();
             map["key_shift"] = key_shift;
@@ -191,8 +201,23 @@ QList<QMap<QString,int>> MIDIChannelSelector::getListOfActivatedChannels()
             int key_max = this->list_of_key_maxs.at(i)->value();
             map["key_max"] = key_max;
             
-            int volume = this->list_of_volume_sliders.at(i)->value();
-            map["volume"] = volume;
+            int instrument_msb = this->list_of_msb.at(i)->value();
+            map["instrument_msb"] = instrument_msb;
+            
+            int instrument_lsb = this->list_of_lsb.at(i)->value();
+            map["instrument_lsb"] = instrument_lsb;
+            
+            QString instrument_name = this->list_of_instrument_banks.at(i)->currentText();
+            map["instrument_name"] = instrument_name;
+            
+            int portamento_time = this->list_of_portamentos.at(i)->value();
+            map["portamento_time"] = portamento_time;
+            
+            int attack = this->list_of_attacks.at(i)->value();
+            map["attack"] = attack;
+            
+            int release = this->list_of_releases.at(i)->value();
+            map["release"] = release;
             
             result.append(map);
         }
@@ -215,11 +240,11 @@ void MIDIChannelSelector::volumeDCAChanged(int value)
 {
     this->volume_dca = value;
     
-    QList<QMap<QString,int>> channels = getListOfActivatedChannels();
+    QList<QMap<QString,QVariant>> channels = getListOfActivatedChannels();
     for (int i=0; i < channels.length(); i++)
     {
-        int channel = channels.at(i)["channel"];
-        int volume = channels.at(i)["volume"];
+        int channel = channels.at(i)["channel"].toInt();
+        int volume = channels.at(i)["volume"].toInt();
         
         volumeSliderMoved(channel, volume);
     }
@@ -242,17 +267,16 @@ void MIDIChannelSelector::instrumentGroupChanged(int channel, QComboBox *combo_g
     combo_instrument->addItems(instruments);
     combo_instrument->blockSignals(false);
     
-    instrumentChanged(channel, combo_instrument);
+    instrumentChanged(channel, combo_instrument->currentText());
 }
 
-void MIDIChannelSelector::instrumentChanged(int channel, QComboBox *combo_instrument)
+void MIDIChannelSelector::instrumentChanged(int channel, QString instrument)
 {
-    QString name = combo_instrument->currentText();
     //if (name != (new MIDISoundsList())->BANK_NO_NAME)
     //{
-        qDebug() << "changed: "+name;
+        qDebug() << "changed: "+instrument;
         
-        QList<int> codes = this->midi_sounds_list->getMIDICodesForInstrument(name);
+        QList<int> codes = this->midi_sounds_list->getMIDICodesForInstrument(instrument);
         int program = codes.at(0) - 1;
         int bank = codes.at(1);
         
@@ -284,30 +308,38 @@ void MIDIChannelSelector::instrumentChangedNumeric(int channel, int program, int
     this->list_of_instrument_banks.at(channel)->blockSignals(true);
 }
 
-void MIDIChannelSelector::portamentoChanged(int channel, QSlider *slider)
+void MIDIChannelSelector::portamentoChanged(int channel, int value)
 {
-    this->audio->setPortamentoChanged(channel, slider->value());
+    this->audio->setPortamentoChanged(channel, value);
 }
 
-void MIDIChannelSelector::attackChanged(int channel, QSlider *slider)
+void MIDIChannelSelector::attackChanged(int channel, int value)
 {
-    this->audio->setAttackChanged(channel, slider->value());
+    this->audio->setAttackChanged(channel, value);
 }
 
-void MIDIChannelSelector::releaseChanged(int channel, QSlider *slider)
+void MIDIChannelSelector::releaseChanged(int channel, int value)
 {
-    this->audio->setReleaseChanged(channel, slider->value());
+    this->audio->setReleaseChanged(channel, value);
 }
 
 void MIDIChannelSelector::resendMIDIControls()
 {
-    QList<QMap<QString,int>> channels = getListOfActivatedChannels();
+    QList<QMap<QString,QVariant>> channels = getListOfActivatedChannels();
     for (int i=0; i < channels.length(); i++)
     {
-        int channel = channels.at(i)["channel"];
+        int channel = channels.at(i)["channel"].toInt();
         
-        volumeSliderMoved(channel, channels.at(i)["volume"]);
-        
+        volumeSliderMoved(channel, channels.at(i)["volume"].toInt());
+        panSliderMoved(channel, channels.at(i)["pan"].toInt());
+        this->audio->setProgramChangeEvent(
+                    channel,
+                    channels.at(i)["instrument_msb"].toInt(),
+                    channels.at(i)["instrument_lsb"].toInt()
+                    );
+        portamentoChanged(channel, channels.at(i)["portamento_time"].toInt());
+        attackChanged(channel, channels.at(i)["attack"].toInt());
+        releaseChanged(channel, channels.at(i)["release"].toInt());
     }
 }
 
@@ -339,7 +371,7 @@ bool MIDIChannelSelector::eventFilter(QObject *obj, QEvent *ev)
 
 void MIDIChannelSelector::playTestNote()
 {
-    QList<QMap<QString,int>> channels = getListOfActivatedChannels();
+    QList<QMap<QString,QVariant>> channels = getListOfActivatedChannels();
     for (int i=0; i < channels.length(); i++)
     {
         this->audio->keyPressEvent(i, 60);
@@ -347,7 +379,7 @@ void MIDIChannelSelector::playTestNote()
 }
 void MIDIChannelSelector::stopTestNote()
 {
-    QList<QMap<QString,int>> channels = getListOfActivatedChannels();
+    QList<QMap<QString,QVariant>> channels = getListOfActivatedChannels();
     for (int i=0; i < channels.length(); i++)
     {
         this->audio->keyReleaseEvent(i, 60);

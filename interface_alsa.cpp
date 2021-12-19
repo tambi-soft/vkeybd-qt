@@ -19,6 +19,7 @@ InterfaceAlsa::InterfaceAlsa(QString label, InterfaceAudio *parent) : InterfaceA
     port = snd_seq_create_simple_port(seq, this->label.toLatin1(),
         SND_SEQ_PORT_CAP_READ | SND_SEQ_PORT_CAP_SUBS_READ | SND_SEQ_PORT_CAP_WRITE,
         SND_SEQ_PORT_TYPE_APPLICATION);
+    Q_UNUSED(port);
     
     snd_seq_ev_clear(&ev);
     snd_seq_ev_set_direct(&ev);
@@ -26,11 +27,10 @@ InterfaceAlsa::InterfaceAlsa(QString label, InterfaceAudio *parent) : InterfaceA
 
 InterfaceAlsa::~InterfaceAlsa()
 {
-    for (int i=0; i < 128; i++)
+    for (int i=0; i < 16; i++)
     {
         snd_seq_ev_set_controller(&ev, i, MIDI_CTL_ALL_NOTES_OFF, 127);
-        snd_seq_event_output(seq, &ev);
-        snd_seq_drain_output(seq);
+        sendEvent(true);
     }
     snd_seq_close(seq);
 }
