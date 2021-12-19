@@ -381,12 +381,19 @@ bool MIDIChannelSelector::eventFilter(QObject *obj, QEvent *ev)
             {
                 return false;
             }
-            else
-            {
-                emit eventFiltered(obj, ev);
-                
-                return true;
-            }
+            
+            emit eventFiltered(obj, ev);
+            return true;
+        }
+    }
+    else if (ev->type() == QEvent::KeyPress)//|| ev->type() == QEvent::KeyRelease)
+    {
+        QKeyEvent *event = static_cast<QKeyEvent*>(ev);
+        
+        if (event->isAutoRepeat() == false)
+        {
+            emit eventFiltered(obj, ev);
+            return true;
         }
     }
     
