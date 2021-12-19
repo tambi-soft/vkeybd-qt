@@ -146,10 +146,10 @@ void Orgelwerk::showChannelsSummary(int grid_row)
     
     this->midi_channels_summary = new MIDIChannelsSummary;
     
-    QPushButton *button_channels_dialog = new QPushButton("Edit MIDI Channels");
+    this->button_channels_dialog->setText("Edit MIDI Channels");
     connect(button_channels_dialog, &QPushButton::clicked, this, [this]{ this->showChannelDetails(false); });
     
-    QPushButton *button_resend_midi = new QPushButton("Resend MIDI Settings");
+    this->button_resend_midi->setText("Resend MIDI Settings [Ins]");
     connect(button_resend_midi, &QPushButton::clicked, this, &Orgelwerk::resendMIDIControls);
     
     //layout_channels->addWidget(scroll, 0, 0, 1, 2);

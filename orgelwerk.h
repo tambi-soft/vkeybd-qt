@@ -52,6 +52,9 @@ public:
     KeyboardPiano *piano = nullptr;
     KeyboardPC *pc = nullptr;
     
+    QPushButton *button_channels_dialog = new QPushButton;
+    QPushButton *button_resend_midi = new QPushButton;
+    
 private:
     void drawGUI();
     void drawNotesKeyboard(int grid_row);
@@ -91,6 +94,8 @@ private slots:
     void showChannelDetails(bool update_preview=false);
     void channelsDialogRejected();
     void volumeSliderMoved(int value);
+    
+public slots:
     void resendMIDIControls();
     
 protected:

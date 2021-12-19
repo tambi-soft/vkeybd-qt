@@ -94,7 +94,11 @@ bool MainTabs::eventFilter(QObject *obj, QEvent *ev)
             }
             else if (event->key() == Qt::Key_Menu)
             {
-                qDebug() << "Context-Key!";
+                o->button_channels_dialog->animateClick();
+            }
+            else if (event->key() == Qt::Key_Insert)
+            {
+                o->button_resend_midi->animateClick();
             }
             else if (event->key() == Qt::Key_Space)
             {
@@ -127,6 +131,10 @@ bool MainTabs::eventFilter(QObject *obj, QEvent *ev)
                         
                         // activate new tab
                         this->setCurrentIndex(i);
+                        
+                        // current widget changed, need to update
+                        o = static_cast<Orgelwerk*>(currentWidget()->layout()->itemAt(0)->widget());
+                        o->resendMIDIControls();
                         
                         return true;
                     }

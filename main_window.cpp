@@ -120,7 +120,7 @@ void MainWindow::grabButtonClicked()
         
         QString stylesheet = "QPushButton {"
                              "  color: white;"
-                             "  background-color: black;"
+                             "  background-color: darkblue;"
                              "}";
         this->button_grab->setStyleSheet(stylesheet);
         this->button_grab->setText("Grabbing Keyboard. Hit Ctrl+Shift or Click to stop.");
