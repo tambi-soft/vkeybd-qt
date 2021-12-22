@@ -53,7 +53,7 @@ public:
     explicit MIDIChannelSelector(InterfaceAudio *audio, QWidget *parent = nullptr);
     
     QList<QMap<QString, QVariant> > getListOfActivatedChannels();
-    void setListOfActivatedChannels(QList<QMap<QString, QVariant>> data);
+    void setListOfActivatedChannels(QList<QMap<QString,QVariant>> data);
     void volumeDCAChanged(int value);
     void resendMIDIControls();
     

@@ -186,6 +186,8 @@ QList<QMap<QString,QVariant>> MIDIChannelSelector::getListOfActivatedChannels()
             
             map["channel"] = i;
             
+            map["activated"] = true;
+            
             int volume = this->list_of_volume_sliders.at(i)->value();
             map["volume"] = volume;
             
@@ -225,7 +227,7 @@ QList<QMap<QString,QVariant>> MIDIChannelSelector::getListOfActivatedChannels()
     
     return result;
 }
-void MIDIChannelSelector::setListOfActivatedChannels(QList<QMap<QString, QVariant>> data)
+void MIDIChannelSelector::setListOfActivatedChannels(QList<QMap<QString,QVariant>> data)
 {
     
 }
