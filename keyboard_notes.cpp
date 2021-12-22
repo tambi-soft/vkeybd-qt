@@ -41,8 +41,10 @@ void KeyboardNotes::drawGUI()
     this->scene->addItem(clef_violin);
     
     QGraphicsSvgItem *clef_bass = new QGraphicsSvgItem(":clef_bass");
-    clef_bass->setScale(.06);
-    clef_bass->setPos(-5, 45);
+    //clef_bass->setScale(.06);
+    //clef_bass->setPos(-5, 45);
+    clef_bass->setScale(.07);
+    clef_bass->setPos(-8, 40);
     this->scene->addItem(clef_bass);
     
     qreal x_start = 10;
