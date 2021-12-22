@@ -386,7 +386,7 @@ bool MIDIChannelSelector::eventFilter(QObject *obj, QEvent *ev)
             return true;
         }
     }
-    else if (ev->type() == QEvent::KeyPress)//|| ev->type() == QEvent::KeyRelease)
+    else if (ev->type() == QEvent::KeyRelease)
     {
         QKeyEvent *event = static_cast<QKeyEvent*>(ev);
         
