@@ -18,6 +18,8 @@ private:
     void quitApplication();
     
 signals:
+    void signalSave();
+    void signalOpen();
     
 };
 

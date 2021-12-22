@@ -20,6 +20,8 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
     
+    void saveAllParams();
+    void openAllParams();
     
 private:
     //KeyboardPiano *piano;

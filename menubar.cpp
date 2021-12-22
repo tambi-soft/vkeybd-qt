@@ -14,10 +14,15 @@ void MenuBar::addFileMenu()
     exitAction->setStatusTip("Exit Application");
     connect(exitAction, &QAction::triggered, this, &MenuBar::quitApplication);
         
-    QAction *saveAction = new QAction(QIcon::fromTheme("application-save"), "Save");
+    QAction *saveAction = new QAction(QIcon::fromTheme("application-save"), "Save Settings");
     //saveAction->setShortcut(QKeySequence::fromString("Ctrl+S"));
+    connect(saveAction, &QAction::triggered, this, [this]{ emit signalSave(); });
+    
+    QAction *openAction = new QAction(QIcon::fromTheme("application-open"), "Open Settings");
+    connect(openAction, &QAction::triggered, this, [this]{ emit signalOpen(); });
     
     menuFile->addAction(saveAction);
+    menuFile->addAction(openAction);
     menuFile->addAction(exitAction);
     
     

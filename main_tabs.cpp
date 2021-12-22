@@ -1,7 +1,9 @@
 #include "main_tabs.h"
 
-MainTabs::MainTabs(QTabWidget *parent) : QTabWidget(parent)
+MainTabs::MainTabs(Config *config, QTabWidget *parent) : QTabWidget(parent)
 {
+    this->config = config;
+    
     setMovable(false);
     
     this->list_function_keys = {Qt::Key_F1, Qt::Key_F2, Qt::Key_F3, Qt::Key_F4, -1, Qt::Key_F5, Qt::Key_F6, Qt::Key_F7, Qt::Key_F8, -1, Qt::Key_F9, Qt::Key_F10, Qt::Key_F11, Qt::Key_F12};
@@ -64,6 +66,26 @@ void MainTabs::addOrganTab(QString label, int number_of_orgelwerks)
     }
     
     addTab(widget, label);
+}
+
+void MainTabs::saveAllParams()
+{
+    for (int i=0; i < count(); i++)
+    {
+        QString label = tabText(i);
+        if (! label.isEmpty())
+        {
+            Orgelwerk *o = static_cast<Orgelwerk*>(widget(i)->layout()->itemAt(0)->widget());
+            
+            QList<QMap<QString,QVariant>> channels = o->getListOfActivatedChannels();
+            
+            this->config->saveChannelSettings(label, channels);
+        }
+    }
+}
+void MainTabs::openAllParams()
+{
+    
 }
 
 bool MainTabs::callEventFilter(QObject *obj, QEvent *ev)

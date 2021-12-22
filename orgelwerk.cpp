@@ -425,6 +425,12 @@ void Orgelwerk::resendMIDIControls()
     this->channels->resendMIDIControls();
 }
 
+QList<QMap<QString,QVariant>> Orgelwerk::getListOfActivatedChannels()
+{
+    QList<QMap<QString,QVariant>> list_of_channels = this->channels->getListOfActivatedChannels();
+    return list_of_channels;
+}
+
 bool Orgelwerk::eventFilter(QObject *obj, QEvent *ev)
 {
     if (ev->type() == QEvent::KeyPress || ev->type() == QEvent::KeyRelease)

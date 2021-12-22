@@ -15,10 +15,16 @@ class Config : public QObject
 public:
     explicit Config(QObject *parent = nullptr);
     
+    void setValue(QString key, QVariant value);
+    void saveChannelSettings(QString label, QList<QMap<QString, QVariant> > channels);
+    
 private:
+    QSettings *config;
     QSettings *settings;
     
-    void openConfigFile();
+    void openSettingsFile();
+    QString getDbPath();
+    void setDbPath(QString db_path);
     
 signals:
     

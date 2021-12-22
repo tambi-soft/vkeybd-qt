@@ -55,6 +55,8 @@ public:
     QPushButton *button_channels_dialog = new QPushButton;
     QPushButton *button_resend_midi = new QPushButton;
     
+    QList<QMap<QString,QVariant>> getListOfActivatedChannels();
+    
 private:
     void drawGUI();
     void drawNotesKeyboard(int grid_row);

@@ -4,6 +4,8 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
     MenuBar *menu = new MenuBar;
+    connect(menu, &MenuBar::signalSave, this, &MainWindow::saveAllParams);
+    connect(menu, &MenuBar::signalOpen, this, &MainWindow::openAllParams);
     setMenuBar(menu);
     
     QWidget *widget = new QWidget;
@@ -20,7 +22,7 @@ MainWindow::MainWindow(QWidget *parent)
                          "}";
     this->button_grab->setStyleSheet(stylesheet);
     
-    this->tabs = new MainTabs;
+    this->tabs = new MainTabs(this->config);
     
     layout->addWidget(button_grab);
     layout->addWidget(this->tabs);
@@ -37,6 +39,15 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     
+}
+
+void MainWindow::saveAllParams()
+{
+    this->tabs->saveAllParams();
+}
+void MainWindow::openAllParams()
+{
+    this->tabs->openAllParams();
 }
 
 bool MainWindow::eventFilter(QObject *obj, QEvent *ev)

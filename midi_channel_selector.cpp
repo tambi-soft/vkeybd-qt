@@ -225,6 +225,10 @@ QList<QMap<QString,QVariant>> MIDIChannelSelector::getListOfActivatedChannels()
     
     return result;
 }
+void MIDIChannelSelector::setListOfActivatedChannels(QList<QMap<QString, QVariant>> data)
+{
+    
+}
 
 void MIDIChannelSelector::volumeSliderMoved(int channel, int volume)
 {
