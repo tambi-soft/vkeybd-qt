@@ -25,6 +25,7 @@ CONFIG += \
 
 SOURCES += \
     button_piano.cpp \
+    config.cpp \
     db_adapter.cpp \
     input_keyboard_raw_thread.cpp \
     interface_alsa.cpp \
@@ -46,6 +47,7 @@ SOURCES += \
 
 HEADERS += \
     button_piano.h \
+    config.h \
     db_adapter.h \
     input_keyboard_raw_thread.h \
     interface_alsa.h \

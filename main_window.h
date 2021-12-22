@@ -10,6 +10,7 @@
 #include "main_tabs.h"
 #include "menubar.h"
 #include "db_adapter.h"
+#include "config.h"
 
 class MainWindow : public QMainWindow
 {
@@ -24,6 +25,7 @@ private:
     //KeyboardPiano *piano;
     //Orgelwerk *werk;
     MainTabs *tabs;
+    Config *config;
     
     bool grabbing = false;
     bool ctrl_down = false;

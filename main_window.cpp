@@ -10,6 +10,8 @@ MainWindow::MainWindow(QWidget *parent)
     QVBoxLayout *layout = new QVBoxLayout;
     widget->setLayout(layout);
     
+    this->config = new Config;
+    
     this->button_grab = new QPushButton("Grab Keyboard");
     connect(button_grab, &QPushButton::clicked, this, &MainWindow::grabButtonClicked);
     QString stylesheet = "QPushButton {"
