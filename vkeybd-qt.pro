@@ -41,6 +41,7 @@ SOURCES += \
     midi_channel_selector.cpp \
     midi_channels_summary.cpp \
     midi_key_selector.cpp \
+    midi_key_shift_widget.cpp \
     midi_pitchwheel.cpp \
     midi_sounds_list.cpp \
     orgelwerk.cpp
@@ -62,6 +63,7 @@ HEADERS += \
     midi_channel_selector.h \
     midi_channels_summary.h \
     midi_key_selector.h \
+    midi_key_shift_widget.h \
     midi_pitchwheel.h \
     midi_sounds_list.h \
     orgelwerk.h

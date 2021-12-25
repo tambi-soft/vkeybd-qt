@@ -4,35 +4,6 @@
 #include <QObject>
 #include <QWidget>
 
-#include <QHBoxLayout>
-#include <QPushButton>
-#include <QSpinBox>
-
-#include <QDebug>
-
-class MIDIKeyShiftWidget : public QWidget
-{
-    Q_OBJECT
-public:
-    explicit MIDIKeyShiftWidget(QWidget *parent = nullptr);
-    
-    QSpinBox *spin_key;
-    
-private:
-    
-signals:
-    
-private slots:
-    void lowerShiftKeyPressed();
-    void higherShiftKeyPressed();
-};
-
-
-
-
-#include <QObject>
-#include <QWidget>
-
 #include <QGridLayout>
 #include <QCheckBox>
 #include <QSpinBox>
@@ -45,6 +16,7 @@ private slots:
 
 #include "midi_sounds_list.h"
 #include "interface_audio.h"
+#include "midi_key_shift_widget.h"
 
 class MIDIChannelSelector : public QWidget
 {

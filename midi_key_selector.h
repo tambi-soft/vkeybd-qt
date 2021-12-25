@@ -7,6 +7,8 @@
 #include <QHBoxLayout>
 #include <QCheckBox>
 
+#include "midi_key_shift_widget.h"
+
 class MIDIKeySelector : public QWidget
 {
     Q_OBJECT

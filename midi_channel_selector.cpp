@@ -229,7 +229,50 @@ QList<QMap<QString,QVariant>> MIDIChannelSelector::getListOfActivatedChannels()
 }
 void MIDIChannelSelector::setListOfActivatedChannels(QList<QMap<QString,QVariant>> data)
 {
+    for (int i=0; i < data.length(); i++)
+    {
+        int channel = data.at(i)["channel"].toInt();
+        
+        
+    }
+    /*
+    map["channel"] = i;
     
+    map["activated"] = true;
+    
+    int volume = this->list_of_volume_sliders.at(i)->value();
+    map["volume"] = volume;
+    
+    int pan = this->list_of_pan_sliders.at(i)->value();
+    map["pan"] = pan;
+    
+    int key_shift = this->list_of_keyshifts.at(i)->spin_key->value();
+    map["key_shift"] = key_shift;
+    
+    int key_min = this->list_of_key_mins.at(i)->value();
+    map["key_min"] = key_min;
+    
+    int key_max = this->list_of_key_maxs.at(i)->value();
+    map["key_max"] = key_max;
+    
+    int instrument_msb = this->list_of_msb.at(i)->value();
+    map["instrument_msb"] = instrument_msb;
+    
+    int instrument_lsb = this->list_of_lsb.at(i)->value();
+    map["instrument_lsb"] = instrument_lsb;
+    
+    QString instrument_name = this->list_of_instrument_banks.at(i)->currentText();
+    map["instrument_name"] = instrument_name;
+    
+    int portamento_time = this->list_of_portamentos.at(i)->value();
+    map["portamento_time"] = portamento_time;
+    
+    int attack = this->list_of_attacks.at(i)->value();
+    map["attack"] = attack;
+    
+    int release = this->list_of_releases.at(i)->value();
+    map["release"] = release;
+    */
 }
 
 void MIDIChannelSelector::volumeSliderMoved(int channel, int volume)
@@ -420,56 +463,5 @@ void MIDIChannelSelector::stopTestNote()
     for (int i=0; i < channels.length(); i++)
     {
         this->audio->keyReleaseEvent(i, 60);
-    }
-}
-
-
-
-
-
-MIDIKeyShiftWidget::MIDIKeyShiftWidget(QWidget *parent) : QWidget(parent)
-{
-    QHBoxLayout *layout = new QHBoxLayout;
-    setLayout(layout);
-    layout->setContentsMargins(0, 0, 0, 0);
-    layout->setSpacing(0);
-    
-    QPushButton *button_lower = new QPushButton("<<");
-    QPushButton *button_higher = new QPushButton(">>");
-    button_higher->setMaximumWidth(30);
-    button_lower->setMaximumWidth(30);
-    
-    connect(button_higher, &QPushButton::clicked, this, &MIDIKeyShiftWidget::higherShiftKeyPressed);
-    connect(button_lower, &QPushButton::clicked, this, &MIDIKeyShiftWidget::lowerShiftKeyPressed);
-    
-    this->spin_key = new QSpinBox;
-    this->spin_key->setMinimum(-64);
-    this->spin_key->setMaximum(64);
-    
-    layout->addWidget(button_lower);
-    layout->addWidget(this->spin_key);
-    layout->addWidget(button_higher);
-    
-    button_lower->setFocusPolicy(Qt::NoFocus);
-    button_higher->setFocusPolicy(Qt::NoFocus);
-}
-
-void MIDIKeyShiftWidget::lowerShiftKeyPressed()
-{
-    int val = this->spin_key->value();
-    if (val >= -64+12)
-    {
-        val -= 12;
-        this->spin_key->setValue(val);
-    }
-}
-
-void MIDIKeyShiftWidget::higherShiftKeyPressed()
-{
-    int val = this->spin_key->value();
-    if (val <= 64-12)
-    {
-        val += 12;
-        this->spin_key->setValue(val);
     }
 }
