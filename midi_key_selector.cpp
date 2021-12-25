@@ -2,10 +2,15 @@
 
 MIDIKeySelector::MIDIKeySelector(QWidget *parent) : QWidget(parent)
 {
-    QHBoxLayout *layout = new QHBoxLayout;
-    setLayout(layout);
+    QVBoxLayout *layout_vertical = new QVBoxLayout;
+    QHBoxLayout *layout_keys = new QHBoxLayout;
+    QHBoxLayout *layout_shift = new QHBoxLayout;
+    //setLayout(layout_horizontal);
+    setLayout(layout_vertical);
     
-    layout->setContentsMargins(0, 0, 0, 0);
+    layout_vertical->setContentsMargins(0, 0, 0, 0);
+    layout_keys->setContentsMargins(0, 0, 0, 0);
+    layout_shift->setContentsMargins(0, 0, 0, 0);
     
     this->labels = {0, 12, 24, 36, 48, 60, 72, 84};
     
@@ -13,7 +18,7 @@ MIDIKeySelector::MIDIKeySelector(QWidget *parent) : QWidget(parent)
     {
         QCheckBox *check = new QCheckBox(QString::number(labels.at(i)));
         
-        layout->addWidget(check);
+        layout_keys->addWidget(check);
         
         if (i == 4)
         {
@@ -29,6 +34,19 @@ MIDIKeySelector::MIDIKeySelector(QWidget *parent) : QWidget(parent)
         
         this->list_of_checkboxes.append(check);
     }
+    
+    layout_vertical->addLayout(layout_keys);
+    
+    this->key_shift = new MIDIKeyShiftWidget;
+    QLabel *label_key_shift = new QLabel("Key Shift:");
+    
+    layout_shift->addStretch();
+    layout_shift->addWidget(label_key_shift);
+    layout_shift->addWidget(key_shift);
+    layout_shift->addStretch();
+    
+    layout_vertical->addLayout(layout_shift);
+    
 }
 
 QList<int> MIDIKeySelector::getListOfSelectedKeys()

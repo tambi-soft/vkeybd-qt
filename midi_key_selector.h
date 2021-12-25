@@ -4,8 +4,10 @@
 #include <QObject>
 #include <QWidget>
 
+#include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QCheckBox>
+#include <QLabel>
 
 #include "midi_key_shift_widget.h"
 
@@ -16,6 +18,7 @@ public:
     explicit MIDIKeySelector(QWidget *parent = nullptr);
     
     QList<int> getListOfSelectedKeys();
+    MIDIKeyShiftWidget *key_shift;
     
 private:
     QList<int> labels;

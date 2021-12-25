@@ -233,6 +233,7 @@ void Orgelwerk::keyMIDIHelper(int midicode, QString mode)
     
     QList<QMap<QString,QVariant>> list_of_channels = this->channels->getListOfActivatedChannels();
     
+    int master_key_shift = this->keys->key_shift->spin_key->value();
     QList<int> list_of_keys = this->keys->getListOfSelectedKeys();
     for (int k=0; k < list_of_keys.length(); k++)
     {
@@ -244,7 +245,8 @@ void Orgelwerk::keyMIDIHelper(int midicode, QString mode)
             int key_max = list_of_channels.at(c)["key_max"].toInt(); 
             
             int m_code = keycode + list_of_keys.at(k);
-            int m_code_shifted = m_code + key_shift;
+            int m_code_shifted = m_code + key_shift + master_key_shift;
+            
             
             if ((key_min <= m_code && key_max >= m_code) || mode == "pitch")
             {
