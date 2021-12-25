@@ -26,6 +26,7 @@
 #include "interface_alsa.h"
 #include "interface_jack.h"
 #include "midi_channels_summary.h"
+#include "midi_key_shift_widget.h"
 
 class Orgelwerk : public QWidget
 {
@@ -71,6 +72,7 @@ private:
     QPushButton *button_channels;
     QScrollArea *scroll_channels;
     MIDIChannelsSummary *midi_channels_summary;
+    MIDIKeyShiftWidget *key_shift_master;
     
     //InputKeyboardRaw *input_raw;
     QThread *thread_input;

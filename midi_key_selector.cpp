@@ -37,15 +37,12 @@ MIDIKeySelector::MIDIKeySelector(QWidget *parent) : QWidget(parent)
     
     layout_vertical->addLayout(layout_keys);
     
-    this->key_shift = new MIDIKeyShiftWidget;
-    QLabel *label_key_shift = new QLabel("Key Shift:");
+    //QLabel *label_key_shift = new QLabel("Key Shift:");
     
-    layout_shift->addStretch();
-    layout_shift->addWidget(label_key_shift);
-    layout_shift->addWidget(key_shift);
-    layout_shift->addStretch();
+    //layout_shift->addStretch();
+    //layout_shift->addStretch();
     
-    layout_vertical->addLayout(layout_shift);
+    //layout_vertical->addLayout(layout_shift);
     
 }
 

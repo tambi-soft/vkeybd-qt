@@ -194,7 +194,7 @@ QList<QMap<QString,QVariant>> MIDIChannelSelector::getListOfActivatedChannels()
             int pan = this->list_of_pan_sliders.at(i)->value();
             map["pan"] = pan;
             
-            int key_shift = this->list_of_keyshifts.at(i)->spin_key->value();
+            int key_shift = this->list_of_keyshifts.at(i)->value();
             map["key_shift"] = key_shift;
             
             int key_min = this->list_of_key_mins.at(i)->value();

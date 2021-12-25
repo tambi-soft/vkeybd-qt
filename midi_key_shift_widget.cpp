@@ -46,3 +46,8 @@ void MIDIKeyShiftWidget::higherShiftKeyPressed()
         this->spin_key->setValue(val);
     }
 }
+
+int MIDIKeyShiftWidget::value()
+{
+    return this->spin_key->value();
+}

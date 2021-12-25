@@ -59,6 +59,12 @@ void Orgelwerk::drawGUI()
                          "  background-color: yellow;"
                          "}";
     this->button_stop_all->setStyleSheet(stylesheet_stop);
+    QLayout *layout_panic_stop = new QHBoxLayout;
+    layout_panic_stop->addWidget(this->button_panic);
+    layout_panic_stop->addWidget(this->button_stop_all);
+    
+    QLabel *label_key_shift_master = new QLabel("Key Shift");
+    this->key_shift_master = new MIDIKeyShiftWidget;
     
     this->label_volume_master = new QLabel("Master Volume (DCA): 100%");
     this->slider_volume_master = new QSlider(Qt::Horizontal, this);
@@ -71,15 +77,18 @@ void Orgelwerk::drawGUI()
     //showChannelsReal(0);
     //showChannelsImage(1);
     showChannelsSummary(1);
-    this->grid->addWidget(label_volume_master, 2, 0, 1, 2);
-    this->grid->addWidget(this->slider_volume_master, 3, 0, 1, 2);
+    this->grid->addWidget(label_key_shift_master, 2, 0);
+    this->grid->addWidget(this->key_shift_master, 3, 0);
+    this->grid->addWidget(label_volume_master, 2, 1);
+    this->grid->addWidget(this->slider_volume_master, 3, 1);
     this->grid->addWidget(group_keys, 4, 0, 1, 2);
     this->grid->addWidget(group_pitch, 5, 0, 1, 2);
     drawNotesKeyboard(6);
     //drawPianoKeyboard(7);
     drawPCKeyboard(8);
-    this->grid->addWidget(this->button_panic, 10, 0);
-    this->grid->addWidget(this->button_stop_all, 10, 1);
+    //this->grid->addWidget(this->button_panic, 10, 0);
+    //this->grid->addWidget(this->button_stop_all, 10, 1);
+    this->grid->addLayout(layout_panic_stop, 10, 0, 1, 2);
     
     //this->grid->setSizeConstraint( QLayout::SetFixedSize );
 }
@@ -233,7 +242,7 @@ void Orgelwerk::keyMIDIHelper(int midicode, QString mode)
     
     QList<QMap<QString,QVariant>> list_of_channels = this->channels->getListOfActivatedChannels();
     
-    int master_key_shift = this->keys->key_shift->spin_key->value();
+    int master_key_shift = this->key_shift_master->value();
     QList<int> list_of_keys = this->keys->getListOfSelectedKeys();
     for (int k=0; k < list_of_keys.length(); k++)
     {

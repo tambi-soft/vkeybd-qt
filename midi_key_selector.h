@@ -9,8 +9,6 @@
 #include <QCheckBox>
 #include <QLabel>
 
-#include "midi_key_shift_widget.h"
-
 class MIDIKeySelector : public QWidget
 {
     Q_OBJECT
@@ -18,7 +16,6 @@ public:
     explicit MIDIKeySelector(QWidget *parent = nullptr);
     
     QList<int> getListOfSelectedKeys();
-    MIDIKeyShiftWidget *key_shift;
     
 private:
     QList<int> labels;

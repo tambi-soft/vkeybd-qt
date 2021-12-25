@@ -13,9 +13,10 @@ class MIDIKeyShiftWidget : public QWidget
 public:
     explicit MIDIKeyShiftWidget(QWidget *parent = nullptr);
     
-    QSpinBox *spin_key;
+    int value();
     
 private:
+    QSpinBox *spin_key;
     
 signals:
     
