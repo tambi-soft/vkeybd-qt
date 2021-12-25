@@ -56,7 +56,7 @@ public:
     QPushButton *button_channels_dialog = new QPushButton;
     QPushButton *button_resend_midi = new QPushButton;
     
-    QList<QMap<QString,QVariant>> getListOfActivatedChannels();
+    QList<QMap<QString,QVariant>> listOfChannels(bool only_activated);
     
 private:
     void drawGUI();

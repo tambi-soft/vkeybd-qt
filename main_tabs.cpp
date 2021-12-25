@@ -77,7 +77,7 @@ void MainTabs::saveAllParams()
         {
             Orgelwerk *o = static_cast<Orgelwerk*>(widget(i)->layout()->itemAt(0)->widget());
             
-            QList<QMap<QString,QVariant>> channels = o->getListOfActivatedChannels();
+            QList<QMap<QString,QVariant>> channels = o->listOfChannels(false);
             
             this->config->saveChannelSettings(label, channels);
         }

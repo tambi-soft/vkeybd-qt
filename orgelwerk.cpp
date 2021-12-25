@@ -172,7 +172,7 @@ void Orgelwerk::showChannelsSummary(int grid_row)
 }
 void Orgelwerk::channelsSummaryUpdate()
 {
-    QList<QMap<QString,QVariant>> data = this->channels->getListOfActivatedChannels();
+    QList<QMap<QString,QVariant>> data = this->channels->listOfChannels(true);
     
     this->midi_channels_summary->showData(data);
 }
@@ -218,7 +218,7 @@ void Orgelwerk::panicKeyPressed()
     
     this->pc->allKeysUp();
     
-    QList<QMap<QString,QVariant>> list_of_channels = this->channels->getListOfActivatedChannels();
+    QList<QMap<QString,QVariant>> list_of_channels = this->channels->listOfChannels(true);
     for (int c=0; c < list_of_channels.length(); c++)
     {
         this->interface_audio->keyPanicEvent(list_of_channels.at(c)["channel"].toInt());
@@ -226,7 +226,7 @@ void Orgelwerk::panicKeyPressed()
 }
 void Orgelwerk::stopAllPressed()
 {
-    QList<QMap<QString,QVariant>> list_of_channels = this->channels->getListOfActivatedChannels();
+    QList<QMap<QString,QVariant>> list_of_channels = this->channels->listOfChannels(true);
     for (int c=0; c < list_of_channels.length(); c++)
     {
         this->interface_audio->keyStopAllEvent(list_of_channels.at(c)["channel"].toInt());
@@ -240,7 +240,7 @@ void Orgelwerk::keyMIDIHelper(int midicode, QString mode)
     // Therefore we get an offset of 12 we have to compensate here.
     int keycode = midicode - 12;
     
-    QList<QMap<QString,QVariant>> list_of_channels = this->channels->getListOfActivatedChannels();
+    QList<QMap<QString,QVariant>> list_of_channels = this->channels->listOfChannels(true);
     
     int master_key_shift = this->key_shift_master->value();
     QList<int> list_of_keys = this->keys->getListOfSelectedKeys();
@@ -321,7 +321,7 @@ void Orgelwerk::pitchWheelMoved(int pitch)
 
 void Orgelwerk::keySustain(bool pressed)
 {
-    QList<QMap<QString,QVariant>> list_of_channels = this->channels->getListOfActivatedChannels();
+    QList<QMap<QString,QVariant>> list_of_channels = this->channels->listOfChannels();
     for (int c=0; c < list_of_channels.length(); c++)
     {
         int channel = list_of_channels.at(c)["channel"].toInt();
@@ -331,7 +331,7 @@ void Orgelwerk::keySustain(bool pressed)
 
 void Orgelwerk::keySostenuto(bool pressed)
 {
-    QList<QMap<QString,QVariant>> list_of_channels = this->channels->getListOfActivatedChannels();
+    QList<QMap<QString,QVariant>> list_of_channels = this->channels->listOfChannels();
     for (int c=0; c < list_of_channels.length(); c++)
     {
         int channel = list_of_channels.at(c)["channel"].toInt();
@@ -341,7 +341,7 @@ void Orgelwerk::keySostenuto(bool pressed)
 
 void Orgelwerk::keySoft(bool pressed)
 {
-    QList<QMap<QString,QVariant>> list_of_channels = this->channels->getListOfActivatedChannels();
+    QList<QMap<QString,QVariant>> list_of_channels = this->channels->listOfChannels(true);
     for (int c=0; c < list_of_channels.length(); c++)
     {
         int channel = list_of_channels.at(c)["channel"].toInt();
@@ -436,9 +436,9 @@ void Orgelwerk::resendMIDIControls()
     this->channels->resendMIDIControls();
 }
 
-QList<QMap<QString,QVariant>> Orgelwerk::getListOfActivatedChannels()
+QList<QMap<QString,QVariant>> Orgelwerk::listOfChannels(bool only_activated)
 {
-    QList<QMap<QString,QVariant>> list_of_channels = this->channels->getListOfActivatedChannels();
+    QList<QMap<QString,QVariant>> list_of_channels = this->channels->listOfChannels(only_activated);
     return list_of_channels;
 }
 

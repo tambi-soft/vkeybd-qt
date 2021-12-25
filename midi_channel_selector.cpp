@@ -173,14 +173,14 @@ void MIDIChannelSelector::drawGUI()
     grid->addWidget(button_test_note, 17, 0, 1, 13);
 }
 
-QList<QMap<QString,QVariant>> MIDIChannelSelector::getListOfActivatedChannels()
+QList<QMap<QString,QVariant>> MIDIChannelSelector::listOfChannels(bool only_activated)
 {
     QList<QMap<QString,QVariant>> result;
     
     for (int i=0; i < this->list_of_checkboxes.length(); i++)
     {
         QCheckBox *check = this->list_of_checkboxes.at(i);
-        if (check->isChecked())
+        if (!only_activated || check->isChecked())
         {
             QMap<QString,QVariant> map;
             
@@ -227,7 +227,7 @@ QList<QMap<QString,QVariant>> MIDIChannelSelector::getListOfActivatedChannels()
     
     return result;
 }
-void MIDIChannelSelector::setListOfActivatedChannels(QList<QMap<QString,QVariant>> data)
+void MIDIChannelSelector::setListOfChannels(QList<QMap<QString,QVariant>> data)
 {
     for (int i=0; i < data.length(); i++)
     {
@@ -289,7 +289,7 @@ void MIDIChannelSelector::volumeDCAChanged(int value)
 {
     this->volume_dca = value;
     
-    QList<QMap<QString,QVariant>> channels = getListOfActivatedChannels();
+    QList<QMap<QString,QVariant>> channels = listOfChannels(false);
     for (int i=0; i < channels.length(); i++)
     {
         int channel = channels.at(i)["channel"].toInt();
@@ -374,7 +374,7 @@ void MIDIChannelSelector::releaseChanged(int channel, int value)
 
 void MIDIChannelSelector::resendMIDIControls()
 {
-    QList<QMap<QString,QVariant>> channels = getListOfActivatedChannels();
+    QList<QMap<QString,QVariant>> channels = listOfChannels(true);
     for (int i=0; i < channels.length(); i++)
     {
         int channel = channels.at(i)["channel"].toInt();
@@ -451,7 +451,7 @@ bool MIDIChannelSelector::eventFilter(QObject *obj, QEvent *ev)
 
 void MIDIChannelSelector::playTestNote()
 {
-    QList<QMap<QString,QVariant>> channels = getListOfActivatedChannels();
+    QList<QMap<QString,QVariant>> channels = listOfChannels(true);
     for (int i=0; i < channels.length(); i++)
     {
         this->audio->keyPressEvent(i, 60);
@@ -459,7 +459,7 @@ void MIDIChannelSelector::playTestNote()
 }
 void MIDIChannelSelector::stopTestNote()
 {
-    QList<QMap<QString,QVariant>> channels = getListOfActivatedChannels();
+    QList<QMap<QString,QVariant>> channels = listOfChannels(true);
     for (int i=0; i < channels.length(); i++)
     {
         this->audio->keyReleaseEvent(i, 60);
