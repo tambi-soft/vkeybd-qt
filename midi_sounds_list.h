@@ -12,13 +12,11 @@ class MIDISoundsList
 public:
     MIDISoundsList();
     
-    static QStringList getCategories();
-    
     QList<QString> getInstrumentGroups();
     QList<QString> getInstrumentsForGroupMIDIv1(QString group);
     QList<QString> getInstrumentsForGroupMIDIv2(QString group);
-    QList<int>  getMIDICodesForInstrument(QString instrument);
-    QString getGroupNameForNumber(int number);
+    QMap<QString, int> getMIDICodesForInstrument(QString instrument);
+    QMap<QString, QString> getInstrumentForMIDICodes(int msb, int lsb);
     
     //QString BANK_NO_NAME = "[None]";
     

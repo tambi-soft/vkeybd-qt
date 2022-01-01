@@ -90,22 +90,48 @@ void MIDIChannelSelector::drawGUI()
         key_max->setValue(127);
         
         QComboBox *combo_instrument_group = new QComboBox;
-        //QStringList list_instrument_group = MIDISoundsList::getCategories();
         QList<QString> list_instrument_group = this->midi_sounds_list->getInstrumentGroups();
         combo_instrument_group->addItems(list_instrument_group);
+        combo_instrument_group->setPlaceholderText("[non-default MSB/LSB set]");
         
         QComboBox *combo_instrument = new QComboBox;
         QList<QString> list_instrument = this->midi_sounds_list->getInstrumentsForGroupMIDIv1(list_instrument_group.at(0));
         combo_instrument->addItems(list_instrument);
+        combo_instrument->setPlaceholderText("[non-default MSB/LSB set]");
         
         connect(combo_instrument_group, &QComboBox::currentTextChanged, this, [this, i, combo_instrument_group, combo_instrument]{ MIDIChannelSelector::instrumentGroupChanged(i-1, combo_instrument_group, combo_instrument); });
+        //connect(combo_instrument_group, &QComboBox::currentTextChanged, this, [this, i, combo_instrument]{ MIDIChannelSelector::instrumentChanged(i-1, combo_instrument->currentText()); });
+        
         connect(combo_instrument, &QComboBox::currentTextChanged, this, [this, i, combo_instrument]{ MIDIChannelSelector::instrumentChanged(i-1, combo_instrument->currentText()); });
         
-        QSpinBox *midi_group = new QSpinBox;
-        QSpinBox *midi_bank = new QSpinBox;
-        midi_group->setRange(0, 127);
-        midi_bank->setRange(0, 127);
-        connect(midi_group, &QSpinBox::textChanged, this, [this, i, midi_group, midi_bank]{ MIDIChannelSelector::instrumentChangedNumeric(i-1, midi_group->value(), midi_bank->value()); });
+        QSpinBox *midi_instrument_msb = new QSpinBox;
+        QSpinBox *midi_instrument_lsb = new QSpinBox;
+        midi_instrument_msb->setRange(0, 127);
+        midi_instrument_lsb->setRange(0, 127);
+        connect(
+                    midi_instrument_msb,
+                    &QSpinBox::textChanged,
+                    this,
+                    [this, i, midi_instrument_msb, midi_instrument_lsb]{
+                        MIDIChannelSelector::instrumentChangedNumeric(
+                                    i-1,
+                                    midi_instrument_msb->value(),
+                                    midi_instrument_lsb->value()
+                        );
+                    }
+        );
+        connect(
+                    midi_instrument_lsb,
+                    &QSpinBox::textChanged,
+                    this,
+                    [this, i, midi_instrument_msb, midi_instrument_lsb]{
+                        MIDIChannelSelector::instrumentChangedNumeric(
+                                    i-1,
+                                    midi_instrument_msb->value(),
+                                    midi_instrument_lsb->value()
+                        );
+                    }
+        );
         
         //QDial *dial_portamento = new QDial();
         //dial_portamento->resize(20, 20);
@@ -137,8 +163,8 @@ void MIDIChannelSelector::drawGUI()
         
         grid->addWidget(combo_instrument_group, i, 6);
         grid->addWidget(combo_instrument, i, 7);
-        grid->addWidget(midi_group, i, 8);
-        grid->addWidget(midi_bank, i, 9);
+        grid->addWidget(midi_instrument_msb, i, 8);
+        grid->addWidget(midi_instrument_lsb, i, 9);
         
         grid->addWidget(slider_portamento, i, 10);
         
@@ -163,8 +189,8 @@ void MIDIChannelSelector::drawGUI()
         this->list_of_key_maxs.append(key_max);
         this->list_of_instrument_groups.append(combo_instrument_group);
         this->list_of_instrument_banks.append(combo_instrument);
-        this->list_of_msb.append(midi_group);
-        this->list_of_lsb.append(midi_bank);
+        this->list_of_msb.append(midi_instrument_msb);
+        this->list_of_lsb.append(midi_instrument_lsb);
     }
     
     QPushButton *button_test_note = new QPushButton("Play Test Note");
@@ -251,18 +277,18 @@ void MIDIChannelSelector::setListOfChannels(QList<QMap<QString,QVariant>> data)
             activated = false;
         }
         //this->list_of_checkboxes.at(channel)->setChecked(map["activated"].toBool());
-        this->list_of_checkboxes.at(channel)->setChecked(activated);
+        //this->list_of_checkboxes.at(channel)->setChecked(activated);
         
-        this->list_of_volume_sliders.at(channel)->setValue(map["volume"].toInt());
-        this->list_of_pan_sliders.at(channel)->setValue(map["pan"].toInt());
+        //this->list_of_volume_sliders.at(channel)->setValue(map["volume"].toInt());
+        //this->list_of_pan_sliders.at(channel)->setValue(map["pan"].toInt());
         this->list_of_keyshifts.at(channel)->setValue(map["key_shift"].toInt());
         this->list_of_key_mins.at(channel)->setValue(map["key_min"].toInt());
         this->list_of_key_maxs.at(channel)->setValue(map["key_max"].toInt());
-        this->list_of_msb.at(channel)->setValue(map["instrument_msb"].toInt());
-        this->list_of_lsb.at(channel)->setValue(map["instrument_lsb"].toInt());
-        this->list_of_portamentos.at(channel)->setValue(map["portamento_time"].toInt());
-        this->list_of_attacks.at(channel)->setValue(map["attack"].toInt());
-        this->list_of_releases.at(channel)->setValue(map["release"].toInt());
+        //this->list_of_msb.at(channel)->setValue(map["instrument_msb"].toInt());
+        //this->list_of_lsb.at(channel)->setValue(map["instrument_lsb"].toInt());
+        //this->list_of_portamentos.at(channel)->setValue(map["portamento_time"].toInt());
+        //this->list_of_attacks.at(channel)->setValue(map["attack"].toInt());
+        //this->list_of_releases.at(channel)->setValue(map["release"].toInt());
     }
 }
 
@@ -307,45 +333,51 @@ void MIDIChannelSelector::instrumentGroupChanged(int channel, QComboBox *combo_g
     combo_instrument->addItems(instruments);
     combo_instrument->blockSignals(false);
     
-    instrumentChanged(channel, combo_instrument->currentText());
+    //instrumentChanged(channel, combo_instrument->currentText());
 }
 
 void MIDIChannelSelector::instrumentChanged(int channel, QString instrument)
 {
-    //if (name != (new MIDISoundsList())->BANK_NO_NAME)
-    //{
-        qDebug() << "changed: "+instrument;
-        
-        QList<int> codes = this->midi_sounds_list->getMIDICodesForInstrument(instrument);
-        int program = codes.at(0) - 1;
-        int bank = codes.at(1);
-        
-        this->audio->setProgramChangeEvent(channel, program, bank);
-        
-        // change msb and lsb spinbox accordingly but not send signals
-        this->list_of_msb.at(channel)->blockSignals(true);
-        this->list_of_msb.at(channel)->setValue(program);
-        this->list_of_msb.at(channel)->blockSignals(false);
-        
-        this->list_of_lsb.at(channel)->blockSignals(true);
-        this->list_of_lsb.at(channel)->setValue(bank);
-        this->list_of_lsb.at(channel)->blockSignals(false);
-    //}
+    qDebug() << "changed-: "+instrument;
+    
+    QMap<QString,int> codes = this->midi_sounds_list->getMIDICodesForInstrument(instrument);
+    int instrument_msb = codes["msb"] - 1;
+    int instrument_lsb = codes["lsb"];
+    
+    this->list_of_msb.at(channel)->setValue(instrument_msb);
+    this->list_of_lsb.at(channel)->setValue(instrument_lsb);
 }
 
-void MIDIChannelSelector::instrumentChangedNumeric(int channel, int program, int bank)
+void MIDIChannelSelector::instrumentChangedNumeric(int channel, int instrument_msb, int instrument_lsb)
 {
-    qDebug() << "changed: "+QString::number(channel)+" "+QString::number(bank);
-    this->audio->setProgramChangeEvent(channel, program, bank);
+    this->audio->setProgramChangeEvent(channel, instrument_msb, instrument_lsb);
+    
+    qDebug() << "changed+: "+QString::number(channel)+" "+QString::number(instrument_msb)+" "+QString::number(instrument_lsb);
+    this->audio->setProgramChangeEvent(channel, instrument_msb, instrument_lsb);
     
     // change spin boxes for group and bank accordingly
-    this->list_of_instrument_groups.at(channel)->blockSignals(true);
-    this->list_of_instrument_groups.at(channel)->setCurrentIndex(program);
-    this->list_of_instrument_groups.at(channel)->blockSignals(false);
+    QMap<QString,QString> names = this->midi_sounds_list->getInstrumentForMIDICodes(instrument_msb, instrument_lsb);
+    qDebug() << names;
     
     this->list_of_instrument_banks.at(channel)->blockSignals(true);
-    this->list_of_instrument_banks.at(channel)->setCurrentIndex(bank);
-    this->list_of_instrument_banks.at(channel)->blockSignals(true);
+    if (names["group"] == "")
+    {
+        this->list_of_instrument_groups.at(channel)->setCurrentIndex(-1);
+    }
+    else
+    {
+        this->list_of_instrument_groups.at(channel)->setCurrentText(names["group"]);
+    }
+    
+    if (names["instrument"] == "")
+    {
+        this->list_of_instrument_banks.at(channel)->setCurrentIndex(-1);
+    }
+    else
+    {
+        this->list_of_instrument_banks.at(channel)->setCurrentText(names["instrument"]);
+    }
+    this->list_of_instrument_banks.at(channel)->blockSignals(false);
 }
 
 void MIDIChannelSelector::portamentoChanged(int channel, int value)

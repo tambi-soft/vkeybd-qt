@@ -59,7 +59,7 @@ private slots:
     void panSliderMoved(int channel, int value);
     void instrumentGroupChanged(int channel, QComboBox *combo_group, QComboBox *combo_instrument);
     void instrumentChanged(int channel, QString instrument);
-    void instrumentChangedNumeric(int channel, int program, int bank);
+    void instrumentChangedNumeric(int channel, int instrument_msb, int instrument_lsb);
     void portamentoChanged(int channel, int value);
     void attackChanged(int channel, int value);
     void releaseChanged(int channel, int value);
