@@ -78,14 +78,24 @@ void MainTabs::saveAllParams()
             Orgelwerk *o = static_cast<Orgelwerk*>(widget(i)->layout()->itemAt(0)->widget());
             
             QList<QMap<QString,QVariant>> channels = o->listOfChannels(false);
-            
             this->config->saveChannelSettings(label, channels);
         }
     }
 }
 void MainTabs::openAllParams()
 {
-    
+    for (int i=0; i < count(); i++)
+    //for (int i=0; i < 1; i++)
+    {
+        QString label = tabText(i);
+        if (! label.isEmpty())
+        {
+            Orgelwerk *o = static_cast<Orgelwerk*>(widget(i)->layout()->itemAt(0)->widget());
+            
+            QList<QMap<QString,QVariant>> channels = this->config->loadChannelSettings(label);
+            o->setListOfChannels(channels);
+        }
+    }
 }
 
 bool MainTabs::callEventFilter(QObject *obj, QEvent *ev)

@@ -14,6 +14,7 @@ public:
     explicit MIDIKeyShiftWidget(QWidget *parent = nullptr);
     
     int value();
+    void setValue(int value);
     
 private:
     QSpinBox *spin_key;

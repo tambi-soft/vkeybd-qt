@@ -17,6 +17,7 @@ public:
     
     void setValue(QString key, QVariant value);
     void saveChannelSettings(QString label, QList<QMap<QString, QVariant> > channels);
+    QList<QMap<QString, QVariant> > loadChannelSettings(QString tab_label);
     
 private:
     QSettings *config;

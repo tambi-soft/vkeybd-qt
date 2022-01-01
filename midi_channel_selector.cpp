@@ -229,50 +229,41 @@ QList<QMap<QString,QVariant>> MIDIChannelSelector::listOfChannels(bool only_acti
 }
 void MIDIChannelSelector::setListOfChannels(QList<QMap<QString,QVariant>> data)
 {
+    qDebug() << "rrrrrrrrrrrrrrrrrrrrrrrrrrr";
+    //qDebug() << data;
+    
     for (int i=0; i < data.length(); i++)
     {
-        int channel = data.at(i)["channel"].toInt();
+        QMap<QString,QVariant> map = data.at(i);
+        //qDebug() << map;
         
+        int channel = map["channel"].toInt(); //data.at(i)["channel"].toInt();
         
+        bool activated;
+        if (map["activated"] == "true")
+        {
+            qDebug() << "true";
+            activated = true;
+        }
+        else
+        {
+            qDebug() << "false";
+            activated = false;
+        }
+        //this->list_of_checkboxes.at(channel)->setChecked(map["activated"].toBool());
+        this->list_of_checkboxes.at(channel)->setChecked(activated);
+        
+        this->list_of_volume_sliders.at(channel)->setValue(map["volume"].toInt());
+        this->list_of_pan_sliders.at(channel)->setValue(map["pan"].toInt());
+        this->list_of_keyshifts.at(channel)->setValue(map["key_shift"].toInt());
+        this->list_of_key_mins.at(channel)->setValue(map["key_min"].toInt());
+        this->list_of_key_maxs.at(channel)->setValue(map["key_max"].toInt());
+        this->list_of_msb.at(channel)->setValue(map["instrument_msb"].toInt());
+        this->list_of_lsb.at(channel)->setValue(map["instrument_lsb"].toInt());
+        this->list_of_portamentos.at(channel)->setValue(map["portamento_time"].toInt());
+        this->list_of_attacks.at(channel)->setValue(map["attack"].toInt());
+        this->list_of_releases.at(channel)->setValue(map["release"].toInt());
     }
-    /*
-    map["channel"] = i;
-    
-    map["activated"] = true;
-    
-    int volume = this->list_of_volume_sliders.at(i)->value();
-    map["volume"] = volume;
-    
-    int pan = this->list_of_pan_sliders.at(i)->value();
-    map["pan"] = pan;
-    
-    int key_shift = this->list_of_keyshifts.at(i)->spin_key->value();
-    map["key_shift"] = key_shift;
-    
-    int key_min = this->list_of_key_mins.at(i)->value();
-    map["key_min"] = key_min;
-    
-    int key_max = this->list_of_key_maxs.at(i)->value();
-    map["key_max"] = key_max;
-    
-    int instrument_msb = this->list_of_msb.at(i)->value();
-    map["instrument_msb"] = instrument_msb;
-    
-    int instrument_lsb = this->list_of_lsb.at(i)->value();
-    map["instrument_lsb"] = instrument_lsb;
-    
-    QString instrument_name = this->list_of_instrument_banks.at(i)->currentText();
-    map["instrument_name"] = instrument_name;
-    
-    int portamento_time = this->list_of_portamentos.at(i)->value();
-    map["portamento_time"] = portamento_time;
-    
-    int attack = this->list_of_attacks.at(i)->value();
-    map["attack"] = attack;
-    
-    int release = this->list_of_releases.at(i)->value();
-    map["release"] = release;
-    */
 }
 
 void MIDIChannelSelector::volumeSliderMoved(int channel, int volume)

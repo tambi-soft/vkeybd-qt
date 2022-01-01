@@ -51,3 +51,7 @@ int MIDIKeyShiftWidget::value()
 {
     return this->spin_key->value();
 }
+void MIDIKeyShiftWidget::setValue(int value)
+{
+    this->spin_key->setValue(value);
+}
