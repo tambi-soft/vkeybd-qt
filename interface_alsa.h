@@ -28,6 +28,8 @@ public:
     explicit InterfaceAlsa(QString label, InterfaceAudio *parent = nullptr);
     ~InterfaceAlsa();
     
+    QString label();
+    
     void keyPressEvent(int channel, int midicode);
     void keyReleaseEvent(int channel, int midicode);
     void keyPanicEvent(int channel);
@@ -46,7 +48,7 @@ public:
     QString NAME = "vkeybd-qt";
     
 private:
-    QString label;
+    QString label_string;
     snd_seq_t *seq;
     snd_seq_event_t ev;
     

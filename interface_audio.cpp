@@ -10,6 +10,11 @@ InterfaceAudio::~InterfaceAudio()
     
 }
 
+QString InterfaceAudio::label()
+{
+    return "";
+}
+
 void InterfaceAudio::keyPressEvent(int channel, int midicode)
 {
     Q_UNUSED(channel);

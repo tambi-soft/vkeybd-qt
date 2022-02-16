@@ -79,7 +79,8 @@ private:
     QThread *thread_input;
     InputKeyboardRawThread *worker_input;
     
-    InterfaceAudio *interface_audio;
+    //InterfaceAudio *interface_audio;
+    QList<InterfaceAudio*> list_of_audio_interfaces;
     
     void keyMIDIHelper(int midicode, QString mode);
     
@@ -93,6 +94,8 @@ private:
     void updateChannelsSchreenshot();
     
 private slots:
+    void addNewAudioInterface(QString label);
+    
     void keyMIDIDown(int midicode);
     void keyMIDIUp(int midicode);
     void pitchWheelMoved(int pitch);

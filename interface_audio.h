@@ -10,6 +10,8 @@ public:
     explicit InterfaceAudio(QString label, QObject *parent = nullptr);
     ~InterfaceAudio();
     
+    virtual QString label();
+    
     virtual void keyPressEvent(int channel, int midicode);
     virtual void keyReleaseEvent(int channel, int midicode);
     virtual void keyPanicEvent(int channel);

@@ -22,7 +22,9 @@ class MIDIChannelSelector : public QWidget
 {
     Q_OBJECT
 public:
-    explicit MIDIChannelSelector(InterfaceAudio *audio, QWidget *parent = nullptr);
+    explicit MIDIChannelSelector(QList<InterfaceAudio*> list_of_audio_interfaces, QWidget *parent = nullptr);
+    
+    void setListOfAudioOutputs(QList<InterfaceAudio*> list_of_audio_interfaces);
     
     QList<QMap<QString, QVariant> > listOfChannels(bool only_activated=true);
     void setListOfChannels(QList<QMap<QString, QVariant> > data);
@@ -31,13 +33,20 @@ public:
     
 private:
     MIDISoundsList *midi_sounds_list = new MIDISoundsList;
-    InterfaceAudio *audio;
+    //InterfaceAudio *audio;
+    QList<InterfaceAudio*> list_of_midi_outputs;
     
     int volume_dca = 100;
     
     void drawGUI();
     
+    QString ADD_NEW_AUDIO_OUTPUT_LABEL = "[add new interface]";
+    
+    InterfaceAudio* selectedAudioInterface(int channel);
+    
     QList<QCheckBox*> list_of_checkboxes;
+    QList<QComboBox*> list_of_midi_output_combos;
+    void populateAudioCombos();
     QList<MIDIKeyShiftWidget*> list_of_keyshifts;
     QList<QSpinBox*> list_of_key_mins;
     QList<QSpinBox*> list_of_key_maxs;
@@ -55,6 +64,7 @@ protected:
     bool eventFilter(QObject *obj, QEvent *ev);
     
 private slots:
+    void addNewAudioInterface(QString text);
     void volumeSliderMoved(int channel, int volume);
     void panSliderMoved(int channel, int value);
     void instrumentGroupChanged(int channel, QComboBox *combo_group, QComboBox *combo_instrument);
@@ -67,6 +77,7 @@ private slots:
     void stopTestNote();
     
 signals:
+    void newAudioInterfaceRequested(QString label);
     void eventFiltered(QObject *obj, QEvent *ev);
 };
 

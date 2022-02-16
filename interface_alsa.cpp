@@ -10,13 +10,13 @@
 
 InterfaceAlsa::InterfaceAlsa(QString label, InterfaceAudio *parent) : InterfaceAudio(label, parent)
 {
-    this->label = "alsa-midi-"+label;
+    this->label_string = label;
     
     snd_seq_open(&seq, "default", SND_SEQ_OPEN_DUPLEX, 0);
     snd_seq_set_client_name(seq, this->NAME.toLatin1());
     
     int port;
-    port = snd_seq_create_simple_port(seq, this->label.toLatin1(),
+    port = snd_seq_create_simple_port(seq, this->label_string.toLatin1(),
         SND_SEQ_PORT_CAP_READ | SND_SEQ_PORT_CAP_SUBS_READ | SND_SEQ_PORT_CAP_WRITE,
         SND_SEQ_PORT_TYPE_APPLICATION);
     Q_UNUSED(port);
@@ -33,6 +33,11 @@ InterfaceAlsa::~InterfaceAlsa()
         sendEvent(true);
     }
     snd_seq_close(seq);
+}
+
+QString InterfaceAlsa::label()
+{
+    return this->label_string;
 }
 
 void InterfaceAlsa::keyPressEvent(int channel, int midicode)

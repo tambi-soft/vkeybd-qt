@@ -2,8 +2,9 @@
 
 Orgelwerk::Orgelwerk(QString label, QWidget *parent) : QWidget(parent)
 {
-    this->interface_audio = new InterfaceAlsa(label);
+    //this->interface_audio = new InterfaceAlsa(label);
     //this->interface_audio = new InterfaceJack(label);
+    this->list_of_audio_interfaces.append(new InterfaceAlsa("alsa-midi-"+label));
     
     drawGUI();
     initInputThread();
@@ -13,7 +14,9 @@ Orgelwerk::Orgelwerk(QString label, QWidget *parent) : QWidget(parent)
 
 void Orgelwerk::drawGUI()
 {
-    this->channels = new MIDIChannelSelector(this->interface_audio);
+    //this->channels = new MIDIChannelSelector(this->interface_audio);
+    this->channels = new MIDIChannelSelector(this->list_of_audio_interfaces);
+    connect(this->channels, &MIDIChannelSelector::newAudioInterfaceRequested, this, &Orgelwerk::addNewAudioInterface);
     this->keys = new MIDIKeySelector;
     this->pitch = new MIDIPitchWheel;
     
@@ -193,6 +196,13 @@ Orgelwerk::~Orgelwerk()
     this->thread_input->exit();
 }
 
+void Orgelwerk::addNewAudioInterface(QString label)
+{
+    this->list_of_audio_interfaces.append(new InterfaceAlsa(label));
+    
+    this->channels->setListOfAudioOutputs(this->list_of_audio_interfaces);
+}
+
 void Orgelwerk::keyDown(int keycode)
 {
     qDebug() << "keyDown: " + QString::number(keycode);
@@ -221,7 +231,9 @@ void Orgelwerk::panicKeyPressed()
     QList<QMap<QString,QVariant>> list_of_channels = this->channels->listOfChannels(true);
     for (int c=0; c < list_of_channels.length(); c++)
     {
-        this->interface_audio->keyPanicEvent(list_of_channels.at(c)["channel"].toInt());
+        //this->interface_audio->keyPanicEvent(list_of_channels.at(c)["channel"].toInt());
+        int channel = list_of_channels.at(c)["channel"].toInt();
+        this->list_of_audio_interfaces.at(list_of_channels.at(c)["interface_index"].toInt())->keyPanicEvent(channel);
     }
 }
 void Orgelwerk::stopAllPressed()
@@ -229,7 +241,8 @@ void Orgelwerk::stopAllPressed()
     QList<QMap<QString,QVariant>> list_of_channels = this->channels->listOfChannels(true);
     for (int c=0; c < list_of_channels.length(); c++)
     {
-        this->interface_audio->keyStopAllEvent(list_of_channels.at(c)["channel"].toInt());
+        int channel = list_of_channels.at(c)["channel"].toInt();
+        this->list_of_audio_interfaces.at(list_of_channels.at(c)["interface_index"].toInt())->keyStopAllEvent(channel);
     }
 }
 
@@ -249,6 +262,7 @@ void Orgelwerk::keyMIDIHelper(int midicode, QString mode)
         for (int c=0; c < list_of_channels.length(); c++)
         {
             int channel = list_of_channels.at(c)["channel"].toInt();
+            int interface_index = list_of_channels.at(c)["interface_index"].toInt();
             int key_shift = list_of_channels.at(c)["key_shift"].toInt();
             int key_min = list_of_channels.at(c)["key_min"].toInt();
             int key_max = list_of_channels.at(c)["key_max"].toInt(); 
@@ -260,7 +274,7 @@ void Orgelwerk::keyMIDIHelper(int midicode, QString mode)
             {
                 if (mode == "down")
                 {
-                    this->interface_audio->keyPressEvent(channel, m_code_shifted);
+                    this->list_of_audio_interfaces.at(interface_index)->keyPressEvent(channel, m_code_shifted);
                     
                     if (this->notes) 
                     {
@@ -269,7 +283,7 @@ void Orgelwerk::keyMIDIHelper(int midicode, QString mode)
                 }
                 else if (mode == "up")
                 {
-                    this->interface_audio->keyReleaseEvent(channel, m_code_shifted);
+                    this->list_of_audio_interfaces.at(interface_index)->keyReleaseEvent(channel, m_code_shifted);
                     
                     if (this->notes)
                     {
@@ -278,7 +292,7 @@ void Orgelwerk::keyMIDIHelper(int midicode, QString mode)
                 }
                 else if (mode == "pitch")
                 {
-                    this->interface_audio->keyPitchbendEvent(channel, midicode);
+                    this->list_of_audio_interfaces.at(interface_index)->keyPitchbendEvent(channel, midicode);
                 }
             }
         }
@@ -323,8 +337,9 @@ void Orgelwerk::keySustain(bool pressed)
     QList<QMap<QString,QVariant>> list_of_channels = this->channels->listOfChannels();
     for (int c=0; c < list_of_channels.length(); c++)
     {
+        int interface_index = list_of_channels.at(c)["interface_index"].toInt();
         int channel = list_of_channels.at(c)["channel"].toInt();
-        this->interface_audio->keySustainEvent(channel, pressed);
+        this->list_of_audio_interfaces.at(interface_index)->keySustainEvent(channel, pressed);
     }
 }
 
@@ -333,8 +348,9 @@ void Orgelwerk::keySostenuto(bool pressed)
     QList<QMap<QString,QVariant>> list_of_channels = this->channels->listOfChannels();
     for (int c=0; c < list_of_channels.length(); c++)
     {
+        int interface_index = list_of_channels.at(c)["interface_index"].toInt();
         int channel = list_of_channels.at(c)["channel"].toInt();
-        this->interface_audio->keySostenutoEvent(channel, pressed);
+        this->list_of_audio_interfaces.at(interface_index)->keySostenutoEvent(channel, pressed);
     }
 }
 
@@ -343,9 +359,10 @@ void Orgelwerk::keySoft(bool pressed)
     QList<QMap<QString,QVariant>> list_of_channels = this->channels->listOfChannels(true);
     for (int c=0; c < list_of_channels.length(); c++)
     {
+        int interface_index = list_of_channels.at(c)["interface_index"].toInt();
         int channel = list_of_channels.at(c)["channel"].toInt();
         int volume = list_of_channels.at(c)["volume"].toInt();
-        this->interface_audio->keySoftEvent(channel, pressed, volume);
+        this->list_of_audio_interfaces.at(interface_index)->keySoftEvent(channel, pressed, volume);
     }
 }
 
