@@ -8,5 +8,7 @@
         <file alias="flat">assets/svg/flat.svg</file>
         <file alias="sharp">assets/svg/sharp.svg</file>
         <file alias="note_whole">assets/svg/note_whole.svg</file>
+        <file alias="octave_contrabass">assets/svg/octave_contrabass.svg</file>
+        <file alias="octave_treble">assets/svg/octave_treble.svg</file>
     </qresource>
 </RCC>
