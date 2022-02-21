@@ -331,6 +331,8 @@ void KeyboardNotes::showHideAuxiliaryLines(int midicode, bool show)
 }
 void KeyboardNotes::allKeysUp()
 {
+    this->show_all = false;
+    
     QList<int> keys_full = this->map_of_notes_full.keys();
     for (int i=0; i < keys_full.length(); i++)
     {
