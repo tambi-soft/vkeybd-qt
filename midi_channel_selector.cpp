@@ -37,7 +37,6 @@ void MIDIChannelSelector::drawGUI()
     QLabel *label_attack = new QLabel("Attack");
     QLabel *label_release = new QLabel("Release");
     
-    
     grid->addWidget(label_channel, 0, 0);
     grid->addWidget(label_output, 0, 1);
     grid->addWidget(label_volume, 0, 2);
@@ -323,8 +322,17 @@ void MIDIChannelSelector::populateAudioCombos()
     {
         QComboBox *combo = this->list_of_midi_output_combos.at(i);
         combo->blockSignals(true);
+        int current_index = 0;
+        if (combo->count() > 0)
+        {
+            current_index = combo->currentIndex();
+        }
         combo->clear();
         combo->addItems(list_of_audio_output_labels);
+        if (combo->count() > 0)
+        {
+            combo->setCurrentIndex(current_index);
+        }
         combo->blockSignals(false);
     }
 }
