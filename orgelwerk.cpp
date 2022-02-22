@@ -2,6 +2,8 @@
 
 Orgelwerk::Orgelwerk(QString label, QWidget *parent) : QWidget(parent)
 {
+    this->label = label;
+    
     //this->interface_audio = new InterfaceAlsa(label);
     //this->interface_audio = new InterfaceJack(label);
     this->list_of_audio_interfaces.append(new InterfaceAlsa("alsa-midi-"+label));
@@ -205,12 +207,20 @@ void Orgelwerk::addNewAudioInterface(QString label)
 
 void Orgelwerk::keyDown(int keycode)
 {
-    qDebug() << "keyDown: " + QString::number(keycode);
+    
+    this->number_of_keys_down++;
+    
+    qDebug() << "keyDown: "+this->label+" "+ QString::number(keycode);
     this->pc->keyDown(keycode);
 }
 void Orgelwerk::keyUp(int keycode)
 {
-    qDebug() << "keyUp:   " + QString::number(keycode);
+    if (this->number_of_keys_down >= 1)
+    {
+        this->number_of_keys_down--;
+    }
+    
+    qDebug() << "keyUp:   "+this->label+" "+ QString::number(keycode);
     this->pc->keyUp(keycode);
 }
 
@@ -235,6 +245,8 @@ void Orgelwerk::panicKeyPressed()
         int channel = list_of_channels.at(c)["channel"].toInt();
         this->list_of_audio_interfaces.at(list_of_channels.at(c)["interface_index"].toInt())->keyPanicEvent(channel);
     }
+    
+    this->number_of_keys_down = 0;
 }
 void Orgelwerk::stopAllPressed()
 {
@@ -248,6 +260,8 @@ void Orgelwerk::stopAllPressed()
 
 void Orgelwerk::keyMIDIHelper(int midicode, QString mode)
 {
+    qDebug() << "################ " << this->number_of_keys_down;
+    
     // -12: The lower full octave on the keyboard is in the midi-range of 12 - 23.
     // For being able to add some even deeper notes to the left.
     // Therefore we get an offset of 12 we have to compensate here.
@@ -473,4 +487,16 @@ bool Orgelwerk::eventFilter(QObject *obj, QEvent *ev)
     }
     
     return false;
+}
+
+bool Orgelwerk::areKeysPressed()
+{
+    if (this->number_of_keys_down > 0)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }

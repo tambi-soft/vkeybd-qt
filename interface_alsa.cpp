@@ -23,6 +23,11 @@ InterfaceAlsa::InterfaceAlsa(QString label, InterfaceAudio *parent) : InterfaceA
     
     snd_seq_ev_clear(&ev);
     snd_seq_ev_set_direct(&ev);
+    
+    /* either */
+    //snd_seq_ev_set_dest(&ev, 64, 0); /* send to 64:0 */
+    /* or */
+    snd_seq_ev_set_subs(&ev);        /* send to subscribers of source port */
 }
 
 InterfaceAlsa::~InterfaceAlsa()
@@ -43,10 +48,6 @@ QString InterfaceAlsa::label()
 void InterfaceAlsa::keyPressEvent(int channel, int midicode)
 {
     qDebug() << "ALSA: "+QString::number(midicode);
-    /* either */
-    //snd_seq_ev_set_dest(&ev, 64, 0); /* send to 64:0 */
-    /* or */
-    snd_seq_ev_set_subs(&ev);        /* send to subscribers of source port */
     
     //snd_seq_ev_set_controller(&ev, channel, MIDI_CTL_LSB_MAIN_VOLUME, 50);
     

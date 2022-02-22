@@ -63,6 +63,8 @@ void MainTabs::addOrganTab(QString label, int number_of_orgelwerks)
         connect(o, &Orgelwerk::eventFiltered, this, &MainTabs::eventFilter);
         
         layout->addWidget(o);
+        
+        this->list_of_tabs.append(o);
     }
     
     addTab(widget, label);
@@ -117,12 +119,21 @@ bool MainTabs::eventFilter(QObject *obj, QEvent *ev)
             
             if (event->key() == Qt::Key_Escape)
             {
-                o->button_panic->animateClick();
+                //o->button_panic->animateClick();
+                for (int i=0; i < this->list_of_tabs.length(); i++)
+                {
+                    this->list_of_tabs.at(i)->button_panic->animateClick();
+                }
+                
                 return true;
             }
             else if (event->key() == Qt::Key_Delete)
             {
-                o->button_stop_all->animateClick();
+                //o->button_stop_all->animateClick();
+                for (int i=0; i < this->list_of_tabs.length(); i++)
+                {
+                    this->list_of_tabs.at(i)->button_stop_all->animateClick();
+                }
             }
             else if (event->key() == Qt::Key_Menu)
             {
@@ -159,7 +170,7 @@ bool MainTabs::eventFilter(QObject *obj, QEvent *ev)
                     if (this->list_function_keys.at(i) == event->key())
                     {
                         // send "all keys of" on old tab
-                        o->panicKeyPressed();
+                        //o->panicKeyPressed();
                         
                         // activate new tab
                         this->setCurrentIndex(i);
@@ -223,7 +234,18 @@ bool MainTabs::eventFilter(QObject *obj, QEvent *ev)
             }
             else
             {
-                o->keyUp(event->key());
+                // this function should be kept just in case "areKeysPressed" would return "false" falsely on current tab ...
+                //o->keyUp(event->key());
+                // we want to have a smooth way of switching between tabs (=presets) during playing
+                
+                for (int i=0; i < this->list_of_tabs.length(); i++)
+                {
+                    //if (this->list_of_tabs.at(i)->areKeysPressed())
+                    //{
+                        this->list_of_tabs.at(i)->keyUp(event->key());
+                    //}
+                }
+                
                 return true;
             }
         }
