@@ -71,28 +71,23 @@ void Orgelwerk::drawGUI()
     QLabel *label_key_shift_master = new QLabel("Key Shift");
     this->key_shift_master = new MIDIKeyShiftWidget;
     
-    this->label_volume_master = new QLabel("Master Volume (DCA): 100%");
-    this->slider_volume_master = new QSlider(Qt::Horizontal, this);
-    this->slider_volume_master->setRange(0, 120);
-    this->slider_volume_master->setTickInterval(20);
-    this->slider_volume_master->setTickPosition(QSlider::TicksBelow);
-    this->slider_volume_master->setValue(100);
-    connect(this->slider_volume_master, &QSlider::valueChanged, this, &Orgelwerk::volumeSliderMoved);
+    this->volume = new MIDIMastervolume;
+    connect(volume, &MIDIMastervolume::sliderMoved, this, &Orgelwerk::volumeSliderMoved);
     
     //showChannelsReal(0);
     //showChannelsImage(1);
     showChannelsSummary(1);
     this->grid->addWidget(label_key_shift_master, 2, 0);
     this->grid->addWidget(this->key_shift_master, 3, 0);
-    this->grid->addWidget(label_volume_master, 2, 1);
-    this->grid->addWidget(this->slider_volume_master, 3, 1);
+    //this->grid->addWidget(key_shift_widget, 2, 0);
+    this->grid->addWidget(volume, 2, 1, 2, 1);
+    //this->grid->addWidget(label_volume_master, 2, 1);
+    //this->grid->addWidget(this->slider_volume_master, 3, 1);
     this->grid->addWidget(group_keys, 4, 0, 1, 2);
     this->grid->addWidget(group_pitch, 5, 0, 1, 2);
     drawNotesKeyboard(6);
     //drawPianoKeyboard(7);
     drawPCKeyboard(8);
-    //this->grid->addWidget(this->button_panic, 10, 0);
-    //this->grid->addWidget(this->button_stop_all, 10, 1);
     this->grid->addLayout(layout_panic_stop, 10, 0, 1, 2);
     
     //this->grid->setSizeConstraint( QLayout::SetFixedSize );
@@ -383,11 +378,6 @@ void Orgelwerk::keySoft(bool pressed)
 void Orgelwerk::volumeSliderMoved(int value)
 {
     this->channels->volumeDCAChanged(value);
-    
-    QString label = this->label_volume_master->text().split(":").at(0);
-    label += ": " + QString::number(value) + "%";
-    
-    this->label_volume_master->setText(label);
 }
 
 void Orgelwerk::showChannelDetails(bool update_preview)

@@ -184,11 +184,16 @@ bool MainTabs::eventFilter(QObject *obj, QEvent *ev)
                 }
             }
             // use the arrow-keys to operate the pitch-wheel
-            else if (event->key() == Qt::Key_Left | event->key() == Qt::Key_Right | event->key() == Qt::Key_Up | event->key() == Qt::Key_Down)
+            else if (event->key() == Qt::Key_Left | event->key() == Qt::Key_Right)
             //else if (event->key() == Qt::Key_Up | event->key() == Qt::Key_Down)
             {
                 //o->movePitchWheel(event->key());
                 o->pitch->pitchKeyPressed(event->key());
+                return true;
+            }
+            else if (event->key() == Qt::Key_Up | event->key() == Qt::Key_Down)
+            {
+                o->volume->volumeKeyPressed(event->key());
                 return true;
             }
             // input for the virtual keyboard(s)
@@ -227,9 +232,14 @@ bool MainTabs::eventFilter(QObject *obj, QEvent *ev)
                 o->keyUp(Qt::Key_Super_R);
                 return true;
             }
-            else if (event->key() == Qt::Key_Left | event->key() == Qt::Key_Right | event->key() == Qt::Key_Up | event->key() == Qt::Key_Down)
+            else if (event->key() == Qt::Key_Left | event->key() == Qt::Key_Right)
             {
                 o->pitch->pitchKeyReleased();
+                return true;
+            }
+            else if (event->key() == Qt::Key_Up | event->key() == Qt::Key_Down)
+            {
+                o->volume->volumeKeyReleased(event->key());
                 return true;
             }
             else

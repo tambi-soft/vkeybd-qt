@@ -16,6 +16,9 @@
 #include "midi_channel_selector.h"
 #include "midi_key_selector.h"
 #include "midi_pitchwheel.h"
+#include "midi_channels_summary.h"
+#include "midi_key_shift_widget.h"
+#include "midi_mastervolume.h"
 #include "keyboard_piano.h"
 #include "keyboard_pc.h"
 #include "keyboard_notes.h"
@@ -25,8 +28,6 @@
 #include "interface_audio.h"
 #include "interface_alsa.h"
 #include "interface_jack.h"
-#include "midi_channels_summary.h"
-#include "midi_key_shift_widget.h"
 
 class Orgelwerk : public QWidget
 {
@@ -51,6 +52,7 @@ public:
     MIDIChannelSelector *channels;
     MIDIKeySelector *keys;
     MIDIPitchWheel *pitch;
+    MIDIMastervolume *volume;
     KeyboardNotes *notes = nullptr;
     KeyboardPiano *piano = nullptr;
     KeyboardPC *pc = nullptr;
@@ -72,8 +74,6 @@ private:
     
     QGridLayout *grid;
     
-    QLabel *label_volume_master;
-    QSlider *slider_volume_master;
     QPushButton *button_channels;
     QScrollArea *scroll_channels;
     MIDIChannelsSummary *midi_channels_summary;
