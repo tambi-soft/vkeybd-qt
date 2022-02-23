@@ -71,8 +71,8 @@ void Orgelwerk::drawGUI()
     QLabel *label_key_shift_master = new QLabel("Key Shift");
     this->key_shift_master = new MIDIKeyShiftWidget;
     
-    this->volume = new MIDIMastervolume;
-    connect(volume, &MIDIMastervolume::sliderMoved, this, &Orgelwerk::volumeSliderMoved);
+    this->volume = new MIDIMasterVolume;
+    connect(volume, &MIDIMasterVolume::sliderMoved, this, &Orgelwerk::volumeSliderMoved);
     
     //showChannelsReal(0);
     //showChannelsImage(1);

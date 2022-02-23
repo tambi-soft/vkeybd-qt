@@ -52,7 +52,7 @@ public:
     MIDIChannelSelector *channels;
     MIDIKeySelector *keys;
     MIDIPitchWheel *pitch;
-    MIDIMastervolume *volume;
+    MIDIMasterVolume *volume;
     KeyboardNotes *notes = nullptr;
     KeyboardPiano *piano = nullptr;
     KeyboardPC *pc = nullptr;

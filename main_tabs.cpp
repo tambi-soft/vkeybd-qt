@@ -239,7 +239,7 @@ bool MainTabs::eventFilter(QObject *obj, QEvent *ev)
             }
             else if (event->key() == Qt::Key_Up | event->key() == Qt::Key_Down)
             {
-                o->volume->volumeKeyReleased(event->key());
+                o->volume->volumeKeyReleased();
                 return true;
             }
             else

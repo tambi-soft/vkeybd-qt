@@ -5,13 +5,14 @@
 #include <QThread>
 #include <QTimer>
 
-class MIDIMastervolumeWorker : public QObject
+class MIDIMasterVolumeWorker : public QObject
 {
     Q_OBJECT
     
 public:
-    explicit MIDIMastervolumeWorker(QObject *parent = 0);
+    explicit MIDIMasterVolumeWorker(QObject *parent = 0);
     
+    void setVolume(int value);
     void keyDown(int direction); // direction is either -1, 0, 1
     void keyUp();
     
@@ -19,6 +20,7 @@ private:
     QTimer *timer;
     
     int volume = 100;
+    qreal tether = 1;
     
     int direction = 0; // direction is either -1, 0, 1
     
@@ -43,18 +45,24 @@ signals:
 #include <QSlider>
 #include <QVBoxLayout>
 
-class MIDIMastervolume : public QWidget
+class MIDIMasterVolume : public QWidget
 {
     Q_OBJECT
 public:
-    explicit MIDIMastervolume(QWidget *parent = nullptr);
+    explicit MIDIMasterVolume(QWidget *parent = nullptr);
+    ~MIDIMasterVolume();
     
     void volumeKeyPressed(int key);
-    void volumeKeyReleased(int key);
+    void volumeKeyReleased();
     
 private:
-    QLabel *label_volume_master;
-    QSlider *slider_volume_master;
+    QLabel *label_volume;
+    QSlider *slider_volume;
+    
+    QThread *thread;
+    MIDIMasterVolumeWorker *worker;
+    
+    void moveVolumeSlider(int position);
     
 private slots:
     void volumeSliderMoved(int value);
