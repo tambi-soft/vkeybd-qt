@@ -32,15 +32,23 @@ MIDIMasterVolume::~MIDIMasterVolume()
     this->thread->exit();
 }
 
-void MIDIMasterVolume::moveVolumeSlider(int position)
+void MIDIMasterVolume::moveVolumeSlider(int value)
 {
-    this->slider_volume->setValue(position);
+    this->slider_volume->setValue(value);
+    
+    emit sliderMoved(value);
+    
+    updateSliderLabel(value);
 }
 
 void MIDIMasterVolume::volumeSliderMoved(int value)
 {
     emit sliderMoved(value);
     
+    updateSliderLabel(value);
+}
+void MIDIMasterVolume::updateSliderLabel(int value)
+{
     QString label = this->label_volume->text().split(":").at(0);
     label += ": " + QString::number(value) + "%";
     
@@ -51,6 +59,7 @@ void MIDIMasterVolume::volumeKeyPressed(int key)
 {
     int volume = this->slider_volume->value();
     this->worker->setVolume(volume);
+    this->worker->setVolumeMinMax(this->slider_volume->minimum(), this->slider_volume->maximum());
     
     int direction = 0;
     if (key == Qt::Key_Down)
@@ -79,7 +88,7 @@ MIDIMasterVolumeWorker::MIDIMasterVolumeWorker(QObject *parent)
     : QObject{parent}
 {
     this->timer = new QTimer(this);
-    this->timer->setInterval(30);
+    this->timer->setInterval(5);
     this->timer->setTimerType(Qt::PreciseTimer);
     connect(this->timer, &QTimer::timeout, this, &MIDIMasterVolumeWorker::tick, Qt::DirectConnection);
     
@@ -98,6 +107,11 @@ void MIDIMasterVolumeWorker::setVolume(int value)
     {
         this->sign_positive = true;
     }
+}
+void MIDIMasterVolumeWorker::setVolumeMinMax(int value_min, int value_max)
+{
+    this->volume_min = value_min;
+    this->volume_max = value_max;
 }
 
 void MIDIMasterVolumeWorker::keyDown(int direction)
@@ -123,7 +137,7 @@ void MIDIMasterVolumeWorker::tick()
     if (this->direction == 0)
     {
         // reset volume slider
-        if (this->volume != 100)
+        if (this->volume != 100 && this->reset_slider)
         {
             if (this->volume < 100)
             {
@@ -148,7 +162,10 @@ void MIDIMasterVolumeWorker::tick()
     else
     {
         // pitch wheel moved as long as key pressed
-        this->volume = this->volume + this->direction * this->volume;
+        if (this->volume >= this->volume_min && this->volume <= this->volume_max)
+        {
+            this->volume = this->volume + this->direction * this->tether;
+        }
         
         emit moveVolumeSlider(this->volume);
     }
