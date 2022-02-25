@@ -191,7 +191,7 @@ bool MainTabs::eventFilter(QObject *obj, QEvent *ev)
                 o->pitch->pitchKeyPressed(event->key());
                 return true;
             }
-            else if (event->key() == Qt::Key_Up | event->key() == Qt::Key_Down)
+            else if (event->key() == Qt::Key_Up | event->key() == Qt::Key_Down | event->key() == Qt::Key_PageUp | event->key() == Qt::Key_PageDown)
             {
                 o->volume->volumeKeyPressed(event->key());
                 return true;
@@ -237,7 +237,7 @@ bool MainTabs::eventFilter(QObject *obj, QEvent *ev)
                 o->pitch->pitchKeyReleased();
                 return true;
             }
-            else if (event->key() == Qt::Key_Up | event->key() == Qt::Key_Down)
+            else if (event->key() == Qt::Key_Up | event->key() == Qt::Key_Down | event->key() == Qt::Key_PageUp | event->key() == Qt::Key_PageDown)
             {
                 o->volume->volumeKeyReleased();
                 return true;

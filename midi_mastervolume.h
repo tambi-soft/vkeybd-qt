@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QThread>
 #include <QTimer>
+#include <QDebug>
 
 class MIDIMasterVolumeWorker : public QObject
 {
@@ -14,6 +15,7 @@ public:
     
     void setVolume(int value);
     void setVolumeMinMax(int value_min, int value_max);
+    void shouldResetSlider(bool reset);
     void keyDown(int direction); // direction is either -1, 0, 1
     void keyUp();
     

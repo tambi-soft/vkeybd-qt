@@ -65,10 +65,22 @@ void MIDIMasterVolume::volumeKeyPressed(int key)
     if (key == Qt::Key_Down)
     {
         direction = -1;
+        this->worker->shouldResetSlider(true);
     }
     else if (key == Qt::Key_Up)
     {
         direction = 1;
+        this->worker->shouldResetSlider(true);
+    }
+    else if (key == Qt::Key_PageDown)
+    {
+        direction = -1;
+        this->worker->shouldResetSlider(false);
+    }
+    else if (key == Qt::Key_PageUp)
+    {
+        direction = 1;
+        this->worker->shouldResetSlider(false);
     }
     
     this->slider_volume->blockSignals(true);
@@ -114,6 +126,11 @@ void MIDIMasterVolumeWorker::setVolumeMinMax(int value_min, int value_max)
     this->volume_max = value_max;
 }
 
+void MIDIMasterVolumeWorker::shouldResetSlider(bool reset)
+{
+    this->reset_slider = reset;
+}
+
 void MIDIMasterVolumeWorker::keyDown(int direction)
 {
     this->direction = direction;
@@ -139,6 +156,7 @@ void MIDIMasterVolumeWorker::tick()
         // reset volume slider
         if (this->volume != 100 && this->reset_slider)
         {
+            qDebug() << "aaaaaaaa";
             if (this->volume < 100)
             {
                 this->volume = this->volume + this->tether;
@@ -161,6 +179,7 @@ void MIDIMasterVolumeWorker::tick()
     }
     else
     {
+        qDebug() << "bbbbbbbb";
         // pitch wheel moved as long as key pressed
         if (this->volume >= this->volume_min && this->volume <= this->volume_max)
         {
