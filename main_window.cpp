@@ -24,7 +24,10 @@ MainWindow::MainWindow(QWidget *parent)
     
     this->tabs = new MainTabs(this->config);
     
+    this->stack_widget_switches = new StackedWidgetSwitches;
+    
     layout->addWidget(button_grab);
+    layout->addWidget(this->stack_widget_switches);
     layout->addWidget(this->tabs);
     
     setCentralWidget(widget);
@@ -34,6 +37,23 @@ MainWindow::MainWindow(QWidget *parent)
     
     //int width = this->width();
     //resize(width, 900);
+    
+    QString style = "QTabBar::tab {"
+                    "    font-size: 8pt;"
+                    "    padding: 1px;"
+                    "}"
+                    "QTabBar::tab:disabled {"
+                    "    width: 3px;"
+                    "    color: transparent;"
+                    "    background: transparent;"
+                    "}"
+                    "QTabBar::tab:enabled {"
+                    "    width: 28px;"
+                    "}"
+                    "QTabBar::tab:selected {"
+                    "    background: #ffffff;"
+                    "}";
+    setStyleSheet(style);
 }
 
 MainWindow::~MainWindow()

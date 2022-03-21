@@ -35,6 +35,7 @@ SOURCES += \
     keyboard_pc.cpp \
     keyboard_piano.cpp \
     main.cpp \
+    main_stacked_widget.cpp \
     main_tabs.cpp \
     main_window.cpp \
     menubar.cpp \
@@ -58,6 +59,7 @@ HEADERS += \
     keyboard_notes.h \
     keyboard_pc.h \
     keyboard_piano.h \
+    main_stacked_widget.h \
     main_tabs.h \
     main_window.h \
     menubar.h \

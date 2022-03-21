@@ -29,12 +29,22 @@ MainTabs::MainTabs(Config *config, QTabWidget *parent) : QTabWidget(parent)
     }
     
     // make hidden tabs invisible
-    QString style = "QTabBar::tab:disabled {"
-            "    width: 20px;"
-            "    color: transparent;"
-            "    background: transparent;"
-            "}";
-    setStyleSheet(style);
+    QString style = "QTabBar::tab {"
+                    "    font-size: 8pt;"
+                    "    padding: 1px;"
+                    "}"
+                    "QTabBar::tab:disabled {"
+                    "    width: 3px;"
+                    "    color: transparent;"
+                    "    background: transparent;"
+                    "}"
+                    "QTabBar::tab:enabled {"
+                    "    width: 28px;"
+                    "}"
+                    "QTabBar::tab:selected {"
+                    "    background: #ffffff;"
+                    "}";
+    //setStyleSheet(style);
     
     installEventFilter(this);
 }
@@ -184,7 +194,7 @@ bool MainTabs::eventFilter(QObject *obj, QEvent *ev)
                 }
             }
             // use the arrow-keys to operate the pitch-wheel
-            else if (event->key() == Qt::Key_Left | event->key() == Qt::Key_Right)
+            else if ( (event->key() == Qt::Key_Left) | (event->key() == Qt::Key_Right) )
             //else if (event->key() == Qt::Key_Up | event->key() == Qt::Key_Down)
             {
                 //o->movePitchWheel(event->key());
