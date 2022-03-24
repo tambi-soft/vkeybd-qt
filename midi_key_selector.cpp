@@ -25,12 +25,14 @@ MIDIKeySelector::MIDIKeySelector(QWidget *parent) : QWidget(parent)
             check->setChecked(true);
         }
         
+        /* 
         QString stylesheet = "QCheckBox:indicator:checked {"
                              "  color: white;"
                              "  background-color: black;"
                              "}";
         
         check->setStyleSheet(stylesheet);
+        */
         
         this->list_of_checkboxes.append(check);
     }

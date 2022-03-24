@@ -39,12 +39,12 @@ MIDIPitchWheel::MIDIPitchWheel(QWidget *parent) : QWidget(parent)
     grid->addWidget(this->slider_vibamp, 1, 1);
     
     QString style = "QSlider::groove:horizontal {"
-            "   border: 1px solid;"
+            "   border: 1px solid #cf6f2e;"
             "   height: 5px;"
             "   margin: 0px;"
             "}"
             "QSlider::handle:horizontal {"
-            "   background-color: black;"
+            "   background-color: #cf6f2e;"
             "   border: 1px solid;"
             "   height: 10px;"
             "   width: 15px;"
