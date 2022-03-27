@@ -11,6 +11,8 @@ MIDIKeyShiftWidget::MIDIKeyShiftWidget(QWidget *parent) : QWidget(parent)
     QPushButton *button_higher = new QPushButton(">>");
     button_higher->setMaximumWidth(30);
     button_lower->setMaximumWidth(30);
+    button_higher->setObjectName("key_shift_button");
+    button_lower->setObjectName("key_shift_button");
     
     connect(button_higher, &QPushButton::clicked, this, &MIDIKeyShiftWidget::higherShiftKeyPressed);
     connect(button_lower, &QPushButton::clicked, this, &MIDIKeyShiftWidget::lowerShiftKeyPressed);
@@ -18,6 +20,7 @@ MIDIKeyShiftWidget::MIDIKeyShiftWidget(QWidget *parent) : QWidget(parent)
     this->spin_key = new QSpinBox;
     this->spin_key->setMinimum(-64);
     this->spin_key->setMaximum(64);
+    this->spin_key->setObjectName("key_shift_spin");
     
     layout->addWidget(button_lower);
     layout->addWidget(this->spin_key);

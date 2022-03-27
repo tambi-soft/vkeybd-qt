@@ -376,6 +376,7 @@ void Orgelwerk::showChannelDetails(bool update_preview)
     //QWidget *channel_details = this->scroll_channels->takeWidget();
     //layout_dialog->addWidget(channel_details);
     layout_dialog->addWidget(this->channels);
+    //layout_dialog->addLayout(this->channels->layout());
     //layout_dialog->addWidget(this->scroll_channels);
     //layout_dialog->setGeometry(this->scroll_channels->geometry());
     

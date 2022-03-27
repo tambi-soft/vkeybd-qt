@@ -10,13 +10,13 @@ MIDIChannelSelector::MIDIChannelSelector(QList<InterfaceAudio *> list_of_audio_i
     
     installEventFilter(this);
     
+    setObjectName("midi_channel_selector");
+    setAttribute(Qt::WA_TranslucentBackground);
     QFile css_file(":css_light");
     if (css_file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
         setStyleSheet(css_file.readAll());
     }
-    
-    setObjectName("midi_channel_selector");
 }
 
 void MIDIChannelSelector::setListOfAudioOutputs(QList<InterfaceAudio *> list_of_audio_interfaces)
