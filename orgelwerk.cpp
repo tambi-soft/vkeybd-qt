@@ -43,27 +43,12 @@ void Orgelwerk::drawGUI()
     
     this->button_panic->setText("Panic! [Esc]");
     connect(this->button_panic, &QPushButton::clicked, this, &Orgelwerk::panicKeyPressed);
-    QString stylesheet_panic = "QPushButton {"
-                         "  color: white;"
-                         "  background-color: darkred;"
-                         "}"
-                         "QPushButton:pressed {"
-                         "  color: white;"
-                         "  background-color: yellow;"
-                         "}";
-    this->button_panic->setStyleSheet(stylesheet_panic);
+    this->button_panic->setObjectName("button_panic");
     
     this->button_stop_all->setText("Stop All [Del]");
     connect(this->button_stop_all, &QPushButton::clicked, this, &Orgelwerk::stopAllPressed);
-    QString stylesheet_stop = "QPushButton {"
-                         "  color: white;"
-                         "  background-color: darkorange;"
-                         "}"
-                         "QPushButton:pressed {"
-                         "  color: white;"
-                         "  background-color: yellow;"
-                         "}";
-    this->button_stop_all->setStyleSheet(stylesheet_stop);
+    this->button_stop_all->setObjectName("button_stop");
+    
     QLayout *layout_panic_stop = new QHBoxLayout;
     layout_panic_stop->addWidget(this->button_panic);
     layout_panic_stop->addWidget(this->button_stop_all);

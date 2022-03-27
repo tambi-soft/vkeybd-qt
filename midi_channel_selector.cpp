@@ -9,6 +9,12 @@ MIDIChannelSelector::MIDIChannelSelector(QList<InterfaceAudio *> list_of_audio_i
     drawGUI();
     
     installEventFilter(this);
+    
+    QFile css_file(":css_light");
+    if (css_file.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        setStyleSheet(css_file.readAll());
+    }
 }
 
 void MIDIChannelSelector::setListOfAudioOutputs(QList<InterfaceAudio *> list_of_audio_interfaces)
@@ -72,20 +78,8 @@ void MIDIChannelSelector::drawGUI()
         slider_pan->setRange(0, 127);
         slider_pan->setValue(64);
         connect(slider_pan, &QSlider::valueChanged, this, [this, i, slider_pan]{ MIDIChannelSelector::panSliderMoved(i-1, slider_pan->value()); });
-        //slider_pan->setStyleSheet("QSlider::groove:horizontal {background-color:red;}");
-        QString style_pan = "QSlider::groove:horizontal {"
-                "border: 1px solid #999999;"
-                "height: 20px;"
-                "background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #B1B1B1, stop:1 #c4c4c4);"
-                "margin: 2px 0;"
-                "}"
-                "QSlider::handle:horizontal {"
-                "background: qlineargradient(x1:0, y1:0, x2:1, y2:1, stop:0 #b4b4b4, stop:1 #8f8f8f);"
-                "border: 1px solid #5c5c5c;"
-                "width: 15px;"
-                "margin: -2px 0px;"
-                "}";
-        slider_pan->setStyleSheet(style_pan);
+        slider_pan->setObjectName("slider_pan");
+        
         connect(slider_pan, &QSlider::sliderPressed, this, [slider_pan]{ slider_pan->setValue(64); });
         this->list_of_pan_sliders.append(slider_pan);
         
@@ -188,13 +182,6 @@ void MIDIChannelSelector::drawGUI()
             check->setChecked(true);
         }
         
-        QString stylesheet = "QCheckBox:indicator:checked {"
-                             "  color: white;"
-                             "  background-color: black;"
-                             "}";
-        
-        check->setStyleSheet(stylesheet);
-        
         this->list_of_checkboxes.append(check);
         this->list_of_midi_output_combos.append(combo_midi_output);
         this->list_of_keyshifts.append(key_shift);
@@ -211,7 +198,7 @@ void MIDIChannelSelector::drawGUI()
     QPushButton *button_test_note = new QPushButton("Play Test Note");
     connect(button_test_note, &QPushButton::pressed, this, &MIDIChannelSelector::playTestNote);
     connect(button_test_note, &QPushButton::released, this, &MIDIChannelSelector::stopTestNote);
-    grid->addWidget(button_test_note, 17, 0, 1, 13);
+    grid->addWidget(button_test_note, 17, 0, 1, 14);
 }
 
 QList<QMap<QString,QVariant>> MIDIChannelSelector::listOfChannels(bool only_activated)

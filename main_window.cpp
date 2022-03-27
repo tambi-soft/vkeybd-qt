@@ -16,11 +16,7 @@ MainWindow::MainWindow(QWidget *parent)
     
     this->button_grab = new QPushButton("Grab Keyboard");
     connect(button_grab, &QPushButton::clicked, this, &MainWindow::grabButtonClicked);
-    QString stylesheet = "QPushButton {"
-                         "  color: white;"
-                         "  background-color: darkgreen;"
-                         "}";
-    this->button_grab->setStyleSheet(stylesheet);
+    this->button_grab->setObjectName("button_grab");
     
     this->tabs = new MainTabs(this->config);
     
@@ -38,57 +34,12 @@ MainWindow::MainWindow(QWidget *parent)
     //int width = this->width();
     //resize(width, 900);
     
-    QString style = "QWidget {"
-                    "    /*color: #d4ce99;*/"
-                    "    color: #e7e7e7;"
-                    "    background: #393939;"
-                    "    /*padding: 1px;*/"
-                    "    /*margin: 1px;*/"
-                    "}"
-                    "QTabWidget:pane {"
-                    "    border: 1px solid #94969a;"
-                    "    border-top: 0px;"
-                    "}"
-                    "QTabBar::tab {"
-                    "    font-size: 8pt;"
-                    "    border: 1px solid #94969a;"
-                    "}"
-                    "QTabBar::tab:enabled {"
-                    "    width: 30px;"
-                    "    padding: 1px;"
-                    "}"
-                    "QTabBar::tab:selected {"
-                    "    background: #393939;"
-                    "    border-bottom-color: #393939;"
-                    "}"
-                    "QTabBar::tab:!selected {"
-                    "    background: #2d2d2d;"
-                    "}"
-                    "QTabBar::tab:disabled {"
-                    "    width: 3px;"
-                    "    color: transparent;"
-                    "    background: #393939;"
-                    "}"
-                    "QGraphicsView {"
-                    "    background: #eeeeee;"
-                    "}"
-                    "QGroupBox {"
-                    "    border: 1px solid #956d3d;"
-                    "    /*padding: 5px;*/"
-                    "    margin-top: 3ex;"
-                    "}"
-                    "QGroupBox:title {"
-                    "    subcontrol-origin: margin;"
-                    "    subcontrol-position: top left;"
-                    "}"
-                    "QCheckBox:indicator:unchecked {"
-                    "    "
-                    "}"
-                    "QCheckBox:indicator:checked {"
-                    "    color: #42b2c0;"
-                    "    background-color: #cf6f2e;"
-                    "}";
-    setStyleSheet(style);
+    //setAttribute(Qt::WA_TranslucentBackground);
+    QFile css_file(":css_light");
+    if (css_file.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        setStyleSheet(css_file.readAll());
+    }
 }
 
 MainWindow::~MainWindow()
@@ -173,11 +124,7 @@ void MainWindow::grabButtonClicked()
         // to avoid to mess around with the os like blocking taskbar-items, we need to grab the mouse aswell
         releaseMouse();
         
-        QString stylesheet = "QPushButton {"
-                             "  color: white;"
-                             "  background-color: darkgreen;"
-                             "}";
-        this->button_grab->setStyleSheet(stylesheet);
+        this->button_grab->setDown(false);
         this->button_grab->setText("Grab Keyboard");
     }
     else
@@ -186,11 +133,7 @@ void MainWindow::grabButtonClicked()
         grabKeyboard();
         grabMouse();
         
-        QString stylesheet = "QPushButton {"
-                             "  color: white;"
-                             "  background-color: darkblue;"
-                             "}";
-        this->button_grab->setStyleSheet(stylesheet);
+        this->button_grab->setDown(true);
         this->button_grab->setText("Grabbing Keyboard. Hit Ctrl+Shift or Click to stop.");
     }
 }

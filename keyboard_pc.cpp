@@ -43,38 +43,22 @@ void KeyboardPC::drawButtons()
             
             button->show();
             
-            QString color = "black";
-            QString background_color = "white";
             if (colors.at(row).at(col) == "b")
             {
-                color = "white";
-                background_color = "black";
+                button->setObjectName("pc_black");
             }
             else if (colors.at(row).at(col) == "g")
             {
-                color = "black";
-                background_color = "grey";
+                button->setObjectName("pc_grey");
             }
             else if (colors.at(row).at(col) == "gold")
             {
-                color = "#000000";
-                background_color = "#ffd700";
+                button->setObjectName("pc_gold");
             }
-            QString stylesheet = "QPushButton {"
-                                 "  color: "+ color +";"
-                                 "  background-color: "+ background_color + ";"
-                                 "  font-size: 6pt;"
-                                 "  border-style: outset;"
-                                 "  border-width: 1px;"
-                                 "  border-color: black;"
-                                 "  border-radius: 0px;"
-                                 "}"
-                                 "QPushButton:pressed {"
-                                 "  color: white;"
-                                 "  background-color: blue;"
-                                 "}";
-            
-            button->setStyleSheet(stylesheet);
+            else
+            {
+                button->setObjectName("pc_white");
+            }
             
             list_of_buttons_row.append(button);
         }

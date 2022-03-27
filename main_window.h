@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QObject>
 #include <QKeyEvent>
+#include <QFile>
 
 //#include "orgelwerk.h"
 //#include "keyboard_piano.h"

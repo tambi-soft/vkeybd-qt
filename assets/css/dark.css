@@ -1,0 +1,50 @@
+QWidget {
+    /*color: #d4ce99;*/
+    color: #e7e7e7;
+    background: #393939;
+    /*padding: 1px;*/
+    /*margin: 1px;*/
+}
+QTabWidget:pane {
+    border: 1px solid #94969a;
+    border-top: 0px;
+}
+QTabBar::tab {
+    font-size: 8pt;
+    border: 1px solid #94969a;
+}
+QTabBar::tab:enabled {
+    width: 30px;
+    padding: 1px;
+}
+QTabBar::tab:selected {
+    background: #393939;
+    border-bottom-color: #393939;
+}
+QTabBar::tab:!selected {
+    background: #2d2d2d;
+}
+QTabBar::tab:disabled {
+    width: 3px;
+    color: transparent;
+    background: #393939;
+}
+QGraphicsView {
+    background: #eeeeee;
+}
+QGroupBox {
+    border: 1px solid #956d3d;
+    /*padding: 5px;*/
+    margin-top: 3ex;
+}
+QGroupBox:title {
+    subcontrol-origin: margin;
+    subcontrol-position: top left;
+}
+QCheckBox:indicator:unchecked {
+    
+}
+QCheckBox:indicator:checked {
+    color: #42b2c0;
+    background-color: #cf6f2e;
+} 
