@@ -15,6 +15,8 @@ MIDIChannelSelector::MIDIChannelSelector(QList<InterfaceAudio *> list_of_audio_i
     {
         setStyleSheet(css_file.readAll());
     }
+    
+    setObjectName("midi_channel_selector");
 }
 
 void MIDIChannelSelector::setListOfAudioOutputs(QList<InterfaceAudio *> list_of_audio_interfaces)
