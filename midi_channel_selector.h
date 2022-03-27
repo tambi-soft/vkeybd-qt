@@ -79,6 +79,7 @@ private slots:
 signals:
     void newAudioInterfaceRequested(QString label);
     void eventFiltered(QObject *obj, QEvent *ev);
+    void closed();
 };
 
 #endif // MIDICHANNELSELECTOR_H

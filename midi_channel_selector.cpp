@@ -11,7 +11,7 @@ MIDIChannelSelector::MIDIChannelSelector(QList<InterfaceAudio *> list_of_audio_i
     installEventFilter(this);
     
     setObjectName("midi_channel_selector");
-    setAttribute(Qt::WA_TranslucentBackground);
+    //setAttribute(Qt::WA_TranslucentBackground);
     QFile css_file(":css_light");
     if (css_file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
@@ -28,6 +28,7 @@ void MIDIChannelSelector::drawGUI()
 {
     QGridLayout *grid = new QGridLayout;
     setLayout(grid);
+    grid->setSizeConstraint( QLayout::SetFixedSize );
     
     QLabel *label_channel = new QLabel("Channel");
     QLabel *label_output = new QLabel("Output");
@@ -100,11 +101,13 @@ void MIDIChannelSelector::drawGUI()
         QList<QString> list_instrument_group = this->midi_sounds_list->getInstrumentGroups();
         combo_instrument_group->addItems(list_instrument_group);
         combo_instrument_group->setPlaceholderText("[non-default MSB/LSB set]");
+        combo_instrument_group->setObjectName("instrument_selector");
         
         QComboBox *combo_instrument = new QComboBox;
         QList<QString> list_instrument = this->midi_sounds_list->getInstrumentsForGroupMIDIv1(list_instrument_group.at(0));
         combo_instrument->addItems(list_instrument);
         combo_instrument->setPlaceholderText("[non-default MSB/LSB set]");
+        combo_instrument->setObjectName("instrument_selector");
         
         connect(combo_instrument_group, &QComboBox::currentTextChanged, this, [this, i, combo_instrument_group, combo_instrument]{ MIDIChannelSelector::instrumentGroupChanged(i-1, combo_instrument_group, combo_instrument); });
         //connect(combo_instrument_group, &QComboBox::currentTextChanged, this, [this, i, combo_instrument]{ MIDIChannelSelector::instrumentChanged(i-1, combo_instrument->currentText()); });
@@ -115,6 +118,8 @@ void MIDIChannelSelector::drawGUI()
         QSpinBox *midi_instrument_lsb = new QSpinBox;
         midi_instrument_msb->setRange(0, 127);
         midi_instrument_lsb->setRange(0, 127);
+        midi_instrument_msb->setObjectName("instrument_selector");
+        midi_instrument_lsb->setObjectName("instrument_selector");
         connect(
                     midi_instrument_msb,
                     &QSpinBox::textChanged,
@@ -513,7 +518,10 @@ bool MIDIChannelSelector::eventFilter(QObject *obj, QEvent *ev)
             }
             else if (event->key() == Qt::Key_Escape)
             {
-                return false;
+                this->hide();
+                emit closed();
+                
+                return true;
             }
             
             emit eventFiltered(obj, ev);

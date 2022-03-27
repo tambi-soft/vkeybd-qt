@@ -23,6 +23,7 @@ void Orgelwerk::drawGUI()
     this->pitch = new MIDIPitchWheel;
     
     connect(this->channels, &MIDIChannelSelector::eventFiltered, this, &Orgelwerk::eventFilter);
+    connect(this->channels, &MIDIChannelSelector::closed, this, &Orgelwerk::channelsSummaryUpdate);
     
     connect(this->pitch, &MIDIPitchWheel::pitchWheelMoved, this, &Orgelwerk::pitchWheelMoved);
     
@@ -367,11 +368,16 @@ void Orgelwerk::volumeSliderMoved(int value)
 
 void Orgelwerk::showChannelDetails(bool update_preview)
 {
+    this->channels->show();
+    
+    /*
     QDialog *dialog = new QDialog();
     connect(dialog, &QDialog::rejected, this, &Orgelwerk::channelsDialogRejected);
     QVBoxLayout *layout_dialog = new QVBoxLayout;
     layout_dialog->setMargin(0);
     dialog->setLayout(layout_dialog);
+    
+    
     
     //QWidget *channel_details = this->scroll_channels->takeWidget();
     //layout_dialog->addWidget(channel_details);
@@ -380,9 +386,10 @@ void Orgelwerk::showChannelDetails(bool update_preview)
     //layout_dialog->addWidget(this->scroll_channels);
     //layout_dialog->setGeometry(this->scroll_channels->geometry());
     
-    dialog->layout()->setSizeConstraint( QLayout::SetFixedSize );
+    //dialog->layout()->setSizeConstraint( QLayout::SetFixedSize );
     
-    dialog->exec();
+    //dialog->exec();
+    dialog->show();
     
     if (update_preview)
     {
@@ -400,6 +407,7 @@ void Orgelwerk::showChannelDetails(bool update_preview)
         //this->scroll_channels->setWidget(this->channels);
     //}
     //this->channels->show();
+    */
 }
 
 void Orgelwerk::channelsDialogRejected()

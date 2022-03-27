@@ -183,7 +183,8 @@ QSpinBox {
     color: black;
     /*background-color: #098ba0;*/
     background-color: #65dcd5;
-    /*border: 1px solid blue;*/
+    background-color: #65c6dc;
+    background-color: #6cd5ec;
 }
 /**
 QSpinBox:up-button {
@@ -200,9 +201,9 @@ QSpinBox#key_shift_spin {
 QPushButton#key_shift_button {
     background-color: #098ba0;
 }
-/**
-QWidget {
-    color: yellow;
-    background: red;
+
+#instrument_selector {
+    color: white;
+    /*background-color: #07a2aa;*/
+    background-color: #024858;
 }
-**/
