@@ -38,6 +38,8 @@ private:
     QPushButton *button_grab;
     
     QMap<QString, QString> key_keycode_map = {};
+    
+    QWidget* newKeyboardInstance();
 
 protected:
     bool eventFilter(QObject *obj, QEvent *ev);

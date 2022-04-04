@@ -8,9 +8,29 @@ MainWindow::MainWindow(QWidget *parent)
     connect(menu, &MenuBar::signalOpen, this, &MainWindow::openAllParams);
     setMenuBar(menu);
     
+    QWidget *main_container_widget = new QWidget;
+    QHBoxLayout *layout = new QHBoxLayout;
+    layout->setContentsMargins(0, 0, 0, 0);
+    main_container_widget->setLayout(layout);
+    setCentralWidget(main_container_widget);
+    
+    layout->addWidget(newKeyboardInstance());
+    layout->addWidget(newKeyboardInstance());
+    
+    
+}
+
+MainWindow::~MainWindow()
+{
+    
+}
+
+QWidget* MainWindow::newKeyboardInstance()
+{
     QWidget *widget = new QWidget;
     QVBoxLayout *layout = new QVBoxLayout;
     widget->setLayout(layout);
+    //setCentralWidget(widget);
     
     this->config = new Config;
     
@@ -26,8 +46,6 @@ MainWindow::MainWindow(QWidget *parent)
     //layout->addWidget(this->stack_widget_switches);
     layout->addWidget(this->tabs);
     
-    setCentralWidget(widget);
-    
     this->installEventFilter(this);
     //installNativeEventFilter(this);
     
@@ -40,11 +58,8 @@ MainWindow::MainWindow(QWidget *parent)
     {
         setStyleSheet(css_file.readAll());
     }
-}
-
-MainWindow::~MainWindow()
-{
     
+    return widget;
 }
 
 void MainWindow::saveAllParams()
