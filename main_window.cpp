@@ -15,7 +15,8 @@ MainWindow::MainWindow(QWidget *parent)
     setCentralWidget(main_container_widget);
     
     layout->addWidget(newKeyboardInstance("default"));
-    layout->addWidget(newKeyboardInstance("udp_client"));
+    //layout->addWidget(newKeyboardInstance("default"));
+    //layout->addWidget(newKeyboardInstance("udp_client"));
     
     
 }
@@ -51,7 +52,9 @@ QWidget* MainWindow::newKeyboardInstance(QString mode)
     
     if (mode == "default")
     {
-        line_udp_ip->hide();
+        QLabel *label_udp_listen_ip = new QLabel("IP-Address of the interface you want to listen on");
+        layout->addWidget(label_udp_listen_ip);
+        layout->addWidget(line_udp_ip);
         
         QLabel *label_udp_listen_port = new QLabel("Network Listen Port");
         layout->addWidget(label_udp_listen_port);

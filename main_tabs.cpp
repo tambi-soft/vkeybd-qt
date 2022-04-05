@@ -13,6 +13,7 @@ MainTabs::MainTabs(Config *config, QString mode, QLineEdit *line_udp_ip, QSpinBo
     
     if (mode == "default")
     {
+        connect(line_udp_ip, &QLineEdit::textChanged, this, &MainTabs::rebindSocketIP);
         connect(spin_port, QOverload<int>::of(&QSpinBox::valueChanged), this, &MainTabs::rebindSocket);
         
         socket->bind(QHostAddress::LocalHost, spin_port->value());
@@ -369,8 +370,13 @@ void MainTabs::receiveUDPMessage()
     }
 }
 
+void MainTabs::rebindSocketIP(QString ip)
+{
+    socket->close();
+    socket->bind(QHostAddress(ip), this->spin_port->value());
+}
 void MainTabs::rebindSocket(int value)
 {
     socket->close();
-    socket->bind(QHostAddress::LocalHost, value);
+    socket->bind(QHostAddress(this->line_udp_ip->text()), value);
 }

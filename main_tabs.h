@@ -35,6 +35,7 @@ private:
     QSpinBox *spin_port;
     
     QUdpSocket *socket;
+    void rebindSocketIP(QString ip);
     void rebindSocket(int value);
     void sendUDPMessage(QString message);
     void receiveUDPMessage();
