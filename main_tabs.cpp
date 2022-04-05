@@ -1,11 +1,37 @@
 #include "main_tabs.h"
 
-MainTabs::MainTabs(Config *config, QTabWidget *parent) : QTabWidget(parent)
+MainTabs::MainTabs(Config *config, QString mode, QLineEdit *line_udp_ip, QSpinBox *spin_port, QTabWidget *parent) : QTabWidget(parent)
 {
     this->config = config;
+    this->mode = mode;
+    this->line_udp_ip = line_udp_ip;
+    this->spin_port = spin_port;
     
     setMovable(false);
     
+    this->socket = new QUdpSocket(this);
+    
+    if (mode == "default")
+    {
+        connect(spin_port, QOverload<int>::of(&QSpinBox::valueChanged), this, &MainTabs::rebindSocket);
+        
+        socket->bind(QHostAddress::LocalHost, spin_port->value());
+        connect(socket, &QUdpSocket::readyRead, this, &MainTabs::receiveUDPMessage);
+        
+        initializeTabs();
+    }
+    else
+    {
+        initializeTabs();
+        
+        hide();
+    }
+    
+    installEventFilter(this);
+}
+
+void MainTabs::initializeTabs()
+{
     this->list_function_keys = {Qt::Key_F1, Qt::Key_F2, Qt::Key_F3, Qt::Key_F4, -1, Qt::Key_F5, Qt::Key_F6, Qt::Key_F7, Qt::Key_F8, -1, Qt::Key_F9, Qt::Key_F10, Qt::Key_F11, Qt::Key_F12};
     this->list_labels = {"F1", "F2", "F3", "F4", "spacer", "F5", "F6", "F7", "F8", "spacer", "F9", "F10", "F11", "F12"};
     
@@ -27,26 +53,6 @@ MainTabs::MainTabs(Config *config, QTabWidget *parent) : QTabWidget(parent)
             addOrganTab(this->list_labels.at(i), 1);
         }
     }
-    
-    // make hidden tabs invisible
-    QString style = "QTabBar::tab {"
-                    "    font-size: 8pt;"
-                    "    padding: 1px;"
-                    "}"
-                    "QTabBar::tab:disabled {"
-                    "    width: 3px;"
-                    "    color: transparent;"
-                    "    background: transparent;"
-                    "}"
-                    "QTabBar::tab:enabled {"
-                    "    width: 28px;"
-                    "}"
-                    "QTabBar::tab:selected {"
-                    "    background: #ffffff;"
-                    "}";
-    //setStyleSheet(style);
-    
-    installEventFilter(this);
 }
 
 void MainTabs::addOrganTab(QString label, int number_of_orgelwerks)
@@ -127,6 +133,8 @@ bool MainTabs::eventFilter(QObject *obj, QEvent *ev)
             //Orgelwerk *o = static_cast<Orgelwerk*>(currentWidget());
             Orgelwerk *o = static_cast<Orgelwerk*>(currentWidget()->layout()->itemAt(0)->widget());
             
+            QString udp_message = QString::number(ev->type())+"/"+QString::number(event->key());
+            
             if (event->key() == Qt::Key_Escape)
             {
                 //o->button_panic->animateClick();
@@ -134,6 +142,8 @@ bool MainTabs::eventFilter(QObject *obj, QEvent *ev)
                 {
                     this->list_of_tabs.at(i)->button_panic->animateClick();
                 }
+                
+                sendUDPMessage(udp_message);
                 
                 return true;
             }
@@ -144,25 +154,37 @@ bool MainTabs::eventFilter(QObject *obj, QEvent *ev)
                 {
                     this->list_of_tabs.at(i)->button_stop_all->animateClick();
                 }
+                
+                sendUDPMessage(udp_message);
+                
+                return true;
             }
             else if (event->key() == Qt::Key_Menu)
             {
                 o->button_channels_dialog->animateClick();
+                sendUDPMessage(udp_message);
             }
             else if (event->key() == Qt::Key_Insert)
             {
                 o->button_resend_midi->animateClick();
+                sendUDPMessage(udp_message);
             }
             else if (event->key() == Qt::Key_Space)
             {
                 o->keySustain(true);
                 o->keyDown(Qt::Key_Space);
+                
+                sendUDPMessage(udp_message);
+                
                 return true;
             }
             else if (event->key() == Qt::Key_Alt)
             {
                 o->keySostenuto(true);
                 o->keyDown(Qt::Key_Alt);
+                
+                sendUDPMessage(udp_message);
+                
                 return true;
             }
             else if (event->key() == Qt::Key_Super_L || event->key() == Qt::Key_Super_R)
@@ -170,6 +192,9 @@ bool MainTabs::eventFilter(QObject *obj, QEvent *ev)
                 o->keySoft(true);
                 o->keyDown(Qt::Key_Super_L);
                 o->keyDown(Qt::Key_Super_R);
+                
+                sendUDPMessage(udp_message);
+                
                 return true;
             }
             // activate desired tab by pressing an f-key
@@ -189,6 +214,8 @@ bool MainTabs::eventFilter(QObject *obj, QEvent *ev)
                         //o = static_cast<Orgelwerk*>(currentWidget()->layout()->itemAt(0)->widget());
                         //o->resendMIDIControls();
                         
+                        sendUDPMessage(udp_message);
+                        
                         return true;
                     }
                 }
@@ -199,17 +226,26 @@ bool MainTabs::eventFilter(QObject *obj, QEvent *ev)
             {
                 //o->movePitchWheel(event->key());
                 o->pitch->pitchKeyPressed(event->key());
+                
+                sendUDPMessage(udp_message);
+                
                 return true;
             }
             else if (event->key() == Qt::Key_Up | event->key() == Qt::Key_Down | event->key() == Qt::Key_PageUp | event->key() == Qt::Key_PageDown)
             {
                 o->volume->volumeKeyPressed(event->key());
+                
+                sendUDPMessage(udp_message);
+                
                 return true;
             }
             // input for the virtual keyboard(s)
             else
             {
                 o->keyDown(event->key());
+                
+                sendUDPMessage(udp_message);
+                
                 return true;
             }
         }
@@ -223,16 +259,24 @@ bool MainTabs::eventFilter(QObject *obj, QEvent *ev)
             //Orgelwerk *o = static_cast<Orgelwerk*>(currentWidget());
             Orgelwerk *o = static_cast<Orgelwerk*>(currentWidget()->layout()->itemAt(0)->widget());
             
+            QString udp_message = QString::number(ev->type())+"/"+QString::number(event->key());
+            
             if (event->key() == Qt::Key_Space)
             {
                 o->keySustain(false);
                 o->keyUp(Qt::Key_Space);
+                
+                sendUDPMessage(udp_message);
+                
                 return true;
             }
             else if (event->key() == Qt::Key_Alt)
             {
                 o->keySostenuto(false);
                 o->keyUp(Qt::Key_Alt);
+                
+                sendUDPMessage(udp_message);
+                
                 return true;
             }
             else if (event->key() == Qt::Key_Super_L || event->key() == Qt::Key_Super_R)
@@ -240,16 +284,23 @@ bool MainTabs::eventFilter(QObject *obj, QEvent *ev)
                 o->keySoft(false);
                 o->keyUp(Qt::Key_Super_L);
                 o->keyUp(Qt::Key_Super_R);
+                
+                sendUDPMessage(udp_message);
+                
                 return true;
             }
             else if (event->key() == Qt::Key_Left | event->key() == Qt::Key_Right)
             {
                 o->pitch->pitchKeyReleased();
+                sendUDPMessage(udp_message);
+                
                 return true;
             }
             else if (event->key() == Qt::Key_Up | event->key() == Qt::Key_Down | event->key() == Qt::Key_PageUp | event->key() == Qt::Key_PageDown)
             {
                 o->volume->volumeKeyReleased();
+                sendUDPMessage(udp_message);
+                
                 return true;
             }
             else
@@ -266,10 +317,60 @@ bool MainTabs::eventFilter(QObject *obj, QEvent *ev)
                     //}
                 }
                 
+                sendUDPMessage(udp_message);
+                
                 return true;
             }
         }
     }
     
     return false;
+}
+
+void MainTabs::sendUDPMessage(QString message)
+{
+    QByteArray udp_message;
+    udp_message = message.toUtf8();
+    
+    if (this->mode == "udp_client")
+    {
+        //this->socket->writeDatagram(udp_message, QHostAddress::LocalHost, 20002);
+        this->socket->writeDatagram(udp_message, QHostAddress(this->line_udp_ip->text()), this->spin_port->value());
+        //this->socket->writeDatagram(udp_message, QHostAddress("127.0.0.1"), 20002);
+    }
+}
+
+void MainTabs::receiveUDPMessage()
+{
+    QByteArray buffer;
+    buffer.resize(socket->pendingDatagramSize());
+    
+    QHostAddress sender;
+    quint16 senderPort;
+    
+    socket->readDatagram(buffer.data(), buffer.size(),
+                         &sender, &senderPort);
+    
+    QString input = QString(buffer);
+    QStringList splitted = input.split("/");
+    
+    int type = splitted.at(0).toInt();
+    int key = splitted.at(1).toInt();
+    
+    if (type == QEvent::KeyPress)
+    {
+        QKeyEvent *event = new QKeyEvent(QEvent::KeyPress, key, Qt::NoModifier);
+        QCoreApplication::postEvent(this, event);
+    }
+    else if (type == QEvent::KeyRelease)
+    {
+        QKeyEvent *event = new QKeyEvent(QEvent::KeyRelease, key, Qt::NoModifier);
+        QCoreApplication::postEvent(this, event);
+    }
+}
+
+void MainTabs::rebindSocket(int value)
+{
+    socket->close();
+    socket->bind(QHostAddress::LocalHost, value);
 }

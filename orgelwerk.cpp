@@ -30,6 +30,9 @@ void Orgelwerk::drawGUI()
     this->grid = new QGridLayout;
     setLayout(this->grid);
     
+    QLabel *label_udp_port = new QLabel("UDP Listen Port");
+    this->spin_udp_port = new QSpinBox;
+    
     QGroupBox *group_keys = new QGroupBox("Keys");
     QGroupBox *group_pitch = new QGroupBox("Pitch");
     

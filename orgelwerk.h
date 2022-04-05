@@ -12,6 +12,7 @@
 #include <QIcon>
 #include <QDialog>
 #include <QSizePolicy>
+#include <QSpinBox>
 
 #include "midi_channel_selector.h"
 #include "midi_key_selector.h"
@@ -57,6 +58,7 @@ public:
     KeyboardPiano *piano = nullptr;
     KeyboardPC *pc = nullptr;
     
+    QSpinBox *spin_udp_port;
     QPushButton *button_channels_dialog = new QPushButton;
     QPushButton *button_resend_midi = new QPushButton;
     

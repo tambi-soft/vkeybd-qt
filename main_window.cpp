@@ -14,8 +14,8 @@ MainWindow::MainWindow(QWidget *parent)
     main_container_widget->setLayout(layout);
     setCentralWidget(main_container_widget);
     
-    layout->addWidget(newKeyboardInstance());
-    layout->addWidget(newKeyboardInstance());
+    layout->addWidget(newKeyboardInstance("default"));
+    layout->addWidget(newKeyboardInstance("udp_client"));
     
     
 }
@@ -25,12 +25,11 @@ MainWindow::~MainWindow()
     
 }
 
-QWidget* MainWindow::newKeyboardInstance()
+QWidget* MainWindow::newKeyboardInstance(QString mode)
 {
     QWidget *widget = new QWidget;
     QVBoxLayout *layout = new QVBoxLayout;
     widget->setLayout(layout);
-    //setCentralWidget(widget);
     
     this->config = new Config;
     
@@ -38,12 +37,41 @@ QWidget* MainWindow::newKeyboardInstance()
     connect(button_grab, &QPushButton::clicked, this, &MainWindow::grabButtonClicked);
     this->button_grab->setObjectName("button_grab");
     
-    this->tabs = new MainTabs(this->config);
+    QLineEdit *line_udp_ip = new QLineEdit(this);
+    line_udp_ip->setText("127.0.0.1");
     
-    this->stack_widget_switches = new StackedWidgetSwitches;
+    QSpinBox *spin_port = new QSpinBox;
+    spin_port->setMinimum(1025);
+    spin_port->setMaximum(65535);
+    spin_port->setValue(20020);
+    
+    this->tabs = new MainTabs(this->config, mode, line_udp_ip, spin_port);
     
     layout->addWidget(button_grab);
-    //layout->addWidget(this->stack_widget_switches);
+    
+    if (mode == "default")
+    {
+        line_udp_ip->hide();
+        
+        QLabel *label_udp_listen_port = new QLabel("Network Listen Port");
+        layout->addWidget(label_udp_listen_port);
+        layout->addWidget(spin_port);
+        
+        
+    }
+    else if (mode == "udp_client")
+    {
+        QLabel *label_udp_client_ip = new QLabel("IP-Address of remote vkeybd-qt instance:");
+        layout->addWidget(label_udp_client_ip);
+        
+        layout->addWidget(line_udp_ip);
+        
+        QLabel *label_udp_client_port = new QLabel("Port:");
+        layout->addWidget(label_udp_client_port);
+        
+        layout->addWidget(spin_port);
+    }
+    
     layout->addWidget(this->tabs);
     
     this->installEventFilter(this);

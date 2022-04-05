@@ -5,11 +5,12 @@
 #include <QObject>
 #include <QKeyEvent>
 #include <QFile>
+#include <QLineEdit>
+#include <QSpinBox>
 
 //#include "orgelwerk.h"
 //#include "keyboard_piano.h"
 #include "main_tabs.h"
-#include "main_stacked_widget.h"
 #include "menubar.h"
 #include "db_adapter.h"
 #include "config.h"
@@ -24,8 +25,6 @@ public:
     
     void saveAllParams();
     void openAllParams();
-    
-    StackedWidgetSwitches *stack_widget_switches;
 
 private:
     //KeyboardPiano *piano;
@@ -39,7 +38,7 @@ private:
     
     QMap<QString, QString> key_keycode_map = {};
     
-    QWidget* newKeyboardInstance();
+    QWidget* newKeyboardInstance(QString mode);
 
 protected:
     bool eventFilter(QObject *obj, QEvent *ev);
