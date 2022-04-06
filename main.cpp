@@ -29,7 +29,6 @@ int main(int argc, char *argv[])
     
     bool is_sattelite = parser.isSet("sattelite");
     int number_of_keyboards = parser.value("number-of-keyboards").toInt();
-    qDebug() << number_of_keyboards;
     
     if (number_of_keyboards <= 0)
     {
