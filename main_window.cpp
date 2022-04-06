@@ -1,6 +1,6 @@
 #include "main_window.h"
 
-MainWindow::MainWindow(bool is_sattelite, QWidget *parent)
+MainWindow::MainWindow(bool is_sattelite, int number_of_keyboards, QWidget *parent)
     : QMainWindow(parent)
 {
     MenuBar *menu = new MenuBar;
@@ -20,7 +20,10 @@ MainWindow::MainWindow(bool is_sattelite, QWidget *parent)
     }
     else
     {
-        layout->addWidget(newKeyboardInstance("default"));
+        for (int i=0; i < number_of_keyboards; i++)
+        {
+            layout->addWidget(newKeyboardInstance("default"));
+        }
     }
     //layout->addWidget(newKeyboardInstance("default"));
     //layout->addWidget(newKeyboardInstance("udp_client"));
