@@ -22,7 +22,8 @@ int main(int argc, char *argv[])
         {"sattelite",
             QCoreApplication::translate("main", "Show windows in sattelite mode to remote control another instance of vkeybd-qt over the network.")},
         {{"n", "number-of-keyboards"},
-            QCoreApplication::translate("main", "Number of Keyboards. Should not be too high, because your soundsystem may be overwhelmed.")}
+            QCoreApplication::translate("main", "<Number> of Keyboards. Should not be too high, because your soundsystem may be overwhelmed."),
+            QCoreApplication::translate("main", "Number")}
     });
     
     parser.process(app);
