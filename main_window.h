@@ -20,7 +20,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = nullptr);
+    MainWindow(bool is_sattelite, QWidget *parent = nullptr);
     ~MainWindow();
     
     void saveAllParams();
