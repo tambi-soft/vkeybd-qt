@@ -22,17 +22,15 @@ int main(int argc, char *argv[])
         {"sattelite",
             QCoreApplication::translate("main", "Show windows in sattelite mode to remote control another instance of vkeybd-qt over the network.")},
         {{"n", "number-of-keyboards"},
-            QCoreApplication::translate("main", "<Number> of Keyboards. Should not be too high, because your soundsystem may be overwhelmed."),
-            QCoreApplication::translate("main", "Number")}
+            QCoreApplication::translate("main", "Number of Keyboards. Should not be too high, because your soundsystem may be overwhelmed."), "number", "1"}
     });
     
     parser.process(app);
     
     bool is_sattelite = parser.isSet("sattelite");
-    QString number = parser.value("number-of-keyboards");
-    qDebug() << number;
-    int number_of_keyboards = number.toInt();
+    int number_of_keyboards = parser.value("number-of-keyboards").toInt();
     qDebug() << number_of_keyboards;
+    
     if (number_of_keyboards <= 0)
     {
         number_of_keyboards = 1;
