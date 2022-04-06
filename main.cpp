@@ -27,7 +27,7 @@ int main(int argc, char *argv[])
     
     parser.process(app);
     
-    bool is_sattelite = parser.isSet("satellite");
+    bool is_satellite = parser.isSet("satellite");
     int number_of_keyboards = parser.value("number-of-keyboards").toInt();
     
     if (number_of_keyboards <= 0)
@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
         number_of_keyboards = 10;
     }
     
-    MainWindow win(is_sattelite, number_of_keyboards);
+    MainWindow win(is_satellite, number_of_keyboards);
     win.show();
     return app.exec();
 }

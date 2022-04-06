@@ -20,7 +20,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    MainWindow(bool is_sattelite, int number_of_keyboards, QWidget *parent = nullptr);
+    MainWindow(bool is_satellite, int number_of_keyboards, QWidget *parent = nullptr);
     ~MainWindow();
     
     void saveAllParams();
