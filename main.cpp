@@ -28,7 +28,10 @@ int main(int argc, char *argv[])
     parser.process(app);
     
     bool is_sattelite = parser.isSet("sattelite");
-    int number_of_keyboards = parser.value("number-of-keyboards").toInt();
+    QString number = parser.value("number-of-keyboards");
+    qDebug() << number;
+    int number_of_keyboards = number.toInt();
+    qDebug() << number_of_keyboards;
     if (number_of_keyboards <= 0)
     {
         number_of_keyboards = 1;
