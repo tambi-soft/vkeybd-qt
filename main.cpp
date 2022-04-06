@@ -19,7 +19,7 @@ int main(int argc, char *argv[])
     parser.addPositionalArgument("destination", QCoreApplication::translate("main", "Destination directory."));
     
     parser.addOptions({
-        {"sattelite",
+        {"satellite",
             QCoreApplication::translate("main", "Show windows in sattelite mode to remote control another instance of vkeybd-qt over the network.")},
         {{"n", "number-of-keyboards"},
             QCoreApplication::translate("main", "Number of Keyboards. Should not be too high, because your soundsystem may be overwhelmed."), "number", "1"}
@@ -27,7 +27,7 @@ int main(int argc, char *argv[])
     
     parser.process(app);
     
-    bool is_sattelite = parser.isSet("sattelite");
+    bool is_sattelite = parser.isSet("satellite");
     int number_of_keyboards = parser.value("number-of-keyboards").toInt();
     
     if (number_of_keyboards <= 0)
