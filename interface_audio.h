@@ -26,6 +26,7 @@ public:
     virtual void setPortamentoChanged(int channel, int value);
     virtual void setAttackChanged(int channel, int value);
     virtual void setReleaseChanged(int channel, int value);
+    virtual void setTremoloChanged(int channel, int value);
     
 signals:
     

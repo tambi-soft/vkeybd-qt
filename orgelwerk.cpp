@@ -30,9 +30,6 @@ void Orgelwerk::drawGUI()
     this->grid = new QGridLayout;
     setLayout(this->grid);
     
-    QLabel *label_udp_port = new QLabel("UDP Listen Port");
-    this->spin_udp_port = new QSpinBox;
-    
     QGroupBox *group_keys = new QGroupBox("Keys");
     QGroupBox *group_pitch = new QGroupBox("Pitch");
     
@@ -263,7 +260,8 @@ void Orgelwerk::keyMIDIHelper(int midicode, QString mode)
             int interface_index = list_of_channels.at(c)["interface_index"].toInt();
             int key_shift = list_of_channels.at(c)["key_shift"].toInt();
             int key_min = list_of_channels.at(c)["key_min"].toInt();
-            int key_max = list_of_channels.at(c)["key_max"].toInt(); 
+            int key_max = list_of_channels.at(c)["key_max"].toInt();
+            int tremolo = list_of_channels.at(c)["tremolo"].toInt();
             
             int m_code = keycode + list_of_keys.at(k);
             int m_code_shifted = m_code + key_shift + master_key_shift;
@@ -272,7 +270,31 @@ void Orgelwerk::keyMIDIHelper(int midicode, QString mode)
             {
                 if (mode == "down")
                 {
-                    this->list_of_audio_interfaces.at(interface_index)->keyPressEvent(channel, m_code_shifted);
+                    if (tremolo == 0)
+                    {
+                        this->list_of_audio_interfaces.at(interface_index)->keyPressEvent(channel, m_code_shifted);
+                        
+                        
+                    }
+                    else
+                    {
+                        QString worker_code = QString::number(channel)+"_"+QString::number(m_code_shifted);
+                        if (!this->map_of_tremolo_threads.contains(worker_code))
+                        {
+                            TremoloWorker *worker = new TremoloWorker(
+                                        this->list_of_audio_interfaces.at(interface_index),
+                                        tremolo,
+                                        channel,
+                                        m_code_shifted
+                                        );
+                            
+                            QThread *thread = new QThread(this);
+                            worker->moveToThread(thread);
+                            thread->start();
+                            
+                            this->map_of_tremolo_threads[worker_code] = thread;
+                        }
+                    }
                     
                     if (this->notes) 
                     {
@@ -282,6 +304,14 @@ void Orgelwerk::keyMIDIHelper(int midicode, QString mode)
                 else if (mode == "up")
                 {
                     this->list_of_audio_interfaces.at(interface_index)->keyReleaseEvent(channel, m_code_shifted);
+                    
+                    QString worker_code = QString::number(channel)+"_"+QString::number(m_code_shifted);
+                    if (this->map_of_tremolo_threads.contains(worker_code))
+                    {
+                        this->map_of_tremolo_threads[worker_code]->terminate();
+                        //this->map_of_tremolo_threads[worker_code]->deleteLater();
+                        this->map_of_tremolo_threads.remove(worker_code);
+                    }
                     
                     if (this->notes)
                     {
@@ -486,4 +516,28 @@ bool Orgelwerk::areKeysPressed()
     {
         return false;
     }
+}
+
+
+
+TremoloWorker::TremoloWorker(InterfaceAudio *audio, int delay, int channel, int note, QObject *parent)
+    : QObject(parent)
+{
+    this->audio = audio;
+    this->channel = channel;
+    this->note = note;
+    
+    this->timer = new QTimer(this);
+    this->timer->setInterval(delay);
+    this->timer->setTimerType(Qt::PreciseTimer);
+    
+    connect(this->timer, &QTimer::timeout, this, &TremoloWorker::tick, Qt::DirectConnection);
+    
+    this->timer->start();
+}
+
+void TremoloWorker::tick()
+{
+    this->audio->keyReleaseEvent(this->channel, this->note);
+    this->audio->keyPressEvent(this->channel, this->note);
 }

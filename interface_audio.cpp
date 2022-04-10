@@ -98,3 +98,9 @@ void InterfaceAudio::setReleaseChanged(int channel, int value)
     Q_UNUSED(channel);
     Q_UNUSED(value);
 }
+
+void InterfaceAudio::setTremoloChanged(int channel, int value)
+{
+    Q_UNUSED(channel);
+    Q_UNUSED(value);
+}

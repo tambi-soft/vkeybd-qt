@@ -194,6 +194,14 @@ void InterfaceAlsa::setReleaseChanged(int channel, int value)
     sendEvent(true);
 }
 
+void InterfaceAlsa::setTremoloChanged(int channel, int value)
+{
+    qDebug() << MIDI_CTL_E2_TREMOLO_DEPTH;
+    snd_seq_ev_set_controller(&this->ev, channel, MIDI_CTL_E2_TREMOLO_DEPTH, value);
+    
+    sendEvent(true);
+}
+
 void InterfaceAlsa::sendEvent(bool drain)
 {
     snd_seq_ev_set_direct(&this->ev);

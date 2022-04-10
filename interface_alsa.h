@@ -44,6 +44,7 @@ public:
     void setPortamentoChanged(int channel, int value);
     void setAttackChanged(int channel, int value);
     void setReleaseChanged(int channel, int value);
+    void setTremoloChanged(int channel, int value);
     
     QString NAME = "vkeybd-qt";
     

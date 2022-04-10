@@ -30,6 +30,28 @@
 #include "interface_alsa.h"
 #include "interface_jack.h"
 
+
+#include <QThread>
+#include <QTimer>
+class TremoloWorker : public QObject
+{
+    Q_OBJECT
+public:
+    explicit TremoloWorker(InterfaceAudio *audio, int delay, int channel, int note, QObject *parent = 0);
+    
+private:
+    InterfaceAudio *audio;
+    QTimer *timer;
+    int channel;
+    int note;
+    
+public slots:
+    void tick();
+    
+};
+
+
+
 class Orgelwerk : public QWidget
 {
     Q_OBJECT
@@ -89,6 +111,8 @@ private:
     
     //InterfaceAudio *interface_audio;
     QList<InterfaceAudio*> list_of_audio_interfaces;
+    QMap<QString, TremoloWorker*> map_of_tremolo_workers;
+    QMap<QString, QThread*> map_of_tremolo_threads;
     
     void keyMIDIHelper(int midicode, QString mode);
     

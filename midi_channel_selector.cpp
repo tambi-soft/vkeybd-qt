@@ -45,6 +45,7 @@ void MIDIChannelSelector::drawGUI()
     label_portamento_time->setToolTip("Portamento Time");
     QLabel *label_attack = new QLabel("Attack");
     QLabel *label_release = new QLabel("Release");
+    QLabel *label_tremolo = new QLabel("Tremolo");
     
     grid->addWidget(label_channel, 0, 0);
     grid->addWidget(label_output, 0, 1);
@@ -60,6 +61,7 @@ void MIDIChannelSelector::drawGUI()
     grid->addWidget(label_portamento_time, 0, 11);
     grid->addWidget(label_attack, 0, 12);
     grid->addWidget(label_release, 0, 13);
+    grid->addWidget(label_tremolo, 0, 14);
     
     for (int i=1; i <= 16; i++)
     {
@@ -165,6 +167,12 @@ void MIDIChannelSelector::drawGUI()
         connect(slider_release, &QSlider::valueChanged, this, [this, i, slider_release]{ MIDIChannelSelector::releaseChanged(i-1, slider_release->value()); });
         this->list_of_releases.append(slider_release);
         
+        QSlider *slider_tremolo = new QSlider;
+        slider_tremolo->setOrientation(Qt::Horizontal);
+        slider_tremolo->setRange(0, 127);
+        connect(slider_tremolo, &QSlider::valueChanged, this, [this, i, slider_tremolo]{ MIDIChannelSelector::tremoloChanged(i-1, slider_tremolo->value()); });
+        this->list_of_tremolos.append(slider_tremolo);
+        
         grid->addWidget(check, i, 0);
         grid->addWidget(combo_midi_output, i, 1);
         grid->addWidget(slider_volume, i, 2);
@@ -183,6 +191,8 @@ void MIDIChannelSelector::drawGUI()
         
         grid->addWidget(slider_attack, i, 12);
         grid->addWidget(slider_release, i, 13);
+        
+        grid->addWidget(slider_tremolo, i, 14);
         
         if (i==1)
         {
@@ -257,6 +267,9 @@ QList<QMap<QString,QVariant>> MIDIChannelSelector::listOfChannels(bool only_acti
             
             int release = this->list_of_releases.at(i)->value();
             map["release"] = release;
+            
+            int tremolo = this->list_of_tremolos.at(i)->value();
+            map["tremolo"] = tremolo;
             
             result.append(map);
         }
@@ -459,6 +472,12 @@ void MIDIChannelSelector::releaseChanged(int channel, int value)
 {
     InterfaceAudio *audio = selectedAudioInterface(channel);
     audio->setReleaseChanged(channel, value);
+}
+
+void MIDIChannelSelector::tremoloChanged(int channel, int value)
+{
+    InterfaceAudio *audio = selectedAudioInterface(channel);
+    audio->setTremoloChanged(channel, value);
 }
 
 void MIDIChannelSelector::resendMIDIControls()

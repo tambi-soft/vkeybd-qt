@@ -59,6 +59,7 @@ private:
     QList<QSlider*> list_of_portamentos;
     QList<QSlider*> list_of_attacks;
     QList<QSlider*> list_of_releases;
+    QList<QSlider*> list_of_tremolos;
     
 protected:
     bool eventFilter(QObject *obj, QEvent *ev);
@@ -73,6 +74,7 @@ private slots:
     void portamentoChanged(int channel, int value);
     void attackChanged(int channel, int value);
     void releaseChanged(int channel, int value);
+    void tremoloChanged(int channel, int value);
     void playTestNote();
     void stopTestNote();
     
