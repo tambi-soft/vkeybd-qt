@@ -524,6 +524,7 @@ TremoloWorker::TremoloWorker(InterfaceAudio *audio, int delay, int channel, int 
     : QObject(parent)
 {
     this->audio = audio;
+    this->delay = delay;
     this->channel = channel;
     this->note = note;
     
@@ -540,4 +541,13 @@ void TremoloWorker::tick()
 {
     this->audio->keyReleaseEvent(this->channel, this->note);
     this->audio->keyPressEvent(this->channel, this->note);
+    
+    // make the tremolo effect feeling a bit more natural by not having all the time the exact same delay but just modify it a little bit
+    int rnd = this->random->bounded(
+                0,
+                int(this->delay * .5)
+                );
+    qDebug() << rnd;
+    int interval = this->delay + rnd;
+    this->timer->setInterval(interval);
 }

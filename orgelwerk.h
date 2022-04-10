@@ -33,6 +33,7 @@
 
 #include <QThread>
 #include <QTimer>
+#include <QRandomGenerator>
 class TremoloWorker : public QObject
 {
     Q_OBJECT
@@ -42,8 +43,11 @@ public:
 private:
     InterfaceAudio *audio;
     QTimer *timer;
+    int delay;
     int channel;
     int note;
+    
+    QRandomGenerator *random = new QRandomGenerator;
     
 public slots:
     void tick();
