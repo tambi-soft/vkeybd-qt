@@ -29,6 +29,8 @@ SOURCES += \
     button_piano.cpp \
     config.cpp \
     db_adapter.cpp \
+    help_about_widget.cpp \
+    help_message.cpp \
     input_keyboard_raw_thread.cpp \
     interface_alsa.cpp \
     interface_audio.cpp \
@@ -53,6 +55,8 @@ HEADERS += \
     button_piano.h \
     config.h \
     db_adapter.h \
+    help_about_widget.h \
+    help_message.h \
     input_keyboard_raw_thread.h \
     interface_alsa.h \
     interface_audio.h \

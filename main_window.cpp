@@ -35,8 +35,10 @@ MainWindow::~MainWindow()
 QWidget* MainWindow::newKeyboardInstance(QString mode)
 {
     QWidget *widget = new QWidget;
-    QVBoxLayout *layout = new QVBoxLayout;
-    widget->setLayout(layout);
+    //QVBoxLayout *layout = new QVBoxLayout;
+    QGridLayout *grid = new QGridLayout;
+    //widget->setLayout(layout);
+    widget->setLayout(grid);
     
     this->config = new Config;
     
@@ -46,42 +48,43 @@ QWidget* MainWindow::newKeyboardInstance(QString mode)
     
     QLineEdit *line_udp_ip = new QLineEdit(this);
     line_udp_ip->setText("127.0.0.1");
+    line_udp_ip->setToolTip("For remote-controlling: IP-Address of the interface you want to listen on (the IP-address of this machine).");
     
     QSpinBox *spin_port = new QSpinBox;
     spin_port->setMinimum(1025);
     spin_port->setMaximum(65535);
     spin_port->setValue(20020);
+    spin_port->setToolTip("Network Listen Port");
     
     this->tabs = new MainTabs(this->config, mode, line_udp_ip, spin_port);
     
-    layout->addWidget(button_grab);
+    grid->addWidget(button_grab, 0, 0, 1, 3);
     
     if (mode == "default")
     {
-        QLabel *label_udp_listen_ip = new QLabel("IP-Address of the interface you want to listen on");
-        layout->addWidget(label_udp_listen_ip);
-        layout->addWidget(line_udp_ip);
+        QPushButton *button_network_help = new QPushButton;
+        button_network_help->setIcon(QIcon::fromTheme("dialog-question"));
+        button_network_help->setToolTip("help");
+        connect(button_network_help, &QPushButton::clicked, this, []{ new HelpMessage(":help_tntware"); });
         
-        QLabel *label_udp_listen_port = new QLabel("Network Listen Port");
-        layout->addWidget(label_udp_listen_port);
-        layout->addWidget(spin_port);
-        
-        
+        grid->addWidget(line_udp_ip, 1, 0);
+        grid->addWidget(spin_port, 1, 1);
+        grid->addWidget(button_network_help, 1, 2);
     }
     else if (mode == "udp_client")
     {
         QLabel *label_udp_client_ip = new QLabel("IP-Address of remote vkeybd-qt instance:");
-        layout->addWidget(label_udp_client_ip);
+        grid->addWidget(label_udp_client_ip, 0, 0, 1, 3);
         
-        layout->addWidget(line_udp_ip);
+        grid->addWidget(line_udp_ip, 1, 0, 1, 3);
         
         QLabel *label_udp_client_port = new QLabel("Port:");
-        layout->addWidget(label_udp_client_port);
+        grid->addWidget(label_udp_client_port, 2, 0, 1, 3);
         
-        layout->addWidget(spin_port);
+        grid->addWidget(spin_port, 2, 0, 1, 3);
     }
     
-    layout->addWidget(this->tabs);
+    grid->addWidget(this->tabs, 3, 0, 1, 3);
     
     this->installEventFilter(this);
     //installNativeEventFilter(this);
@@ -89,7 +92,6 @@ QWidget* MainWindow::newKeyboardInstance(QString mode)
     //int width = this->width();
     //resize(width, 900);
     
-    //setAttribute(Qt::WA_TranslucentBackground);
     QFile css_file(":css_light");
     if (css_file.open(QIODevice::ReadOnly | QIODevice::Text))
     {

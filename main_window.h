@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 #include <QObject>
+#include <QGridLayout>
+#include <QPushButton>
 #include <QKeyEvent>
 #include <QFile>
 #include <QLineEdit>
@@ -14,6 +16,8 @@
 #include "menubar.h"
 #include "db_adapter.h"
 #include "config.h"
+#include "help_message.h"
+#include "help_about_widget.h"
 
 class MainWindow : public QMainWindow
 {
