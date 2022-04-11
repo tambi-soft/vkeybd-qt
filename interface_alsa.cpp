@@ -47,24 +47,9 @@ QString InterfaceAlsa::label()
 
 void InterfaceAlsa::keyPressEvent(int channel, int midicode)
 {
-    qDebug() << "ALSA: "+QString::number(midicode);
-    
-    //snd_seq_ev_set_controller(&ev, channel, MIDI_CTL_LSB_MAIN_VOLUME, 50);
-    
     snd_seq_ev_set_noteon(&ev, channel, midicode, 127);
-    //snd_seq_event_output(seq, &ev);
-    //snd_seq_drain_output(seq);
     
     sendEvent(true);
-    
-    /*
-    setProgramChangeEvent(0, 125, 0);
-    setProgramChangeEvent(1, 125, 8);
-    setProgramChangeEvent(2, 125, 16);
-    setProgramChangeEvent(3, 125, 3);
-    setProgramChangeEvent(4, 125, 4);
-    setProgramChangeEvent(5, 125, 5);
-    */
 }
 
 void InterfaceAlsa::keyReleaseEvent(int channel, int midicode)
@@ -150,9 +135,6 @@ void InterfaceAlsa::setPanChangeEvent(int channel, int value)
 {
     snd_seq_ev_set_controller(&ev, channel, MIDI_CTL_MSB_PAN, value);
     sendEvent(true);
-    
-    qDebug() << MIDI_CTL_LSB_PAN;
-    qDebug() << MIDI_CTL_MSB_PAN;
 }
 
 void InterfaceAlsa::setPortamentoChanged(int channel, int value)
@@ -170,17 +152,10 @@ void InterfaceAlsa::setPortamentoChanged(int channel, int value)
     
     snd_seq_ev_set_controller(&this->ev, channel, MIDI_CTL_MSB_PORTAMENTO_TIME, value); // CC 65
     sendEvent(true);
-    
-    qDebug() << "";
-    qDebug() << MIDI_CTL_PORTAMENTO;
-    qDebug() << MIDI_CTL_PORTAMENTO_CONTROL;
-    qDebug() << MIDI_CTL_LSB_PORTAMENTO_TIME;
-    qDebug() << MIDI_CTL_MSB_PORTAMENTO_TIME;
 }
 
 void InterfaceAlsa::setAttackChanged(int channel, int value)
 {
-    qDebug() << "attack"+QString::number(value);
     snd_seq_ev_set_controller(&this->ev, channel, MIDI_CTL_SC4_ATTACK_TIME, value);
     
     sendEvent(true);
@@ -188,7 +163,6 @@ void InterfaceAlsa::setAttackChanged(int channel, int value)
 
 void InterfaceAlsa::setReleaseChanged(int channel, int value)
 {
-    qDebug() << "release"+QString::number(value);
     snd_seq_ev_set_controller(&this->ev, channel, MIDI_CTL_SC3_RELEASE_TIME, value);
     
     sendEvent(true);
@@ -196,7 +170,6 @@ void InterfaceAlsa::setReleaseChanged(int channel, int value)
 
 void InterfaceAlsa::setTremoloChanged(int channel, int value)
 {
-    qDebug() << MIDI_CTL_E2_TREMOLO_DEPTH;
     snd_seq_ev_set_controller(&this->ev, channel, MIDI_CTL_E2_TREMOLO_DEPTH, value);
     
     sendEvent(true);
@@ -205,9 +178,6 @@ void InterfaceAlsa::setTremoloChanged(int channel, int value)
 void InterfaceAlsa::sendEvent(bool drain)
 {
     snd_seq_ev_set_direct(&this->ev);
-    //snd_seq_ev_set_source(&ev, my_port);
-    //snd_seq_ev_set_dest(&ev, seq_client, seq_port);
-    
     snd_seq_event_output(this->seq, &this->ev);
     
     if (drain)

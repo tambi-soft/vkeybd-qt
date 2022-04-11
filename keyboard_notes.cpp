@@ -277,7 +277,6 @@ void KeyboardNotes::drawFlats(qreal pos_x, qreal pos_y, int note, Qt::GlobalColo
 
 void KeyboardNotes::keyPressed(int midicode)
 {
-    qDebug() << midicode;
     if (this->map_of_notes_full.contains(midicode))
     {
         this->map_of_notes_full[midicode]->show();

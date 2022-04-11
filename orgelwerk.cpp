@@ -191,7 +191,7 @@ void Orgelwerk::keyDown(int keycode)
     
     this->number_of_keys_down++;
     
-    qDebug() << "keyDown: "+this->label+" "+ QString::number(keycode);
+    //qDebug() << "keyDown: "+this->label+" "+ QString::number(keycode);
     this->pc->keyDown(keycode);
 }
 void Orgelwerk::keyUp(int keycode)
@@ -201,7 +201,7 @@ void Orgelwerk::keyUp(int keycode)
         this->number_of_keys_down--;
     }
     
-    qDebug() << "keyUp:   "+this->label+" "+ QString::number(keycode);
+    //qDebug() << "keyUp:   "+this->label+" "+ QString::number(keycode);
     this->pc->keyUp(keycode);
 }
 
@@ -241,7 +241,7 @@ void Orgelwerk::stopAllPressed()
 
 void Orgelwerk::keyMIDIHelper(int midicode, QString mode)
 {
-    qDebug() << "################ " << this->number_of_keys_down;
+    //qDebug() << "################ " << this->number_of_keys_down;
     
     // -12: The lower full octave on the keyboard is in the midi-range of 12 - 23.
     // For being able to add some even deeper notes to the left.
@@ -308,8 +308,8 @@ void Orgelwerk::keyMIDIHelper(int midicode, QString mode)
                     QString worker_code = QString::number(channel)+"_"+QString::number(m_code_shifted);
                     if (this->map_of_tremolo_threads.contains(worker_code))
                     {
-                        this->map_of_tremolo_threads[worker_code]->terminate();
-                        //this->map_of_tremolo_threads[worker_code]->deleteLater();
+                        this->map_of_tremolo_threads[worker_code]->quit();
+                        this->map_of_tremolo_threads[worker_code]->deleteLater();
                         this->map_of_tremolo_threads.remove(worker_code);
                     }
                     
@@ -547,7 +547,6 @@ void TremoloWorker::tick()
                 0,
                 int(this->delay * .5)
                 );
-    qDebug() << rnd;
     int interval = this->delay + rnd;
     this->timer->setInterval(interval);
 }
