@@ -33,7 +33,7 @@ int main(int argc, char *argv[])
     {
         number_of_keyboards = 1;
         
-        fprintf(stderr, "%s\n", qPrintable(QCoreApplication::translate("main", "ERROR: --number-of-keyboards can not be negative. Defaulting to \"1\".")));
+        fprintf(stderr, "%s\n", qPrintable(QCoreApplication::translate("main", "ERROR: --number-of-keyboards can not be zero or negative. Defaulting to \"1\".")));
     }
     else if (number_of_keyboards > 10)
     {
@@ -47,6 +47,7 @@ int main(int argc, char *argv[])
     {
         fprintf(stderr, "%s\n", qPrintable(QCoreApplication::translate("main", "ERROR: Option \"-o\" / \"--output\" has to be one of: \"alsa\", \"jack\" or \"network\".")));
         fprintf(stderr, "\n");
+        
         parser.showHelp(1);
     }
     else
