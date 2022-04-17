@@ -1,12 +1,23 @@
 #include "orgelwerk.h"
 
-Orgelwerk::Orgelwerk(QString label, QWidget *parent) : QWidget(parent)
+Orgelwerk::Orgelwerk(QString audio_system, QString label, QWidget *parent) : QWidget(parent)
 {
     this->label = label;
     
     //this->interface_audio = new InterfaceAlsa(label);
     //this->interface_audio = new InterfaceJack(label);
-    this->list_of_audio_interfaces.append(new InterfaceAlsa("alsa-midi-"+label));
+    if (audio_system == "alsa")
+    {
+        this->list_of_audio_interfaces.append(new InterfaceAlsa("alsa-midi-"+label));
+    }
+    else if (audio_system == "jack")
+    {
+        this->list_of_audio_interfaces.append(new InterfaceJack("jack-midi-"+label));
+    }
+    else
+    {
+        this->list_of_audio_interfaces.append(new InterfaceAudio(""));
+    }
     
     drawGUI();
     initInputThread();

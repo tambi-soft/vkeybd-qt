@@ -47,7 +47,7 @@ void Config::setValue(QString key, QVariant value)
     this->settings->setValue(key, value);
 }
 
-void Config::saveChannelSettings(QString label, QList<QMap<QString,QVariant>> channels)
+void Config::saveChannelSettings(int id, QString label, QList<QMap<QString,QVariant>> channels)
 {
     for (int c=0; c < channels.length(); c++)
     {
@@ -56,10 +56,9 @@ void Config::saveChannelSettings(QString label, QList<QMap<QString,QVariant>> ch
         for (int k=0; k < keys.length(); k++)
         {
             QString key = keys.at(k);
-            
             this->settings->setValue(
                         //label+"_"+QString::number(c)+"/"+key,
-                        label+"/"+QString::number(c)+"/"+key,
+                        QString::number(id)+"/"+label+"/"+QString::number(c)+"/"+key,
                         channels.at(c)[key]
                     );
         }

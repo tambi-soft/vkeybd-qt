@@ -19,15 +19,14 @@ int main(int argc, char *argv[])
     parser.addPositionalArgument("destination", QCoreApplication::translate("main", "Destination directory."));
     
     parser.addOptions({
-        {{"s", "satellite"},
-            QCoreApplication::translate("main", "Show windows in sattelite mode to remote control another instance of vkeybd-qt over the network.")},
         {{"n", "number-of-keyboards"},
-            QCoreApplication::translate("main", "Number of Keyboards. Should not be too high, because your soundsystem may be overwhelmed."), "number", "1"}
+            QCoreApplication::translate("main", "Number of Keyboards. Should not be too high, because your soundsystem may be overwhelmed."), "number", "2"},
+        {{"o", "output"},
+            QCoreApplication::translate("main", "Which Audio System to use: \"alsa\" (default), \"jack\" (not implemented yet) or \"network\" (remote control another vkeybd-qt instance)"), "string", "alsa"}
     });
     
     parser.process(app);
     
-    bool is_satellite = parser.isSet("satellite");
     int number_of_keyboards = parser.value("number-of-keyboards").toInt();
     
     if (number_of_keyboards <= 0)
@@ -39,7 +38,13 @@ int main(int argc, char *argv[])
         number_of_keyboards = 10;
     }
     
-    MainWindow win(is_satellite, number_of_keyboards);
+    QString output_system = QString::fromStdString(parser.value("output").toStdString());
+    if (output_system != "alsa" || output_system != "jack" || output_system != "network")
+    {
+        // error
+    }
+    
+    MainWindow win(output_system, number_of_keyboards);
     win.show();
     return app.exec();
 }

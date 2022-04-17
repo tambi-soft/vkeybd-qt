@@ -1,9 +1,13 @@
 #include "main_tabs.h"
 
-MainTabs::MainTabs(Config *config, QString mode, QLineEdit *line_udp_ip, QSpinBox *spin_port, QTabWidget *parent) : QTabWidget(parent)
+MainTabs::MainTabs(int id, Config *config, QString output_system, QLineEdit *line_udp_ip, QSpinBox *spin_port, QTabWidget *parent) : QTabWidget(parent)
 {
+    this->id = id;
     this->config = config;
-    this->mode = mode;
+    if (output_system == "network")
+    {
+        this->send_udp = true;
+    }
     this->line_udp_ip = line_udp_ip;
     this->spin_port = spin_port;
     
@@ -11,7 +15,7 @@ MainTabs::MainTabs(Config *config, QString mode, QLineEdit *line_udp_ip, QSpinBo
     
     this->socket = new QUdpSocket(this);
     
-    if (mode == "default")
+    if (output_system != "network")
     {
         connect(line_udp_ip, &QLineEdit::textChanged, this, &MainTabs::rebindSocketIP);
         connect(spin_port, QOverload<int>::of(&QSpinBox::valueChanged), this, &MainTabs::rebindSocket);
@@ -19,11 +23,11 @@ MainTabs::MainTabs(Config *config, QString mode, QLineEdit *line_udp_ip, QSpinBo
         socket->bind(QHostAddress::LocalHost, spin_port->value());
         connect(socket, &QUdpSocket::readyRead, this, &MainTabs::receiveUDPMessage);
         
-        initializeTabs();
+        initializeTabs(output_system);
     }
     else
     {
-        initializeTabs();
+        initializeTabs(output_system);
         
         hide();
     }
@@ -31,7 +35,7 @@ MainTabs::MainTabs(Config *config, QString mode, QLineEdit *line_udp_ip, QSpinBo
     installEventFilter(this);
 }
 
-void MainTabs::initializeTabs()
+void MainTabs::initializeTabs(QString output_system)
 {
     this->list_function_keys = {Qt::Key_F1, Qt::Key_F2, Qt::Key_F3, Qt::Key_F4, -1, Qt::Key_F5, Qt::Key_F6, Qt::Key_F7, Qt::Key_F8, -1, Qt::Key_F9, Qt::Key_F10, Qt::Key_F11, Qt::Key_F12};
     this->list_labels = {"F1", "F2", "F3", "F4", "spacer", "F5", "F6", "F7", "F8", "spacer", "F9", "F10", "F11", "F12"};
@@ -51,12 +55,12 @@ void MainTabs::initializeTabs()
         }
         else
         {
-            addOrganTab(this->list_labels.at(i), 1);
+            addOrganTab(output_system, this->list_labels.at(i), 1);
         }
     }
 }
 
-void MainTabs::addOrganTab(QString label, int number_of_orgelwerks)
+void MainTabs::addOrganTab(QString output_system, QString label, int number_of_orgelwerks)
 {
     /*
     Orgelwerk *o = new Orgelwerk(label);
@@ -76,7 +80,7 @@ void MainTabs::addOrganTab(QString label, int number_of_orgelwerks)
             midi_port_label = label + "-" + QString::number(i);
         }
         
-        Orgelwerk *o = new Orgelwerk(midi_port_label);
+        Orgelwerk *o = new Orgelwerk(output_system, midi_port_label);
         connect(o, &Orgelwerk::eventFiltered, this, &MainTabs::eventFilter);
         
         layout->addWidget(o);
@@ -97,7 +101,7 @@ void MainTabs::saveAllParams()
             Orgelwerk *o = static_cast<Orgelwerk*>(widget(i)->layout()->itemAt(0)->widget());
             
             QList<QMap<QString,QVariant>> channels = o->listOfChannels(false);
-            this->config->saveChannelSettings(label, channels);
+            this->config->saveChannelSettings(this->id, label, channels);
         }
     }
 }
@@ -333,11 +337,9 @@ void MainTabs::sendUDPMessage(QString message)
     QByteArray udp_message;
     udp_message = message.toUtf8();
     
-    if (this->mode == "udp_client")
+    if (this->send_udp)
     {
-        //this->socket->writeDatagram(udp_message, QHostAddress::LocalHost, 20002);
         this->socket->writeDatagram(udp_message, QHostAddress(this->line_udp_ip->text()), this->spin_port->value());
-        //this->socket->writeDatagram(udp_message, QHostAddress("127.0.0.1"), 20002);
     }
 }
 

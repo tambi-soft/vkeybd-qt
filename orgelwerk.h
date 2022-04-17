@@ -60,7 +60,7 @@ class Orgelwerk : public QWidget
 {
     Q_OBJECT
 public:
-    explicit Orgelwerk(QString label, QWidget *parent = nullptr);
+    explicit Orgelwerk(QString audio_system, QString label, QWidget *parent = nullptr);
     ~Orgelwerk();
     
     void keyDown(int keycode);

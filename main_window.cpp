@@ -1,6 +1,6 @@
 #include "main_window.h"
 
-MainWindow::MainWindow(bool is_satellite, int number_of_keyboards, QWidget *parent)
+MainWindow::MainWindow(QString output_system, int number_of_keyboards, QWidget *parent)
     : QMainWindow(parent)
 {
     MenuBar *menu = new MenuBar;
@@ -14,15 +14,15 @@ MainWindow::MainWindow(bool is_satellite, int number_of_keyboards, QWidget *pare
     main_container_widget->setLayout(layout);
     setCentralWidget(main_container_widget);
     
-    if (is_satellite)
+    if (output_system == "network")
     {
-        layout->addWidget(newKeyboardInstance("udp_client"));
+        layout->addWidget(newKeyboardInstance(0, output_system));
     }
     else
     {
         for (int i=0; i < number_of_keyboards; i++)
         {
-            layout->addWidget(newKeyboardInstance("default"));
+            layout->addWidget(newKeyboardInstance(i, output_system));
         }
     }
 }
@@ -32,7 +32,7 @@ MainWindow::~MainWindow()
     
 }
 
-QWidget* MainWindow::newKeyboardInstance(QString mode)
+QWidget* MainWindow::newKeyboardInstance(int id, QString mode)
 {
     QWidget *widget = new QWidget;
     //QVBoxLayout *layout = new QVBoxLayout;
@@ -56,11 +56,12 @@ QWidget* MainWindow::newKeyboardInstance(QString mode)
     spin_port->setValue(20020);
     spin_port->setToolTip("Network Listen Port");
     
-    this->tabs = new MainTabs(this->config, mode, line_udp_ip, spin_port);
+    MainTabs *tabs = new MainTabs(id, this->config, mode, line_udp_ip, spin_port);
+    this->list_of_maintabs.append(tabs);
     
     grid->addWidget(button_grab, 0, 0, 1, 3);
     
-    if (mode == "default")
+    if (mode != "network")
     {
         QPushButton *button_network_help = new QPushButton;
         button_network_help->setIcon(QIcon::fromTheme("dialog-question"));
@@ -71,7 +72,7 @@ QWidget* MainWindow::newKeyboardInstance(QString mode)
         grid->addWidget(spin_port, 1, 1);
         grid->addWidget(button_network_help, 1, 2);
     }
-    else if (mode == "udp_client")
+    else if (mode == "network")
     {
         QLabel *label_udp_client_ip = new QLabel("IP-Address of remote vkeybd-qt instance:");
         grid->addWidget(label_udp_client_ip, 0, 0, 1, 3);
@@ -84,7 +85,7 @@ QWidget* MainWindow::newKeyboardInstance(QString mode)
         grid->addWidget(spin_port, 2, 0, 1, 3);
     }
     
-    grid->addWidget(this->tabs, 3, 0, 1, 3);
+    grid->addWidget(tabs, 3, 0, 1, 3);
     
     this->installEventFilter(this);
     //installNativeEventFilter(this);
@@ -103,11 +104,14 @@ QWidget* MainWindow::newKeyboardInstance(QString mode)
 
 void MainWindow::saveAllParams()
 {
-    this->tabs->saveAllParams();
+    for (int i=0; i < this->list_of_maintabs.length(); i++)
+    {
+        this->list_of_maintabs.at(i)->saveAllParams();
+    }
 }
 void MainWindow::openAllParams()
 {
-    this->tabs->openAllParams();
+    //this->tabs->openAllParams();
 }
 
 bool MainWindow::eventFilter(QObject *obj, QEvent *ev)
@@ -133,7 +137,7 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *ev)
             }
             else
             {
-                return this->tabs->callEventFilter(obj, ev);
+                //return this->tabs->callEventFilter(obj, ev);
             }
         }
     }
@@ -149,7 +153,7 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *ev)
             }
             else
             {
-                return this->tabs->callEventFilter(obj, ev);
+                //return this->tabs->callEventFilter(obj, ev);
             }
         }
     }

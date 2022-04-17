@@ -18,7 +18,7 @@ class MainTabs : public QTabWidget
 {
     Q_OBJECT
 public:
-    explicit MainTabs(Config* config, QString mode, QLineEdit *line_udp_ip, QSpinBox *spin_port, QTabWidget *parent = nullptr);
+    explicit MainTabs(int id, Config* config, QString output_system, QLineEdit *line_udp_ip, QSpinBox *spin_port, QTabWidget *parent = nullptr);
     
     bool callEventFilter(QObject *obj, QEvent *ev);
     void saveAllParams();
@@ -29,19 +29,20 @@ private:
     QList<QString> list_labels;
     QList<Orgelwerk*> list_of_tabs;
     
+    int id;
     Config *config;
-    QString mode;
     QLineEdit *line_udp_ip;
     QSpinBox *spin_port;
     
     QUdpSocket *socket;
     void rebindSocketIP(QString ip);
     void rebindSocket(int value);
+    bool send_udp = false;
     void sendUDPMessage(QString message);
     void receiveUDPMessage();
     
-    void initializeTabs();
-    void addOrganTab(QString label, int number_of_orgelwerks=1);
+    void initializeTabs(QString output_system);
+    void addOrganTab(QString output_system, QString label, int number_of_orgelwerks=1);
 
 protected:
     bool eventFilter(QObject *obj, QEvent *ev);

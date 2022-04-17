@@ -24,7 +24,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    MainWindow(bool is_satellite, int number_of_keyboards, QWidget *parent = nullptr);
+    MainWindow(QString output_system, int number_of_keyboards, QWidget *parent = nullptr);
     ~MainWindow();
     
     void saveAllParams();
@@ -33,7 +33,8 @@ public:
 private:
     //KeyboardPiano *piano;
     //Orgelwerk *werk;
-    MainTabs *tabs;
+    //MainTabs *tabs;
+    QList<MainTabs*> list_of_maintabs;
     Config *config;
     
     bool grabbing = false;
@@ -42,7 +43,7 @@ private:
     
     QMap<QString, QString> key_keycode_map = {};
     
-    QWidget* newKeyboardInstance(QString mode);
+    QWidget* newKeyboardInstance(int id, QString mode);
 
 protected:
     bool eventFilter(QObject *obj, QEvent *ev);
