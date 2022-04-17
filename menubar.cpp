@@ -37,8 +37,10 @@ void MenuBar::addFileMenu()
     
     QAction *actionPasteTab = new QAction();
     
+    QMenu *menuView = addMenu("View");
     
     QMenu *menuHelp = addMenu("Help");
+    
     
     //QAction *helpAction = new QAction();
     

@@ -3,11 +3,6 @@
 MainWindow::MainWindow(QString output_system, int number_of_keyboards, QWidget *parent)
     : QMainWindow(parent)
 {
-    MenuBar *menu = new MenuBar;
-    connect(menu, &MenuBar::signalSave, this, &MainWindow::saveAllParams);
-    connect(menu, &MenuBar::signalOpen, this, &MainWindow::openAllParams);
-    setMenuBar(menu);
-    
     QWidget *main_container_widget = new QWidget;
     QHBoxLayout *layout = new QHBoxLayout;
     layout->setContentsMargins(0, 0, 0, 0);
@@ -20,6 +15,11 @@ MainWindow::MainWindow(QString output_system, int number_of_keyboards, QWidget *
     }
     else
     {
+        MenuBar *menu = new MenuBar;
+        connect(menu, &MenuBar::signalSave, this, &MainWindow::saveAllParams);
+        connect(menu, &MenuBar::signalOpen, this, &MainWindow::openAllParams);
+        setMenuBar(menu);
+        
         for (int i=0; i < number_of_keyboards; i++)
         {
             layout->addWidget(newKeyboardInstance(i, output_system));
