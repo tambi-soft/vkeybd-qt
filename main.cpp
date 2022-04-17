@@ -32,19 +32,27 @@ int main(int argc, char *argv[])
     if (number_of_keyboards <= 0)
     {
         number_of_keyboards = 1;
+        
+        fprintf(stderr, "%s\n", qPrintable(QCoreApplication::translate("main", "ERROR: --number-of-keyboards can not be negative. Defaulting to \"1\".")));
     }
     else if (number_of_keyboards > 10)
     {
         number_of_keyboards = 10;
+        
+        fprintf(stderr, "%s\n", qPrintable(QCoreApplication::translate("main", "ERROR: --number-of-keyboards higher than 10 is probably not a good idea. Defaulting to \"10\".")));
     }
     
     QString output_system = QString::fromStdString(parser.value("output").toStdString());
-    if (output_system != "alsa" || output_system != "jack" || output_system != "network")
+    if (output_system != "alsa" & output_system != "jack" & output_system != "network")
     {
-        // error
+        fprintf(stderr, "%s\n", qPrintable(QCoreApplication::translate("main", "ERROR: Option \"-o\" / \"--output\" has to be one of: \"alsa\", \"jack\" or \"network\".")));
+        fprintf(stderr, "\n");
+        parser.showHelp(1);
     }
-    
-    MainWindow win(output_system, number_of_keyboards);
-    win.show();
-    return app.exec();
+    else
+    {
+        MainWindow win(output_system, number_of_keyboards);
+        win.show();
+        return app.exec();
+    }
 }
