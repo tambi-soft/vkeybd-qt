@@ -38,10 +38,10 @@ class TremoloWorker : public QObject
 {
     Q_OBJECT
 public:
-    explicit TremoloWorker(InterfaceAudio *audio, int delay, int channel, int note, QObject *parent = 0);
+    explicit TremoloWorker(int interface_index, int delay, int channel, int note, QObject *parent = 0);
     
 private:
-    InterfaceAudio *audio;
+    int interface_index;
     QTimer *timer;
     int delay;
     int channel;
@@ -51,6 +51,10 @@ private:
     
 public slots:
     void tick();
+    
+signals:
+    void notePlay(int interface_index, int channel, int note);
+    void noteStop(int interface_index, int channel, int note);
     
 };
 
@@ -99,6 +103,9 @@ private:
     void drawPianoKeyboard(int grid_row);
     void drawPCKeyboard(int grid_row);
     void initInputThread();
+    
+    void notePlay(int interface_index, int channel, int note);
+    void noteStop(int interface_index, int channel, int note);
     
     QGridLayout *grid;
     

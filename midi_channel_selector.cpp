@@ -12,7 +12,7 @@ MIDIChannelSelector::MIDIChannelSelector(QList<InterfaceAudio *> list_of_audio_i
     
     setObjectName("midi_channel_selector");
     //setAttribute(Qt::WA_TranslucentBackground);
-    QFile css_file(":css_green");
+    QFile css_file(":css_allen_heath");
     if (css_file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
         setStyleSheet(css_file.readAll());
@@ -69,6 +69,7 @@ void MIDIChannelSelector::drawGUI()
         
         QComboBox *combo_midi_output = new QComboBox;
         connect(combo_midi_output, &QComboBox::currentTextChanged, this, &MIDIChannelSelector::addNewAudioInterface);
+        combo_midi_output->setObjectName("midi_output_selector");
         
         QSlider *slider_volume = new QSlider;
         slider_volume->setOrientation(Qt::Horizontal);

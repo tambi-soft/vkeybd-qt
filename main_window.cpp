@@ -49,12 +49,14 @@ QWidget* MainWindow::newKeyboardInstance(int id, QString mode)
     QLineEdit *line_udp_ip = new QLineEdit(this);
     line_udp_ip->setText("127.0.0.1");
     line_udp_ip->setToolTip("For remote-controlling: IP-Address of the interface you want to listen on (the IP-address of this machine).");
+    line_udp_ip->setObjectName("network_select");
     
     QSpinBox *spin_port = new QSpinBox;
     spin_port->setMinimum(1025);
     spin_port->setMaximum(65535);
     spin_port->setValue(20020);
     spin_port->setToolTip("Network Listen Port");
+    spin_port->setObjectName("network_select");
     
     MainTabs *tabs = new MainTabs(id, this->config, mode, line_udp_ip, spin_port);
     this->list_of_maintabs.append(tabs);
@@ -93,7 +95,7 @@ QWidget* MainWindow::newKeyboardInstance(int id, QString mode)
     //int width = this->width();
     //resize(width, 900);
     
-    QFile css_file(":css_light");
+    QFile css_file(":css_allen_heath");
     if (css_file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
         setStyleSheet(css_file.readAll());
@@ -138,6 +140,7 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *ev)
             else
             {
                 //return this->tabs->callEventFilter(obj, ev);
+                qDebug() << "activate tabs widget";
             }
         }
     }
@@ -154,6 +157,7 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *ev)
             else
             {
                 //return this->tabs->callEventFilter(obj, ev);
+                qDebug() << "activate tabs widget";
             }
         }
     }

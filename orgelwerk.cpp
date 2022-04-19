@@ -293,11 +293,13 @@ void Orgelwerk::keyMIDIHelper(int midicode, QString mode)
                         if (!this->map_of_tremolo_threads.contains(worker_code))
                         {
                             TremoloWorker *worker = new TremoloWorker(
-                                        this->list_of_audio_interfaces.at(interface_index),
+                                        interface_index,
                                         tremolo,
                                         channel,
                                         m_code_shifted
                                         );
+                            connect(worker, &TremoloWorker::notePlay, this, &Orgelwerk::notePlay);
+                            connect(worker, &TremoloWorker::noteStop, this, &Orgelwerk::noteStop);
                             
                             QThread *thread = new QThread(this);
                             worker->moveToThread(thread);
@@ -359,6 +361,15 @@ void Orgelwerk::keyMIDIDown(int midicode)
 void Orgelwerk::keyMIDIUp(int midicode)
 {
     keyMIDIHelper(midicode, "up");
+}
+
+void Orgelwerk::notePlay(int interface_index, int channel, int note)
+{
+    this->list_of_audio_interfaces.at(interface_index)->keyPressEvent(channel, note);
+}
+void Orgelwerk::noteStop(int interface_index, int channel, int note)
+{
+    this->list_of_audio_interfaces.at(interface_index)->keyReleaseEvent(channel, note);
 }
 
 // to move pitch wheel by keyboard
@@ -531,10 +542,10 @@ bool Orgelwerk::areKeysPressed()
 
 
 
-TremoloWorker::TremoloWorker(InterfaceAudio *audio, int delay, int channel, int note, QObject *parent)
+TremoloWorker::TremoloWorker(int interface_index, int delay, int channel, int note, QObject *parent)
     : QObject(parent)
 {
-    this->audio = audio;
+    this->interface_index = interface_index;
     this->delay = delay;
     this->channel = channel;
     this->note = note;
@@ -550,8 +561,8 @@ TremoloWorker::TremoloWorker(InterfaceAudio *audio, int delay, int channel, int 
 
 void TremoloWorker::tick()
 {
-    this->audio->keyReleaseEvent(this->channel, this->note);
-    this->audio->keyPressEvent(this->channel, this->note);
+    emit noteStop(this->interface_index, this->channel, this->note);
+    emit notePlay(this->interface_index, this->channel, this->note);
     
     // make the tremolo effect feeling a bit more natural by not having all the time the exact same delay but just modify it a little bit
     int rnd = this->random->bounded(

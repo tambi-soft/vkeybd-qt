@@ -14,5 +14,6 @@
         <file alias="css_dark">assets/css/dark.css</file>
         <file alias="css_light">assets/css/light.css</file>
         <file alias="css_green">assets/css/green.css</file>
+        <file alias="css_allen_heath">assets/css/allen_heath.css</file>
     </qresource>
 </RCC>
