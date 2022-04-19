@@ -9,6 +9,12 @@ MainWindow::MainWindow(QString output_system, int number_of_keyboards, QWidget *
     main_container_widget->setLayout(layout);
     setCentralWidget(main_container_widget);
     
+    QFile css_file(":css_allen_heath");
+    if (css_file.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        setStyleSheet(css_file.readAll());
+    }
+    
     if (output_system == "network")
     {
         layout->addWidget(newKeyboardInstance(0, output_system));
@@ -42,9 +48,10 @@ QWidget* MainWindow::newKeyboardInstance(int id, QString mode)
     
     this->config = new Config;
     
-    this->button_grab = new QPushButton("Grab Keyboard");
-    connect(button_grab, &QPushButton::clicked, this, &MainWindow::grabButtonClicked);
-    this->button_grab->setObjectName("button_grab");
+    QPushButton *button_grab = new QPushButton("Grab Keyboard");
+    connect(button_grab, &QPushButton::clicked, this, [this, button_grab]{ grabButtonClicked(button_grab); });
+    button_grab->setObjectName("button_grab");
+    this->list_of_button_grabs.append(button_grab);
     
     QLineEdit *line_udp_ip = new QLineEdit(this);
     line_udp_ip->setText("127.0.0.1");
@@ -95,12 +102,6 @@ QWidget* MainWindow::newKeyboardInstance(int id, QString mode)
     //int width = this->width();
     //resize(width, 900);
     
-    QFile css_file(":css_allen_heath");
-    if (css_file.open(QIODevice::ReadOnly | QIODevice::Text))
-    {
-        setStyleSheet(css_file.readAll());
-    }
-    
     return widget;
 }
 
@@ -132,7 +133,18 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *ev)
             {
                 if (this->ctrl_down)
                 {
-                    grabButtonClicked();
+                    if (this->grabbing != nullptr)
+                    {
+                        grabButtonClicked(this->grabbing);
+                    }
+                    else if (this->grabbing_last != nullptr)
+                    {
+                        grabButtonClicked(this->grabbing_last);
+                    }
+                    else
+                    {
+                        grabButtonClicked(this->list_of_button_grabs.first());
+                    }
                     
                     return true;
                 }
@@ -140,7 +152,16 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *ev)
             else
             {
                 //return this->tabs->callEventFilter(obj, ev);
-                qDebug() << "activate tabs widget";
+                
+                if (this->grabbing != nullptr)
+                {
+                    int index = this->list_of_button_grabs.indexOf(this->grabbing);
+                    return this->list_of_maintabs.at(index)->callEventFilter(obj, ev);
+                }
+                else
+                {
+                    return this->list_of_maintabs.first()->callEventFilter(obj, ev);
+                }
             }
         }
     }
@@ -157,15 +178,24 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *ev)
             else
             {
                 //return this->tabs->callEventFilter(obj, ev);
-                qDebug() << "activate tabs widget";
+                
+                if (this->grabbing != nullptr)
+                {
+                    int index = this->list_of_button_grabs.indexOf(this->grabbing);
+                    return this->list_of_maintabs.at(index)->callEventFilter(obj, ev);
+                }
+                else
+                {
+                    return this->list_of_maintabs.first()->callEventFilter(obj, ev);
+                }
             }
         }
     }
     else if (ev->type() == QEvent::MouseButtonPress)
     {
-        if (this->grabbing)
+        if (this->grabbing != nullptr)
         {
-            grabButtonClicked();
+            grabButtonClicked(this->grabbing);
         }
     }
     
@@ -177,25 +207,28 @@ bool MainWindow::nativeEventFilter(const QByteArray &eventType, void *message, l
     return false;
 }
 
-void MainWindow::grabButtonClicked()
+void MainWindow::grabButtonClicked(QPushButton *button_grab)
 {
-    if (this->grabbing)
+    if (this->grabbing != nullptr)
     {
-        this->grabbing = false;
         releaseKeyboard();
         // to avoid to mess around with the os like blocking taskbar-items, we need to grab the mouse aswell
         releaseMouse();
         
-        this->button_grab->setDown(false);
-        this->button_grab->setText("Grab Keyboard");
+        this->grabbing->setDown(false);
+        this->grabbing->setText("Grab Keyboard");
+        
+        this->grabbing = nullptr;
     }
     else
     {
-        this->grabbing = true;
+        this->grabbing = button_grab;
+        this->grabbing_last = button_grab;
+        
         grabKeyboard();
         grabMouse();
         
-        this->button_grab->setDown(true);
-        this->button_grab->setText("Grabbing Keyboard. Hit Ctrl+Shift or Click to stop.");
+        this->grabbing->setDown(true);
+        this->grabbing->setText("Grabbing Keyboard. Hit Ctrl+Shift or Click to stop.");
     }
 }

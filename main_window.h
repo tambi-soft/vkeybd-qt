@@ -37,9 +37,11 @@ private:
     QList<MainTabs*> list_of_maintabs;
     Config *config;
     
-    bool grabbing = false;
+    //QPushButton *button_grab;
+    QList<QPushButton*> list_of_button_grabs;
+    QPushButton *grabbing = nullptr;
+    QPushButton *grabbing_last = nullptr;
     bool ctrl_down = false;
-    QPushButton *button_grab;
     
     QMap<QString, QString> key_keycode_map = {};
     
@@ -50,7 +52,7 @@ protected:
     bool nativeEventFilter(const QByteArray &eventType, void *message, long *);
 
 private slots:
-    void grabButtonClicked();
+    void grabButtonClicked(QPushButton *button_grab);
 
 };
 #endif // MAINWINDOW_H
