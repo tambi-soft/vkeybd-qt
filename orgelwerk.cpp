@@ -1,18 +1,20 @@
 #include "orgelwerk.h"
 
-Orgelwerk::Orgelwerk(QString audio_system, QString label, QWidget *parent) : QWidget(parent)
+Orgelwerk::Orgelwerk(int id, QString audio_system, QString label, QWidget *parent) : QWidget(parent)
 {
+    this->id = id;
+    this->audio_system = audio_system;
     this->label = label;
     
     //this->interface_audio = new InterfaceAlsa(label);
     //this->interface_audio = new InterfaceJack(label);
     if (audio_system == "alsa")
     {
-        this->list_of_audio_interfaces.append(new InterfaceAlsa("alsa-midi-"+label));
+        this->list_of_audio_interfaces.append(new InterfaceAlsa("alsa-midi-"+QString::number(id+1)+"-"+label));
     }
     else if (audio_system == "jack")
     {
-        this->list_of_audio_interfaces.append(new InterfaceJack("jack-midi-"+label));
+        this->list_of_audio_interfaces.append(new InterfaceJack("jack-midi-"+QString::number(id+1)+"-"+label));
     }
     else
     {
@@ -192,7 +194,14 @@ Orgelwerk::~Orgelwerk()
 
 void Orgelwerk::addNewAudioInterface(QString label)
 {
-    this->list_of_audio_interfaces.append(new InterfaceAlsa(label));
+    if (this->audio_system == "alsa")
+    {
+        this->list_of_audio_interfaces.append(new InterfaceAlsa(label));
+    }
+    else if (this->audio_system == "jack")
+    {
+        this->list_of_audio_interfaces.append(new InterfaceJack(label));
+    }
     
     this->channels->setListOfAudioOutputs(this->list_of_audio_interfaces);
 }
