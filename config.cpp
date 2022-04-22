@@ -21,7 +21,7 @@ Config::Config(QObject *parent) : QObject(parent)
         run->exec();
         */
         
-        this->config->setValue("default/db_path", config_dir->absoluteFilePath("default.ini"));
+        this->config->setValue("default/quicksave_path", config_dir->absoluteFilePath("quicksave.ini"));
     }
     
     openSettingsFile();
@@ -29,17 +29,17 @@ Config::Config(QObject *parent) : QObject(parent)
 
 void Config::openSettingsFile()
 {
-    this->settings = new QSettings(this->config->value("default/db_path").toString(), QSettings::IniFormat);
+    this->settings = new QSettings(this->config->value("default/quicksave_path").toString(), QSettings::IniFormat);
 }
 
-QString Config::getDbPath()
+QString Config::getQuicksavePath()
 {
-    return this->settings->value("default/db_path").toString();
+    return this->settings->value("default/quicksave_path").toString();
 }
 
-void Config::setDbPath(QString db_path)
+void Config::setQuicksavePath(QString db_path)
 {
-    this->settings->setValue("default/db_path", db_path);
+    this->settings->setValue("default/quicksave_path", db_path);
 }
 
 void Config::setValue(QString key, QVariant value)

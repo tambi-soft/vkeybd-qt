@@ -24,8 +24,8 @@ private:
     QSettings *settings;
     
     void openSettingsFile();
-    QString getDbPath();
-    void setDbPath(QString db_path);
+    QString getQuicksavePath();
+    void setQuicksavePath(QString db_path);
     
 signals:
     void restoreParams(int maintab, QString tab, QMap<QString, QVariant> data);
