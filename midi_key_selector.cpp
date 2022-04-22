@@ -5,7 +5,7 @@ MIDIKeySelector::MIDIKeySelector(QWidget *parent) : QWidget(parent)
     QVBoxLayout *layout_vertical = new QVBoxLayout;
     QHBoxLayout *layout_keys = new QHBoxLayout;
     QHBoxLayout *layout_shift = new QHBoxLayout;
-    //setLayout(layout_horizontal);
+    
     setLayout(layout_vertical);
     
     layout_vertical->setContentsMargins(0, 0, 0, 0);
@@ -25,27 +25,10 @@ MIDIKeySelector::MIDIKeySelector(QWidget *parent) : QWidget(parent)
             check->setChecked(true);
         }
         
-        /* 
-        QString stylesheet = "QCheckBox:indicator:checked {"
-                             "  color: white;"
-                             "  background-color: black;"
-                             "}";
-        
-        check->setStyleSheet(stylesheet);
-        */
-        
         this->list_of_checkboxes.append(check);
     }
     
     layout_vertical->addLayout(layout_keys);
-    
-    //QLabel *label_key_shift = new QLabel("Key Shift:");
-    
-    //layout_shift->addStretch();
-    //layout_shift->addStretch();
-    
-    //layout_vertical->addLayout(layout_shift);
-    
 }
 
 QList<int> MIDIKeySelector::getListOfSelectedKeys()

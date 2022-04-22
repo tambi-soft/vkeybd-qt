@@ -93,7 +93,7 @@ public:
     QPushButton *button_resend_midi = new QPushButton;
     
     QList<QMap<QString,QVariant>> listOfChannels(bool only_activated);
-    //void setListOfChannels(QList<QMap<QString, QVariant> > data);
+    QList<QMap<QString,QVariant>> getParams();
     void restoreParams(QMap<QString,QVariant> data);
     
 private:
@@ -145,7 +145,7 @@ private slots:
     void keyMIDIDown(int midicode);
     void keyMIDIUp(int midicode);
     void pitchWheelMoved(int pitch);
-    void showChannelDetails(bool update_preview=false);
+    void showChannelDetails();
     void channelsDialogRejected();
     void volumeSliderMoved(int value);
     

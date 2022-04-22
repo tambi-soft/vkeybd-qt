@@ -103,6 +103,9 @@ void MainTabs::saveAllParams()
             
             QList<QMap<QString,QVariant>> channels = o->listOfChannels(false);
             this->config->saveChannelSettings(this->id, label, channels);
+            
+            QList<QMap<QString,QVariant>> params = o->getParams();
+            qDebug() << params;
         }
     }
 }

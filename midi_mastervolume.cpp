@@ -92,6 +92,11 @@ void MIDIMasterVolume::volumeKeyReleased()
     this->worker->keyUp();
 }
 
+int MIDIMasterVolume::getValue()
+{
+    return this->slider_volume->value();
+}
+
 
 
 

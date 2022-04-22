@@ -6,8 +6,6 @@ Orgelwerk::Orgelwerk(int id, QString audio_system, QString label, QWidget *paren
     this->audio_system = audio_system;
     this->label = label;
     
-    //this->interface_audio = new InterfaceAlsa(label);
-    //this->interface_audio = new InterfaceJack(label);
     if (audio_system == "alsa")
     {
         this->list_of_audio_interfaces.append(new InterfaceAlsa("alsa-midi-"+QString::number(id+1)+"-"+label));
@@ -124,7 +122,7 @@ void Orgelwerk::showChannelsReal(int grid_row)
     scroll_channels->setWidget(this->channels);
     
     QPushButton *button_channels_dialog = new QPushButton("Show in own Window");
-    connect(button_channels_dialog, &QPushButton::clicked, this, [this]{ this->showChannelDetails(false); });
+    connect(button_channels_dialog, &QPushButton::clicked, this, &Orgelwerk::showChannelDetails);
     
     layout_channels->addWidget(scroll_channels);
     layout_channels->addWidget(button_channels_dialog);
@@ -134,7 +132,7 @@ void Orgelwerk::showChannelsReal(int grid_row)
 void Orgelwerk::showChannelsImage(int grid_row)
 {
     this->button_channels = new QPushButton;
-    connect(this->button_channels, &QPushButton::clicked, this, [this]{ this->showChannelDetails(true); });
+    connect(this->button_channels, &QPushButton::clicked, this, &Orgelwerk::showChannelDetails);
     
     QGroupBox *group_channels_pixmap = new QGroupBox("Channels");
     QVBoxLayout *layout_channels_pixmap = new QVBoxLayout;
@@ -155,7 +153,7 @@ void Orgelwerk::showChannelsSummary(int grid_row)
     this->midi_channels_summary = new MIDIChannelsSummary;
     
     this->button_channels_dialog->setText("Edit MIDI Channels");
-    connect(button_channels_dialog, &QPushButton::clicked, this, [this]{ this->showChannelDetails(false); });
+    connect(button_channels_dialog, &QPushButton::clicked, this, &Orgelwerk::showChannelDetails);
     
     this->button_resend_midi->setText("Resend MIDI Settings [Ins]");
     connect(button_resend_midi, &QPushButton::clicked, this, &Orgelwerk::resendMIDIControls);
@@ -430,62 +428,14 @@ void Orgelwerk::volumeSliderMoved(int value)
     this->channels->volumeDCAChanged(value);
 }
 
-void Orgelwerk::showChannelDetails(bool update_preview)
+void Orgelwerk::showChannelDetails()
 {
     this->channels->show();
-    
-    /*
-    QDialog *dialog = new QDialog();
-    connect(dialog, &QDialog::rejected, this, &Orgelwerk::channelsDialogRejected);
-    QVBoxLayout *layout_dialog = new QVBoxLayout;
-    layout_dialog->setMargin(0);
-    dialog->setLayout(layout_dialog);
-    
-    
-    
-    //QWidget *channel_details = this->scroll_channels->takeWidget();
-    //layout_dialog->addWidget(channel_details);
-    layout_dialog->addWidget(this->channels);
-    //layout_dialog->addLayout(this->channels->layout());
-    //layout_dialog->addWidget(this->scroll_channels);
-    //layout_dialog->setGeometry(this->scroll_channels->geometry());
-    
-    //dialog->layout()->setSizeConstraint( QLayout::SetFixedSize );
-    
-    //dialog->exec();
-    dialog->show();
-    
-    if (update_preview)
-    {
-        updateChannelsSchreenshot();
-    }
-    
-    //if (this->scroll_channels != nullptr)
-    //{
-    qDebug() << "||==||";
-    //3qDebug() << this->scroll_channels;
-    
-    //layout_dialog->deleteLater();
-    //dialog->deleteLater();
-    
-        //this->scroll_channels->setWidget(this->channels);
-    //}
-    //this->channels->show();
-    */
 }
 
 void Orgelwerk::channelsDialogRejected()
 {
-    qDebug() << "rejected";
     channelsSummaryUpdate();
-    
-    /*
-    qDebug() << this->channels;
-    this->scroll_channels->setWidget(this->channels);
-    //this->scroll_channels->widget()->show();
-    this->scroll_channels->show();
-    this->channels->show();
-    */
 }
 
 void Orgelwerk::updateChannelsSchreenshot()
@@ -519,13 +469,18 @@ QList<QMap<QString,QVariant>> Orgelwerk::listOfChannels(bool only_activated)
     QList<QMap<QString,QVariant>> list_of_channels = this->channels->listOfChannels(only_activated);
     return list_of_channels;
 }
-
-/*
-void Orgelwerk::setListOfChannels(QList<QMap<QString,QVariant>> data)
+QList<QMap<QString,QVariant>> Orgelwerk::getParams()
 {
-    this->channels->setListOfChannels(data);
+    QList<QMap<QString,QVariant>> result;
+    
+    int key_shift = this->key_shift_master->value();
+    int volume = this->volume->getValue();
+    QList<int> list_of_keys = this->keys->getListOfSelectedKeys();
+    
+    QMap<QString,int> pitchwheel = this->pitch->getData();
+    
+    return result;
 }
-*/
 void Orgelwerk::restoreParams(QMap<QString,QVariant> data)
 {
     this->channels->restoreParams(data);

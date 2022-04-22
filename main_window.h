@@ -37,6 +37,9 @@ private:
     QList<MainTabs*> list_of_maintabs;
     Config *config;
     
+    QLineEdit *line_udp_ip;
+    QSpinBox *spin_port;
+    
     //QPushButton *button_grab;
     QList<QPushButton*> list_of_button_grabs;
     QPushButton *grabbing = nullptr;

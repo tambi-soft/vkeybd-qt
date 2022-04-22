@@ -144,6 +144,17 @@ void MIDIPitchWheel::pitchKeyReleased()
     this->worker->keyUp();
 }
 
+QMap<QString,int> MIDIPitchWheel::getData()
+{
+    QMap<QString,int> result;
+    
+    result["pitchwheel_tether"] = this->slider_tether->value();
+    result["pitchwheel_vibamp"] = this->slider_vibamp->value();
+    result["pitchwheel_pitch"] = this->slider_pitch->value();
+    
+    return result;
+}
+
 
 
 MIDIPitchWheelWorker::MIDIPitchWheelWorker(QObject *parent) : QObject(parent)

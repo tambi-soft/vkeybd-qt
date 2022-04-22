@@ -54,19 +54,19 @@ QWidget* MainWindow::newKeyboardInstance(int id, QString mode)
     button_grab->setObjectName("button_grab");
     this->list_of_button_grabs.append(button_grab);
     
-    QLineEdit *line_udp_ip = new QLineEdit(this);
-    line_udp_ip->setText("127.0.0.1");
-    line_udp_ip->setToolTip("For remote-controlling: IP-Address of the interface you want to listen on (the IP-address of this machine).");
-    line_udp_ip->setObjectName("network_select");
+    this->line_udp_ip = new QLineEdit(this);
+    this->line_udp_ip->setText("127.0.0.1");
+    this->line_udp_ip->setToolTip("For remote-controlling: IP-Address of the interface you want to listen on (the IP-address of this machine).");
+    this->line_udp_ip->setObjectName("network_select");
     
-    QSpinBox *spin_port = new QSpinBox;
-    spin_port->setMinimum(1025);
-    spin_port->setMaximum(65535);
-    spin_port->setValue(20020);
-    spin_port->setToolTip("Network Listen Port");
-    spin_port->setObjectName("network_select");
+    this->spin_port = new QSpinBox;
+    this->spin_port->setMinimum(1025);
+    this->spin_port->setMaximum(65535);
+    this->spin_port->setValue(20020);
+    this->spin_port->setToolTip("Network Listen Port");
+    this->spin_port->setObjectName("network_select");
     
-    MainTabs *tabs = new MainTabs(id, this->config, mode, line_udp_ip, spin_port);
+    MainTabs *tabs = new MainTabs(id, this->config, mode, this->line_udp_ip, this->spin_port);
     this->list_of_maintabs.append(tabs);
     
     grid->addWidget(button_grab, 0, 0, 1, 3);
@@ -108,6 +108,9 @@ QWidget* MainWindow::newKeyboardInstance(int id, QString mode)
 
 void MainWindow::saveAllParams()
 {
+    QString network_ip = this->line_udp_ip->text();
+    int network_port = this->spin_port->value();
+    
     for (int i=0; i < this->list_of_maintabs.length(); i++)
     {
         this->list_of_maintabs.at(i)->saveAllParams();
@@ -119,12 +122,8 @@ void MainWindow::openAllParams()
 }
 void MainWindow::restoreParams(int maintab, QString tab, QMap<QString, QVariant> data)
 {
-    qDebug() << this->list_of_maintabs.length();
-    qDebug() << maintab;
-    
     if (this->list_of_maintabs.length() >= maintab+1)
     {
-        qDebug() << "rianetriantiraunertia";
         this->list_of_maintabs.at(maintab)->restoreParams(tab, data);
     }
     
