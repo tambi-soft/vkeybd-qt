@@ -22,12 +22,14 @@ public:
     
     bool callEventFilter(QObject *obj, QEvent *ev);
     void saveAllParams();
-    void openAllParams();
+    //void openAllParams(int id);
+    void restoreParams(QString tab, QMap<QString,QVariant> data);
     
 private:
     QList<int> list_function_keys;
     QList<QString> list_labels;
     QList<Orgelwerk*> list_of_tabs;
+    QMap<QString,Orgelwerk*> map_of_tabs;
     
     int id;
     Config *config;

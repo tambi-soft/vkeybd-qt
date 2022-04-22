@@ -47,6 +47,7 @@ QWidget* MainWindow::newKeyboardInstance(int id, QString mode)
     widget->setLayout(grid);
     
     this->config = new Config;
+    connect(this->config, &Config::restoreParams, this, &MainWindow::restoreParams);
     
     QPushButton *button_grab = new QPushButton("Grab Keyboard");
     connect(button_grab, &QPushButton::clicked, this, [this, button_grab]{ grabButtonClicked(button_grab); });
@@ -114,7 +115,26 @@ void MainWindow::saveAllParams()
 }
 void MainWindow::openAllParams()
 {
-    //this->tabs->openAllParams();
+    /*
+    for (int i=0; i < this->list_of_maintabs.length(); i++)
+    {
+        this->list_of_maintabs.at(i)->openAllParams(i);
+    }
+    */
+    
+    this->config->loadChannelSettings();
+}
+void MainWindow::restoreParams(int maintab, QString tab, QMap<QString, QVariant> data)
+{
+    qDebug() << this->list_of_maintabs.length();
+    qDebug() << maintab;
+    
+    if (this->list_of_maintabs.length() >= maintab+1)
+    {
+        qDebug() << "rianetriantiraunertia";
+        this->list_of_maintabs.at(maintab)->restoreParams(tab, data);
+    }
+    
 }
 
 bool MainWindow::eventFilter(QObject *obj, QEvent *ev)

@@ -65,10 +65,71 @@ void Config::saveChannelSettings(int id, QString label, QList<QMap<QString,QVari
     }
 }
 
-QList<QMap<QString,QVariant>> Config::loadChannelSettings(QString tab_label)
+void Config::loadChannelSettings()
 {
-    QList<QMap<QString,QVariant>> result;
+    qDebug() << "aaaaaaaaaaaaaaaa";
     
+    QMap<QString,QVariant> result;
+    
+    // maintabs is something like ["0", "1"] if vkeybd-qt sarted with -n=2
+    QList<QString> maintabs = this->settings->childGroups();
+    for (int i=0; i < maintabs.length(); i++)
+    {
+        this->settings->beginGroup(maintabs.at(i));
+        // tabs is something like ["F1", "F2", ... "F12"]
+        QList<QString> tabs = this->settings->childGroups();
+        this->settings->endGroup();
+        
+        for (int j=0; j < tabs.length(); j++)
+        {
+            QMap<QString, QVariant> channels_;
+            
+            this->settings->beginGroup(maintabs.at(i)+"/"+tabs.at(j));
+            // channels is something like ["1", "2", ... "16"]
+            QList<QString> channels = this->settings->childGroups();
+            this->settings->endGroup();
+            
+            for (int k=0; k < channels.length(); k++)
+            {
+                this->settings->beginGroup(maintabs.at(i)+"/"+tabs.at(j)+"/"+channels.at(k));
+                // keys is something like ["tremolo", "volume", "msb", "lsb" ...]
+                QList<QString> keys = this->settings->childKeys();
+                this->settings->endGroup();
+                
+                QMap<QString, QVariant> value_;
+                
+                for (int l=0; l < keys.length(); l++)
+                {
+                    QVariant value = this->settings->value(maintabs.at(i)+"/"+tabs.at(j)+"/"+channels.at(k)+"/"+keys.at(l));
+                    
+                    value_[keys.at(l)] = value; // e.g: "volume" -> "127"
+                }
+                
+                channels_[channels.at(k)] = value_; // e.g: "1" -> ("volume" -> "127")
+            }
+            
+            //qDebug() << channels_;
+            qDebug() << "maintabs: "+maintabs.at(i)+" tabs: "+tabs.at(j);
+            emit restoreParams(
+                        maintabs.at(i).toInt(),
+                        tabs.at(j),
+                        channels_
+                        );
+        }
+    }
+            
+    //this->settings->beginGroup(QString::number(id));
+    //qDebug() << this->settings->allKeys();
+    
+    //qDebug() << this->settings->group();
+    
+    //qDebug() << this->settings->childKeys(); // empty
+    //qDebug() << this->settings->childGroups(); // 0, 1
+    //qDebug() << this->settings->value(QString::number(id));
+    
+    //this->settings->endGroup();
+    
+    /*
     //qDebug() << this->settings->allKeys();
     //QStringList child_groups = this->settings->childGroups();
     
@@ -102,8 +163,5 @@ QList<QMap<QString,QVariant>> Config::loadChannelSettings(QString tab_label)
         last_tab_channel_id = tab_channel_id;
     }
     result.append(map);
-    
-    qDebug() << result;
-    
-    return result;
+    */
 }

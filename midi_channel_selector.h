@@ -27,7 +27,7 @@ public:
     void setListOfAudioOutputs(QList<InterfaceAudio*> list_of_audio_interfaces);
     
     QList<QMap<QString, QVariant> > listOfChannels(bool only_activated=true);
-    void setListOfChannels(QList<QMap<QString, QVariant> > data);
+    void restoreParams(QMap<QString,QVariant> data);
     void volumeDCAChanged(int value);
     void resendMIDIControls();
     

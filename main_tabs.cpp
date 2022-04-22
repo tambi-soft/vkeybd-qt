@@ -86,6 +86,7 @@ void MainTabs::addOrganTab(QString output_system, QString label, int number_of_o
         layout->addWidget(o);
         
         this->list_of_tabs.append(o);
+        this->map_of_tabs[label] = o;
     }
     
     addTab(widget, label);
@@ -105,7 +106,8 @@ void MainTabs::saveAllParams()
         }
     }
 }
-void MainTabs::openAllParams()
+/*
+void MainTabs::openAllParams(int id)
 {
     for (int i=0; i < count(); i++)
     //for (int i=0; i < 1; i++)
@@ -115,10 +117,16 @@ void MainTabs::openAllParams()
         {
             Orgelwerk *o = static_cast<Orgelwerk*>(widget(i)->layout()->itemAt(0)->widget());
             
-            QList<QMap<QString,QVariant>> channels = this->config->loadChannelSettings(label);
-            o->setListOfChannels(channels);
+            this->config->loadChannelSettings();
+            //o->setListOfChannels(channels);
         }
     }
+}
+*/
+void MainTabs::restoreParams(QString tab, QMap<QString,QVariant> data)
+{
+    //this->list_of_tabs.at(tab)->restoreParams(data);
+    this->map_of_tabs[tab]->restoreParams(data);
 }
 
 bool MainTabs::callEventFilter(QObject *obj, QEvent *ev)

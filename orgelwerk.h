@@ -93,7 +93,8 @@ public:
     QPushButton *button_resend_midi = new QPushButton;
     
     QList<QMap<QString,QVariant>> listOfChannels(bool only_activated);
-    void setListOfChannels(QList<QMap<QString, QVariant> > data);
+    //void setListOfChannels(QList<QMap<QString, QVariant> > data);
+    void restoreParams(QMap<QString,QVariant> data);
     
 private:
     int id;

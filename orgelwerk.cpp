@@ -520,9 +520,15 @@ QList<QMap<QString,QVariant>> Orgelwerk::listOfChannels(bool only_activated)
     return list_of_channels;
 }
 
+/*
 void Orgelwerk::setListOfChannels(QList<QMap<QString,QVariant>> data)
 {
     this->channels->setListOfChannels(data);
+}
+*/
+void Orgelwerk::restoreParams(QMap<QString,QVariant> data)
+{
+    this->channels->restoreParams(data);
 }
 
 bool Orgelwerk::eventFilter(QObject *obj, QEvent *ev)

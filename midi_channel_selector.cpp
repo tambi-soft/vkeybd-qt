@@ -234,7 +234,7 @@ QList<QMap<QString,QVariant>> MIDIChannelSelector::listOfChannels(bool only_acti
             
             map["interface_index"] = this->list_of_midi_output_combos.at(i)->currentIndex();
             
-            map["activated"] = true;
+            map["activated"] = this->list_of_checkboxes.at(i)->isChecked();
             
             int volume = this->list_of_volume_sliders.at(i)->value();
             map["volume"] = volume;
@@ -278,42 +278,27 @@ QList<QMap<QString,QVariant>> MIDIChannelSelector::listOfChannels(bool only_acti
     
     return result;
 }
-void MIDIChannelSelector::setListOfChannels(QList<QMap<QString,QVariant>> data)
+
+void MIDIChannelSelector::restoreParams(QMap<QString,QVariant> data)
 {
-    qDebug() << "rrrrrrrrrrrrrrrrrrrrrrrrrrr";
-    //qDebug() << data;
-    
-    for (int i=0; i < data.length(); i++)
+    for (int i=0; i < this->list_of_checkboxes.length(); i++)
     {
-        QMap<QString,QVariant> map = data.at(i);
-        //qDebug() << map;
+        QMap<QString,QVariant> channel = data[QString::number(i)].toMap();
         
-        int channel = map["channel"].toInt(); //data.at(i)["channel"].toInt();
+        this->list_of_checkboxes.at(i)->setChecked(channel["activated"].toBool());
         
-        bool activated;
-        if (map["activated"] == "true")
-        {
-            qDebug() << "true";
-            activated = true;
-        }
-        else
-        {
-            qDebug() << "false";
-            activated = false;
-        }
-        //this->list_of_checkboxes.at(channel)->setChecked(map["activated"].toBool());
-        //this->list_of_checkboxes.at(channel)->setChecked(activated);
+        this->list_of_volume_sliders.at(i)->setValue(channel["volume"].toInt());
+        this->list_of_pan_sliders.at(i)->setValue(channel["pan"].toInt());
+        this->list_of_keyshifts.at(i)->setValue(channel["key_shift"].toInt());
+        this->list_of_key_mins.at(i)->setValue(channel["key_min"].toInt());
+        this->list_of_key_maxs.at(i)->setValue(channel["key_max"].toInt());
+        this->list_of_msb.at(i)->setValue(channel["instrument_msb"].toInt());
+        this->list_of_lsb.at(i)->setValue(channel["instrument_lsb"].toInt());
         
-        //this->list_of_volume_sliders.at(channel)->setValue(map["volume"].toInt());
-        //this->list_of_pan_sliders.at(channel)->setValue(map["pan"].toInt());
-        this->list_of_keyshifts.at(channel)->setValue(map["key_shift"].toInt());
-        this->list_of_key_mins.at(channel)->setValue(map["key_min"].toInt());
-        this->list_of_key_maxs.at(channel)->setValue(map["key_max"].toInt());
-        //this->list_of_msb.at(channel)->setValue(map["instrument_msb"].toInt());
-        //this->list_of_lsb.at(channel)->setValue(map["instrument_lsb"].toInt());
-        //this->list_of_portamentos.at(channel)->setValue(map["portamento_time"].toInt());
-        //this->list_of_attacks.at(channel)->setValue(map["attack"].toInt());
-        //this->list_of_releases.at(channel)->setValue(map["release"].toInt());
+        this->list_of_portamentos.at(i)->setValue(channel["portamento_time"].toInt());
+        this->list_of_attacks.at(i)->setValue(channel["attack"].toInt());
+        this->list_of_releases.at(i)->setValue(channel["release"].toInt());
+        this->list_of_tremolos.at(i)->setValue(channel["tremolo"].toInt());
     }
 }
 

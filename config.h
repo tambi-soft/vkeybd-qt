@@ -17,7 +17,7 @@ public:
     
     void setValue(QString key, QVariant value);
     void saveChannelSettings(int id, QString label, QList<QMap<QString, QVariant> > channels);
-    QList<QMap<QString, QVariant> > loadChannelSettings(QString tab_label);
+    void loadChannelSettings();
     
 private:
     QSettings *config;
@@ -28,7 +28,7 @@ private:
     void setDbPath(QString db_path);
     
 signals:
-    
+    void restoreParams(int maintab, QString tab, QMap<QString, QVariant> data);
 };
 
 #endif // CONFIG_H

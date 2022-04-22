@@ -53,6 +53,7 @@ protected:
 
 private slots:
     void grabButtonClicked(QPushButton *button_grab);
+    void restoreParams(int maintab, QString tab, QMap<QString, QVariant> data);
 
 };
 #endif // MAINWINDOW_H
