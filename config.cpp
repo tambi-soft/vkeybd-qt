@@ -57,7 +57,6 @@ void Config::saveChannelSettings(int id, QString label, QList<QMap<QString,QVari
         {
             QString key = keys.at(k);
             this->settings->setValue(
-                        //label+"_"+QString::number(c)+"/"+key,
                         QString::number(id)+"/"+label+"/"+QString::number(c)+"/"+key,
                         channels.at(c)[key]
                     );
@@ -67,8 +66,6 @@ void Config::saveChannelSettings(int id, QString label, QList<QMap<QString,QVari
 
 void Config::loadChannelSettings()
 {
-    qDebug() << "aaaaaaaaaaaaaaaa";
-    
     QMap<QString,QVariant> result;
     
     // maintabs is something like ["0", "1"] if vkeybd-qt sarted with -n=2

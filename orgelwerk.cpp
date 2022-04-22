@@ -529,6 +529,8 @@ void Orgelwerk::setListOfChannels(QList<QMap<QString,QVariant>> data)
 void Orgelwerk::restoreParams(QMap<QString,QVariant> data)
 {
     this->channels->restoreParams(data);
+    
+    channelsSummaryUpdate();
 }
 
 bool Orgelwerk::eventFilter(QObject *obj, QEvent *ev)

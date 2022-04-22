@@ -106,26 +106,8 @@ void MainTabs::saveAllParams()
         }
     }
 }
-/*
-void MainTabs::openAllParams(int id)
-{
-    for (int i=0; i < count(); i++)
-    //for (int i=0; i < 1; i++)
-    {
-        QString label = tabText(i);
-        if (! label.isEmpty())
-        {
-            Orgelwerk *o = static_cast<Orgelwerk*>(widget(i)->layout()->itemAt(0)->widget());
-            
-            this->config->loadChannelSettings();
-            //o->setListOfChannels(channels);
-        }
-    }
-}
-*/
 void MainTabs::restoreParams(QString tab, QMap<QString,QVariant> data)
 {
-    //this->list_of_tabs.at(tab)->restoreParams(data);
     this->map_of_tabs[tab]->restoreParams(data);
 }
 

@@ -115,13 +115,6 @@ void MainWindow::saveAllParams()
 }
 void MainWindow::openAllParams()
 {
-    /*
-    for (int i=0; i < this->list_of_maintabs.length(); i++)
-    {
-        this->list_of_maintabs.at(i)->openAllParams(i);
-    }
-    */
-    
     this->config->loadChannelSettings();
 }
 void MainWindow::restoreParams(int maintab, QString tab, QMap<QString, QVariant> data)

@@ -22,7 +22,6 @@ public:
     
     bool callEventFilter(QObject *obj, QEvent *ev);
     void saveAllParams();
-    //void openAllParams(int id);
     void restoreParams(QString tab, QMap<QString,QVariant> data);
     
 private:
