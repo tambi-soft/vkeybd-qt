@@ -66,8 +66,6 @@ void Config::saveChannelSettings(int id, QString label, QList<QMap<QString,QVari
 
 void Config::loadChannelSettings()
 {
-    QMap<QString,QVariant> result;
-    
     // maintabs is something like ["0", "1"] if vkeybd-qt sarted with -n=2
     QList<QString> maintabs = this->settings->childGroups();
     for (int i=0; i < maintabs.length(); i++)
@@ -105,8 +103,6 @@ void Config::loadChannelSettings()
                 channels_[channels.at(k)] = value_; // e.g: "1" -> ("volume" -> "127")
             }
             
-            //qDebug() << channels_;
-            qDebug() << "maintabs: "+maintabs.at(i)+" tabs: "+tabs.at(j);
             emit restoreParams(
                         maintabs.at(i).toInt(),
                         tabs.at(j),
@@ -114,51 +110,4 @@ void Config::loadChannelSettings()
                         );
         }
     }
-            
-    //this->settings->beginGroup(QString::number(id));
-    //qDebug() << this->settings->allKeys();
-    
-    //qDebug() << this->settings->group();
-    
-    //qDebug() << this->settings->childKeys(); // empty
-    //qDebug() << this->settings->childGroups(); // 0, 1
-    //qDebug() << this->settings->value(QString::number(id));
-    
-    //this->settings->endGroup();
-    
-    /*
-    //qDebug() << this->settings->allKeys();
-    //QStringList child_groups = this->settings->childGroups();
-    
-    int last_tab_channel_id = 0;
-    QMap<QString,QVariant> map;
-    QStringList keys = this->settings->allKeys();
-    for (int i=0; i < keys.length(); i++)
-    {
-        QStringList splitted = keys.at(i).split("/");
-        QString tab_label_ = splitted.at(0); // "F1", "F2" ...
-        int tab_channel_id = splitted.at(1).toInt(); // 0, 1, ..., 15
-        QString tab_channel_key = splitted.at(2); // "key_min", "key_shift", ...
-        
-        if (tab_label == tab_label_)
-        {
-            if (last_tab_channel_id == tab_channel_id)
-            {
-                map[tab_channel_key] = this->settings->value(keys.at(i));
-            }
-            else
-            {
-                result.append(map);
-                map.clear();
-            }
-            //map["channel"] = tab_channel_id;
-            //map[tab_channel_key] = this->settings->value(keys.at(i));
-        }
-        
-        //result.append(map);
-        
-        last_tab_channel_id = tab_channel_id;
-    }
-    result.append(map);
-    */
 }
