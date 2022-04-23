@@ -44,29 +44,35 @@ void MenuBar::addViewMenu()
 {
     QMenu *menuView = addMenu("View");
     
-    QAction *showNetwork = new QAction("Show Network Section");
-    showNetwork->setCheckable(true);
-    showNetwork->setChecked(true);
+    this->showNetwork = new QAction("Show Network Section");
+    this->showNetwork->setCheckable(true);
+    this->showNetwork->setChecked(true);
+    connect(this->showNetwork, &QAction::changed, this, &MenuBar::showNetworkActionChanged);
     
-    QAction *showKeyShift = new QAction("Show Key Shift Section");
-    showKeyShift->setCheckable(true);
-    showKeyShift->setChecked(true);
+    this->showKeyShift = new QAction("Show Key Shift Section");
+    this->showKeyShift->setCheckable(true);
+    this->showKeyShift->setChecked(true);
+    connect(this->showKeyShift, &QAction::changed, this, &MenuBar::showKeyShiftActionChanged);
     
-    QAction *showKeys = new QAction("Show Keys Section");
-    showKeys->setCheckable(true);
-    showKeys->setChecked(true);
+    this->showKeys = new QAction("Show Keys Section");
+    this->showKeys->setCheckable(true);
+    this->showKeys->setChecked(true);
+    connect(this->showKeys, &QAction::changed, this, &MenuBar::showKeysActionChanged);
     
-    QAction *showNotes = new QAction("Show Notes Section");
-    showNotes->setCheckable(true);
-    showNotes->setChecked(true);
+    this->showNotes = new QAction("Show Notes Section");
+    this->showNotes->setCheckable(true);
+    this->showNotes->setChecked(true);
+    connect(this->showNotes, &QAction::changed, this, &MenuBar::showNotesActionChanged);
     
-    QAction *showPCKeyboard = new QAction("Show PC-Keyboard Section");
-    showPCKeyboard->setCheckable(true);
-    showPCKeyboard->setChecked(true);
+    this->showPCKeyboard = new QAction("Show PC-Keyboard Section");
+    this->showPCKeyboard->setCheckable(true);
+    this->showPCKeyboard->setChecked(true);
+    connect(this->showPCKeyboard, &QAction::changed, this, &MenuBar::showPCKeyboardActionChanged);
     
-    QAction *showPianoKeyboard = new QAction("Show Piano-Keyboard Section");
-    showPianoKeyboard->setCheckable(true);
-    showPianoKeyboard->setChecked(false);
+    this->showPianoKeyboard = new QAction("Show Piano-Keyboard Section");
+    this->showPianoKeyboard->setCheckable(true);
+    this->showPianoKeyboard->setChecked(false);
+    connect(this->showPianoKeyboard, &QAction::changed, this, &MenuBar::showPianoKeyboardActionChanged);
     
     menuView->addAction(showNetwork);
     menuView->addAction(showKeyShift);
@@ -85,4 +91,29 @@ void MenuBar::addHelpMenu()
 void MenuBar::quitApplication()
 {
     QApplication::quit();
+}
+
+void MenuBar::showNetworkActionChanged()
+{
+    emit signalShowActionChanged("network", this->showNetwork->isChecked());
+}
+void MenuBar::showKeyShiftActionChanged()
+{
+    emit signalShowActionChanged("keyshift", this->showKeyShift->isChecked());
+}
+void MenuBar::showKeysActionChanged()
+{
+    emit signalShowActionChanged("keys", this->showKeys->isChecked());
+}
+void MenuBar::showNotesActionChanged()
+{
+    emit signalShowActionChanged("notes", this->showNotes->isChecked());
+}
+void MenuBar::showPCKeyboardActionChanged()
+{
+    emit signalShowActionChanged("pc", this->showPCKeyboard->isChecked());
+}
+void MenuBar::showPianoKeyboardActionChanged()
+{
+    emit signalShowActionChanged("piano", this->showPianoKeyboard->isChecked());
 }

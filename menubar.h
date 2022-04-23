@@ -21,9 +21,25 @@ private:
     
     void quitApplication();
     
+    QAction *showNetwork;
+    QAction *showKeyShift;
+    QAction *showKeys;
+    QAction *showNotes;
+    QAction *showPCKeyboard;
+    QAction *showPianoKeyboard;
+    
 signals:
     void signalSave();
     void signalOpen();
+    void signalShowActionChanged(QString name, bool is_checked);
+
+private slots:
+    void showNetworkActionChanged();
+    void showKeyShiftActionChanged();
+    void showKeysActionChanged();
+    void showNotesActionChanged();
+    void showPCKeyboardActionChanged();
+    void showPianoKeyboardActionChanged();
     
 };
 
