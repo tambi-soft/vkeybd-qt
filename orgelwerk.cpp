@@ -111,39 +111,6 @@ void Orgelwerk::drawPCKeyboard(int grid_row)
     this->grid->addWidget(this->pc, grid_row, 0, 1, 2);
 }
 
-void Orgelwerk::showChannelsReal(int grid_row)
-{
-    QGroupBox *group_channels = new QGroupBox("Channels");
-    QVBoxLayout *layout_channels = new QVBoxLayout;
-    group_channels->setLayout(layout_channels);
-    layout_channels->setContentsMargins(0, 0, 0, 0);
-    
-    this->scroll_channels = new QScrollArea;
-    scroll_channels->setWidget(this->channels);
-    
-    QPushButton *button_channels_dialog = new QPushButton("Show in own Window");
-    connect(button_channels_dialog, &QPushButton::clicked, this, &Orgelwerk::showChannelDetails);
-    
-    layout_channels->addWidget(scroll_channels);
-    layout_channels->addWidget(button_channels_dialog);
-    
-    this->grid->addWidget(group_channels, grid_row, 0, 1, 2);
-}
-void Orgelwerk::showChannelsImage(int grid_row)
-{
-    this->button_channels = new QPushButton;
-    connect(this->button_channels, &QPushButton::clicked, this, &Orgelwerk::showChannelDetails);
-    
-    QGroupBox *group_channels_pixmap = new QGroupBox("Channels");
-    QVBoxLayout *layout_channels_pixmap = new QVBoxLayout;
-    layout_channels_pixmap->setContentsMargins(0, 0, 0, 0);
-    group_channels_pixmap->setLayout(layout_channels_pixmap);
-    layout_channels_pixmap->addWidget(this->button_channels);
-    
-    this->grid->addWidget(group_channels_pixmap, grid_row, 0, 1, 2);
-    
-    updateChannelsSchreenshot();
-}
 void Orgelwerk::showChannelsSummary(int grid_row)
 {
     QGroupBox *group_channels = new QGroupBox("Channels");
@@ -436,27 +403,6 @@ void Orgelwerk::showChannelDetails()
 void Orgelwerk::channelsDialogRejected()
 {
     channelsSummaryUpdate();
-}
-
-void Orgelwerk::updateChannelsSchreenshot()
-{
-    QPixmap channels_pixmap = this->channels->grab();
-    
-    float w = channels_pixmap.width();
-    float h = channels_pixmap.height();
-    
-    int scale_factor = 380;
-    float scale = scale_factor / w;
-    w = scale_factor;
-    h = h * scale;
-    
-    channels_pixmap = channels_pixmap.scaled(w, h, Qt::KeepAspectRatio);
-    
-    //channels_pixmap = channels_pixmap.scaled(this->button_channels->size(), Qt::KeepAspectRatio);
-    
-    QIcon ButtonIcon(channels_pixmap);
-    this->button_channels->setIcon(ButtonIcon);
-    this->button_channels->setIconSize(channels_pixmap.rect().size());
 }
 
 void Orgelwerk::resendMIDIControls()

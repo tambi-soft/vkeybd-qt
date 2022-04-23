@@ -130,14 +130,8 @@ private:
     
     void keyMIDIHelper(int midicode, QString mode);
     
-    // shows midi_channel_selector as a preview with a button to click to show the real widget
-    // (saves screen space)
-    void showChannelsImage(int grid_row);
-    // shows directly the real widget (needs more screen space)
-    void showChannelsReal(int grid_row);
     void showChannelsSummary(int grid_row);
     void channelsSummaryUpdate();
-    void updateChannelsSchreenshot();
     
 private slots:
     void addNewAudioInterface(QString label);

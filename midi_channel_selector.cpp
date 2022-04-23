@@ -299,6 +299,13 @@ void MIDIChannelSelector::restoreParams(QMap<QString,QVariant> data)
         this->list_of_attacks.at(i)->setValue(channel["attack"].toInt());
         this->list_of_releases.at(i)->setValue(channel["release"].toInt());
         this->list_of_tremolos.at(i)->setValue(channel["tremolo"].toInt());
+        
+        int audio_interface_index = channel["interface_index"].toInt();
+        if (audio_interface_index >= 1)
+        {
+            addNewAudioInterface(ADD_NEW_AUDIO_OUTPUT_LABEL);
+            this->list_of_midi_output_combos.at(i)->setCurrentIndex(audio_interface_index);
+        }
     }
 }
 
