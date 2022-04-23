@@ -130,8 +130,11 @@ void MainWindow::restoreParams(int maintab, QString tab, QMap<QString, QVariant>
 }
 void MainWindow::restoreGeneral(int maintab, QMap<QString,QVariant> data)
 {
-    this->list_of_line_udp_ips.at(maintab)->setText(data["network_ip"].toString());
-    this->list_of_spin_ports.at(maintab)->setValue(data["network_port"].toInt());
+    if (this->list_of_maintabs.length() >= maintab+1)
+    {
+        this->list_of_line_udp_ips.at(maintab)->setText(data["network_ip"].toString());
+        this->list_of_spin_ports.at(maintab)->setValue(data["network_port"].toInt());
+    }
 }
 
 bool MainWindow::eventFilter(QObject *obj, QEvent *ev)
