@@ -425,8 +425,10 @@ QMap<QString,QVariant> Orgelwerk::getParams()
     
     QMap<QString,int> pitchwheel = this->pitch->getData();
     
-    for (int i=0; i < pitchwheel.keys().length(); i++)
+    //for (int i=0; i < pitchwheel.keys().length(); i++)
+    for (int i=0; i < pitchwheel.count(); i++)
     {
+        //result[pitchwheel.keys().at(i)] = pitchwheel[pitchwheel.keys().at(i)];
         result[pitchwheel.keys().at(i)] = pitchwheel[pitchwheel.keys().at(i)];
     }
     

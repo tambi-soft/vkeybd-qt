@@ -15,6 +15,10 @@ public:
     
 private:
     void addFileMenu();
+    void addToolsMenu();
+    void addViewMenu();
+    void addHelpMenu();
+    
     void quitApplication();
     
 signals:
