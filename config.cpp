@@ -65,17 +65,19 @@ void Config::saveChannelSettings(int id, QString label, QList<QMap<QString,QVari
 }
 void Config::saveParams(int id, QString label, QString channel, QMap<QString,QVariant> params)
 {
-    for (auto &key : params)
+    for (int i=0; i < params.size(); i++)
     {
-        QString path = QString::number(id)+"/"+label+"/"+key.toString();
+        QString key = params.keys().at(i);
+        
+        QString path = QString::number(id)+"/"+label+"/"+key;
         if (! channel.isEmpty())
         {
-            path = QString::number(id)+"/"+label+"/"+channel+"/"+key.toString();
+            path = QString::number(id)+"/"+label+"/"+channel+"/"+key;
         }
                 
         this->settings->setValue(
                     path,
-                    params[key.toString()]
+                    params[key]
                     );
     }
 }
@@ -84,52 +86,63 @@ void Config::loadChannelSettings()
 {
     // maintabs is something like ["0", "1"] if vkeybd-qt sarted with -n=2
     QList<QString> maintabs = this->settings->childGroups();
-    for (int i=0; i < maintabs.length(); i++)
+    for (auto &maintab : maintabs)
     {
-        this->settings->beginGroup(maintabs.at(i));
+        this->settings->beginGroup(maintab);
         // tabs is something like ["F1", "F2", ... "F12", "general"]
         QList<QString> tabs = this->settings->childGroups();
         this->settings->endGroup();
         
-        for (int j=0; j < tabs.length(); j++)
+        for (auto &tab : tabs)
         {
-            if (tabs.at(j) != "general")
+            if (tab != "general")
             {
                 QMap<QString, QVariant> channels_;
                 
-                this->settings->beginGroup(maintabs.at(i)+"/"+tabs.at(j));
+                this->settings->beginGroup(maintab+"/"+tab);
                 // channels is something like ["1", "2", ... "16"]
                 QList<QString> channels = this->settings->childGroups();
                 this->settings->endGroup();
                 
-                for (int k=0; k < channels.length(); k++)
+                for (auto &channel : channels)
                 {
-                    this->settings->beginGroup(maintabs.at(i)+"/"+tabs.at(j)+"/"+channels.at(k));
+                    this->settings->beginGroup(maintab+"/"+tab+"/"+channel);
                     // keys is something like ["tremolo", "volume", "msb", "lsb" ...]
                     QList<QString> keys = this->settings->childKeys();
                     this->settings->endGroup();
                     
                     QMap<QString, QVariant> value_;
                     
-                    for (int l=0; l < keys.length(); l++)
+                    for (auto &key : keys)
                     {
-                        QVariant value = this->settings->value(maintabs.at(i)+"/"+tabs.at(j)+"/"+channels.at(k)+"/"+keys.at(l));
+                        QVariant value = this->settings->value(maintab+"/"+tab+"/"+channel+"/"+key);
                         
-                        value_[keys.at(l)] = value; // e.g: "volume" -> "127"
+                        value_[key] = value; // e.g: "volume" -> "127"
                     }
                     
-                    channels_[channels.at(k)] = value_; // e.g: "1" -> ("volume" -> "127")
+                    channels_[channel] = value_; // e.g: "1" -> ("volume" -> "127")
                 }
                 
                 emit restoreParams(
-                            maintabs.at(i).toInt(),
-                            tabs.at(j),
+                            maintab.toInt(),
+                            tab,
                             channels_
                             );
             }
-            else if (tabs.at(j) == "general")
+            else if (tab == "general")
             {
+                this->settings->beginGroup(maintab+"/"+tab);
+                QList<QString> generals = this->settings->childKeys();
+                this->settings->endGroup();
                 
+                QMap<QString,QVariant> generals_;
+                for (auto &general : generals)
+                {
+                    QVariant value = this->settings->value(maintab+"/"+tab+"/"+general);
+                    generals_[general] = value;
+                }
+                
+                emit restoreGeneral(maintab.toInt(), generals_);
             }
         }
     }

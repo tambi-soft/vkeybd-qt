@@ -48,25 +48,28 @@ QWidget* MainWindow::newKeyboardInstance(int id, QString mode)
     
     this->config = new Config;
     connect(this->config, &Config::restoreParams, this, &MainWindow::restoreParams);
+    connect(this->config, &Config::restoreGeneral, this, &MainWindow::restoreGeneral);
     
     QPushButton *button_grab = new QPushButton("Grab Keyboard");
     connect(button_grab, &QPushButton::clicked, this, [this, button_grab]{ grabButtonClicked(button_grab); });
     button_grab->setObjectName("button_grab");
     this->list_of_button_grabs.append(button_grab);
     
-    this->line_udp_ip = new QLineEdit(this);
-    this->line_udp_ip->setText("127.0.0.1");
-    this->line_udp_ip->setToolTip("For remote-controlling: IP-Address of the interface you want to listen on (the IP-address of this machine).");
-    this->line_udp_ip->setObjectName("network_select");
+    QLineEdit *line_udp_ip = new QLineEdit(this);
+    line_udp_ip->setText("127.0.0.1");
+    line_udp_ip->setToolTip("For remote-controlling: IP-Address of the interface you want to listen on (the IP-address of this machine).");
+    line_udp_ip->setObjectName("network_select");
+    this->list_of_line_udp_ips.append(line_udp_ip);
     
-    this->spin_port = new QSpinBox;
-    this->spin_port->setMinimum(1025);
-    this->spin_port->setMaximum(65535);
-    this->spin_port->setValue(20020);
-    this->spin_port->setToolTip("Network Listen Port");
-    this->spin_port->setObjectName("network_select");
+    QSpinBox *spin_port = new QSpinBox;
+    spin_port->setMinimum(1025);
+    spin_port->setMaximum(65535);
+    spin_port->setValue(20020);
+    spin_port->setToolTip("Network Listen Port");
+    spin_port->setObjectName("network_select");
+    this->list_of_spin_ports.append(spin_port);
     
-    MainTabs *tabs = new MainTabs(id, this->config, mode, this->line_udp_ip, this->spin_port);
+    MainTabs *tabs = new MainTabs(id, this->config, mode, line_udp_ip, spin_port);
     this->list_of_maintabs.append(tabs);
     
     grid->addWidget(button_grab, 0, 0, 1, 3);
@@ -124,6 +127,11 @@ void MainWindow::restoreParams(int maintab, QString tab, QMap<QString, QVariant>
         this->list_of_maintabs.at(maintab)->restoreParams(tab, data);
     }
     
+}
+void MainWindow::restoreGeneral(int maintab, QMap<QString,QVariant> data)
+{
+    this->list_of_line_udp_ips.at(maintab)->setText(data["network_ip"].toString());
+    this->list_of_spin_ports.at(maintab)->setValue(data["network_port"].toInt());
 }
 
 bool MainWindow::eventFilter(QObject *obj, QEvent *ev)

@@ -36,8 +36,8 @@ private:
     QList<MainTabs*> list_of_maintabs;
     Config *config;
     
-    QLineEdit *line_udp_ip;
-    QSpinBox *spin_port;
+    QList<QLineEdit*> list_of_line_udp_ips;
+    QList<QSpinBox*> list_of_spin_ports;
     
     //QPushButton *button_grab;
     QList<QPushButton*> list_of_button_grabs;
@@ -56,6 +56,7 @@ protected:
 private slots:
     void grabButtonClicked(QPushButton *button_grab);
     void restoreParams(int maintab, QString tab, QMap<QString, QVariant> data);
+    void restoreGeneral(int maintab, QMap<QString,QVariant> data);
 
 };
 #endif // MAINWINDOW_H
