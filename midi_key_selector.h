@@ -16,6 +16,8 @@ public:
     explicit MIDIKeySelector(QWidget *parent = nullptr);
     
     QList<int> getListOfSelectedKeys();
+    QString getBitmaskOfKeys();
+    void restoreBitmaskOfKeys(QString bitmask);
     
 private:
     QList<int> labels;

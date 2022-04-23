@@ -44,3 +44,37 @@ QList<int> MIDIKeySelector::getListOfSelectedKeys()
     }
     return result;
 }
+
+QString MIDIKeySelector::getBitmaskOfKeys()
+{
+    QString result;
+    
+    for (int i=0; i < this->list_of_checkboxes.length(); i++)
+    {
+        if (this->list_of_checkboxes.at(i)->isChecked())
+        {
+            result += "1";
+        }
+        else
+        {
+            result += "0";
+        }
+    }
+    
+    return result;
+}
+void MIDIKeySelector::restoreBitmaskOfKeys(QString bitmask)
+{
+    for (int i=0; i < bitmask.length(); i++)
+    {
+        QChar c = bitmask.at(i);
+        if (c == "0")
+        {
+            this->list_of_checkboxes.at(i)->setChecked(false);
+        }
+        else if (c == "1")
+        {
+            this->list_of_checkboxes.at(i)->setChecked(true);
+        }
+    }
+}

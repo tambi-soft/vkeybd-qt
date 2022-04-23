@@ -62,6 +62,7 @@ public:
     void pitchKeyReleased();
     
     QMap<QString,int> getData();
+    void setData(QMap<QString,QVariant> data);
     
 private:
     QSlider *slider_tether;

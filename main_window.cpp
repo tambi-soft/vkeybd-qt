@@ -108,9 +108,6 @@ QWidget* MainWindow::newKeyboardInstance(int id, QString mode)
 
 void MainWindow::saveAllParams()
 {
-    QString network_ip = this->line_udp_ip->text();
-    int network_port = this->spin_port->value();
-    
     for (int i=0; i < this->list_of_maintabs.length(); i++)
     {
         this->list_of_maintabs.at(i)->saveAllParams();

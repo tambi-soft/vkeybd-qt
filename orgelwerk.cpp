@@ -469,23 +469,33 @@ QList<QMap<QString,QVariant>> Orgelwerk::listOfChannels(bool only_activated)
     QList<QMap<QString,QVariant>> list_of_channels = this->channels->listOfChannels(only_activated);
     return list_of_channels;
 }
-QList<QMap<QString,QVariant>> Orgelwerk::getParams()
+QMap<QString,QVariant> Orgelwerk::getParams()
 {
-    QList<QMap<QString,QVariant>> result;
+    QMap<QString,QVariant> result;
     
-    int key_shift = this->key_shift_master->value();
-    int volume = this->volume->getValue();
-    QList<int> list_of_keys = this->keys->getListOfSelectedKeys();
+    result["key_shift"] = this->key_shift_master->value();
+    result["volume"] = this->volume->getValue();
+    result["keys"] = this->keys->getBitmaskOfKeys();
     
     QMap<QString,int> pitchwheel = this->pitch->getData();
+    
+    for (int i=0; i < pitchwheel.keys().length(); i++)
+    {
+        result[pitchwheel.keys().at(i)] = pitchwheel[pitchwheel.keys().at(i)];
+    }
     
     return result;
 }
 void Orgelwerk::restoreParams(QMap<QString,QVariant> data)
 {
     this->channels->restoreParams(data);
-    
     channelsSummaryUpdate();
+    
+    QMap<QString,QVariant> main = data["main"].toMap();
+    this->key_shift_master->setValue(main["key_shift"].toInt());
+    this->volume->setValue(main["volume"].toInt());
+    this->keys->restoreBitmaskOfKeys(main["keys"].toString());
+    this->pitch->setData(main);
 }
 
 bool Orgelwerk::eventFilter(QObject *obj, QEvent *ev)

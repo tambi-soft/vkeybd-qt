@@ -104,10 +104,16 @@ void MainTabs::saveAllParams()
             QList<QMap<QString,QVariant>> channels = o->listOfChannels(false);
             this->config->saveChannelSettings(this->id, label, channels);
             
-            QList<QMap<QString,QVariant>> params = o->getParams();
-            qDebug() << params;
+            QMap<QString,QVariant> params = o->getParams();
+            this->config->saveParams(this->id, label, "main", params);
         }
     }
+    
+    QMap<QString,QVariant> params;
+    params["network_ip"] = this->line_udp_ip->text();
+    params["network_port"] = this->spin_port->value();
+    
+    this->config->saveParams(this->id, "general", "", params);
 }
 void MainTabs::restoreParams(QString tab, QMap<QString,QVariant> data)
 {

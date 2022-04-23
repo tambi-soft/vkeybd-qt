@@ -96,6 +96,10 @@ int MIDIMasterVolume::getValue()
 {
     return this->slider_volume->value();
 }
+void MIDIMasterVolume::setValue(int value)
+{
+    this->slider_volume->setValue(value);
+}
 
 
 

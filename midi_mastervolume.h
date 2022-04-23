@@ -61,6 +61,7 @@ public:
     void volumeKeyPressed(int key);
     void volumeKeyReleased();
     int getValue();
+    void setValue(int value);
     
 private:
     QLabel *label_volume;

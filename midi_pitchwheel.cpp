@@ -154,6 +154,12 @@ QMap<QString,int> MIDIPitchWheel::getData()
     
     return result;
 }
+void MIDIPitchWheel::setData(QMap<QString,QVariant> data)
+{
+    this->slider_tether->setValue(data["pitchwheel_tether"].toInt());
+    this->slider_vibamp->setValue(data["pitchwheel_vibamp"].toInt());
+    this->slider_pitch->setValue(data["pitchwheel_pitch"].toInt());
+}
 
 
 
