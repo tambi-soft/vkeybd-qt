@@ -14,7 +14,6 @@
 //#include "keyboard_piano.h"
 #include "main_tabs.h"
 #include "menubar.h"
-#include "db_adapter.h"
 #include "config.h"
 #include "help_message.h"
 #include "help_about_widget.h"

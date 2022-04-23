@@ -1,6 +1,5 @@
 QT  += core\
     gui\
-    sql\
     svg\
     network
 
@@ -28,7 +27,6 @@ CONFIG += \
 SOURCES += \
     button_piano.cpp \
     config.cpp \
-    db_adapter.cpp \
     help_about_widget.cpp \
     help_message.cpp \
     input_keyboard_raw_thread.cpp \
@@ -54,7 +52,6 @@ SOURCES += \
 HEADERS += \
     button_piano.h \
     config.h \
-    db_adapter.h \
     help_about_widget.h \
     help_message.h \
     input_keyboard_raw_thread.h \
