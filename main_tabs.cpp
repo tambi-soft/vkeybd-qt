@@ -120,6 +120,19 @@ void MainTabs::restoreParams(QString tab, QMap<QString,QVariant> data)
     this->map_of_tabs[tab]->restoreParams(data);
 }
 
+void MainTabs::showHideGUIElements(QString name, bool show)
+{
+    for (int i=0; i < count(); i++)
+    {
+        QString label = tabText(i);
+        if (! label.isEmpty())
+        {
+            Orgelwerk *o = static_cast<Orgelwerk*>(widget(i)->layout()->itemAt(0)->widget());
+            o->showHideGUIElements(name, show);
+        }
+    }
+}
+
 bool MainTabs::callEventFilter(QObject *obj, QEvent *ev)
 {
     return eventFilter(obj, ev);

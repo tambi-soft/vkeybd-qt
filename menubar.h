@@ -24,6 +24,7 @@ private:
     QAction *showNetwork;
     QAction *showKeyShift;
     QAction *showKeys;
+    QAction *showPitch;
     QAction *showNotes;
     QAction *showPCKeyboard;
     QAction *showPianoKeyboard;
@@ -37,6 +38,7 @@ private slots:
     void showNetworkActionChanged();
     void showKeyShiftActionChanged();
     void showKeysActionChanged();
+    void showPitchActionChanged();
     void showNotesActionChanged();
     void showPCKeyboardActionChanged();
     void showPianoKeyboardActionChanged();

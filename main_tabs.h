@@ -24,6 +24,8 @@ public:
     void saveAllParams();
     void restoreParams(QString tab, QMap<QString,QVariant> data);
     
+    void showHideGUIElements(QString name, bool show);
+    
 private:
     QList<int> list_function_keys;
     QList<QString> list_labels;

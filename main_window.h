@@ -25,9 +25,6 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QString output_system, int number_of_keyboards, QWidget *parent = nullptr);
     ~MainWindow();
-    
-    void saveAllParams();
-    void openAllParams();
 
 private:
     //KeyboardPiano *piano;
@@ -55,8 +52,13 @@ protected:
 
 private slots:
     void grabButtonClicked(QPushButton *button_grab);
+    
+    void saveAllParams();
+    void openAllParams();
     void restoreParams(int maintab, QString tab, QMap<QString, QVariant> data);
     void restoreGeneral(int maintab, QMap<QString,QVariant> data);
+    
+    void showActionChanged(QString name, bool is_checked);
 
 };
 #endif // MAINWINDOW_H

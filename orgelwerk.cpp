@@ -41,14 +41,14 @@ void Orgelwerk::drawGUI()
     this->grid = new QGridLayout;
     setLayout(this->grid);
     
-    QGroupBox *group_keys = new QGroupBox("Keys");
-    QGroupBox *group_pitch = new QGroupBox("Pitch");
+    this->group_keys = new QGroupBox("Keys");
+    this->group_pitch = new QGroupBox("Pitch");
     
     QVBoxLayout *layout_keys = new QVBoxLayout;
     QHBoxLayout *layout_pitch = new QHBoxLayout;
     
-    group_keys->setLayout(layout_keys);
-    group_pitch->setLayout(layout_pitch);
+    this->group_keys->setLayout(layout_keys);
+    this->group_pitch->setLayout(layout_pitch);
     
     layout_keys->addWidget(this->keys);
     layout_pitch->addWidget(this->pitch);
@@ -80,10 +80,10 @@ void Orgelwerk::drawGUI()
     this->grid->addWidget(volume, 2, 1, 2, 1);
     //this->grid->addWidget(label_volume_master, 2, 1);
     //this->grid->addWidget(this->slider_volume_master, 3, 1);
-    this->grid->addWidget(group_keys, 4, 0, 1, 2);
-    this->grid->addWidget(group_pitch, 5, 0, 1, 2);
+    this->grid->addWidget(this->group_keys, 4, 0, 1, 2);
+    this->grid->addWidget(this->group_pitch, 5, 0, 1, 2);
     drawNotesKeyboard(6);
-    //drawPianoKeyboard(7);
+    drawPianoKeyboard(7);
     drawPCKeyboard(8);
     this->grid->addLayout(layout_panic_stop, 10, 0, 1, 2);
     
@@ -101,6 +101,7 @@ void Orgelwerk::drawPianoKeyboard(int grid_row)
     this->piano = new KeyboardPiano;
     
     this->grid->addWidget(this->piano, grid_row, 0, 1, 2);
+    this->piano->hide();
 }
 void Orgelwerk::drawPCKeyboard(int grid_row)
 {
@@ -444,6 +445,56 @@ void Orgelwerk::restoreParams(QMap<QString,QVariant> data)
     this->volume->setValue(main["volume"].toInt());
     this->keys->restoreBitmaskOfKeys(main["keys"].toString());
     this->pitch->setData(main);
+}
+
+void Orgelwerk::showHideGUIElements(QString name, bool show)
+{
+    if (name == "keyshift")
+    {
+        if (show)
+        {
+            this->key_shift_master->show();
+        }
+        else
+        {
+            this->key_shift_master->hide();
+        }
+    }
+    else if (name == "keys")
+    {
+        if (show)
+            this->group_keys->show();
+        else
+            this->group_keys->hide();
+    }
+    else if (name == "pitch")
+    {
+        if (show)
+            this->group_pitch->show();
+        else
+            this->group_pitch->hide();
+    }
+    else if (name == "notes")
+    {
+        if (show)
+            this->notes->show();
+        else
+            this->notes->hide();
+    }
+    else if (name == "pc")
+    {
+        if (show)
+            this->pc->show();
+        else
+            this->pc->hide();
+    }
+    else if (name == "piano")
+    {
+        if (show)
+            this->piano->show();
+        else
+            this->piano->hide();
+    }
 }
 
 bool Orgelwerk::eventFilter(QObject *obj, QEvent *ev)

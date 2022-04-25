@@ -24,6 +24,7 @@ MainWindow::MainWindow(QString output_system, int number_of_keyboards, QWidget *
         MenuBar *menu = new MenuBar;
         connect(menu, &MenuBar::signalSave, this, &MainWindow::saveAllParams);
         connect(menu, &MenuBar::signalOpen, this, &MainWindow::openAllParams);
+        connect(menu, &MenuBar::signalShowActionChanged, this, &MainWindow::showActionChanged);
         setMenuBar(menu);
         
         for (int i=0; i < number_of_keyboards; i++)
@@ -105,6 +106,7 @@ QWidget* MainWindow::newKeyboardInstance(int id, QString mode)
     
     //int width = this->width();
     //resize(width, 900);
+    //resize(10, 10);
     
     return widget;
 }
@@ -135,6 +137,36 @@ void MainWindow::restoreGeneral(int maintab, QMap<QString,QVariant> data)
         this->list_of_line_udp_ips.at(maintab)->setText(data["network_ip"].toString());
         this->list_of_spin_ports.at(maintab)->setValue(data["network_port"].toInt());
     }
+}
+
+void MainWindow::showActionChanged(QString name, bool is_checked)
+{
+    if (name == "network")
+    {
+        for (auto &line : this->list_of_line_udp_ips)
+        {
+            if (is_checked)
+                line->show();
+            else
+                line->hide();
+        }
+        for (auto &spin : this->list_of_spin_ports)
+        {
+            if (is_checked)
+                spin->show();
+            else
+                spin->hide();
+        }
+    }
+    else
+    {
+        for (auto &maintab : this->list_of_maintabs)
+        {
+            maintab->showHideGUIElements(name, is_checked);
+        }
+    }
+    
+    //resize(10, 10);
 }
 
 bool MainWindow::eventFilter(QObject *obj, QEvent *ev)

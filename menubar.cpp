@@ -59,6 +59,11 @@ void MenuBar::addViewMenu()
     this->showKeys->setChecked(true);
     connect(this->showKeys, &QAction::changed, this, &MenuBar::showKeysActionChanged);
     
+    this->showPitch = new QAction("Show Pitchwheel Section");
+    this->showPitch->setCheckable(true);
+    this->showPitch->setChecked(true);
+    connect(this->showPitch, &QAction::changed, this, &MenuBar::showPitchActionChanged);
+    
     this->showNotes = new QAction("Show Notes Section");
     this->showNotes->setCheckable(true);
     this->showNotes->setChecked(true);
@@ -77,6 +82,7 @@ void MenuBar::addViewMenu()
     menuView->addAction(showNetwork);
     menuView->addAction(showKeyShift);
     menuView->addAction(showKeys);
+    menuView->addAction(showPitch);
     menuView->addAction(showNotes);
     menuView->addAction(showPCKeyboard);
     menuView->addAction(showPianoKeyboard);
@@ -104,6 +110,10 @@ void MenuBar::showKeyShiftActionChanged()
 void MenuBar::showKeysActionChanged()
 {
     emit signalShowActionChanged("keys", this->showKeys->isChecked());
+}
+void MenuBar::showPitchActionChanged()
+{
+    emit signalShowActionChanged("pitch", this->showPitch->isChecked());
 }
 void MenuBar::showNotesActionChanged()
 {

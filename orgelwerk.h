@@ -96,6 +96,8 @@ public:
     QMap<QString, QVariant> getParams();
     void restoreParams(QMap<QString,QVariant> data);
     
+    void showHideGUIElements(QString name, bool show);
+    
 private:
     int id;
     QString audio_system;
@@ -106,6 +108,9 @@ private:
     void drawPianoKeyboard(int grid_row);
     void drawPCKeyboard(int grid_row);
     void initInputThread();
+    
+    QGroupBox *group_keys;
+    QGroupBox *group_pitch;
     
     void notePlay(int interface_index, int channel, int note);
     void noteStop(int interface_index, int channel, int note);
