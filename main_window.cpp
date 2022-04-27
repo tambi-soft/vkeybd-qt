@@ -89,17 +89,17 @@ QWidget* MainWindow::newKeyboardInstance(int id, QString mode)
     else if (mode == "network")
     {
         QLabel *label_udp_client_ip = new QLabel("IP-Address of remote vkeybd-qt instance:");
-        grid->addWidget(label_udp_client_ip, 0, 0, 1, 3);
+        grid->addWidget(label_udp_client_ip, 1, 0, 1, 3);
         
-        grid->addWidget(line_udp_ip, 1, 0, 1, 3);
+        grid->addWidget(line_udp_ip, 2, 0, 1, 3);
         
         QLabel *label_udp_client_port = new QLabel("Port:");
-        grid->addWidget(label_udp_client_port, 2, 0, 1, 3);
+        grid->addWidget(label_udp_client_port, 3, 0, 1, 3);
         
-        grid->addWidget(spin_port, 2, 0, 1, 3);
+        grid->addWidget(spin_port, 4, 0, 1, 3);
     }
     
-    grid->addWidget(tabs, 3, 0, 1, 3);
+    grid->addWidget(tabs, 5, 0, 1, 3);
     
     this->installEventFilter(this);
     //installNativeEventFilter(this);
