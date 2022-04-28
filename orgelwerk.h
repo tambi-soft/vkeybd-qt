@@ -24,8 +24,6 @@
 #include "keyboard_pc.h"
 #include "keyboard_notes.h"
 
-#include "input_keyboard_raw_thread.h"
-
 #include "interface_audio.h"
 #include "interface_alsa.h"
 #include "interface_jack.h"
@@ -126,7 +124,7 @@ private:
     
     //InputKeyboardRaw *input_raw;
     QThread *thread_input;
-    InputKeyboardRawThread *worker_input;
+    //InputKeyboardRawThread *worker_input;
     
     //InterfaceAudio *interface_audio;
     QList<InterfaceAudio*> list_of_audio_interfaces;

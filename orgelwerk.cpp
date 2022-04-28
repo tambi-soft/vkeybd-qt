@@ -144,11 +144,11 @@ void Orgelwerk::channelsSummaryUpdate()
 
 void Orgelwerk::initInputThread()
 {
-    this->thread_input = new QThread(this);
-    this->worker_input = new InputKeyboardRawThread();
-    this->worker_input->moveToThread(this->thread_input);
+    //this->thread_input = new QThread(this);
+    //this->worker_input = new InputKeyboardRawThread();
+    //this->worker_input->moveToThread(this->thread_input);
     
-    this->thread_input->start();
+    //this->thread_input->start();
     
     //this->worker_input->start();
 }

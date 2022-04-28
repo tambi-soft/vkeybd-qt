@@ -1,6 +1,6 @@
 #include "main_tabs.h"
 
-MainTabs::MainTabs(int id, Config *config, QString output_system, QLineEdit *line_udp_ip, QSpinBox *spin_port, QTabWidget *parent) : QTabWidget(parent)
+MainTabs::MainTabs(int id, Config *config, QString output_system, QComboBox *combo_keyboard_input, QLineEdit *line_udp_ip, QSpinBox *spin_port, QTabWidget *parent) : QTabWidget(parent)
 {
     this->id = id;
     this->config = config;
@@ -8,6 +8,13 @@ MainTabs::MainTabs(int id, Config *config, QString output_system, QLineEdit *lin
     {
         this->send_udp = true;
     }
+    this->combo_keyboard_input = combo_keyboard_input;
+    connect(this->combo_keyboard_input, &QComboBox::currentTextChanged, this, &MainTabs::keyboardChanged);
+    this->keyboard_raw = new InputKeyboardRaw;
+    connect(this->keyboard_raw, &InputKeyboardRaw::deviceNotAvailable, this, &MainTabs::deviceNotAvailable);
+    connect(this->keyboard_raw, &InputKeyboardRaw::rawKeyPressed, this, &MainTabs::rawKeyPressed);
+    connect(this->keyboard_raw, &InputKeyboardRaw::rawKeyReleased, this, &MainTabs::rawKeyReleased);
+    
     this->line_udp_ip = line_udp_ip;
     this->spin_port = spin_port;
     
@@ -393,4 +400,30 @@ void MainTabs::rebindSocket(int value)
 {
     socket->close();
     socket->bind(QHostAddress(this->line_udp_ip->text()), value);
+}
+
+void MainTabs::keyboardChanged(QString text)
+{
+    QString devpath = this->keyboard_raw->getPathForName(text);
+    
+    if (this->keyboard_locked)
+    {
+        this->keyboard_raw->lockOnKeyboard(devpath);
+    }
+    else
+    {
+        this->keyboard_raw->listenOnKeyboard(devpath);
+    }
+}
+void MainTabs::deviceNotAvailable(QString message)
+{
+    qDebug() << "main_tabs: deviceNotAvailable";
+}
+void MainTabs::rawKeyPressed(int keycode)
+{
+    qDebug() << "main_tabs: rawKeyPressed: " << keycode;
+}
+void MainTabs::rawKeyReleased(int keycode)
+{
+    qDebug() << "main_tabs: rawKeyReleased: " << keycode;
 }

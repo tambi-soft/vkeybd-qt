@@ -29,6 +29,7 @@ SOURCES += \
     config.cpp \
     help_about_widget.cpp \
     help_message.cpp \
+    input_keyboard_raw.cpp \
     input_keyboard_raw_thread.cpp \
     interface_alsa.cpp \
     interface_audio.cpp \
@@ -54,6 +55,7 @@ HEADERS += \
     config.h \
     help_about_widget.h \
     help_message.h \
+    input_keyboard_raw.h \
     input_keyboard_raw_thread.h \
     interface_alsa.h \
     interface_audio.h \

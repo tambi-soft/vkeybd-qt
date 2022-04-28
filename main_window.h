@@ -9,6 +9,7 @@
 #include <QFile>
 #include <QLineEdit>
 #include <QSpinBox>
+#include <QComboBox>
 
 //#include "orgelwerk.h"
 //#include "keyboard_piano.h"
@@ -17,6 +18,7 @@
 #include "config.h"
 #include "help_message.h"
 #include "help_about_widget.h"
+#include "input_keyboard_raw.h"
 
 class MainWindow : public QMainWindow
 {

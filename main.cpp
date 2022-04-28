@@ -21,6 +21,8 @@ int main(int argc, char *argv[])
     parser.addOptions({
         {{"n", "number-of-keyboards"},
             QCoreApplication::translate("main", "Number of Keyboards. Should not be too high, because your soundsystem may be overwhelmed."), "number", "1"},
+        {{"i", "input"},
+            QCoreApplication::translate("main", "Which Input System to use: \"qt\" (default) or \"linux\""), "string" "qt"},
         {{"o", "output"},
             QCoreApplication::translate("main", "Which Audio System to use: \"alsa\" (default), \"jack\" (not implemented yet) or \"network\" (remote control another vkeybd-qt instance)"), "string", "alsa"}
     });

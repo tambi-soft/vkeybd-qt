@@ -56,6 +56,15 @@ QWidget* MainWindow::newKeyboardInstance(int id, QString mode)
     button_grab->setObjectName("button_grab");
     this->list_of_button_grabs.append(button_grab);
     
+    QPushButton *button_lock = new QPushButton("Lock");
+    button_lock->setObjectName("button_grab");
+    
+    QComboBox *combo_keyboard_input = new QComboBox();
+    InputKeyboardRaw *keyboard_raw = new InputKeyboardRaw;
+    QList<QString> keyboards = keyboard_raw->getKeyboardNames();
+    keyboards.prepend("generic default");
+    combo_keyboard_input->addItems(keyboards);
+    
     QLineEdit *line_udp_ip = new QLineEdit(this);
     line_udp_ip->setText("127.0.0.1");
     line_udp_ip->setToolTip("For remote-controlling: IP-Address of the interface you want to listen on (the IP-address of this machine).");
@@ -70,36 +79,46 @@ QWidget* MainWindow::newKeyboardInstance(int id, QString mode)
     spin_port->setObjectName("network_select");
     this->list_of_spin_ports.append(spin_port);
     
-    MainTabs *tabs = new MainTabs(id, this->config, mode, line_udp_ip, spin_port);
+    MainTabs *tabs = new MainTabs(id, this->config, mode, combo_keyboard_input, line_udp_ip, spin_port);
     this->list_of_maintabs.append(tabs);
     
     grid->addWidget(button_grab, 0, 0, 1, 3);
     
     if (mode != "network")
     {
+        QPushButton *button_lock_help = new QPushButton;
+        button_lock_help->setIcon(QIcon::fromTheme("dialog-question"));
+        button_lock_help->setToolTip("help");
+        
+        grid->addWidget(combo_keyboard_input, 1, 0);
+        grid->addWidget(button_lock, 1, 1);
+        grid->addWidget(button_lock_help, 1, 2);
+        
         QPushButton *button_network_help = new QPushButton;
         button_network_help->setIcon(QIcon::fromTheme("dialog-question"));
         button_network_help->setToolTip("help");
         connect(button_network_help, &QPushButton::clicked, this, []{ new HelpMessage(":help_tntware"); });
         
-        grid->addWidget(line_udp_ip, 1, 0);
-        grid->addWidget(spin_port, 1, 1);
-        grid->addWidget(button_network_help, 1, 2);
+        grid->addWidget(line_udp_ip, 2, 0);
+        grid->addWidget(spin_port, 2, 1);
+        grid->addWidget(button_network_help, 2, 2);
+        
+        grid->addWidget(tabs, 3, 0, 1, 3);
     }
     else if (mode == "network")
     {
-        QLabel *label_udp_client_ip = new QLabel("IP-Address of remote vkeybd-qt instance:");
-        grid->addWidget(label_udp_client_ip, 1, 0, 1, 3);
+        grid->addWidget(combo_keyboard_input, 1, 0, 1, 3);
         
-        grid->addWidget(line_udp_ip, 2, 0, 1, 3);
+        QLabel *label_udp_client_ip = new QLabel("IP-Address of remote vkeybd-qt instance:");
+        grid->addWidget(label_udp_client_ip, 2, 0, 1, 3);
+        
+        grid->addWidget(line_udp_ip, 3, 0, 1, 3);
         
         QLabel *label_udp_client_port = new QLabel("Port:");
-        grid->addWidget(label_udp_client_port, 3, 0, 1, 3);
+        grid->addWidget(label_udp_client_port, 4, 0, 1, 3);
         
-        grid->addWidget(spin_port, 4, 0, 1, 3);
+        grid->addWidget(spin_port, 5, 0, 1, 3);
     }
-    
-    grid->addWidget(tabs, 5, 0, 1, 3);
     
     this->installEventFilter(this);
     //installNativeEventFilter(this);
