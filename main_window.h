@@ -29,16 +29,13 @@ public:
     ~MainWindow();
 
 private:
-    //KeyboardPiano *piano;
-    //Orgelwerk *werk;
-    //MainTabs *tabs;
     QList<MainTabs*> list_of_maintabs;
     Config *config;
     
     QList<QLineEdit*> list_of_line_udp_ips;
     QList<QSpinBox*> list_of_spin_ports;
+    QList<QPushButton*> list_of_network_help_buttons;
     
-    //QPushButton *button_grab;
     QList<QPushButton*> list_of_button_grabs;
     QPushButton *grabbing = nullptr;
     QPushButton *grabbing_last = nullptr;
@@ -50,7 +47,6 @@ private:
 
 protected:
     bool eventFilter(QObject *obj, QEvent *ev);
-    bool nativeEventFilter(const QByteArray &eventType, void *message, long *);
 
 private slots:
     void grabButtonClicked(QPushButton *button_grab);

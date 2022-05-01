@@ -69,6 +69,7 @@ QWidget* MainWindow::newKeyboardInstance(int id, QString mode)
     line_udp_ip->setText("127.0.0.1");
     line_udp_ip->setToolTip("For remote-controlling: IP-Address of the interface you want to listen on (the IP-address of this machine).");
     line_udp_ip->setObjectName("network_select");
+    line_udp_ip->hide();
     this->list_of_line_udp_ips.append(line_udp_ip);
     
     QSpinBox *spin_port = new QSpinBox;
@@ -77,9 +78,10 @@ QWidget* MainWindow::newKeyboardInstance(int id, QString mode)
     spin_port->setValue(20020);
     spin_port->setToolTip("Network Listen Port");
     spin_port->setObjectName("network_select");
+    spin_port->hide();
     this->list_of_spin_ports.append(spin_port);
     
-    MainTabs *tabs = new MainTabs(id, this->config, mode, combo_keyboard_input, line_udp_ip, spin_port);
+    MainTabs *tabs = new MainTabs(id, this->config, mode, combo_keyboard_input, button_lock, line_udp_ip, spin_port);
     this->list_of_maintabs.append(tabs);
     
     grid->addWidget(button_grab, 0, 0, 1, 3);
@@ -98,6 +100,8 @@ QWidget* MainWindow::newKeyboardInstance(int id, QString mode)
         button_network_help->setIcon(QIcon::fromTheme("dialog-question"));
         button_network_help->setToolTip("help");
         connect(button_network_help, &QPushButton::clicked, this, []{ new HelpMessage(":help_tntware"); });
+        button_network_help->hide();
+        this->list_of_network_help_buttons.append(button_network_help);
         
         grid->addWidget(line_udp_ip, 2, 0);
         grid->addWidget(spin_port, 2, 1);
@@ -175,6 +179,13 @@ void MainWindow::showActionChanged(QString name, bool is_checked)
                 spin->show();
             else
                 spin->hide();
+        }
+        for (auto &button : this->list_of_network_help_buttons)
+        {
+            if (is_checked)
+                button->show();
+            else
+                button->hide();
         }
     }
     else
@@ -270,11 +281,6 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *ev)
         }
     }
     
-    return false;
-}
-
-bool MainWindow::nativeEventFilter(const QByteArray &eventType, void *message, long *)
-{
     return false;
 }
 

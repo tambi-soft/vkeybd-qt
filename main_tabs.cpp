@@ -1,6 +1,6 @@
 #include "main_tabs.h"
 
-MainTabs::MainTabs(int id, Config *config, QString output_system, QComboBox *combo_keyboard_input, QLineEdit *line_udp_ip, QSpinBox *spin_port, QTabWidget *parent) : QTabWidget(parent)
+MainTabs::MainTabs(int id, Config *config, QString output_system, QComboBox *combo_keyboard_input, QPushButton *button_lock, QLineEdit *line_udp_ip, QSpinBox *spin_port, QTabWidget *parent) : QTabWidget(parent)
 {
     this->id = id;
     this->config = config;
@@ -15,6 +15,8 @@ MainTabs::MainTabs(int id, Config *config, QString output_system, QComboBox *com
     connect(this->keyboard_raw, &InputKeyboardRaw::rawKeyPressed, this, &MainTabs::rawKeyPressed);
     connect(this->keyboard_raw, &InputKeyboardRaw::rawKeyReleased, this, &MainTabs::rawKeyReleased);
     
+    this->button_lock = button_lock;
+    connect(this->button_lock, &QPushButton::clicked, this, &MainTabs::lockButtonPressed);
     this->line_udp_ip = line_udp_ip;
     this->spin_port = spin_port;
     
@@ -138,6 +140,7 @@ void MainTabs::showHideGUIElements(QString name, bool show)
             o->showHideGUIElements(name, show);
         }
     }
+    resize(10, 10);
 }
 
 bool MainTabs::callEventFilter(QObject *obj, QEvent *ev)
@@ -280,6 +283,18 @@ bool MainTabs::eventFilter(QObject *obj, QEvent *ev)
         
         if (!event->isAutoRepeat())
         {
+            if (event->key() == Qt::Key_Control)
+            {
+                this->ctrl_down = true;
+            }
+            else if (event->key() == Qt::Key_Shift)
+            {
+                if (this->ctrl_down)
+                {
+                    lockButtonPressed();
+                }
+            }
+            
             //Orgelwerk *o = static_cast<Orgelwerk*>(currentWidget());
             Orgelwerk *o = static_cast<Orgelwerk*>(currentWidget()->layout()->itemAt(0)->widget());
             
@@ -347,6 +362,13 @@ bool MainTabs::eventFilter(QObject *obj, QEvent *ev)
             }
         }
     }
+    else if (ev->type() == QEvent::MouseButtonPress)
+    {
+        if (this->keyboard_locked)
+        {
+            lockButtonPressed(); 
+        }
+    }
     
     return false;
 }
@@ -408,12 +430,17 @@ void MainTabs::keyboardChanged(QString text)
     
     if (this->keyboard_locked)
     {
-        this->keyboard_raw->lockOnKeyboard(devpath);
+        lockButtonPressed();
+    }
+    /*
+    {
+        this->keyboard_raw->keyboardLock(devpath);
     }
     else
     {
-        this->keyboard_raw->listenOnKeyboard(devpath);
+        this->keyboard_raw->keyboardListen(devpath);
     }
+    */
 }
 void MainTabs::deviceNotAvailable(QString message)
 {
@@ -426,4 +453,34 @@ void MainTabs::rawKeyPressed(int keycode)
 void MainTabs::rawKeyReleased(int keycode)
 {
     qDebug() << "main_tabs: rawKeyReleased: " << keycode;
+}
+void MainTabs::lockButtonPressed()
+{
+    if (this->keyboard_locked)
+    {
+        this->keyboard_locked = false;
+        this->button_lock->setDown(false);
+        this->button_lock->setText("Lock");
+        
+        if (this->combo_keyboard_input->currentIndex() == 0)
+        {
+            qDebug() << "releasing";
+            releaseKeyboard();
+            releaseMouse();
+        }
+    }
+    else
+    {
+        this->keyboard_locked = true;
+        this->button_lock->setDown(true);
+        this->button_lock->setText("Unlock");
+        
+        if (this->combo_keyboard_input->currentIndex() == 0)
+        {
+            qDebug() << "grabbing";
+            grabKeyboard();
+            // to avoid to mess around with the os like blocking taskbar-items, we need to grab the mouse aswell
+            grabMouse();
+        }
+    }
 }

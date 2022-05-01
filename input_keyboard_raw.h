@@ -2,7 +2,6 @@
 #define INPUTKEYBOARDRAW_H
 
 // https://unix.stackexchange.com/questions/72483/how-to-distinguish-input-from-different-keyboards
-// https://cpp.hotexamples.com/examples/-/-/EVIOCGNAME/cpp-eviocgname-function-examples.html
 // https://www.linuxjournal.com/files/linuxjournal.com/linuxjournal/articles/064/6429/6429l4.html
 
 /*
@@ -23,6 +22,7 @@
 
 #include <QObject>
 #include <QFile>
+#include <QDataStream>
 #include <QDebug>
 
 class InputKeyboardRaw : public QObject
@@ -34,12 +34,12 @@ public:
     QList<QMap<QString, QString> > detectKeyboards();
     QList<QString> getKeyboardNames();
     QString getPathForName(QString name);
-    void openInputDevice();
-    void readKeyboardEvents();
-    void listenOnKeyboard(QString devpath);
-    void lockOnKeyboard(QString devpath);
+    void keyboardListen(QString devpath);
+    void keyboardLock(QString devpath);
+    void keyboardRelease();
     
 private:
+    // https://stackoverflow.com/questions/16695432/input-event-structure-description-from-linux-input-h
     const char *const evval[3] = {
         "RELEASED",
         "PRESSED ",

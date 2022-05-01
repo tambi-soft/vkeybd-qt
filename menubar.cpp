@@ -46,7 +46,7 @@ void MenuBar::addViewMenu()
     
     this->showNetwork = new QAction("Show Network Section");
     this->showNetwork->setCheckable(true);
-    this->showNetwork->setChecked(true);
+    this->showNetwork->setChecked(false);
     connect(this->showNetwork, &QAction::changed, this, &MenuBar::showNetworkActionChanged);
     
     this->showKeyShift = new QAction("Show Key Shift Section");
