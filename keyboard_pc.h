@@ -17,6 +17,8 @@ public:
     
     void keyDown(int keycode);
     void keyUp(int keycode);
+    void keyDownRaw(int keycode);
+    void keyUpRaw(int keycode);
     void allKeysUp();
     
 private:
@@ -26,6 +28,7 @@ private:
     // some keys can have different codes on up or down (e.g. Shift-Keys on German Neo2)
     QList<QList<int>> getButtonKeycodesDown();
     QList<QList<int>> getButtonKeycodesUp();
+    QList<QList<int>> getButtonKeycodesRaw();
     QList<QList<int>> getMIDICodes();
     
     QList<QList<QPushButton*>> list_of_buttons;

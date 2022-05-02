@@ -20,7 +20,7 @@ int main(int argc, char *argv[])
     
     parser.addOptions({
         {{"n", "number-of-keyboards"},
-            QCoreApplication::translate("main", "Number of Keyboards. Should not be too high, because your soundsystem may be overwhelmed."), "number", "1"},
+            QCoreApplication::translate("main", "Number of Keyboards. Should not be too high, because your soundsystem may be overwhelmed."), "number", "2"},
         {{"i", "input"},
             QCoreApplication::translate("main", "Which Input System to use: \"qt\" (default) or \"linux\""), "string" "qt"},
         {{"o", "output"},

@@ -51,19 +51,14 @@ QWidget* MainWindow::newKeyboardInstance(int id, QString mode)
     connect(this->config, &Config::restoreParams, this, &MainWindow::restoreParams);
     connect(this->config, &Config::restoreGeneral, this, &MainWindow::restoreGeneral);
     
-    QPushButton *button_grab = new QPushButton("Grab Keyboard");
-    connect(button_grab, &QPushButton::clicked, this, [this, button_grab]{ grabButtonClicked(button_grab); });
-    button_grab->setObjectName("button_grab");
-    this->list_of_button_grabs.append(button_grab);
-    
     QPushButton *button_lock = new QPushButton("Lock");
     button_lock->setObjectName("button_grab");
     
+    QPushButton *button_keyboard_rescan = new QPushButton();
+    button_keyboard_rescan->setIcon(QIcon::fromTheme("system-reboot"));
+    button_keyboard_rescan->setToolTip("Rescan Keyboards");
+    
     QComboBox *combo_keyboard_input = new QComboBox();
-    InputKeyboardRaw *keyboard_raw = new InputKeyboardRaw;
-    QList<QString> keyboards = keyboard_raw->getKeyboardNames();
-    keyboards.prepend("generic default");
-    combo_keyboard_input->addItems(keyboards);
     
     QLineEdit *line_udp_ip = new QLineEdit(this);
     line_udp_ip->setText("127.0.0.1");
@@ -81,10 +76,8 @@ QWidget* MainWindow::newKeyboardInstance(int id, QString mode)
     spin_port->hide();
     this->list_of_spin_ports.append(spin_port);
     
-    MainTabs *tabs = new MainTabs(id, this->config, mode, combo_keyboard_input, button_lock, line_udp_ip, spin_port);
+    MainTabs *tabs = new MainTabs(id, this->config, mode, combo_keyboard_input, button_lock, button_keyboard_rescan, line_udp_ip, spin_port);
     this->list_of_maintabs.append(tabs);
-    
-    grid->addWidget(button_grab, 0, 0, 1, 3);
     
     if (mode != "network")
     {
@@ -94,7 +87,8 @@ QWidget* MainWindow::newKeyboardInstance(int id, QString mode)
         
         grid->addWidget(combo_keyboard_input, 1, 0);
         grid->addWidget(button_lock, 1, 1);
-        grid->addWidget(button_lock_help, 1, 2);
+        grid->addWidget(button_keyboard_rescan, 1, 2);
+        //grid->addWidget(button_lock_help, 1, 3);
         
         QPushButton *button_network_help = new QPushButton;
         button_network_help->setIcon(QIcon::fromTheme("dialog-question"));
@@ -201,6 +195,29 @@ void MainWindow::showActionChanged(QString name, bool is_checked)
 
 bool MainWindow::eventFilter(QObject *obj, QEvent *ev)
 {
+    //return this->list_of_maintabs.first()->callEventFilter(obj, ev);
+    /*
+    qDebug() << "evfilter";
+    for (auto &maintab : this->list_of_maintabs)
+    {
+        qDebug() << "for";
+        //return maintab->callEventFilter(obj, ev);
+        
+        if (maintab->hasFocus())
+        {
+            //return maintab->callEventFilter(obj, ev);
+            qDebug() << "focus";
+        }
+        
+    }
+    */
+    
+    //return false;
+}
+
+/*
+bool MainWindow::eventFilter(QObject *obj, QEvent *ev)
+{
     if (ev->type() == QEvent::KeyPress)
     {
         QKeyEvent *event = static_cast<QKeyEvent*>(ev);
@@ -283,29 +300,5 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *ev)
     
     return false;
 }
+*/
 
-void MainWindow::grabButtonClicked(QPushButton *button_grab)
-{
-    if (this->grabbing != nullptr)
-    {
-        releaseKeyboard();
-        // to avoid to mess around with the os like blocking taskbar-items, we need to grab the mouse aswell
-        releaseMouse();
-        
-        this->grabbing->setDown(false);
-        this->grabbing->setText("Grab Keyboard");
-        
-        this->grabbing = nullptr;
-    }
-    else
-    {
-        this->grabbing = button_grab;
-        this->grabbing_last = button_grab;
-        
-        grabKeyboard();
-        grabMouse();
-        
-        this->grabbing->setDown(true);
-        this->grabbing->setText("Grabbing Keyboard. Hit Ctrl+Shift or Click to stop.");
-    }
-}

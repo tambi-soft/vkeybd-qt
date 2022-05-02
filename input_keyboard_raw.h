@@ -4,14 +4,32 @@
 // https://unix.stackexchange.com/questions/72483/how-to-distinguish-input-from-different-keyboards
 // https://www.linuxjournal.com/files/linuxjournal.com/linuxjournal/articles/064/6429/6429l4.html
 
-/*
-#include <sys/types.h>
-#include <linux/hdreg.h>
-#include <sys/ioctl.h>
-#include <fcntl.h>
 #include <linux/input.h>
-#include <unistd.h>
-*/
+
+#include <QObject>
+#include <QTimer>
+
+class InputKeyboardRawWorker : public QObject
+{
+    Q_OBJECT
+public:
+    explicit InputKeyboardRawWorker(ssize_t n, int fd, QObject *parent = nullptr);
+    
+private:
+    QTimer *timer;
+    
+    struct input_event ev;
+    ssize_t n;
+    int fd = -1;
+    
+public slots:
+    void tick();
+    
+signals:
+    void rawKeyPressed(int code);
+    void rawKeyReleased(int code);
+};
+
 #include <stdlib.h>
 #include <unistd.h>
 #include <fcntl.h>
@@ -23,6 +41,7 @@
 #include <QObject>
 #include <QFile>
 #include <QDataStream>
+#include <QThread>
 #include <QDebug>
 
 class InputKeyboardRaw : public QObject
@@ -46,15 +65,22 @@ private:
         "REPEATED"
     };
     
-    const char *dev = "/dev/input/by-path/platform-i8042-serio-0-event-kbd";
+    const char *dev;
     struct input_event ev;
     ssize_t n;
     int fd = -1;
     
-signals:
-    void deviceNotAvailable(QString message);
+    QThread *thread;
+    InputKeyboardRawWorker *worker;
+    
+private slots:
     void rawKeyPressed(int keycode);
     void rawKeyReleased(int keycode);
+    
+signals:
+    void deviceNotAvailable(QString message);
+    void rawKeyPressedSignal(int keycode);
+    void rawKeyReleasedSignal(int keycode);
 };
 
 #endif // INPUTKEYBOARDRAW_H

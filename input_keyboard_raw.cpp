@@ -3,9 +3,7 @@
 InputKeyboardRaw::InputKeyboardRaw(QObject *parent)
     : QObject{parent}
 {
-    detectKeyboards();
-    //getKeyboardNames();
-    //readKeyboardEvents();
+    
 }
 
 QList<QMap<QString,QString>> InputKeyboardRaw::detectKeyboards()
@@ -100,6 +98,7 @@ void InputKeyboardRaw::keyboardListen(QString devpath)
 }
 void InputKeyboardRaw::keyboardLock(QString devpath)
 {
+    qDebug() << "lockraiaeuie";
     // https://stackoverflow.com/questions/29942421/read-barcodes-from-input-event-linux-c/29956584#29956584
     // https://www.reddit.com/r/Cplusplus/comments/rsgjwf/ioctl_in_c_c_wrapper_class_for_linuxjoystickh/
     
@@ -114,7 +113,16 @@ void InputKeyboardRaw::keyboardLock(QString devpath)
             //return errno = (saved_errno) ? errno : EACCES;
         }
         
+        this->worker = new InputKeyboardRawWorker(this->n, this->fd);
+        connect(this->worker, &InputKeyboardRawWorker::rawKeyPressed, this, &InputKeyboardRaw::rawKeyPressed);
+        connect(this->worker, &InputKeyboardRawWorker::rawKeyReleased, this, &InputKeyboardRaw::rawKeyReleased);
+        
+        this->thread = new QThread(this);
+        this->worker->moveToThread(this->thread);
+        this->thread->start();
+        
         // https://stackoverflow.com/questions/20943322/accessing-keys-from-linux-input-device
+        /*
         while (true)
         {
             n = read(this->fd, &this->ev, sizeof this->ev);
@@ -141,6 +149,7 @@ void InputKeyboardRaw::keyboardLock(QString devpath)
                 }
             }
         }
+        */
     }
     else
     {
@@ -150,5 +159,52 @@ void InputKeyboardRaw::keyboardLock(QString devpath)
 
 void InputKeyboardRaw::keyboardRelease()
 {
+    this->thread->exit();
+    close(this->fd);
+}
+
+void InputKeyboardRaw::rawKeyPressed(int keycode)
+{
+    emit rawKeyPressedSignal(keycode);
+}
+void InputKeyboardRaw::rawKeyReleased(int keycode)
+{
+    emit rawKeyReleasedSignal(keycode);
+}
+
+
+
+InputKeyboardRawWorker::InputKeyboardRawWorker(ssize_t n, int fd, QObject *parent)
+    : QObject{parent}
+{
+    this->n = n;
+    this->fd = fd;
     
+    this->timer = new QTimer(this);
+    this->timer->setInterval(1);
+    this->timer->setTimerType(Qt::PreciseTimer);
+    connect(this->timer, &QTimer::timeout, this, &InputKeyboardRawWorker::tick, Qt::DirectConnection);
+    
+    this->timer->start();
+}
+
+void InputKeyboardRawWorker::tick()
+{
+    this->n = read(this->fd, &this->ev, sizeof this->ev);
+    
+    if (this->n != (ssize_t)-1 && this->n == sizeof this->ev)
+    {
+        if (this->ev.type == EV_KEY && this->ev.value >= 0 && this->ev.value <= 2)
+        {
+            //printf("%s 0x%04x (%d)\n", evval[ev.value], (int)ev.code, (int)ev.code);
+            if (this->ev.value == 1)
+            {
+                emit rawKeyPressed(this->ev.code);
+            }
+            else if (this->ev.value == 0)
+            {
+                emit rawKeyReleased(this->ev.code);
+            }
+        }
+    }
 }

@@ -190,6 +190,14 @@ void Orgelwerk::keyUp(int keycode)
     //qDebug() << "keyUp:   "+this->label+" "+ QString::number(keycode);
     this->pc->keyUp(keycode);
 }
+void Orgelwerk::keyDownRaw(int keycode)
+{
+    this->pc->keyDownRaw(keycode);
+}
+void Orgelwerk::keyUpRaw(int keycode)
+{
+    this->pc->keyUpRaw(keycode);
+}
 
 void Orgelwerk::panicKeyPressed()
 {

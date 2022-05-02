@@ -139,6 +139,16 @@ QList<QList<int>> KeyboardPC::getButtonKeycodesUp()
             {-1, 16777299, 16777251, 32, 16777251, -1, -1, -1, -1, -1, -1}};
     return list;
 }
+QList<QList<int>> KeyboardPC::getButtonKeycodesRaw()
+{
+    QList<QList<int>> list;
+    list = {{41, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14},
+            {15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28},
+            {58, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 43},
+            {42, 86, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54},
+            {-1, 125, 56, 57, 100, -1, -1, -1, -1, -1, -1}};
+    return list;
+}
 
 QList<QList<int>> KeyboardPC::getMIDICodes()
 {
@@ -174,6 +184,46 @@ void KeyboardPC::keyDown(int keycode)
 void KeyboardPC::keyUp(int keycode)
 {
     QList<QList<int>> keycodes = getButtonKeycodesUp();
+    for (int row=0; row < keycodes.length(); row++)
+    {
+        for (int col=0; col < keycodes.at(row).length(); col++)
+        {
+            if (keycodes.at(row).at(col) == keycode)
+            {
+                this->list_of_buttons.at(row).at(col)->setDown(false);
+                
+                QList<QList<int>> midicodes = getMIDICodes();
+                if (midicodes.at(row).at(col) > -1)
+                {
+                    emit MIDIRelease(midicodes.at(row).at(col));
+                }
+            }
+        }
+    }
+}
+void KeyboardPC::keyDownRaw(int keycode)
+{
+    QList<QList<int>> keycodes = getButtonKeycodesRaw();
+    for (int row=0; row < keycodes.length(); row++)
+    {
+        for (int col=0; col < keycodes.at(row).length(); col++)
+        {
+            if (keycodes.at(row).at(col) == keycode)
+            {
+                this->list_of_buttons.at(row).at(col)->setDown(true);
+                
+                QList<QList<int>> midicodes = getMIDICodes();
+                if (midicodes.at(row).at(col) > -1)
+                {
+                    emit MIDIPress(midicodes.at(row).at(col));
+                }
+            }
+        }
+    }
+}
+void KeyboardPC::keyUpRaw(int keycode)
+{
+    QList<QList<int>> keycodes = getButtonKeycodesRaw();
     for (int row=0; row < keycodes.length(); row++)
     {
         for (int col=0; col < keycodes.at(row).length(); col++)

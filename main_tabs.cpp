@@ -1,6 +1,6 @@
 #include "main_tabs.h"
 
-MainTabs::MainTabs(int id, Config *config, QString output_system, QComboBox *combo_keyboard_input, QPushButton *button_lock, QLineEdit *line_udp_ip, QSpinBox *spin_port, QTabWidget *parent) : QTabWidget(parent)
+MainTabs::MainTabs(int id, Config *config, QString output_system, QComboBox *combo_keyboard_input, QPushButton *button_lock, QPushButton *button_keyboard_rescan, QLineEdit *line_udp_ip, QSpinBox *spin_port, QTabWidget *parent) : QTabWidget(parent)
 {
     this->id = id;
     this->config = config;
@@ -9,14 +9,16 @@ MainTabs::MainTabs(int id, Config *config, QString output_system, QComboBox *com
         this->send_udp = true;
     }
     this->combo_keyboard_input = combo_keyboard_input;
-    connect(this->combo_keyboard_input, &QComboBox::currentTextChanged, this, &MainTabs::keyboardChanged);
+    connect(this->combo_keyboard_input, &QComboBox::currentTextChanged, this, &MainTabs::keyboardSelectionChanged);
     this->keyboard_raw = new InputKeyboardRaw;
     connect(this->keyboard_raw, &InputKeyboardRaw::deviceNotAvailable, this, &MainTabs::deviceNotAvailable);
-    connect(this->keyboard_raw, &InputKeyboardRaw::rawKeyPressed, this, &MainTabs::rawKeyPressed);
-    connect(this->keyboard_raw, &InputKeyboardRaw::rawKeyReleased, this, &MainTabs::rawKeyReleased);
+    connect(this->keyboard_raw, &InputKeyboardRaw::rawKeyPressedSignal, this, &MainTabs::rawKeyPressed);
+    connect(this->keyboard_raw, &InputKeyboardRaw::rawKeyReleasedSignal, this, &MainTabs::rawKeyReleased);
     
     this->button_lock = button_lock;
-    connect(this->button_lock, &QPushButton::clicked, this, &MainTabs::lockButtonPressed);
+    connect(this->button_lock, &QPushButton::clicked, this, &MainTabs::toggleKeyboardLock);
+    connect(button_keyboard_rescan, &QPushButton::clicked, this, &MainTabs::keyboardRescan);
+    keyboardRescan();
     this->line_udp_ip = line_udp_ip;
     this->spin_port = spin_port;
     
@@ -47,6 +49,7 @@ MainTabs::MainTabs(int id, Config *config, QString output_system, QComboBox *com
 void MainTabs::initializeTabs(QString output_system)
 {
     this->list_function_keys = {Qt::Key_F1, Qt::Key_F2, Qt::Key_F3, Qt::Key_F4, -1, Qt::Key_F5, Qt::Key_F6, Qt::Key_F7, Qt::Key_F8, -1, Qt::Key_F9, Qt::Key_F10, Qt::Key_F11, Qt::Key_F12};
+    this->list_function_keys_raw = {59, 60, 61, 62, -1, 63, 64, 65, 66, -1, 67, 68, 87, 88};
     this->list_labels = {"F1", "F2", "F3", "F4", "spacer", "F5", "F6", "F7", "F8", "spacer", "F9", "F10", "F11", "F12"};
     
     int number_of_tabs = this->list_labels.length();
@@ -157,6 +160,21 @@ bool MainTabs::eventFilter(QObject *obj, QEvent *ev)
         
         if (!event->isAutoRepeat())
         {
+            if (event->key() == Qt::Key_Control)
+            {
+                this->ctrl_down = true;
+            }
+            else if (event->key() == Qt::Key_Shift)
+            {
+                if (this->ctrl_down)
+                {
+                    qDebug() << "ctr shift";
+                    toggleKeyboardLock();
+                    
+                    return true;
+                }
+            }
+            
             //Orgelwerk *o = static_cast<Orgelwerk*>(currentWidget());
             Orgelwerk *o = static_cast<Orgelwerk*>(currentWidget()->layout()->itemAt(0)->widget());
             
@@ -283,18 +301,6 @@ bool MainTabs::eventFilter(QObject *obj, QEvent *ev)
         
         if (!event->isAutoRepeat())
         {
-            if (event->key() == Qt::Key_Control)
-            {
-                this->ctrl_down = true;
-            }
-            else if (event->key() == Qt::Key_Shift)
-            {
-                if (this->ctrl_down)
-                {
-                    lockButtonPressed();
-                }
-            }
-            
             //Orgelwerk *o = static_cast<Orgelwerk*>(currentWidget());
             Orgelwerk *o = static_cast<Orgelwerk*>(currentWidget()->layout()->itemAt(0)->widget());
             
@@ -366,7 +372,7 @@ bool MainTabs::eventFilter(QObject *obj, QEvent *ev)
     {
         if (this->keyboard_locked)
         {
-            lockButtonPressed(); 
+            toggleKeyboardLock();
         }
     }
     
@@ -424,13 +430,13 @@ void MainTabs::rebindSocket(int value)
     socket->bind(QHostAddress(this->line_udp_ip->text()), value);
 }
 
-void MainTabs::keyboardChanged(QString text)
+void MainTabs::keyboardSelectionChanged(QString text)
 {
     QString devpath = this->keyboard_raw->getPathForName(text);
     
     if (this->keyboard_locked)
     {
-        lockButtonPressed();
+        toggleKeyboardLock();
     }
     /*
     {
@@ -449,12 +455,52 @@ void MainTabs::deviceNotAvailable(QString message)
 void MainTabs::rawKeyPressed(int keycode)
 {
     qDebug() << "main_tabs: rawKeyPressed: " << keycode;
+    
+    for (int i=0; i < this->list_function_keys.length(); i++)
+    {
+        if (this->list_function_keys_raw.at(i) == keycode)
+        {
+            // activate new tab
+            this->setCurrentIndex(i);
+        }
+    }
+    
+    if (keycode == 1) // escape
+    {
+        for (int i=0; i < this->list_of_tabs.length(); i++)
+        {
+            this->list_of_tabs.at(i)->button_panic->animateClick();
+        }
+    }
+    else if (keycode == 110) // insert
+    {
+        Orgelwerk *o = static_cast<Orgelwerk*>(currentWidget()->layout()->itemAt(0)->widget());
+        o->button_resend_midi->animateClick();
+    }
+    else if (keycode == 111) // delete
+    {
+        for (int i=0; i < this->list_of_tabs.length(); i++)
+        {
+            this->list_of_tabs.at(i)->button_stop_all->animateClick();
+        }
+    }
+    else
+    {
+        Orgelwerk *o = static_cast<Orgelwerk*>(currentWidget()->layout()->itemAt(0)->widget());
+        o->keyDownRaw(keycode);
+    }
 }
 void MainTabs::rawKeyReleased(int keycode)
 {
     qDebug() << "main_tabs: rawKeyReleased: " << keycode;
+    
+    // we want to have a smooth way of switching between tabs (=presets) during playing
+    for (int i=0; i < this->list_of_tabs.length(); i++)
+    {
+        this->list_of_tabs.at(i)->keyUpRaw(keycode);
+    }
 }
-void MainTabs::lockButtonPressed()
+void MainTabs::toggleKeyboardLock()
 {
     if (this->keyboard_locked)
     {
@@ -462,11 +508,17 @@ void MainTabs::lockButtonPressed()
         this->button_lock->setDown(false);
         this->button_lock->setText("Lock");
         
+        this->combo_keyboard_input->setEnabled(true);
+        
         if (this->combo_keyboard_input->currentIndex() == 0)
         {
             qDebug() << "releasing";
             releaseKeyboard();
             releaseMouse();
+        }
+        else
+        {
+            this->keyboard_raw->keyboardRelease();
         }
     }
     else
@@ -475,6 +527,8 @@ void MainTabs::lockButtonPressed()
         this->button_lock->setDown(true);
         this->button_lock->setText("Unlock");
         
+        this->combo_keyboard_input->setEnabled(false);
+        
         if (this->combo_keyboard_input->currentIndex() == 0)
         {
             qDebug() << "grabbing";
@@ -482,5 +536,27 @@ void MainTabs::lockButtonPressed()
             // to avoid to mess around with the os like blocking taskbar-items, we need to grab the mouse aswell
             grabMouse();
         }
+        else
+        {
+            //qDebug() << "locking: release";
+            //this->keyboard_raw->keyboardRelease();
+            qDebug() << "locking: lock";
+            QString devpath = this->keyboard_raw->getPathForName(this->combo_keyboard_input->currentText());
+            this->keyboard_raw->keyboardLock(devpath);
+        }
     }
+}
+
+void MainTabs::keyboardRescan()
+{
+    if (this->keyboard_locked)
+        toggleKeyboardLock();
+    
+    InputKeyboardRaw *keyboard_raw = new InputKeyboardRaw;
+    QList<QString> keyboards = keyboard_raw->getKeyboardNames();
+    keyboards.prepend("generic default");
+    this->combo_keyboard_input->blockSignals(true);
+    this->combo_keyboard_input->clear();
+    this->combo_keyboard_input->addItems(keyboards);
+    this->combo_keyboard_input->blockSignals(false);
 }

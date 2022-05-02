@@ -10,6 +10,7 @@
 #include <QLineEdit>
 #include <QSpinBox>
 #include <QComboBox>
+#include <QIcon>
 
 //#include "orgelwerk.h"
 //#include "keyboard_piano.h"
@@ -36,11 +37,6 @@ private:
     QList<QSpinBox*> list_of_spin_ports;
     QList<QPushButton*> list_of_network_help_buttons;
     
-    QList<QPushButton*> list_of_button_grabs;
-    QPushButton *grabbing = nullptr;
-    QPushButton *grabbing_last = nullptr;
-    bool ctrl_down = false;
-    
     QMap<QString, QString> key_keycode_map = {};
     
     QWidget* newKeyboardInstance(int id, QString mode);
@@ -49,8 +45,6 @@ protected:
     bool eventFilter(QObject *obj, QEvent *ev);
 
 private slots:
-    void grabButtonClicked(QPushButton *button_grab);
-    
     void saveAllParams();
     void openAllParams();
     void restoreParams(int maintab, QString tab, QMap<QString, QVariant> data);

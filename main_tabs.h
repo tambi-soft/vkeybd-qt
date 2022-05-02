@@ -20,7 +20,7 @@ class MainTabs : public QTabWidget
 {
     Q_OBJECT
 public:
-    explicit MainTabs(int id, Config* config, QString output_system, QComboBox *combo_keyboard_input, QPushButton *button_lock, QLineEdit *line_udp_ip, QSpinBox *spin_port, QTabWidget *parent = nullptr);
+    explicit MainTabs(int id, Config* config, QString output_system, QComboBox *combo_keyboard_input, QPushButton *button_lock, QPushButton *button_keyboard_rescan, QLineEdit *line_udp_ip, QSpinBox *spin_port, QTabWidget *parent = nullptr);
     
     bool callEventFilter(QObject *obj, QEvent *ev);
     void saveAllParams();
@@ -30,6 +30,7 @@ public:
     
 private:
     QList<int> list_function_keys;
+    QList<int> list_function_keys_raw;
     QList<QString> list_labels;
     QList<Orgelwerk*> list_of_tabs;
     QMap<QString,Orgelwerk*> map_of_tabs;
@@ -59,11 +60,12 @@ protected:
     bool eventFilter(QObject *obj, QEvent *ev);
     
 private slots:
-    void keyboardChanged(QString text);
+    void keyboardSelectionChanged(QString text);
     void deviceNotAvailable(QString message);
     void rawKeyPressed(int keycode);
     void rawKeyReleased(int keycode);
-    void lockButtonPressed();
+    void toggleKeyboardLock();
+    void keyboardRescan();
     
 signals:
     

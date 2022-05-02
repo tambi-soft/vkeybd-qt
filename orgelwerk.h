@@ -67,6 +67,8 @@ public:
     
     void keyDown(int keycode);
     void keyUp(int keycode);
+    void keyDownRaw(int keycode);
+    void keyUpRaw(int keycode);
     void panicKeyPressed();
     void stopAllPressed();
     QPushButton *button_panic = new QPushButton;
