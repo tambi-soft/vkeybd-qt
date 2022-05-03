@@ -87,18 +87,16 @@ QString InputKeyboardRaw::getPathForName(QString name)
 
 void InputKeyboardRaw::keyboardListen(QString devpath)
 {
-    /*
-    QFile file(devpath);
-    if (file.open(QIODevice::ReadOnly | QIODevice::Binary))
-    {
-        QDataStream stream(&file);
-        qDebug() << stream.readRawData();
-    }
-    */
+    qDebug() << "listen";
+    keyboardHelper(devpath, "listen");
 }
 void InputKeyboardRaw::keyboardLock(QString devpath)
 {
-    qDebug() << "lockraiaeuie";
+    qDebug() << "lock";
+    keyboardHelper(devpath, "lock");
+}
+void InputKeyboardRaw::keyboardHelper(QString devpath, QString mode)
+{
     // https://stackoverflow.com/questions/29942421/read-barcodes-from-input-event-linux-c/29956584#29956584
     // https://www.reddit.com/r/Cplusplus/comments/rsgjwf/ioctl_in_c_c_wrapper_class_for_linuxjoystickh/
     
@@ -107,10 +105,13 @@ void InputKeyboardRaw::keyboardLock(QString devpath)
     {
         errno = 0;
         // to consume the event and not let it passed through to any other software
-        if (ioctl(this->fd, EVIOCGRAB, 1)) {
-            const int saved_errno = errno;
-            close(this->fd);
-            //return errno = (saved_errno) ? errno : EACCES;
+        if (mode == "lock")
+        {
+            if (ioctl(this->fd, EVIOCGRAB, 1)) {
+                //const int saved_errno = errno;
+                //close(this->fd);
+                //return errno = (saved_errno) ? errno : EACCES;
+            }
         }
         
         this->worker = new InputKeyboardRawWorker(this->n, this->fd);
@@ -120,36 +121,6 @@ void InputKeyboardRaw::keyboardLock(QString devpath)
         this->thread = new QThread(this);
         this->worker->moveToThread(this->thread);
         this->thread->start();
-        
-        // https://stackoverflow.com/questions/20943322/accessing-keys-from-linux-input-device
-        /*
-        while (true)
-        {
-            n = read(this->fd, &this->ev, sizeof this->ev);
-            
-            if (n == (ssize_t)-1)
-            {
-                continue;
-            }
-            else if (n != sizeof ev)
-            {
-                continue;
-            }
-            
-            if (ev.type == EV_KEY && ev.value >= 0 && ev.value <= 2)
-            {
-                //printf("%s 0x%04x (%d)\n", evval[ev.value], (int)ev.code, (int)ev.code);
-                if (ev.value == 1)
-                {
-                    emit rawKeyPressed(ev.code);
-                }
-                else if (ev.value == 0)
-                {
-                    emit rawKeyReleased(ev.code);
-                }
-            }
-        }
-        */
     }
     else
     {
@@ -159,8 +130,16 @@ void InputKeyboardRaw::keyboardLock(QString devpath)
 
 void InputKeyboardRaw::keyboardRelease()
 {
-    this->thread->exit();
-    close(this->fd);
+    if (this->thread != nullptr)
+    {
+        this->thread->exit();
+    }
+    
+    if (this->fd != -1)
+    {
+        close(this->fd);
+        this->fd = -1;
+    }
 }
 
 void InputKeyboardRaw::rawKeyPressed(int keycode)
@@ -190,6 +169,8 @@ InputKeyboardRawWorker::InputKeyboardRawWorker(ssize_t n, int fd, QObject *paren
 
 void InputKeyboardRawWorker::tick()
 {
+    // https://stackoverflow.com/questions/20943322/accessing-keys-from-linux-input-device
+    
     this->n = read(this->fd, &this->ev, sizeof this->ev);
     
     if (this->n != (ssize_t)-1 && this->n == sizeof this->ev)

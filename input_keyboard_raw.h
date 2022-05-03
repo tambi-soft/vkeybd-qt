@@ -55,6 +55,7 @@ public:
     QString getPathForName(QString name);
     void keyboardListen(QString devpath);
     void keyboardLock(QString devpath);
+    void keyboardHelper(QString devpath, QString mode);
     void keyboardRelease();
     
 private:
@@ -70,7 +71,7 @@ private:
     ssize_t n;
     int fd = -1;
     
-    QThread *thread;
+    QThread *thread = nullptr;
     InputKeyboardRawWorker *worker;
     
 private slots:

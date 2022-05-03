@@ -432,21 +432,24 @@ void MainTabs::rebindSocket(int value)
 
 void MainTabs::keyboardSelectionChanged(QString text)
 {
-    QString devpath = this->keyboard_raw->getPathForName(text);
-    
+    // unlock the keyboard if selection changed and it was locked (probably this is not possible anymore anyways since the lock-button deactivates this->combo_keyboard_input, but it is better to leave this code in here, just in case ...)
     if (this->keyboard_locked)
     {
         toggleKeyboardLock();
     }
-    /*
+    
+    this->keyboard_raw->keyboardRelease();
+    
+    if (this->combo_keyboard_input->currentIndex() == 0)
     {
-        this->keyboard_raw->keyboardLock(devpath);
+        // nothing; just use Qt for handling keystrokes
     }
     else
     {
+        QString devpath = this->keyboard_raw->getPathForName(text);
+        
         this->keyboard_raw->keyboardListen(devpath);
     }
-    */
 }
 void MainTabs::deviceNotAvailable(QString message)
 {
@@ -502,6 +505,8 @@ void MainTabs::rawKeyReleased(int keycode)
 }
 void MainTabs::toggleKeyboardLock()
 {
+    this->keyboard_raw->keyboardRelease();
+    
     if (this->keyboard_locked)
     {
         this->keyboard_locked = false;
