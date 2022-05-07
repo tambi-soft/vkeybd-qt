@@ -15,22 +15,18 @@ MainWindow::MainWindow(QString output_system, int number_of_keyboards, QWidget *
         setStyleSheet(css_file.readAll());
     }
     
-    if (output_system == "network")
-    {
-        layout->addWidget(newKeyboardInstance(0, output_system));
-    }
-    else
+    if (output_system != "network")
     {
         MenuBar *menu = new MenuBar;
         connect(menu, &MenuBar::signalSave, this, &MainWindow::saveAllParams);
         connect(menu, &MenuBar::signalOpen, this, &MainWindow::openAllParams);
         connect(menu, &MenuBar::signalShowActionChanged, this, &MainWindow::showActionChanged);
         setMenuBar(menu);
-        
-        for (int i=0; i < number_of_keyboards; i++)
-        {
-            layout->addWidget(newKeyboardInstance(i, output_system));
-        }
+    }
+    
+    for (int i=0; i < number_of_keyboards; i++)
+    {
+        layout->addWidget(newKeyboardInstance(i, output_system));
     }
 }
 
@@ -64,7 +60,7 @@ QWidget* MainWindow::newKeyboardInstance(int id, QString mode)
     line_udp_ip->setText("127.0.0.1");
     line_udp_ip->setToolTip("For remote-controlling: IP-Address of the interface you want to listen on (the IP-address of this machine).");
     line_udp_ip->setObjectName("network_select");
-    line_udp_ip->hide();
+    //line_udp_ip->hide();
     this->list_of_line_udp_ips.append(line_udp_ip);
     
     QSpinBox *spin_port = new QSpinBox;
@@ -73,49 +69,46 @@ QWidget* MainWindow::newKeyboardInstance(int id, QString mode)
     spin_port->setValue(20020);
     spin_port->setToolTip("Network Listen Port");
     spin_port->setObjectName("network_select");
-    spin_port->hide();
+    //spin_port->hide();
     this->list_of_spin_ports.append(spin_port);
     
     MainTabs *tabs = new MainTabs(id, this->config, mode, combo_keyboard_input, button_lock, button_keyboard_rescan, line_udp_ip, spin_port);
     this->list_of_maintabs.append(tabs);
     
-    if (mode != "network")
+    QPushButton *button_lock_help = new QPushButton;
+    button_lock_help->setIcon(QIcon::fromTheme("dialog-question"));
+    button_lock_help->setToolTip("help");
+    button_lock_help->hide();
+    
+    QPushButton *button_network_help = new QPushButton;
+    button_network_help->setIcon(QIcon::fromTheme("dialog-question"));
+    button_network_help->setToolTip("help");
+    connect(button_network_help, &QPushButton::clicked, this, []{ new HelpMessage(":help_tntware"); });
+    button_network_help->hide();
+    this->list_of_network_help_buttons.append(button_network_help);
+    
+    grid->addWidget(combo_keyboard_input, 1, 0);
+    grid->addWidget(button_lock, 1, 1);
+    grid->addWidget(button_keyboard_rescan, 1, 2);
+    //grid->addWidget(button_lock_help, 1, 3);
+    if (mode == "network")
     {
-        QPushButton *button_lock_help = new QPushButton;
-        button_lock_help->setIcon(QIcon::fromTheme("dialog-question"));
-        button_lock_help->setToolTip("help");
-        
-        grid->addWidget(combo_keyboard_input, 1, 0);
-        grid->addWidget(button_lock, 1, 1);
-        grid->addWidget(button_keyboard_rescan, 1, 2);
-        //grid->addWidget(button_lock_help, 1, 3);
-        
-        QPushButton *button_network_help = new QPushButton;
-        button_network_help->setIcon(QIcon::fromTheme("dialog-question"));
-        button_network_help->setToolTip("help");
-        connect(button_network_help, &QPushButton::clicked, this, []{ new HelpMessage(":help_tntware"); });
-        button_network_help->hide();
-        this->list_of_network_help_buttons.append(button_network_help);
-        
-        grid->addWidget(line_udp_ip, 2, 0);
-        grid->addWidget(spin_port, 2, 1);
-        grid->addWidget(button_network_help, 2, 2);
-        
-        grid->addWidget(tabs, 3, 0, 1, 3);
-    }
-    else if (mode == "network")
-    {
-        grid->addWidget(combo_keyboard_input, 1, 0, 1, 3);
-        
         QLabel *label_udp_client_ip = new QLabel("IP-Address of remote vkeybd-qt instance:");
-        grid->addWidget(label_udp_client_ip, 2, 0, 1, 3);
-        
-        grid->addWidget(line_udp_ip, 3, 0, 1, 3);
+        grid->addWidget(label_udp_client_ip, 2, 0);
         
         QLabel *label_udp_client_port = new QLabel("Port:");
-        grid->addWidget(label_udp_client_port, 4, 0, 1, 3);
-        
-        grid->addWidget(spin_port, 5, 0, 1, 3);
+        grid->addWidget(label_udp_client_port, 2, 1);
+    }
+    else
+    {
+        line_udp_ip->hide();
+        spin_port->hide();
+    }
+    grid->addWidget(line_udp_ip, 3, 0);
+    grid->addWidget(spin_port, 3, 1, 1, 2);
+    if (mode != "network")
+    {
+        grid->addWidget(tabs, 4, 0, 1, 3);
     }
     
     this->installEventFilter(this);
@@ -177,9 +170,13 @@ void MainWindow::showActionChanged(QString name, bool is_checked)
         for (auto &button : this->list_of_network_help_buttons)
         {
             if (is_checked)
-                button->show();
+            {
+                //button->show();
+            }
             else
+            {
                 button->hide();
+            }
         }
     }
     else
@@ -212,7 +209,7 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *ev)
     }
     */
     
-    //return false;
+    return false;
 }
 
 /*

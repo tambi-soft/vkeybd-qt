@@ -3,6 +3,7 @@
 
 // https://unix.stackexchange.com/questions/72483/how-to-distinguish-input-from-different-keyboards
 // https://www.linuxjournal.com/files/linuxjournal.com/linuxjournal/articles/064/6429/6429l4.html
+// https://stackoverflow.com/questions/26373963/distinguish-2-keyboards-keystrokes-using-eventfilter-embedded-linux
 
 #include <linux/input.h>
 
