@@ -22,7 +22,6 @@
 #include "help_message.h"
 #include "help_about_widget.h"
 #include "input_keyboard_raw.h"
-#include "input_nativeeventfilter.h"
 
 #include <xcb/xcb.h>
 

@@ -31,9 +31,12 @@ public:
 private:
     QList<int> list_function_keys;
     QList<int> list_function_keys_raw;
+    QList<int> list_function_keys_native;
     QList<QString> list_labels;
     QList<Orgelwerk*> list_of_tabs;
     QMap<QString,Orgelwerk*> map_of_tabs;
+    
+    QMap<int,QString> combo_keyboard_input_labels;
     
     int id;
     Config *config;

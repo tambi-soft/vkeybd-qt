@@ -47,7 +47,6 @@ HEADERS += \
     help_about_widget.h \
     help_message.h \
     input_keyboard_raw.h \
-    input_nativeeventfilter.h \
     interface_alsa.h \
     interface_audio.h \
     interface_jack.h \

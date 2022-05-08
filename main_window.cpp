@@ -116,8 +116,8 @@ QWidget* MainWindow::newKeyboardInstance(int id, QString mode)
     //QAbstractEventDispatcher::instance()->installNativeEventFilter(this);
     //QAbstractEventDispatcher::instance()->installNativeEventFilter(this);
     
-    QAbstractNativeEventFilter *xev = new InputNativeEventFilter;
-    QAbstractEventDispatcher::instance()->installNativeEventFilter(xev);
+    //QAbstractNativeEventFilter *xev = new InputNativeEventFilter;
+    //QAbstractEventDispatcher::instance()->installNativeEventFilter(xev);
     
     //int width = this->width();
     //resize(width, 900);
@@ -332,6 +332,32 @@ bool MainWindow::nativeEventFilter(const QByteArray &eventType, void *message, l
 
 bool MainWindow::nativeEvent(const QByteArray &eventType, void *message, long *result)
 {
-    qDebug() << "native event"; 
+    Q_UNUSED(result);
+    
+    if (eventType == "xcb_generic_event_t") {
+        xcb_generic_event_t* xev = static_cast<xcb_generic_event_t *>(message);
+        
+        if ((xev->response_type & ~0x80) == XCB_KEY_PRESS)
+        {
+            xcb_key_press_event_t* kp = (xcb_key_press_event_t*)xev;
+            
+            const quint32 keycode = kp->detail;
+        //      const quint32 keymod =
+        //          static_cast<quint32>(kp->state & (ShiftMask | ControlMask |
+        //                                            Mod1Mask | Mod4Mask));
+            qDebug() << "native press: " << keycode;
+        }
+        else if ((xev->response_type & ~0x80) == XCB_KEY_RELEASE)
+        {
+            xcb_key_press_event_t* kp = (xcb_key_press_event_t*)xev;
+            const quint32 keycode = kp->detail;
+            
+            qDebug() << "native release: " << keycode;
+        }
+            
+        
+    }
+    
+    return false;
 }
 
