@@ -43,7 +43,8 @@ MainTabs::MainTabs(int id, Config *config, QString output_system, QComboBox *com
         hide();
     }
     
-    installEventFilter(this);
+    //installEventFilter(this);
+    
 }
 
 void MainTabs::initializeTabs(QString output_system)
@@ -74,11 +75,6 @@ void MainTabs::initializeTabs(QString output_system)
 
 void MainTabs::addOrganTab(QString output_system, QString label, int number_of_orgelwerks)
 {
-    /*
-    Orgelwerk *o = new Orgelwerk(label);
-    addTab(o, label);
-    */
-    
     QWidget *widget = new QWidget;
     QHBoxLayout *layout = new QHBoxLayout;
     widget->setLayout(layout);

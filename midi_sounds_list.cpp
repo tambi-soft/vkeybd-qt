@@ -55,7 +55,7 @@ QList<QVariant> MIDISoundsList::splitLine(QString line)
 {
     QList<QVariant> result;
     
-    QList<QString> splitted = line.split(" ", QString::SkipEmptyParts);
+    QList<QString> splitted = line.split(" ", Qt::SkipEmptyParts);
     result.append(splitted.at(0));
     result.append(splitted.at(1));
     
@@ -107,7 +107,7 @@ QMap<QString,int> MIDISoundsList::getMIDICodesForInstrument(QString instrument)
     {
         if (list_raw.at(i).contains(instrument))
         {
-            QList<QString> splitted = list_raw.at(i).split(" ", QString::SkipEmptyParts);
+            QList<QString> splitted = list_raw.at(i).split(" ", Qt::SkipEmptyParts);
             
             //result << splitted.at(0).toInt() << splitted.at(1).toInt();
             result["msb"] = splitted.at(0).toInt();
@@ -138,7 +138,7 @@ QMap<QString,QString> MIDISoundsList::getInstrumentForMIDICodes(int msb, int lsb
         QString line = list_raw.at(i).trimmed();
         if (line.at(0).isDigit())
         {
-            QList<QString> splitted = line.split(" ", QString::SkipEmptyParts);
+            QList<QString> splitted = line.split(" ", Qt::SkipEmptyParts);
             if (splitted.at(0).toInt() == msb && splitted.at(1).toInt() == lsb)
             {
                 for (int c=2; c < splitted.length(); c++)

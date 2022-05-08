@@ -112,7 +112,7 @@ QWidget* MainWindow::newKeyboardInstance(int id, QString mode)
     }
     
     this->installEventFilter(this);
-    //installNativeEventFilter(this);
+    //QCoreApplication::installNativeEventFilter(this);
     
     //int width = this->width();
     //resize(width, 900);
@@ -299,3 +299,15 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *ev)
 }
 */
 
+/*
+bool MainTabs::nativeEventFilter(const QByteArray &eventType, void *message, long *result)
+{
+    if (eventType == "xcb_generic_event_t") {
+        xcb_generic_event_t* xev = static_cast<xcb_generic_event_t *>(message);
+        
+        qDebug() << xev;
+    }
+    
+    return false;
+}
+*/

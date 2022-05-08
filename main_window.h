@@ -11,6 +11,7 @@
 #include <QSpinBox>
 #include <QComboBox>
 #include <QIcon>
+#include <QAbstractNativeEventFilter>
 
 //#include "orgelwerk.h"
 //#include "keyboard_piano.h"
@@ -20,6 +21,8 @@
 #include "help_message.h"
 #include "help_about_widget.h"
 #include "input_keyboard_raw.h"
+
+#include <xcb/xcb.h>
 
 class MainWindow : public QMainWindow
 {
@@ -43,6 +46,7 @@ private:
 
 protected:
     bool eventFilter(QObject *obj, QEvent *ev);
+    bool nativeEventFilter(const QByteArray &eventType, void *message, long *result);
 
 private slots:
     void saveAllParams();

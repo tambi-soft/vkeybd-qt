@@ -5,7 +5,8 @@ MIDIMasterVolume::MIDIMasterVolume(QWidget *parent)
 {
     QVBoxLayout *layout = new QVBoxLayout;
     setLayout(layout);
-    layout->setMargin(0);
+    //layout->setMargin(0);
+    layout->setContentsMargins(0, 0, 0, 0);
     
     this->label_volume = new QLabel("Master Volume (DCA): 100%");
     this->slider_volume = new QSlider(Qt::Horizontal, this);
