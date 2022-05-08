@@ -151,6 +151,11 @@ bool MainTabs::eventFilter(QObject *obj, QEvent *ev)
 {
     Q_UNUSED(obj);
     
+    if (! this->input_kbd_qt_default)
+    {
+        //return false;
+    }
+    
     if (ev->type() == QEvent::KeyPress)
     {
         QKeyEvent *event = static_cast<QKeyEvent*>(ev);
@@ -375,6 +380,38 @@ bool MainTabs::eventFilter(QObject *obj, QEvent *ev)
     
     return false;
 }
+/*
+bool MainTabs::nativeEvent(const QByteArray &eventType, void *message, long *result)
+{
+    Q_UNUSED(result);
+    
+    if (eventType == "xcb_generic_event_t") {
+        xcb_generic_event_t* xev = static_cast<xcb_generic_event_t *>(message);
+        
+        if ((xev->response_type & ~0x80) == XCB_KEY_PRESS)
+        {
+            xcb_key_press_event_t* kp = (xcb_key_press_event_t*)xev;
+            
+            const quint32 keycode = kp->detail;
+        //      const quint32 keymod =
+        //          static_cast<quint32>(kp->state & (ShiftMask | ControlMask |
+        //                                            Mod1Mask | Mod4Mask));
+            qDebug() << "native press: " << keycode;
+        }
+        else if ((xev->response_type & ~0x80) == XCB_KEY_RELEASE)
+        {
+            xcb_key_press_event_t* kp = (xcb_key_press_event_t*)xev;
+            const quint32 keycode = kp->detail;
+            
+            qDebug() << "native release: " << keycode;
+        }
+            
+        
+    }
+    
+    return false;
+}
+*/
 
 void MainTabs::sendUDPMessage(QString message)
 {
@@ -429,17 +466,22 @@ void MainTabs::rebindSocket(int value)
 
 void MainTabs::keyboardSelectionChanged(QString text)
 {
-    // unlock the keyboard if selection changed and it was locked (probably this is not possible anymore anyways since the lock-button deactivates this->combo_keyboard_input, but it is better to leave this code in here, just in case ...)
     if (this->keyboard_locked)
     {
         toggleKeyboardLock();
     }
     
+    // unlock the keyboard if selection changed and it was locked (probably this is not possible anymore anyways since the lock-button deactivates this->combo_keyboard_input, but it is better to leave this code in here, just in case ...)
     this->keyboard_raw->keyboardRelease();
     
-    if (this->combo_keyboard_input->currentIndex() == 0)
+    //if (this->combo_keyboard_input->currentIndex() == 0)
+    if (this->combo_keyboard_input->currentText() == this->combo_keyboard_input_labels[0])
     {
-        // nothing; just use Qt for handling keystrokes
+        emit useInputKbdQtNativeSignal();
+    }
+    else if (this->combo_keyboard_input->currentText() == this->combo_keyboard_input_labels[1])
+    {
+        emit useInputKbdQtDefaultSignal();
     }
     else
     {
@@ -514,17 +556,20 @@ void MainTabs::toggleKeyboardLock()
         
         if (this->combo_keyboard_input->currentText() == this->combo_keyboard_input_labels[1])
         {
+            this->input_kbd_qt_default = false;
             qDebug() << "releasing Qt default";
             releaseKeyboard();
             //releaseMouse();
         }
         else if (this->combo_keyboard_input->currentText() == this->combo_keyboard_input_labels[0])
         {
+            this->input_kbd_qt_native = false;
             qDebug() << "releasing Qt native";
             releaseKeyboard();
         }
         else
         {
+            this->input_kbd_linux_raw = false;
             qDebug() << "releasing raw";
             this->keyboard_raw->keyboardRelease();
         }
@@ -539,6 +584,7 @@ void MainTabs::toggleKeyboardLock()
         
         if (this->combo_keyboard_input->currentText() == this->combo_keyboard_input_labels[1])
         {
+            this->input_kbd_qt_default = true;
             qDebug() << "grabbing Qt default";
             grabKeyboard();
             // to avoid to mess around with the os like blocking taskbar-items, we need to grab the mouse aswell
@@ -546,11 +592,13 @@ void MainTabs::toggleKeyboardLock()
         }
         else if (this->combo_keyboard_input->currentText() == this->combo_keyboard_input_labels[0])
         {
+            this->input_kbd_qt_native = true;
             qDebug() << "grabbing Qt native";
             grabKeyboard();
         }
         else
         {
+            this->input_kbd_linux_raw = true;
             //qDebug() << "locking: release";
             //this->keyboard_raw->keyboardRelease();
             qDebug() << "gabbing: raw";

@@ -73,6 +73,8 @@ QWidget* MainWindow::newKeyboardInstance(int id, QString mode)
     this->list_of_spin_ports.append(spin_port);
     
     MainTabs *tabs = new MainTabs(id, this->config, mode, combo_keyboard_input, button_lock, button_keyboard_rescan, line_udp_ip, spin_port);
+    connect(tabs, &MainTabs::useInputKbdQtNativeSignal, this, &MainWindow::useInputKbdQtNative);
+    connect(tabs, &MainTabs::useInputKbdQtDefaultSignal, this, &MainWindow::useInputKbdQtDefault);
     this->list_of_maintabs.append(tabs);
     
     QPushButton *button_lock_help = new QPushButton;
@@ -305,34 +307,14 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *ev)
     return false;
 }
 */
-
-/*
-bool MainWindow::nativeEventFilter(const QByteArray &eventType, void *message, long *result)
-{
-    Q_UNUSED(result);
-    
-    if (eventType == "xcb_generic_event_t") {
-        xcb_generic_event_t* xev = static_cast<xcb_generic_event_t *>(message);
-        
-        qDebug() << xev;
-        
-        if ((xev->response_type & ~0x80) == XCB_KEY_PRESS) {
-              xcb_key_press_event_t* kp = (xcb_key_press_event_t*)xev;
-        
-              const quint32 keycode = kp->detail;
-              const quint32 keymod =
-                  static_cast<quint32>(kp->state & (ShiftMask | ControlMask |
-                                                    Mod1Mask | Mod4Mask));
-        }
-    }
-    
-    return false;
-}
-*/
-
 bool MainWindow::nativeEvent(const QByteArray &eventType, void *message, long *result)
 {
     Q_UNUSED(result);
+    
+    if (!this->input_kbd_qt_native)
+    {
+        return false;
+    }
     
     if (eventType == "xcb_generic_event_t") {
         xcb_generic_event_t* xev = static_cast<xcb_generic_event_t *>(message);
@@ -346,6 +328,13 @@ bool MainWindow::nativeEvent(const QByteArray &eventType, void *message, long *r
         //          static_cast<quint32>(kp->state & (ShiftMask | ControlMask |
         //                                            Mod1Mask | Mod4Mask));
             qDebug() << "native press: " << keycode;
+            // "nativeEvent" gives the keycodes from the xserver;
+            // "rawKeyPressed" is written to take the keycodes directly from /dev/input/...
+            // the keycodes given by the xserver happen to be exactly off by 8,
+            // so we can simply compensate with -8
+            this->list_of_maintabs.first()->rawKeyPressed(keycode-8);
+            
+            return true;
         }
         else if ((xev->response_type & ~0x80) == XCB_KEY_RELEASE)
         {
@@ -353,6 +342,9 @@ bool MainWindow::nativeEvent(const QByteArray &eventType, void *message, long *r
             const quint32 keycode = kp->detail;
             
             qDebug() << "native release: " << keycode;
+            this->list_of_maintabs.first()->rawKeyReleased(keycode-8);
+            
+            return true;
         }
             
         
@@ -361,3 +353,13 @@ bool MainWindow::nativeEvent(const QByteArray &eventType, void *message, long *r
     return false;
 }
 
+void MainWindow::useInputKbdQtNative()
+{
+    this->input_kbd_qt_native = true;
+    this->input_kbd_qt_default = false;
+}
+void MainWindow::useInputKbdQtDefault()
+{
+    this->input_kbd_qt_default = true;
+    this->input_kbd_qt_native = false;
+}

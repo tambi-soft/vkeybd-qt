@@ -16,6 +16,8 @@
 #include "config.h"
 #include "input_keyboard_raw.h"
 
+#include <xcb/xcb.h>
+
 class MainTabs : public QTabWidget
 {
     Q_OBJECT
@@ -28,6 +30,9 @@ public:
     
     void showHideGUIElements(QString name, bool show);
     
+    void rawKeyPressed(int keycode);
+    void rawKeyReleased(int keycode);
+    
 private:
     QList<int> list_function_keys;
     QList<int> list_function_keys_raw;
@@ -37,6 +42,9 @@ private:
     QMap<QString,Orgelwerk*> map_of_tabs;
     
     QMap<int,QString> combo_keyboard_input_labels;
+    bool input_kbd_qt_native = false;
+    bool input_kbd_qt_default = false;
+    bool input_kbd_linux_raw = false;
     
     int id;
     Config *config;
@@ -60,18 +68,18 @@ private:
     void addOrganTab(QString output_system, QString label, int number_of_orgelwerks=1);
 
 protected:
-    bool eventFilter(QObject *obj, QEvent *ev);
+    bool eventFilter(QObject *obj, QEvent *ev) override;
+    //bool nativeEvent(const QByteArray &eventType, void *message, long *result) override;
     
 private slots:
     void keyboardSelectionChanged(QString text);
     void deviceNotAvailable(QString message);
-    void rawKeyPressed(int keycode);
-    void rawKeyReleased(int keycode);
     void toggleKeyboardLock();
     void keyboardRescan();
     
 signals:
-    
+    void useInputKbdQtNativeSignal();
+    void useInputKbdQtDefaultSignal();
 };
 
 #endif // MAINTABS_H

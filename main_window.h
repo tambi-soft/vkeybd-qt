@@ -23,8 +23,6 @@
 #include "help_about_widget.h"
 #include "input_keyboard_raw.h"
 
-#include <xcb/xcb.h>
-
 //#include <QAbstractEventDispatcher>
 //#include <QDebug>
 //#include <QX11Info>
@@ -50,10 +48,15 @@ private:
     QMap<QString, QString> key_keycode_map = {};
     
     QWidget* newKeyboardInstance(int id, QString mode);
+    
+    bool input_kbd_qt_native = true;
+    bool input_kbd_qt_default = false;
+    
+    void useInputKbdQtNative();
+    void useInputKbdQtDefault();
 
 protected:
     bool eventFilter(QObject *obj, QEvent *ev) override;
-    //bool nativeEventFilter(const QByteArray &eventType, void *message, long *result);
     bool nativeEvent(const QByteArray &eventType, void *message, long *result) override;
 
 private slots:
