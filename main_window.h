@@ -12,6 +12,7 @@
 #include <QComboBox>
 #include <QIcon>
 #include <QAbstractNativeEventFilter>
+#include <QAbstractEventDispatcher>
 
 //#include "orgelwerk.h"
 //#include "keyboard_piano.h"
@@ -21,8 +22,15 @@
 #include "help_message.h"
 #include "help_about_widget.h"
 #include "input_keyboard_raw.h"
+#include "input_nativeeventfilter.h"
 
 #include <xcb/xcb.h>
+
+//#include <QAbstractEventDispatcher>
+//#include <QDebug>
+//#include <QX11Info>
+//#include <xcb/xcb.h>
+//#include <X11/Xlib.h>
 
 class MainWindow : public QMainWindow
 {
@@ -45,8 +53,9 @@ private:
     QWidget* newKeyboardInstance(int id, QString mode);
 
 protected:
-    bool eventFilter(QObject *obj, QEvent *ev);
-    bool nativeEventFilter(const QByteArray &eventType, void *message, long *result);
+    bool eventFilter(QObject *obj, QEvent *ev) override;
+    //bool nativeEventFilter(const QByteArray &eventType, void *message, long *result);
+    bool nativeEvent(const QByteArray &eventType, void *message, long *result) override;
 
 private slots:
     void saveAllParams();

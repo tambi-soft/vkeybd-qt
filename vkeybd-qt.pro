@@ -5,14 +5,6 @@ QT  += core\
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-
-#QMAKE_CFLAGS += \
-#    -lasound
-#    asound
-#QMAKE_CXXFLAGS += \
-#    -lasound
-#    asound
-    
 LIBS += -lasound \
     -ljack
 
@@ -55,6 +47,7 @@ HEADERS += \
     help_about_widget.h \
     help_message.h \
     input_keyboard_raw.h \
+    input_nativeeventfilter.h \
     interface_alsa.h \
     interface_audio.h \
     interface_jack.h \

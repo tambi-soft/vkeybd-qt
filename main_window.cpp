@@ -111,12 +111,19 @@ QWidget* MainWindow::newKeyboardInstance(int id, QString mode)
         grid->addWidget(tabs, 4, 0, 1, 3);
     }
     
-    this->installEventFilter(this);
+    //this->installEventFilter(this);
     //QCoreApplication::installNativeEventFilter(this);
+    //QAbstractEventDispatcher::instance()->installNativeEventFilter(this);
+    //QAbstractEventDispatcher::instance()->installNativeEventFilter(this);
+    
+    QAbstractNativeEventFilter *xev = new InputNativeEventFilter;
+    QAbstractEventDispatcher::instance()->installNativeEventFilter(xev);
     
     //int width = this->width();
     //resize(width, 900);
     //resize(10, 10);
+    
+    qDebug() << "native parent: " << nativeParentWidget();
     
     return widget;
 }
@@ -300,14 +307,31 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *ev)
 */
 
 /*
-bool MainTabs::nativeEventFilter(const QByteArray &eventType, void *message, long *result)
+bool MainWindow::nativeEventFilter(const QByteArray &eventType, void *message, long *result)
 {
+    Q_UNUSED(result);
+    
     if (eventType == "xcb_generic_event_t") {
         xcb_generic_event_t* xev = static_cast<xcb_generic_event_t *>(message);
         
         qDebug() << xev;
+        
+        if ((xev->response_type & ~0x80) == XCB_KEY_PRESS) {
+              xcb_key_press_event_t* kp = (xcb_key_press_event_t*)xev;
+        
+              const quint32 keycode = kp->detail;
+              const quint32 keymod =
+                  static_cast<quint32>(kp->state & (ShiftMask | ControlMask |
+                                                    Mod1Mask | Mod4Mask));
+        }
     }
     
     return false;
 }
 */
+
+bool MainWindow::nativeEvent(const QByteArray &eventType, void *message, long *result)
+{
+    qDebug() << "native event"; 
+}
+
