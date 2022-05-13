@@ -23,6 +23,7 @@ SOURCES += \
     config.cpp \
     help_about_widget.cpp \
     help_message.cpp \
+    input_keyboard_qt.cpp \
     input_keyboard_raw.cpp \
     input_keyboard_xcb.cpp \
     interface_alsa.cpp \
@@ -49,6 +50,7 @@ HEADERS += \
     config.h \
     help_about_widget.h \
     help_message.h \
+    input_keyboard_qt.h \
     input_keyboard_raw.h \
     input_keyboard_xcb.h \
     interface_alsa.h \
