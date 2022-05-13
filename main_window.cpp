@@ -3,6 +3,10 @@
 MainWindow::MainWindow(QString output_system, int number_of_keyboards, QWidget *parent)
     : QMainWindow(parent)
 {
+    this->inputXCB = new InputKeyboardXCB;
+    connect(this->inputXCB, &InputKeyboardXCB::rawKeyPressedSignal, this, &MainWindow::rawKeyPressed);
+    connect(this->inputXCB, &InputKeyboardXCB::rawKeyReleasedSignal, this, &MainWindow::rawKeyReleased);
+    
     QWidget *main_container_widget = new QWidget;
     QHBoxLayout *layout = new QHBoxLayout;
     layout->setContentsMargins(0, 0, 0, 0);
@@ -311,43 +315,9 @@ bool MainWindow::nativeEvent(const QByteArray &eventType, void *message, long *r
 {
     Q_UNUSED(result);
     
-    if (!this->input_kbd_qt_native)
+    if (this->input_kbd_qt_native)
     {
-        return false;
-    }
-    
-    if (eventType == "xcb_generic_event_t") {
-        xcb_generic_event_t* xev = static_cast<xcb_generic_event_t *>(message);
-        
-        if ((xev->response_type & ~0x80) == XCB_KEY_PRESS)
-        {
-            xcb_key_press_event_t* kp = (xcb_key_press_event_t*)xev;
-            
-            const quint32 keycode = kp->detail;
-        //      const quint32 keymod =
-        //          static_cast<quint32>(kp->state & (ShiftMask | ControlMask |
-        //                                            Mod1Mask | Mod4Mask));
-            qDebug() << "native press: " << keycode;
-            // "nativeEvent" gives the keycodes from the xserver;
-            // "rawKeyPressed" is written to take the keycodes directly from /dev/input/...
-            // the keycodes given by the xserver happen to be exactly off by 8,
-            // so we can simply compensate with -8
-            this->list_of_maintabs.first()->rawKeyPressed(keycode-8);
-            
-            return true;
-        }
-        else if ((xev->response_type & ~0x80) == XCB_KEY_RELEASE)
-        {
-            xcb_key_press_event_t* kp = (xcb_key_press_event_t*)xev;
-            const quint32 keycode = kp->detail;
-            
-            qDebug() << "native release: " << keycode;
-            this->list_of_maintabs.first()->rawKeyReleased(keycode-8);
-            
-            return true;
-        }
-            
-        
+        return this->inputXCB->xcbEvent(eventType, message, result);
     }
     
     return false;
@@ -362,4 +332,13 @@ void MainWindow::useInputKbdQtDefault()
 {
     this->input_kbd_qt_default = true;
     this->input_kbd_qt_native = false;
+}
+
+void MainWindow::rawKeyPressed(int key)
+{
+    this->list_of_maintabs.first()->rawKeyPressed(key);
+}
+void MainWindow::rawKeyReleased(int key)
+{
+    this->list_of_maintabs.first()->rawKeyReleased(key);
 }

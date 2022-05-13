@@ -16,8 +16,6 @@
 #include "config.h"
 #include "input_keyboard_raw.h"
 
-#include <xcb/xcb.h>
-
 class MainTabs : public QTabWidget
 {
     Q_OBJECT

@@ -1,12 +1,14 @@
 QT  += core\
     gui\
     svg\
-    network
+    network\
+    x11extras
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 LIBS += -lasound \
-    -ljack
+    -ljack \
+    -lX11
 
 CONFIG += \
     c++11 \
@@ -22,6 +24,7 @@ SOURCES += \
     help_about_widget.cpp \
     help_message.cpp \
     input_keyboard_raw.cpp \
+    input_keyboard_xcb.cpp \
     interface_alsa.cpp \
     interface_audio.cpp \
     interface_jack.cpp \
@@ -47,6 +50,7 @@ HEADERS += \
     help_about_widget.h \
     help_message.h \
     input_keyboard_raw.h \
+    input_keyboard_xcb.h \
     interface_alsa.h \
     interface_audio.h \
     interface_jack.h \

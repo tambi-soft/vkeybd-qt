@@ -22,12 +22,7 @@
 #include "help_message.h"
 #include "help_about_widget.h"
 #include "input_keyboard_raw.h"
-
-//#include <QAbstractEventDispatcher>
-//#include <QDebug>
-//#include <QX11Info>
-//#include <xcb/xcb.h>
-//#include <X11/Xlib.h>
+#include "input_keyboard_xcb.h"
 
 class MainWindow : public QMainWindow
 {
@@ -54,6 +49,8 @@ private:
     
     void useInputKbdQtNative();
     void useInputKbdQtDefault();
+    
+    InputKeyboardXCB *inputXCB;
 
 protected:
     bool eventFilter(QObject *obj, QEvent *ev) override;
@@ -66,6 +63,9 @@ private slots:
     void restoreGeneral(int maintab, QMap<QString,QVariant> data);
     
     void showActionChanged(QString name, bool is_checked);
+    
+    void rawKeyPressed(int key);
+    void rawKeyReleased(int key);
 
 };
 #endif // MAINWINDOW_H
