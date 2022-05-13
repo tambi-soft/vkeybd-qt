@@ -13,7 +13,7 @@ InputKeyboardXCB::InputKeyboardXCB(QObject *parent)
     if(!supported || !result) {
         qDebug() << "ERROR: Set Detectable Autorepeat FAILED";
     } else {
-        qDebug() << "Setting Detectable Autorepeat";
+        qDebug() << "Setting Detectable Autorepeat SUCCESSFUL";
     }
 }
 

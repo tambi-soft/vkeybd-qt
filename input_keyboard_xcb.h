@@ -5,33 +5,17 @@
 #include "qtextstream.h"
 
 #include <xcb/xcb.h>
-//extern "C"
-//{
+
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include <X11/XKBlib.h>
+// https://interest.qt-project.narkive.com/h3IP384b/compiler-error-from-moc-mainwindow-cpp
 #undef Bool
-//}
 
 #include <QObject>
 #include <QX11Info> 
 #include <QMap>
 #include <QDebug>
-
-//#include <QDebug>
-//#include <QX11Info>
-//#include <xcb/xcb.h>
-//#include <X11/Xlib.h>
-
-//#include <X11/extensions/XInput2.h>
-//#include <X11/X.h>
-
-
-//#include <X11/Xutil.h>
-//#include <X11/Xlib.h>
-//#include <X11/XKBlib.h>
-
-//#include <stdbool.h>
 
 class InputKeyboardXCB : public QObject
 {
@@ -44,7 +28,6 @@ public:
 private:
     bool isAutoRepeat(xcb_generic_event_t* xev, void *message);
     
-    //QMap<int, int> map_of_keypresses;
     QList<int> list_of_keypresses;
     
 signals:

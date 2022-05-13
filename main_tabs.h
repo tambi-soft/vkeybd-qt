@@ -67,7 +67,6 @@ private:
 
 protected:
     bool eventFilter(QObject *obj, QEvent *ev) override;
-    //bool nativeEvent(const QByteArray &eventType, void *message, long *result) override;
     
 private slots:
     void keyboardSelectionChanged(QString text);
