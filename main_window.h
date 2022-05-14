@@ -23,12 +23,14 @@
 #include "input_keyboard_raw.h"
 #include "input_keyboard_xcb.h"
 
+#include "enums.h"
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
 public:
-    MainWindow(QString output_system, int number_of_keyboards, QWidget *parent = nullptr);
+    MainWindow(OutputSystem output, int number_of_keyboards, QWidget *parent = nullptr);
     ~MainWindow();
 
 private:
@@ -41,7 +43,7 @@ private:
     
     QMap<QString, QString> key_keycode_map = {};
     
-    QWidget* newKeyboardInstance(int id, QString mode);
+    QWidget* newKeyboardInstance(int id, OutputSystem output);
     
     bool input_kbd_qt_native = true;
     bool input_kbd_qt_default = false;

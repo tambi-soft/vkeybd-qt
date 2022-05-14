@@ -1,10 +1,10 @@
 #include "main_tabs.h"
 
-MainTabs::MainTabs(int id, Config *config, QString output_system, QComboBox *combo_keyboard_input, QPushButton *button_lock, QPushButton *button_keyboard_rescan, QLineEdit *line_udp_ip, QSpinBox *spin_port, QTabWidget *parent) : QTabWidget(parent)
+MainTabs::MainTabs(int id, Config *config, OutputSystem output, QComboBox *combo_keyboard_input, QPushButton *button_lock, QPushButton *button_keyboard_rescan, QLineEdit *line_udp_ip, QSpinBox *spin_port, QTabWidget *parent) : QTabWidget(parent)
 {
     this->id = id;
     this->config = config;
-    if (output_system == "network")
+    if (output == OutputSystem::Network)
     {
         this->send_udp = true;
     }
@@ -26,7 +26,7 @@ MainTabs::MainTabs(int id, Config *config, QString output_system, QComboBox *com
     
     this->socket = new QUdpSocket(this);
     
-    if (output_system != "network")
+    if (output != OutputSystem::Network)
     {
         connect(line_udp_ip, &QLineEdit::textChanged, this, &MainTabs::rebindSocketIP);
         connect(spin_port, QOverload<int>::of(&QSpinBox::valueChanged), this, &MainTabs::rebindSocket);
@@ -34,11 +34,11 @@ MainTabs::MainTabs(int id, Config *config, QString output_system, QComboBox *com
         socket->bind(QHostAddress::LocalHost, spin_port->value());
         connect(socket, &QUdpSocket::readyRead, this, &MainTabs::receiveUDPMessage);
         
-        initializeTabs(output_system);
+        initializeTabs(output);
     }
     else
     {
-        initializeTabs(output_system);
+        initializeTabs(output);
         
         hide();
     }
@@ -47,7 +47,7 @@ MainTabs::MainTabs(int id, Config *config, QString output_system, QComboBox *com
     
 }
 
-void MainTabs::initializeTabs(QString output_system)
+void MainTabs::initializeTabs(OutputSystem output)
 {
     this->list_function_keys = {Qt::Key_F1, Qt::Key_F2, Qt::Key_F3, Qt::Key_F4, -1, Qt::Key_F5, Qt::Key_F6, Qt::Key_F7, Qt::Key_F8, -1, Qt::Key_F9, Qt::Key_F10, Qt::Key_F11, Qt::Key_F12};
     this->list_function_keys_raw = {59, 60, 61, 62, -1, 63, 64, 65, 66, -1, 67, 68, 87, 88};
@@ -69,12 +69,12 @@ void MainTabs::initializeTabs(QString output_system)
         }
         else
         {
-            addOrganTab(output_system, this->list_labels.at(i), 1);
+            addOrganTab(output, this->list_labels.at(i), 1);
         }
     }
 }
 
-void MainTabs::addOrganTab(QString output_system, QString label, int number_of_orgelwerks)
+void MainTabs::addOrganTab(OutputSystem output, QString label, int number_of_orgelwerks)
 {
     QWidget *widget = new QWidget;
     QHBoxLayout *layout = new QHBoxLayout;
@@ -89,7 +89,7 @@ void MainTabs::addOrganTab(QString output_system, QString label, int number_of_o
             midi_port_label = label + "-" + QString::number(i);
         }
         
-        Orgelwerk *o = new Orgelwerk(this->id, output_system, midi_port_label);
+        Orgelwerk *o = new Orgelwerk(this->id, output, midi_port_label);
         connect(o, &Orgelwerk::eventFiltered, this, &MainTabs::eventFilter);
         
         layout->addWidget(o);

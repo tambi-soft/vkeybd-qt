@@ -4,6 +4,7 @@ InputKeyboardQt::InputKeyboardQt(QObject *parent)
     : QObject{parent}
 {
     qDebug() << QLocale::system();
+    //qDebug() << QLocale::Q
     
     this->list_function_keys = {Qt::Key_F1, Qt::Key_F2, Qt::Key_F3, Qt::Key_F4, -1, Qt::Key_F5, Qt::Key_F6, Qt::Key_F7, Qt::Key_F8, -1, Qt::Key_F9, Qt::Key_F10, Qt::Key_F11, Qt::Key_F12};
 }

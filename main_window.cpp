@@ -1,6 +1,6 @@
 #include "main_window.h"
 
-MainWindow::MainWindow(QString output_system, int number_of_keyboards, QWidget *parent)
+MainWindow::MainWindow(OutputSystem output, int number_of_keyboards, QWidget *parent)
     : QMainWindow(parent)
 {
     QWidget *main_container_widget = new QWidget;
@@ -15,7 +15,7 @@ MainWindow::MainWindow(QString output_system, int number_of_keyboards, QWidget *
         setStyleSheet(css_file.readAll());
     }
     
-    if (output_system != "network")
+    if (output != OutputSystem::Network)
     {
         MenuBar *menu = new MenuBar;
         connect(menu, &MenuBar::signalSave, this, &MainWindow::saveAllParams);
@@ -26,7 +26,7 @@ MainWindow::MainWindow(QString output_system, int number_of_keyboards, QWidget *
     
     for (int i=0; i < number_of_keyboards; i++)
     {
-        layout->addWidget(newKeyboardInstance(i, output_system));
+        layout->addWidget(newKeyboardInstance(i, output));
     }
     
     this->inputXCB = new InputKeyboardXCB;
@@ -44,7 +44,7 @@ MainWindow::~MainWindow()
     
 }
 
-QWidget* MainWindow::newKeyboardInstance(int id, QString mode)
+QWidget* MainWindow::newKeyboardInstance(int id, OutputSystem output)
 {
     QWidget *widget = new QWidget;
     //QVBoxLayout *layout = new QVBoxLayout;
@@ -81,7 +81,7 @@ QWidget* MainWindow::newKeyboardInstance(int id, QString mode)
     //spin_port->hide();
     this->list_of_spin_ports.append(spin_port);
     
-    MainTabs *tabs = new MainTabs(id, this->config, mode, combo_keyboard_input, button_lock, button_keyboard_rescan, line_udp_ip, spin_port);
+    MainTabs *tabs = new MainTabs(id, this->config, output, combo_keyboard_input, button_lock, button_keyboard_rescan, line_udp_ip, spin_port);
     connect(tabs, &MainTabs::useInputKbdQtNativeSignal, this, &MainWindow::useInputKbdQtNative);
     connect(tabs, &MainTabs::useInputKbdQtDefaultSignal, this, &MainWindow::useInputKbdQtDefault);
     this->list_of_maintabs.append(tabs);
@@ -102,7 +102,7 @@ QWidget* MainWindow::newKeyboardInstance(int id, QString mode)
     grid->addWidget(button_lock, 1, 1);
     grid->addWidget(button_keyboard_rescan, 1, 2);
     //grid->addWidget(button_lock_help, 1, 3);
-    if (mode == "network")
+    if (output == OutputSystem::Network)
     {
         QLabel *label_udp_client_ip = new QLabel("IP-Address of remote vkeybd-qt instance:");
         grid->addWidget(label_udp_client_ip, 2, 0);
@@ -117,7 +117,7 @@ QWidget* MainWindow::newKeyboardInstance(int id, QString mode)
     }
     grid->addWidget(line_udp_ip, 3, 0);
     grid->addWidget(spin_port, 3, 1, 1, 2);
-    if (mode != "network")
+    if (output != OutputSystem::Network)
     {
         grid->addWidget(tabs, 4, 0, 1, 3);
     }

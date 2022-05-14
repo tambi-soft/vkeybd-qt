@@ -3,6 +3,13 @@
 
 #include <QObject>
 
+enum class OutputSystem
+{
+    Alsa = 0,
+    Jack = 1,
+    Network = 2
+};
+
 enum class MIDISignalTypes
 {
     KeyPress = 0,

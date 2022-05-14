@@ -118,7 +118,6 @@ QList<QList<QString>> KeyboardPC::getButtonLabels()
             {"ctrl", "soft", "soste\nnuto", "sustain", "soste\nnuto", "↓", "↑", "→", "alt", "\u2325", "ctrl"}};
     return list;
 }
-
 QList<QList<int>> KeyboardPC::getButtonKeycodesDown()
 {
     QList<QList<int>> list;
@@ -254,7 +253,7 @@ void KeyboardPC::keyUpRaw(int keycode)
 
 void KeyboardPC::allKeysUp()
 {
-    QList<QList<int>> keycodes = getButtonKeycodesUp();
+    QList<QList<int>> keycodes = getButtonKeycodesRaw();
     for (int row=0; row < keycodes.length(); row++)
     {
         for (int col=0; col < keycodes.at(row).length(); col++)

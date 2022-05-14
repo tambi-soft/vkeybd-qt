@@ -28,6 +28,7 @@
 #include "interface_alsa.h"
 #include "interface_jack.h"
 
+#include "enums.h"
 
 #include <QThread>
 #include <QTimer>
@@ -62,7 +63,7 @@ class Orgelwerk : public QWidget
 {
     Q_OBJECT
 public:
-    explicit Orgelwerk(int id, QString audio_system, QString label, QWidget *parent = nullptr);
+    explicit Orgelwerk(int id, OutputSystem output, QString label, QWidget *parent = nullptr);
     ~Orgelwerk();
     
     void keyDown(int keycode);
@@ -100,7 +101,7 @@ public:
     
 private:
     int id;
-    QString audio_system;
+    OutputSystem audio_system;
     QString label;
     
     void drawGUI();

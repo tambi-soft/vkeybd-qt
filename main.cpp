@@ -4,12 +4,15 @@
 #include <QCommandLineParser>
 #include <QCommandLineOption>
 
+#include "enums.h"
+
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
     QApplication::setApplicationVersion("0.5");
     QApplication::setApplicationName("vkeybd-qt");
-    qDebug() << app.inputMethod()->locale().name();
+    //qDebug() << 
+    //app.inputMethod()->show();
     
     QCommandLineParser parser;
     parser.setApplicationDescription("vkeybd-qt is a powerful and most feature-complete software midi controller");
@@ -54,7 +57,15 @@ int main(int argc, char *argv[])
     }
     else
     {
-        MainWindow win(output_system, number_of_keyboards);
+        OutputSystem output;
+        if (output_system == "alsa")
+            output = OutputSystem::Alsa;
+        else if (output_system == "jack")
+            output = OutputSystem::Jack;
+        else if (output_system == "network")
+            output = OutputSystem::Network;
+        
+        MainWindow win(output, number_of_keyboards);
         win.show();
         return app.exec();
     }
