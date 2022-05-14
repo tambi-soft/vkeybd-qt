@@ -149,236 +149,12 @@ bool MainTabs::callEventFilter(QObject *obj, QEvent *ev)
 }
 bool MainTabs::eventFilter(QObject *obj, QEvent *ev)
 {
-    Q_UNUSED(obj);
-    
     if (! this->input_kbd_qt_default)
     {
-        //return false;
+        return false;
     }
     
-    if (ev->type() == QEvent::KeyPress)
-    {
-        QKeyEvent *event = static_cast<QKeyEvent*>(ev);
-        
-        if (!event->isAutoRepeat())
-        {
-            if (event->key() == Qt::Key_Control)
-            {
-                this->ctrl_down = true;
-            }
-            else if (event->key() == Qt::Key_Shift)
-            {
-                if (this->ctrl_down)
-                {
-                    qDebug() << "ctr shift";
-                    toggleKeyboardLock();
-                    
-                    return true;
-                }
-            }
-            
-            //Orgelwerk *o = static_cast<Orgelwerk*>(currentWidget());
-            Orgelwerk *o = static_cast<Orgelwerk*>(currentWidget()->layout()->itemAt(0)->widget());
-            
-            QString udp_message = QString::number(ev->type())+"/"+QString::number(event->key());
-            
-            if (event->key() == Qt::Key_Escape)
-            {
-                //o->button_panic->animateClick();
-                for (int i=0; i < this->list_of_tabs.length(); i++)
-                {
-                    this->list_of_tabs.at(i)->button_panic->animateClick();
-                }
-                
-                sendUDPMessage(udp_message);
-                
-                return true;
-            }
-            else if (event->key() == Qt::Key_Delete)
-            {
-                //o->button_stop_all->animateClick();
-                for (int i=0; i < this->list_of_tabs.length(); i++)
-                {
-                    this->list_of_tabs.at(i)->button_stop_all->animateClick();
-                }
-                
-                sendUDPMessage(udp_message);
-                
-                return true;
-            }
-            else if (event->key() == Qt::Key_Menu)
-            {
-                o->button_channels_dialog->animateClick();
-                sendUDPMessage(udp_message);
-            }
-            else if (event->key() == Qt::Key_Insert)
-            {
-                o->button_resend_midi->animateClick();
-                sendUDPMessage(udp_message);
-            }
-            else if (event->key() == Qt::Key_Space)
-            {
-                o->keySustain(true);
-                o->keyDown(Qt::Key_Space);
-                
-                sendUDPMessage(udp_message);
-                
-                return true;
-            }
-            else if (event->key() == Qt::Key_Alt)
-            {
-                o->keySostenuto(true);
-                o->keyDown(Qt::Key_Alt);
-                
-                sendUDPMessage(udp_message);
-                
-                return true;
-            }
-            else if (event->key() == Qt::Key_Super_L || event->key() == Qt::Key_Super_R)
-            {
-                o->keySoft(true);
-                o->keyDown(Qt::Key_Super_L);
-                o->keyDown(Qt::Key_Super_R);
-                
-                sendUDPMessage(udp_message);
-                
-                return true;
-            }
-            // activate desired tab by pressing an f-key
-            else if (this->list_function_keys.contains(event->key()))
-            {
-                for (int i=0; i < this->list_function_keys.length(); i++)
-                {
-                    if (this->list_function_keys.at(i) == event->key())
-                    {
-                        // send "all keys of" on old tab
-                        //o->panicKeyPressed();
-                        
-                        // activate new tab
-                        this->setCurrentIndex(i);
-                        
-                        // current widget changed, need to update
-                        //o = static_cast<Orgelwerk*>(currentWidget()->layout()->itemAt(0)->widget());
-                        //o->resendMIDIControls();
-                        
-                        sendUDPMessage(udp_message);
-                        
-                        return true;
-                    }
-                }
-            }
-            // use the arrow-keys to operate the pitch-wheel
-            else if ( (event->key() == Qt::Key_Left) | (event->key() == Qt::Key_Right) )
-            //else if (event->key() == Qt::Key_Up | event->key() == Qt::Key_Down)
-            {
-                //o->movePitchWheel(event->key());
-                o->pitch->pitchKeyPressed(event->key());
-                
-                sendUDPMessage(udp_message);
-                
-                return true;
-            }
-            else if (event->key() == Qt::Key_Up | event->key() == Qt::Key_Down | event->key() == Qt::Key_PageUp | event->key() == Qt::Key_PageDown)
-            {
-                o->volume->volumeKeyPressed(event->key());
-                
-                sendUDPMessage(udp_message);
-                
-                return true;
-            }
-            // input for the virtual keyboard(s)
-            else
-            {
-                o->keyDown(event->key());
-                
-                sendUDPMessage(udp_message);
-                
-                return true;
-            }
-        }
-    }
-    else if (ev->type() == QEvent::KeyRelease)
-    {
-        QKeyEvent *event = static_cast<QKeyEvent*>(ev);
-        
-        if (!event->isAutoRepeat())
-        {
-            //Orgelwerk *o = static_cast<Orgelwerk*>(currentWidget());
-            Orgelwerk *o = static_cast<Orgelwerk*>(currentWidget()->layout()->itemAt(0)->widget());
-            
-            QString udp_message = QString::number(ev->type())+"/"+QString::number(event->key());
-            
-            if (event->key() == Qt::Key_Space)
-            {
-                o->keySustain(false);
-                o->keyUp(Qt::Key_Space);
-                
-                sendUDPMessage(udp_message);
-                
-                return true;
-            }
-            else if (event->key() == Qt::Key_Alt)
-            {
-                o->keySostenuto(false);
-                o->keyUp(Qt::Key_Alt);
-                
-                sendUDPMessage(udp_message);
-                
-                return true;
-            }
-            else if (event->key() == Qt::Key_Super_L || event->key() == Qt::Key_Super_R)
-            {
-                o->keySoft(false);
-                o->keyUp(Qt::Key_Super_L);
-                o->keyUp(Qt::Key_Super_R);
-                
-                sendUDPMessage(udp_message);
-                
-                return true;
-            }
-            else if (event->key() == Qt::Key_Left | event->key() == Qt::Key_Right)
-            {
-                o->pitch->pitchKeyReleased();
-                sendUDPMessage(udp_message);
-                
-                return true;
-            }
-            else if (event->key() == Qt::Key_Up | event->key() == Qt::Key_Down | event->key() == Qt::Key_PageUp | event->key() == Qt::Key_PageDown)
-            {
-                o->volume->volumeKeyReleased();
-                sendUDPMessage(udp_message);
-                
-                return true;
-            }
-            else
-            {
-                // this function should be kept just in case "areKeysPressed" would return "false" falsely on current tab ...
-                //o->keyUp(event->key());
-                // we want to have a smooth way of switching between tabs (=presets) during playing
-                
-                for (int i=0; i < this->list_of_tabs.length(); i++)
-                {
-                    //if (this->list_of_tabs.at(i)->areKeysPressed())
-                    //{
-                        this->list_of_tabs.at(i)->keyUp(event->key());
-                    //}
-                }
-                
-                sendUDPMessage(udp_message);
-                
-                return true;
-            }
-        }
-    }
-    else if (ev->type() == QEvent::MouseButtonPress)
-    {
-        if (this->keyboard_locked)
-        {
-            toggleKeyboardLock();
-        }
-    }
-    
-    return false;
+    //return this->keyboard_qt->callEventFilter(obj, ev);
 }
 
 void MainTabs::sendUDPMessage(QString message)
@@ -510,6 +286,97 @@ void MainTabs::rawKeyReleased(int keycode)
         this->list_of_tabs.at(i)->keyUpRaw(keycode);
     }
 }
+void MainTabs::changeTab(int id){
+    this->setCurrentIndex(id);
+}
+void MainTabs::MIDISignal(MIDISignalTypes type)
+{
+    Orgelwerk *o = static_cast<Orgelwerk*>(currentWidget()->layout()->itemAt(0)->widget());
+    
+    if (type == MIDISignalTypes::ToggleKeyboardLock)
+    {
+        
+    }
+    else if (type == MIDISignalTypes::Panick)
+    {
+        for (int i=0; i < this->list_of_tabs.length(); i++)
+        {
+            this->list_of_tabs.at(i)->button_panic->animateClick();
+        }
+    }
+    else if (type == MIDISignalTypes::StopAll)
+    {
+        for (int i=0; i < this->list_of_tabs.length(); i++)
+        {
+            this->list_of_tabs.at(i)->button_stop_all->animateClick();
+        }
+    }
+    else if (type == MIDISignalTypes::ShowMenu)
+    {
+        o->button_channels_dialog->animateClick();
+    }
+    else if (type == MIDISignalTypes::ResendMIDISettings)
+    {
+        o->button_resend_midi->animateClick();
+    }
+    else if (type == MIDISignalTypes::SustainPressed)
+    {
+        o->keySustain(true);
+        o->keyDown(Qt::Key_Space);
+    }
+    else if (type == MIDISignalTypes::SustainReleased)
+    {
+        o->keySustain(false);
+        o->keyUp(Qt::Key_Space);
+    }
+    else if (type == MIDISignalTypes::SostenutoPressed)
+    {
+        o->keySostenuto(true);
+        o->keyDown(Qt::Key_Alt);
+    }
+    else if (type == MIDISignalTypes::SostenutoReleased)
+    {
+        o->keySostenuto(false);
+        o->keyUp(Qt::Key_Alt);
+    }
+    else if (type == MIDISignalTypes::SoftPressed)
+    {
+        o->keySoft(true);
+        o->keyDown(Qt::Key_Super_L);
+        o->keyDown(Qt::Key_Super_R);
+    }
+    else if (type == MIDISignalTypes::SoftReleased)
+    {
+        o->keySoft(false);
+        o->keyUp(Qt::Key_Super_L);
+        o->keyUp(Qt::Key_Super_R);
+    }
+    else if (type == MIDISignalTypes::VolumeLowerPressed)
+    {
+        o->volume->volumeKeyPressed(Qt::Key_Down);
+    }
+    else if (type == MIDISignalTypes::VolumeHigherPressed)
+    {
+        o->volume->volumeKeyPressed(Qt::Key_Up);
+    }
+    else if (type == MIDISignalTypes::VolumeReleased)
+    {
+        o->volume->volumeKeyReleased();
+    }
+    else if (type == MIDISignalTypes::PitchLowerPressed)
+    {
+        o->pitch->pitchKeyPressed(Qt::Key_Left);
+    }
+    else if (type == MIDISignalTypes::PitchHigherPressed)
+    {
+        o->pitch->pitchKeyPressed(Qt::Key_Right);
+    }
+    else if (type == MIDISignalTypes::PitchReleased)
+    {
+        o->pitch->pitchKeyReleased();
+    }
+}
+
 void MainTabs::toggleKeyboardLock()
 {
     //this->keyboard_raw->keyboardRelease();

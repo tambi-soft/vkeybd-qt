@@ -14,6 +14,8 @@
 
 #include "orgelwerk.h"
 #include "config.h"
+#include "enums.h"
+#include "input_keyboard_qt.h"
 #include "input_keyboard_raw.h"
 
 class MainTabs : public QTabWidget
@@ -30,6 +32,8 @@ public:
     
     void rawKeyPressed(int keycode);
     void rawKeyReleased(int keycode);
+    void changeTab(int id);
+    void MIDISignal(MIDISignalTypes type);
     
 private:
     QList<int> list_function_keys;
@@ -52,8 +56,8 @@ private:
     QSpinBox *spin_port;
     
     bool keyboard_locked = false;
+    //InputKeyboardQt *keyboard_qt;
     InputKeyboardRaw *keyboard_raw;
-    bool ctrl_down = false;
     
     QUdpSocket *socket;
     void rebindSocketIP(QString ip);

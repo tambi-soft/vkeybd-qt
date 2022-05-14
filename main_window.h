@@ -14,13 +14,12 @@
 #include <QAbstractNativeEventFilter>
 #include <QAbstractEventDispatcher>
 
-//#include "orgelwerk.h"
-//#include "keyboard_piano.h"
 #include "main_tabs.h"
 #include "menubar.h"
 #include "config.h"
 #include "help_message.h"
 #include "help_about_widget.h"
+#include "input_keyboard_qt.h"
 #include "input_keyboard_raw.h"
 #include "input_keyboard_xcb.h"
 
@@ -50,6 +49,7 @@ private:
     void useInputKbdQtNative();
     void useInputKbdQtDefault();
     
+    InputKeyboardQt *inputQt;
     InputKeyboardXCB *inputXCB;
 
 protected:
@@ -66,6 +66,8 @@ private slots:
     
     void rawKeyPressed(int key);
     void rawKeyReleased(int key);
+    void changeTab(int id);
+    void MIDISignal(MIDISignalTypes type);
 
 };
 #endif // MAINWINDOW_H

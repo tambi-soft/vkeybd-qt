@@ -3,10 +3,6 @@
 MainWindow::MainWindow(QString output_system, int number_of_keyboards, QWidget *parent)
     : QMainWindow(parent)
 {
-    this->inputXCB = new InputKeyboardXCB;
-    connect(this->inputXCB, &InputKeyboardXCB::rawKeyPressedSignal, this, &MainWindow::rawKeyPressed);
-    connect(this->inputXCB, &InputKeyboardXCB::rawKeyReleasedSignal, this, &MainWindow::rawKeyReleased);
-    
     QWidget *main_container_widget = new QWidget;
     QHBoxLayout *layout = new QHBoxLayout;
     layout->setContentsMargins(0, 0, 0, 0);
@@ -32,6 +28,15 @@ MainWindow::MainWindow(QString output_system, int number_of_keyboards, QWidget *
     {
         layout->addWidget(newKeyboardInstance(i, output_system));
     }
+    
+    this->inputXCB = new InputKeyboardXCB;
+    connect(this->inputXCB, &InputKeyboardXCB::rawKeyPressedSignal, this, &MainWindow::rawKeyPressed);
+    connect(this->inputXCB, &InputKeyboardXCB::rawKeyReleasedSignal, this, &MainWindow::rawKeyReleased);
+    
+    this->inputQt = new InputKeyboardQt;
+    connect(this->inputQt, &InputKeyboardQt::keyPressSignal, this, &MainWindow::rawKeyPressed);
+    connect(this->inputQt, &InputKeyboardQt::keyReleaseSignal, this, &MainWindow::rawKeyReleased);
+    connect(this->inputQt, &InputKeyboardQt::MIDISignal, this, &MainWindow::MIDISignal);                        
 }
 
 MainWindow::~MainWindow()
@@ -116,14 +121,6 @@ QWidget* MainWindow::newKeyboardInstance(int id, QString mode)
     {
         grid->addWidget(tabs, 4, 0, 1, 3);
     }
-    
-    //this->installEventFilter(this);
-    //QCoreApplication::installNativeEventFilter(this);
-    //QAbstractEventDispatcher::instance()->installNativeEventFilter(this);
-    //QAbstractEventDispatcher::instance()->installNativeEventFilter(this);
-    
-    //QAbstractNativeEventFilter *xev = new InputNativeEventFilter;
-    //QAbstractEventDispatcher::instance()->installNativeEventFilter(xev);
     
     //int width = this->width();
     //resize(width, 900);
@@ -222,7 +219,9 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *ev)
     }
     */
     
-    return false;
+    return this->inputQt->callEventFilter(obj, ev);
+    
+    //return false;
 }
 
 /*
@@ -327,11 +326,17 @@ void MainWindow::useInputKbdQtNative()
 {
     this->input_kbd_qt_native = true;
     this->input_kbd_qt_default = false;
+    
+    qDebug() << "removing event filter";
+    removeEventFilter(this);
 }
 void MainWindow::useInputKbdQtDefault()
 {
     this->input_kbd_qt_default = true;
     this->input_kbd_qt_native = false;
+    
+    qDebug() << "installing event filter";
+    installEventFilter(this);
 }
 
 void MainWindow::rawKeyPressed(int key)
@@ -341,4 +346,12 @@ void MainWindow::rawKeyPressed(int key)
 void MainWindow::rawKeyReleased(int key)
 {
     this->list_of_maintabs.first()->rawKeyReleased(key);
+}
+void MainWindow::changeTab(int id)
+{
+    this->list_of_maintabs.first()->changeTab(id);
+}
+void MainWindow::MIDISignal(MIDISignalTypes type)
+{
+    this->list_of_maintabs.first()->MIDISignal(type);
 }

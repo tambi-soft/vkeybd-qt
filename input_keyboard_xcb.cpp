@@ -19,6 +19,8 @@ InputKeyboardXCB::InputKeyboardXCB(QObject *parent)
 
 bool InputKeyboardXCB::xcbEvent(const QByteArray &eventType, void *message, long *result)
 {
+    Q_UNUSED(result);
+    
     if (eventType == "xcb_generic_event_t")
     {
         xcb_generic_event_t* xev = static_cast<xcb_generic_event_t *>(message);
@@ -63,8 +65,7 @@ bool InputKeyboardXCB::xcbEvent(const QByteArray &eventType, void *message, long
                     return true;
                 }
             }
-        }   
-        
+        }
     }
     
     return false;
@@ -79,14 +80,12 @@ bool InputKeyboardXCB::isAutoRepeat(xcb_generic_event_t* xev, void *message)
     if (xev->response_type == XCB_KEY_PRESS)
     {
         auto kev = static_cast<xcb_key_press_event_t*>(message);
-        //qDebug() << ", code: " << kev->detail << ", timestamp: " << kev->time << ", sequence:" << kev->sequence;
         
         if (this->list_of_keypresses.contains(kev->detail))
         {
             autorepeat_detected = true;
         }
-        
-        if (!this->list_of_keypresses.contains(kev->detail))
+        else
         {
             this->list_of_keypresses.append(kev->detail);
         }
@@ -98,8 +97,6 @@ bool InputKeyboardXCB::isAutoRepeat(xcb_generic_event_t* xev, void *message)
         int index = this->list_of_keypresses.indexOf(kev->detail);
         this->list_of_keypresses.removeAt(index);
     }
-    
-    //qDebug() << "AUTOREPEAT: " << autorepeat_detected;
     
     return autorepeat_detected;
 }

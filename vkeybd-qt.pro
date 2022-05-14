@@ -25,7 +25,9 @@ SOURCES += \
     help_message.cpp \
     input_keyboard_qt.cpp \
     input_keyboard_raw.cpp \
+    input_keyboard_udp.cpp \
     input_keyboard_xcb.cpp \
+    input_midi.cpp \
     interface_alsa.cpp \
     interface_audio.cpp \
     interface_jack.cpp \
@@ -48,11 +50,14 @@ SOURCES += \
 HEADERS += \
     button_piano.h \
     config.h \
+    enums.h \
     help_about_widget.h \
     help_message.h \
     input_keyboard_qt.h \
     input_keyboard_raw.h \
+    input_keyboard_udp.h \
     input_keyboard_xcb.h \
+    input_midi.h \
     interface_alsa.h \
     interface_audio.h \
     interface_jack.h \

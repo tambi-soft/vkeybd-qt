@@ -1,6 +1,8 @@
 #ifndef INPUTKEYBOARDXCB_H
 #define INPUTKEYBOARDXCB_H
 
+#include "enums.h"
+
 #include "qmetatype.h"
 #include "qtextstream.h"
 
@@ -33,6 +35,10 @@ private:
 signals:
     void rawKeyPressedSignal(int key);
     void rawKeyReleasedSignal(int key);
+    
+    void toggleKeyboardLockSignal();
+    void changeTabSignal(int id);
+    void MIDISignal(MIDISignalTypes type);
 };
 
 #endif // INPUTKEYBOARDXCB_H

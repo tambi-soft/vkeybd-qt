@@ -9,7 +9,7 @@ int main(int argc, char *argv[])
     QApplication app(argc, argv);
     QApplication::setApplicationVersion("0.5");
     QApplication::setApplicationName("vkeybd-qt");
-    
+    qDebug() << app.inputMethod()->locale().name();
     
     QCommandLineParser parser;
     parser.setApplicationDescription("vkeybd-qt is a powerful and most feature-complete software midi controller");
