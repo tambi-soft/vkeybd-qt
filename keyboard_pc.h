@@ -29,7 +29,6 @@ private:
     QList<QList<int>> getButtonKeycodesDown();
     QList<QList<int>> getButtonKeycodesUp();
     QList<QList<int>> getButtonKeycodesRaw();
-    QList<QList<int>> getButtonKeycodesNative();
     QList<QList<int>> getMIDICodes();
     
     QList<QList<QPushButton*>> list_of_buttons;
