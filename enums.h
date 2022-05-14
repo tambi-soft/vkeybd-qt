@@ -5,55 +5,90 @@
 
 enum class OutputSystem
 {
-    Alsa = 0,
-    Jack = 1,
-    Network = 2
+    Alsa,
+    Jack,
+    Network,
 };
 
 enum class MIDISignalTypes
 {
-    KeyPress = 0,
-    KeyRelease = 1,
-    ToggleKeyboardLock = 2,
-    Panick = 3,
-    StopAll = 4,
-    ShowMenu = 5,
-    ResendMIDISettings = 6,
+    KeyPress,
+    KeyRelease,
+    ToggleKeyboardLock ,
+    Panick,
+    StopAll,
+    ShowMenu,
+    ResendMIDISettings,
     
-    SustainPressed = 7,
-    SustainReleased = 8,
+    SustainPressed,
+    SustainReleased,
     
-    SostenutoPressed = 9,
-    SostenutoReleased = 10,
+    SostenutoPressed,
+    SostenutoReleased,
     
-    SoftPressed = 11,
-    SoftReleased = 12,
+    SoftPressed,
+    SoftReleased,
     
-    VolumeLowerPressed = 13,
-    VolumeHigherPressed = 14,
-    VolumeReleased = 15,
+    VolumeLowerPressed,
+    VolumeHigherPressed,
+    VolumeReleased,
     
-    PitchLowerPressed = 16,
-    PitchHigherPressed = 17,
-    PitchReleased = 18,
+    PitchLowerPressed,
+    PitchHigherPressed,
+    PitchReleased,
 };
 
 enum class TabNames
 {
-    F1 = 0,
-    F2 = 1,
-    F3 = 2,
-    F4 = 3,
+    F1,
+    F2,
+    F3,
+    F4,
     
-    F5 = 4,
-    F6 = 5,
-    F7 = 6,
-    F8 = 7,
+    F5,
+    F6,
+    F7,
+    F8,
     
-    F9 = 8,
-    F10 = 9,
-    F11 = 10,
-    F12 = 11
+    F9,
+    F10,
+    F11,
+    F12
+};
+
+enum KeysRaw : uint8_t
+{
+    Escape = 1,
+    Insert = 110,
+    Delete = 111,
+    Menu = 127,
+    
+    Alt = 56,
+    Space = 57,
+    Up = 103,
+    Down = 108,
+    Left = 105,
+    Right = 106,
+    PageUp = 104,
+    PageDown = 109,
+    Control = 29,
+    Super_L = 125,
+    Super_R = 125,
+    
+    F1 = 59,
+    F2 = 60,
+    F3 = 61,
+    F4 = 62,
+    
+    F5 = 63,
+    F6 = 64,
+    F7 = 65,
+    F8 = 66,
+    
+    F9 = 67,
+    F10 = 68,
+    F11 = 87,
+    F12 = 88,
 };
 
 #endif // ENUMS_H

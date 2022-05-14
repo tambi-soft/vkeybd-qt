@@ -49,9 +49,9 @@ MainTabs::MainTabs(int id, Config *config, OutputSystem output, QComboBox *combo
 
 void MainTabs::initializeTabs(OutputSystem output)
 {
-    this->list_function_keys = {Qt::Key_F1, Qt::Key_F2, Qt::Key_F3, Qt::Key_F4, -1, Qt::Key_F5, Qt::Key_F6, Qt::Key_F7, Qt::Key_F8, -1, Qt::Key_F9, Qt::Key_F10, Qt::Key_F11, Qt::Key_F12};
-    this->list_function_keys_raw = {59, 60, 61, 62, -1, 63, 64, 65, 66, -1, 67, 68, 87, 88};
-    this->list_function_keys_native = {67, 68, 69, 70, -1, 71, 72, 73, 74, -1, 75, 76, 95, 96};
+    //this->list_function_keys = {Qt::Key_F1, Qt::Key_F2, Qt::Key_F3, Qt::Key_F4, -1, Qt::Key_F5, Qt::Key_F6, Qt::Key_F7, Qt::Key_F8, -1, Qt::Key_F9, Qt::Key_F10, Qt::Key_F11, Qt::Key_F12};
+    this->list_function_keys_raw = {KeysRaw::F1, KeysRaw::F2, KeysRaw::F3, KeysRaw::F4, -1, KeysRaw::F5, KeysRaw::F6, KeysRaw::F7, KeysRaw::F8, -1, KeysRaw::F9, KeysRaw::F10, KeysRaw::F11, KeysRaw::F12};
+    //this->list_function_keys_native = {67, 68, 69, 70, -1, 71, 72, 73, 74, -1, 75, 76, 95, 96};
     this->list_labels = {"F1", "F2", "F3", "F4", "spacer", "F5", "F6", "F7", "F8", "spacer", "F9", "F10", "F11", "F12"};
     
     int number_of_tabs = this->list_labels.length();
@@ -242,7 +242,7 @@ void MainTabs::rawKeyPressed(int keycode)
 {
     qDebug() << "main_tabs: rawKeyPressed: " << keycode;
     
-    for (int i=0; i < this->list_function_keys.length(); i++)
+    for (int i=0; i < this->list_function_keys_raw.length(); i++)
     {
         if (this->list_function_keys_raw.at(i) == keycode)
         {
@@ -251,19 +251,19 @@ void MainTabs::rawKeyPressed(int keycode)
         }
     }
     
-    if (keycode == 1) // escape
+    if (keycode == KeysRaw::Escape)
     {
         for (int i=0; i < this->list_of_tabs.length(); i++)
         {
             this->list_of_tabs.at(i)->button_panic->animateClick();
         }
     }
-    else if (keycode == 110) // insert
+    else if (keycode == KeysRaw::Insert)
     {
         Orgelwerk *o = static_cast<Orgelwerk*>(currentWidget()->layout()->itemAt(0)->widget());
         o->button_resend_midi->animateClick();
     }
-    else if (keycode == 111) // delete
+    else if (keycode == KeysRaw::Delete)
     {
         for (int i=0; i < this->list_of_tabs.length(); i++)
         {

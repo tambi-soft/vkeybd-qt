@@ -20,7 +20,7 @@ public:
     bool callEventFilter(QObject *obj, QEvent *ev);
     
 private:
-    QList<int> list_function_keys;
+    //QList<int> list_function_keys;
     
     bool ctrl_down = false;
     
@@ -48,7 +48,7 @@ signals:
     void keyPressSignal(int key);
     void keyReleaseSignal(int key);
     void toggleKeyboardLockSignal();
-    void changeTabSignal(int id);
+    //void changeTabSignal(int id);
     void MIDISignal(MIDISignalTypes type);
 };
 
