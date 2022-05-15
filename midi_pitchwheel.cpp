@@ -127,11 +127,11 @@ void MIDIPitchWheel::pitchKeyPressed(int key)
     this->worker->setVibAmp(amp);
     
     int direction = 0;
-    if (key == Qt::Key_Left)
+    if (key == KeysRaw::Left)
     {
         direction = -1;
     }
-    else if (key == Qt::Key_Right)
+    else if (key == KeysRaw::Right)
     {
         direction = 1;
     }

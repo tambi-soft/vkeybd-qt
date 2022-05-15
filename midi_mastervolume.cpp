@@ -63,22 +63,22 @@ void MIDIMasterVolume::volumeKeyPressed(int key)
     this->worker->setVolumeMinMax(this->slider_volume->minimum(), this->slider_volume->maximum());
     
     int direction = 0;
-    if (key == Qt::Key_Down)
+    if (key == KeysRaw::Down)
     {
         direction = -1;
         this->worker->shouldResetSlider(true);
     }
-    else if (key == Qt::Key_Up)
+    else if (key == KeysRaw::Up)
     {
         direction = 1;
         this->worker->shouldResetSlider(true);
     }
-    else if (key == Qt::Key_PageDown)
+    else if (key == KeysRaw::PageDown)
     {
         direction = -1;
         this->worker->shouldResetSlider(false);
     }
-    else if (key == Qt::Key_PageUp)
+    else if (key == KeysRaw::PageUp)
     {
         direction = 1;
         this->worker->shouldResetSlider(false);

@@ -15,8 +15,6 @@ public:
     
     float button_scale = .799;
     
-    void keyDown(int keycode);
-    void keyUp(int keycode);
     void keyDownRaw(int keycode);
     void keyUpRaw(int keycode);
     void allKeysUp();
@@ -25,9 +23,6 @@ private:
     QList<QList<int>> getButtonSizes();
     QList<QList<QString>> getButtonColors();
     QList<QList<QString>> getButtonLabels();
-    // some keys can have different codes on up or down (e.g. Shift-Keys on German Neo2)
-    QList<QList<int>> getButtonKeycodesDown();
-    QList<QList<int>> getButtonKeycodesUp();
     QList<QList<int>> getButtonKeycodesRaw();
     QList<QList<int>> getMIDICodes();
     

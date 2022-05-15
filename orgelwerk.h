@@ -66,8 +66,8 @@ public:
     explicit Orgelwerk(int id, OutputSystem output, QString label, QWidget *parent = nullptr);
     ~Orgelwerk();
     
-    void keyDown(int keycode);
-    void keyUp(int keycode);
+    //void keyDown(int keycode);
+    //void keyUp(int keycode);
     void keyDownRaw(int keycode);
     void keyUpRaw(int keycode);
     void panicKeyPressed();

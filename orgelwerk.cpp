@@ -171,7 +171,7 @@ void Orgelwerk::addNewAudioInterface(QString label)
     
     this->channels->setListOfAudioOutputs(this->list_of_audio_interfaces);
 }
-
+/*
 void Orgelwerk::keyDown(int keycode)
 {
     
@@ -190,6 +190,7 @@ void Orgelwerk::keyUp(int keycode)
     //qDebug() << "keyUp:   "+this->label+" "+ QString::number(keycode);
     this->pc->keyUp(keycode);
 }
+*/
 void Orgelwerk::keyDownRaw(int keycode)
 {
     this->pc->keyDownRaw(keycode);

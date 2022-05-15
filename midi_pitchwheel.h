@@ -6,6 +6,8 @@
 
 #include <interface_audio.h>
 
+#include "enums.h"
+
 class MIDIPitchWheelWorker : public QObject
 {
     Q_OBJECT

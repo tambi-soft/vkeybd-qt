@@ -30,7 +30,9 @@ enum class MIDISignalTypes
     SoftReleased,
     
     VolumeLowerPressed,
+    VolumeLowerPressedPermanent,
     VolumeHigherPressed,
+    VolumeHigherPressedPermanent,
     VolumeReleased,
     
     PitchLowerPressed,

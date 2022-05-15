@@ -238,9 +238,14 @@ void MainTabs::deviceNotAvailable(QString message)
 {
     qDebug() << "main_tabs: deviceNotAvailable";
 }
+
 void MainTabs::rawKeyPressed(int keycode)
 {
     qDebug() << "main_tabs: rawKeyPressed: " << keycode;
+    
+    QString udp_message = "keypress/"+QString::number(keycode);
+    
+    sendUDPMessage(udp_message);
     
     for (int i=0; i < this->list_function_keys_raw.length(); i++)
     {
@@ -253,22 +258,55 @@ void MainTabs::rawKeyPressed(int keycode)
     
     if (keycode == KeysRaw::Escape)
     {
-        for (int i=0; i < this->list_of_tabs.length(); i++)
-        {
-            this->list_of_tabs.at(i)->button_panic->animateClick();
-        }
-    }
-    else if (keycode == KeysRaw::Insert)
-    {
-        Orgelwerk *o = static_cast<Orgelwerk*>(currentWidget()->layout()->itemAt(0)->widget());
-        o->button_resend_midi->animateClick();
+        MIDISignal(MIDISignalTypes::Panick);
     }
     else if (keycode == KeysRaw::Delete)
     {
-        for (int i=0; i < this->list_of_tabs.length(); i++)
-        {
-            this->list_of_tabs.at(i)->button_stop_all->animateClick();
-        }
+        MIDISignal(MIDISignalTypes::StopAll);
+    }
+    else if (keycode == KeysRaw::Insert)
+    {
+        MIDISignal(MIDISignalTypes::ResendMIDISettings);
+    }
+    else if (keycode == KeysRaw::Menu)
+    {
+        MIDISignal(MIDISignalTypes::ShowMenu);
+    }
+    else if (keycode == KeysRaw::Space)
+    {
+        MIDISignal(MIDISignalTypes::SustainPressed);
+    }
+    else if (keycode == KeysRaw::Alt)
+    {
+        MIDISignal(MIDISignalTypes::SostenutoPressed);
+    }
+    else if (keycode == KeysRaw::Super_L || keycode == KeysRaw::Super_R)
+    {
+        MIDISignal(MIDISignalTypes::SoftPressed);
+    }
+    else if (keycode == KeysRaw::Left)
+    {
+        MIDISignal(MIDISignalTypes::PitchLowerPressed);
+    }
+    else if (keycode == KeysRaw::Right)
+    {
+        MIDISignal(MIDISignalTypes::PitchHigherPressed);
+    }
+    else if (keycode == KeysRaw::Down)
+    {
+        MIDISignal(MIDISignalTypes::VolumeLowerPressed);
+    }
+    else if (keycode == KeysRaw::Up)
+    {
+        MIDISignal(MIDISignalTypes::VolumeHigherPressed);
+    }
+    else if (keycode == KeysRaw::PageDown)
+    {
+        MIDISignal(MIDISignalTypes::VolumeLowerPressedPermanent);
+    }
+    else if (keycode == KeysRaw::PageUp)
+    {
+        MIDISignal(MIDISignalTypes::VolumeHigherPressedPermanent);
     }
     else
     {
@@ -280,10 +318,37 @@ void MainTabs::rawKeyReleased(int keycode)
 {
     qDebug() << "main_tabs: rawKeyReleased: " << keycode;
     
-    // we want to have a smooth way of switching between tabs (=presets) during playing
-    for (int i=0; i < this->list_of_tabs.length(); i++)
+    QString udp_message = "keyrelease/"+QString::number(keycode);
+    
+    sendUDPMessage(udp_message);
+    
+    if (keycode == KeysRaw::Space)
     {
-        this->list_of_tabs.at(i)->keyUpRaw(keycode);
+        MIDISignal(MIDISignalTypes::SustainReleased);
+    }
+    else if (keycode == KeysRaw::Alt)
+    {
+        MIDISignal(MIDISignalTypes::SostenutoReleased);
+    }
+    else if (keycode == KeysRaw::Super_L || keycode == KeysRaw::Super_R)
+    {
+        MIDISignal(MIDISignalTypes::SoftReleased);
+    }
+    else if (keycode == KeysRaw::Left || keycode == KeysRaw::Right)
+    {
+        MIDISignal(MIDISignalTypes::PitchReleased);
+    }
+    else if (keycode == KeysRaw::Up || keycode == KeysRaw::Down || keycode == KeysRaw::PageUp || keycode == KeysRaw::PageDown)
+    {
+        MIDISignal(MIDISignalTypes::VolumeReleased);
+    }
+    else
+    {
+        // we want to have a smooth way of switching between tabs (=presets) during playing
+        for (int i=0; i < this->list_of_tabs.length(); i++)
+        {
+            this->list_of_tabs.at(i)->keyUpRaw(keycode);
+        }
     }
 }
 void MainTabs::changeTab(int id){
@@ -322,42 +387,58 @@ void MainTabs::MIDISignal(MIDISignalTypes type)
     else if (type == MIDISignalTypes::SustainPressed)
     {
         o->keySustain(true);
-        o->keyDown(Qt::Key_Space);
+        //o->keyDown(Qt::Key_Space);
+        o->keyDownRaw(KeysRaw::Space);
     }
     else if (type == MIDISignalTypes::SustainReleased)
     {
         o->keySustain(false);
-        o->keyUp(Qt::Key_Space);
+        //o->keyUp(Qt::Key_Space);
+        o->keyUpRaw(KeysRaw::Space);
     }
     else if (type == MIDISignalTypes::SostenutoPressed)
     {
         o->keySostenuto(true);
-        o->keyDown(Qt::Key_Alt);
+        //o->keyDown(Qt::Key_Alt);
+        o->keyDownRaw(KeysRaw::Alt);
     }
     else if (type == MIDISignalTypes::SostenutoReleased)
     {
         o->keySostenuto(false);
-        o->keyUp(Qt::Key_Alt);
+        //o->keyUp(Qt::Key_Alt);
+        o->keyUpRaw(KeysRaw::Alt);
     }
     else if (type == MIDISignalTypes::SoftPressed)
     {
         o->keySoft(true);
-        o->keyDown(Qt::Key_Super_L);
-        o->keyDown(Qt::Key_Super_R);
+        //o->keyDown(Qt::Key_Super_L);
+        //o->keyDown(Qt::Key_Super_R);
+        o->keyDownRaw(KeysRaw::Super_L);
+        o->keyDownRaw(KeysRaw::Super_R);
     }
     else if (type == MIDISignalTypes::SoftReleased)
     {
         o->keySoft(false);
-        o->keyUp(Qt::Key_Super_L);
-        o->keyUp(Qt::Key_Super_R);
+        //o->keyUp(Qt::Key_Super_L);
+        //o->keyUp(Qt::Key_Super_R);
+        o->keyUpRaw(KeysRaw::Super_L);
+        o->keyUpRaw(KeysRaw::Super_R);
     }
     else if (type == MIDISignalTypes::VolumeLowerPressed)
     {
-        o->volume->volumeKeyPressed(Qt::Key_Down);
+        o->volume->volumeKeyPressed(KeysRaw::Down);
+    }
+    else if (type == MIDISignalTypes::VolumeLowerPressedPermanent)
+    {
+        o->volume->volumeKeyPressed(KeysRaw::PageDown);
     }
     else if (type == MIDISignalTypes::VolumeHigherPressed)
     {
-        o->volume->volumeKeyPressed(Qt::Key_Up);
+        o->volume->volumeKeyPressed(KeysRaw::Up);
+    }
+    else if (type == MIDISignalTypes::VolumeHigherPressedPermanent)
+    {
+        o->volume->volumeKeyPressed(KeysRaw::PageUp);
     }
     else if (type == MIDISignalTypes::VolumeReleased)
     {
@@ -365,11 +446,11 @@ void MainTabs::MIDISignal(MIDISignalTypes type)
     }
     else if (type == MIDISignalTypes::PitchLowerPressed)
     {
-        o->pitch->pitchKeyPressed(Qt::Key_Left);
+        o->pitch->pitchKeyPressed(KeysRaw::Left);
     }
     else if (type == MIDISignalTypes::PitchHigherPressed)
     {
-        o->pitch->pitchKeyPressed(Qt::Key_Right);
+        o->pitch->pitchKeyPressed(KeysRaw::Right);
     }
     else if (type == MIDISignalTypes::PitchReleased)
     {

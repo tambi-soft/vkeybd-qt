@@ -6,6 +6,8 @@
 #include <QTimer>
 #include <QDebug>
 
+#include "enums.h"
+
 class MIDIMasterVolumeWorker : public QObject
 {
     Q_OBJECT
