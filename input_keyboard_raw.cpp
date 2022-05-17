@@ -180,10 +180,12 @@ void InputKeyboardRawWorker::tick()
             //printf("%s 0x%04x (%d)\n", evval[ev.value], (int)ev.code, (int)ev.code);
             if (this->ev.value == 1)
             {
+                qDebug() << "KEY PRESSED RAW";
                 emit rawKeyPressed(this->ev.code);
             }
             else if (this->ev.value == 0)
             {
+                qDebug() << "KEY RELEASED RAW";
                 emit rawKeyReleased(this->ev.code);
             }
         }

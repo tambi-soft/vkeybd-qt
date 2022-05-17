@@ -23,6 +23,7 @@ private:
     QList<QList<int>> getButtonSizes();
     QList<QList<QString>> getButtonColors();
     QList<QList<QString>> getButtonLabels();
+    // "raw" means: as read directly from /dev/input
     QList<QList<int>> getButtonKeycodesRaw();
     QList<QList<int>> getMIDICodes();
     

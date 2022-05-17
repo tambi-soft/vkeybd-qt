@@ -21,7 +21,7 @@ private:
     
 signals:
     
-private slots:
+public slots:
     void lowerShiftKeyPressed();
     void higherShiftKeyPressed();
 };

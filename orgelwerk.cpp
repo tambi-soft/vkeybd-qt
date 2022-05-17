@@ -506,6 +506,15 @@ void Orgelwerk::showHideGUIElements(QString name, bool show)
     }
 }
 
+void Orgelwerk::octaveDown()
+{
+    this->key_shift_master->lowerShiftKeyPressed();
+}
+void Orgelwerk::octaveUp()
+{
+    this->key_shift_master->higherShiftKeyPressed();
+}
+
 bool Orgelwerk::eventFilter(QObject *obj, QEvent *ev)
 {
     if (ev->type() == QEvent::KeyPress || ev->type() == QEvent::KeyRelease)

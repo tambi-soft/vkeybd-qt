@@ -308,6 +308,14 @@ void MainTabs::rawKeyPressed(int keycode)
     {
         MIDISignal(MIDISignalTypes::VolumeHigherPressedPermanent);
     }
+    else if (keycode == KeysRaw::Control_L)
+    {
+        MIDISignal(MIDISignalTypes::OctaveDownPressed);
+    }
+    else if (keycode == KeysRaw::Control_R)
+    {
+        MIDISignal(MIDISignalTypes::OctaveUpPressed);
+    }
     else
     {
         Orgelwerk *o = static_cast<Orgelwerk*>(currentWidget()->layout()->itemAt(0)->widget());
@@ -387,40 +395,32 @@ void MainTabs::MIDISignal(MIDISignalTypes type)
     else if (type == MIDISignalTypes::SustainPressed)
     {
         o->keySustain(true);
-        //o->keyDown(Qt::Key_Space);
         o->keyDownRaw(KeysRaw::Space);
     }
     else if (type == MIDISignalTypes::SustainReleased)
     {
         o->keySustain(false);
-        //o->keyUp(Qt::Key_Space);
         o->keyUpRaw(KeysRaw::Space);
     }
     else if (type == MIDISignalTypes::SostenutoPressed)
     {
         o->keySostenuto(true);
-        //o->keyDown(Qt::Key_Alt);
         o->keyDownRaw(KeysRaw::Alt);
     }
     else if (type == MIDISignalTypes::SostenutoReleased)
     {
         o->keySostenuto(false);
-        //o->keyUp(Qt::Key_Alt);
         o->keyUpRaw(KeysRaw::Alt);
     }
     else if (type == MIDISignalTypes::SoftPressed)
     {
         o->keySoft(true);
-        //o->keyDown(Qt::Key_Super_L);
-        //o->keyDown(Qt::Key_Super_R);
         o->keyDownRaw(KeysRaw::Super_L);
         o->keyDownRaw(KeysRaw::Super_R);
     }
     else if (type == MIDISignalTypes::SoftReleased)
     {
         o->keySoft(false);
-        //o->keyUp(Qt::Key_Super_L);
-        //o->keyUp(Qt::Key_Super_R);
         o->keyUpRaw(KeysRaw::Super_L);
         o->keyUpRaw(KeysRaw::Super_R);
     }
@@ -455,6 +455,14 @@ void MainTabs::MIDISignal(MIDISignalTypes type)
     else if (type == MIDISignalTypes::PitchReleased)
     {
         o->pitch->pitchKeyReleased();
+    }
+    else if (type == MIDISignalTypes::OctaveDownPressed)
+    {
+        o->octaveDown();
+    }
+    else if (type == MIDISignalTypes::OctaveUpPressed)
+    {
+        o->octaveUp();
     }
 }
 

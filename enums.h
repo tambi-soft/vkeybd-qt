@@ -38,6 +38,9 @@ enum class MIDISignalTypes
     PitchLowerPressed,
     PitchHigherPressed,
     PitchReleased,
+    
+    OctaveDownPressed,
+    OctaveUpPressed,
 };
 
 enum class TabNames
@@ -73,7 +76,8 @@ enum KeysRaw : uint8_t
     Right = 106,
     PageUp = 104,
     PageDown = 109,
-    Control = 29,
+    Control_L = 29,
+    Control_R = 97,
     Super_L = 125,
     Super_R = 125,
     

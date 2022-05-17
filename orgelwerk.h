@@ -99,6 +99,9 @@ public:
     
     void showHideGUIElements(QString name, bool show);
     
+    void octaveDown();
+    void octaveUp();
+    
 private:
     int id;
     OutputSystem audio_system;
