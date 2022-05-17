@@ -108,6 +108,8 @@ void Orgelwerk::drawPCKeyboard(int grid_row)
     this->pc = new KeyboardPC;
     connect(this->pc, &KeyboardPC::MIDIPress, this, &Orgelwerk::keyMIDIDown);
     connect(this->pc, &KeyboardPC::MIDIRelease, this, &Orgelwerk::keyMIDIUp);
+    connect(this->pc, &KeyboardPC::octaveDown, this, &Orgelwerk::octaveDown);
+    connect(this->pc, &KeyboardPC::octaveUp, this, &Orgelwerk::octaveUp);
     
     this->grid->addWidget(this->pc, grid_row, 0, 1, 2);
 }

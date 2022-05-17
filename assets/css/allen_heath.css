@@ -107,7 +107,16 @@ QPushButton#pc_gold {
     border-color: black;
     border-radius: 0px;
 }
-QPushButton#pc_white:pressed,#pc_black:pressed,#pc_grey:pressed,#pc_gold:pressed {
+QPushButton#pc_blue {
+    /*background-color: #5cc9fb;*/
+    background-color: #3c73ed;
+    font-size: 6pt;
+    border-style: outset;
+    border-width: 1px;
+    border-color: black;
+    border-radius: 0px;
+}
+QPushButton#pc_white:pressed,#pc_black:pressed,#pc_grey:pressed,#pc_gold:pressed,#pc_blue:pressed {
     color: black;
     background-color: qradialgradient(cx: 0.5, cy: 0.5, radius: 1.5, fx: 0.75, fy: 0.75, stop: 0 #f3ffff, stop: 0.2 #94faff, stop: 0.4 #6592d7);
     border: 0px;

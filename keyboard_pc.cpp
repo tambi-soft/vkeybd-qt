@@ -12,6 +12,8 @@ void KeyboardPC::drawButtons()
     QList<QList<int>> sizes = getButtonSizes();
     QList<QList<QString>> colors = getButtonColors();
     QList<QList<QString>> labels = getButtonLabels();
+    QList<QList<int>> midicodes = getMIDICodes();
+    QList<QList<int>> keycodes = getButtonKeycodesRaw();
     
     for (int row = 0; row < sizes.length(); row++)
     {
@@ -41,6 +43,22 @@ void KeyboardPC::drawButtons()
                             row * 30 * this->button_scale
                         );
             
+            int midicode = midicodes.at(row).at(col);
+            if (midicode > -1)
+            {
+                connect(button, &QPushButton::pressed, this, [this, midicode]{ emit MIDIPress(midicode); });
+                connect(button, &QPushButton::released, this, [this, midicode]{ emit MIDIRelease(midicode); });
+            }
+            int keycode = keycodes.at(row).at(col);
+            if (keycode == KeysRaw::Control_L)
+            {
+                connect(button, &QPushButton::clicked, this, [this]{ emit octaveDown(); });
+            }
+            else if (keycode == KeysRaw::Control_R)
+            {
+                connect(button, &QPushButton::clicked, this, [this]{ emit octaveUp(); });
+            }
+            
             button->show();
             
             if (colors.at(row).at(col) == "b")
@@ -54,6 +72,10 @@ void KeyboardPC::drawButtons()
             else if (colors.at(row).at(col) == "gold")
             {
                 button->setObjectName("pc_gold");
+            }
+            else if (colors.at(row).at(col) == "blue")
+            {
+                button->setObjectName("pc_blue");
             }
             else
             {
@@ -111,7 +133,7 @@ QList<QList<QString>> KeyboardPC::getButtonColors()
             {"w", "w", "b", "b", "w", "w", "b", "b", "w", "w", "b", "b", "w", "w"},
             {"b", "b", "w", "w", "b", "b", "w", "w", "b", "b", "w", "w", "b"},
             {"b", "w", "w", "w", "b", "w", "w", "w", "b", "w", "w", "w", "b"},
-            {"g", "gold", "gold", "gold", "gold", "gold", "g", "g", "g", "g", "g"}};
+            {"blue", "gold", "gold", "gold", "gold", "gold", "g", "blue"}};
     return list;
 }
 
@@ -146,6 +168,11 @@ QList<QList<int>> KeyboardPC::getMIDICodes()
             {8, 11, 14, 17, 20, 23, 26, 29, 32, 35, 38, 41, 44},
             {-1, -1, -1, -1, -1, -1, -1, -1}};
     return list;
+}
+
+void KeyboardPC::buttonPressed(int midicode)
+{
+    emit MIDIPress(midicode);
 }
 
 void KeyboardPC::keyDownRaw(int keycode)
