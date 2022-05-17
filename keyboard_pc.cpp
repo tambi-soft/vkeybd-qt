@@ -65,7 +65,7 @@ void KeyboardPC::drawButtons()
             {
                 button->setObjectName("pc_black");
             }
-            else if (colors.at(row).at(col) == "g")
+            else if (colors.at(row).at(col) == "grey")
             {
                 button->setObjectName("pc_grey");
             }
@@ -111,7 +111,7 @@ float KeyboardPC::calculateOffset(float row_offset, int row, int col, QList<QLis
         }
         row_offset = row_offset + offset - 1.0;
     }
-    qDebug() << "row_offset: " << row_offset << " row: " << row << " col: " << col << " offset: " << row_offset;
+    //qDebug() << "row_offset: " << row_offset << " row: " << row << " col: " << col << " offset: " << row_offset;
     return row_offset;
 }
 
@@ -133,7 +133,7 @@ QList<QList<QString>> KeyboardPC::getButtonColors()
             {"w", "w", "b", "b", "w", "w", "b", "b", "w", "w", "b", "b", "w", "w"},
             {"b", "b", "w", "w", "b", "b", "w", "w", "b", "b", "w", "w", "b"},
             {"b", "w", "w", "w", "b", "w", "w", "w", "b", "w", "w", "w", "b"},
-            {"blue", "gold", "gold", "gold", "gold", "gold", "g", "blue"}};
+            {"blue", "gold", "gold", "gold", "gold", "gold", "grey", "blue"}};
     return list;
 }
 
