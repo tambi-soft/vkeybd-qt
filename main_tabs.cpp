@@ -311,10 +311,18 @@ void MainTabs::rawKeyPressed(int keycode)
     else if (keycode == KeysRaw::Control_L)
     {
         MIDISignal(MIDISignalTypes::OctaveDownPressed);
+        
+        // to animate the button press on the virtual keyboard
+        Orgelwerk *o = static_cast<Orgelwerk*>(currentWidget()->layout()->itemAt(0)->widget());
+        o->keyDownRaw(keycode);
     }
     else if (keycode == KeysRaw::Control_R)
     {
         MIDISignal(MIDISignalTypes::OctaveUpPressed);
+        
+        // to animate the button press on the virtual keyboard
+        Orgelwerk *o = static_cast<Orgelwerk*>(currentWidget()->layout()->itemAt(0)->widget());
+        o->keyDownRaw(keycode);
     }
     else
     {

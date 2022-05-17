@@ -7,6 +7,8 @@
 #include <QList>
 #include <QDebug>
 
+#include "enums.h"
+
 class KeyboardPC : public QWidget
 {
     Q_OBJECT
