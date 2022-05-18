@@ -223,8 +223,6 @@ void Orgelwerk::panicKeyPressed()
         int channel = list_of_channels.at(c)["channel"].toInt();
         this->list_of_audio_interfaces.at(list_of_channels.at(c)["interface_index"].toInt())->keyPanicEvent(channel);
     }
-    
-    this->number_of_keys_down = 0;
 }
 void Orgelwerk::stopAllPressed()
 {
@@ -527,18 +525,6 @@ bool Orgelwerk::eventFilter(QObject *obj, QEvent *ev)
     }
     
     return false;
-}
-
-bool Orgelwerk::areKeysPressed()
-{
-    if (this->number_of_keys_down > 0)
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
 }
 
 

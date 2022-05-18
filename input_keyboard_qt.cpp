@@ -23,7 +23,8 @@ bool InputKeyboardQt::callEventFilter(QObject *obj, QEvent *ev)
             qDebug() << "KEY PRESS/RELEASE Qt";
             
             
-            int key = mapFromKeyboardLayoutToLinuxRaw(event->key());
+            //int key = mapFromKeyboardLayoutToLinuxRaw(event->key());
+            int key = event->nativeScanCode() -8;
             emit keyPressSignal(key);
             
             return true;
@@ -35,20 +36,8 @@ bool InputKeyboardQt::callEventFilter(QObject *obj, QEvent *ev)
         
         if (!is_auto_repeat)
         {
-            // this function should be kept just in case "areKeysPressed" would return "false" falsely on current tab ...
-            //o->keyUp(event->key());
-            // we want to have a smooth way of switching between tabs (=presets) during playing
-            
-            /*
-            for (int i=0; i < this->list_of_tabs.length(); i++)
-            {
-                //if (this->list_of_tabs.at(i)->areKeysPressed())
-                //{
-                    this->list_of_tabs.at(i)->keyUp(event->key());
-                //}
-            }
-            */
-            int key = mapFromKeyboardLayoutToLinuxRaw(event->key());
+            //int key = mapFromKeyboardLayoutToLinuxRaw(event->key());
+            int key = event->nativeScanCode() -8;
             emit keyReleaseSignal(key);
             
             return true;

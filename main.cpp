@@ -4,6 +4,9 @@
 #include <QCommandLineParser>
 #include <QCommandLineOption>
 
+#include <QDebug>
+
+#include "config.h"
 #include "enums.h"
 
 int main(int argc, char *argv[])
@@ -14,6 +17,16 @@ int main(int argc, char *argv[])
     //qDebug() << 
     //app.inputMethod()->show();
     
+    Config *config = new Config;
+    int config_number_of_keyboards = config->getNumberOfKeyboards();
+    qDebug() << "NUMBER OF KEYBOARDS: " << config_number_of_keyboards;
+    QString config_output_system = config->getOutputSystem();
+    qDebug() << "OUTPUT SYSTEM: " << config_output_system;
+    QString config_keyboard_config = config->getKeyboardConfig();
+    qDebug() << "KEYBOARD CONFIG: " << config_keyboard_config;
+    
+    delete config;
+    
     QCommandLineParser parser;
     parser.setApplicationDescription("vkeybd-qt is a powerful and most feature-complete software midi controller");
     parser.addHelpOption();
@@ -23,16 +36,23 @@ int main(int argc, char *argv[])
     
     parser.addOptions({
         {{"n", "number-of-keyboards"},
-            QCoreApplication::translate("main", "Number of Keyboards. Should not be too high, because your soundsystem may be overwhelmed."), "number", "1"},
-        {{"i", "input"},
-            QCoreApplication::translate("main", "Which Input System to use: \"qt\" (default) or \"linux\""), "string" "qt"},
+            QCoreApplication::translate("main", "Number of Keyboards. Should not be too high, because your soundsystem may be overwhelmed."), "number", "-1"},
         {{"o", "output"},
-            QCoreApplication::translate("main", "Which Audio System to use: \"alsa\" (default), \"jack\" (not implemented yet) or \"network\" (remote control another vkeybd-qt instance)"), "string", "alsa"}
+            QCoreApplication::translate("main", "Which Audio System to use: \"alsa\" (default), \"jack\" (not implemented yet) or \"network\" (remote control another vkeybd-qt instance)"), "string", "config"},
+        {{"k", "keyboard-config"},
+            QCoreApplication::translate("main", "Keyboard Configs and Mappings to use"), "string", "builtin"},
+        {{"q", "quicksave-path"},
+            QCoreApplication::translate("main", "Path for the quicksave/quickload file"), "string", "default"}
     });
     
     parser.process(app);
     
+    
     int number_of_keyboards = parser.value("number-of-keyboards").toInt();
+    if (number_of_keyboards == -1)
+    {
+        number_of_keyboards = config_number_of_keyboards;
+    }
     
     if (number_of_keyboards <= 0)
     {
@@ -48,16 +68,23 @@ int main(int argc, char *argv[])
     }
     
     QString output_system = QString::fromStdString(parser.value("output").toStdString());
-    if (output_system != "alsa" & output_system != "jack" & output_system != "network")
+    if (output_system == "config")
+    {
+        output_system = config_output_system;
+    }
+    
+    if ((output_system != "alsa") & (output_system != "jack") & (output_system != "network"))
     {
         fprintf(stderr, "%s\n", qPrintable(QCoreApplication::translate("main", "ERROR: Option \"-o\" / \"--output\" has to be one of: \"alsa\", \"jack\" or \"network\".")));
         fprintf(stderr, "\n");
         
+        // showHelp also stops program execution
         parser.showHelp(1);
     }
     else
     {
         OutputSystem output;
+        output = OutputSystem::Alsa;
         if (output_system == "alsa")
             output = OutputSystem::Alsa;
         else if (output_system == "jack")

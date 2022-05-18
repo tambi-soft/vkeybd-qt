@@ -79,8 +79,6 @@ public:
     void keySostenuto(bool pressed);
     void keySoft(bool pressed);
     
-    bool areKeysPressed();
-    
     MIDIChannelSelector *channels;
     MIDIKeySelector *keys;
     MIDIPitchWheel *pitch;
@@ -125,8 +123,6 @@ private:
     QScrollArea *scroll_channels;
     MIDIChannelsSummary *midi_channels_summary;
     MIDIKeyShiftWidget *key_shift_master;
-    
-    int number_of_keys_down = 0;
     
     //InputKeyboardRaw *input_raw;
     QThread *thread_input;

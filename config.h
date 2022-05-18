@@ -9,6 +9,8 @@
 
 #include <QDebug>
 
+#include "enums.h"
+
 class Config : public QObject
 {
     Q_OBJECT
@@ -20,13 +22,23 @@ public:
     void loadChannelSettings();
     void saveParams(int id, QString label, QString channel, QMap<QString,QVariant> params);
     
+    QString getQuicksavePath();
+    void setQuicksavePath(QString db_path);
+    
+    int getNumberOfKeyboards();
+    void setNumberOfKeyboards(int number);
+    
+    QString getOutputSystem();
+    void setOutputSystem(QString output);
+    
+    QString getKeyboardConfig();
+    void setKeyboardConfig(QString file);
+    
 private:
     QSettings *config;
     QSettings *settings;
     
     void openSettingsFile();
-    QString getQuicksavePath();
-    void setQuicksavePath(QString db_path);
     
 signals:
     void restoreParams(int maintab, QString tab, QMap<QString, QVariant> data);

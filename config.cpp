@@ -15,13 +15,10 @@ Config::Config(QObject *parent) : QObject(parent)
     
     if (! config_file->exists())
     {
-        /*
-        FirstRun *run = new FirstRun("");
-        connect(run, &FirstRun::databasePathSelected, this, &Config::setDbPath);
-        run->exec();
-        */
-        
-        this->config->setValue("default/quicksave_path", config_dir->absoluteFilePath("quicksave.ini"));
+        this->config->setValue("default/quicksave-path", config_dir->absoluteFilePath("quicksave.ini"));
+        this->config->setValue("default/number-of-keyboards", 1);
+        this->config->setValue("default/output", "alsa");
+        this->config->setValue("default/keyboard-config", "keyboard-default.json");
     }
     
     openSettingsFile();
@@ -29,17 +26,43 @@ Config::Config(QObject *parent) : QObject(parent)
 
 void Config::openSettingsFile()
 {
-    this->settings = new QSettings(this->config->value("default/quicksave_path").toString(), QSettings::IniFormat);
+    this->settings = new QSettings(this->config->value("default/quicksave-path").toString(), QSettings::IniFormat);
 }
 
 QString Config::getQuicksavePath()
 {
-    return this->settings->value("default/quicksave_path").toString();
+    return this->config->value("default/quicksave-path").toString();
 }
-
 void Config::setQuicksavePath(QString db_path)
 {
-    this->settings->setValue("default/quicksave_path", db_path);
+    this->config->setValue("default/quicksave-path", db_path);
+}
+
+int Config::getNumberOfKeyboards()
+{
+    return this->config->value("default/number-of-keyboards").toInt();
+}
+void Config::setNumberOfKeyboards(int number)
+{
+    this->config->setValue("default/number-of-keyboards", number);
+}
+
+QString Config::getKeyboardConfig()
+{
+    return this->config->value("default/keyboard-config").toString();
+}
+void Config::setKeyboardConfig(QString file)
+{
+    this->config->setValue("default/keyboard-config", file);
+}
+
+QString Config::getOutputSystem()
+{
+    return this->config->value("default/output").toString();
+}
+void Config::setOutputSystem(QString output)
+{
+    this->config->setValue("default/output", output);
 }
 
 void Config::setValue(QString key, QVariant value)

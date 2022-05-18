@@ -3,7 +3,7 @@
 
 #include <QObject>
 
-enum class OutputSystem
+enum OutputSystem : uint8_t
 {
     Alsa,
     Jack,
