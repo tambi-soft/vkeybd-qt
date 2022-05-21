@@ -19,12 +19,8 @@ int main(int argc, char *argv[])
     
     Config *config = new Config;
     int config_number_of_keyboards = config->getNumberOfKeyboards();
-    qDebug() << "NUMBER OF KEYBOARDS: " << config_number_of_keyboards;
     QString config_output_system = config->getOutputSystem();
-    qDebug() << "OUTPUT SYSTEM: " << config_output_system;
     QString config_keyboard_config = config->getKeyboardConfig();
-    qDebug() << "KEYBOARD CONFIG: " << config_keyboard_config;
-    
     delete config;
     
     QCommandLineParser parser;

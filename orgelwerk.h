@@ -132,6 +132,7 @@ private:
     QList<InterfaceAudio*> list_of_audio_interfaces;
     QMap<QString, TremoloWorker*> map_of_tremolo_workers;
     QMap<QString, QThread*> map_of_tremolo_threads;
+    QList<int> list_of_keys_down;
     
     void keyMIDIHelper(int midicode, QString mode);
     

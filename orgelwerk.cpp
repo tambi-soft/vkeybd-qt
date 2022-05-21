@@ -195,15 +195,29 @@ void Orgelwerk::keyUp(int keycode)
 */
 void Orgelwerk::keyDownRaw(int keycode)
 {
+    if (!this->list_of_keys_down.contains(keycode))
+    {
+        this->list_of_keys_down.append(keycode);
+    }
+    
     this->pc->keyDownRaw(keycode);
 }
 void Orgelwerk::keyUpRaw(int keycode)
 {
-    this->pc->keyUpRaw(keycode);
+    if (this->list_of_keys_down.contains(keycode))
+    {
+        int pos = this->list_of_keys_down.indexOf(keycode);
+        if (pos > -1)
+            this->list_of_keys_down.removeAt(pos);
+        
+        this->pc->keyUpRaw(keycode);
+    }
 }
 
 void Orgelwerk::panicKeyPressed()
 {
+    this->list_of_keys_down.clear();
+    
     if (this->piano)
     {
         this->piano->allKeysUp();
