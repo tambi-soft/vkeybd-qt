@@ -43,6 +43,13 @@ enum class MIDISignalTypes
     OctaveUpPressed,
 };
 
+enum class MIDIMode
+{
+    Press,
+    Release,
+    PitchBend,
+};
+
 enum class TabNames
 {
     F1,

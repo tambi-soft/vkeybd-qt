@@ -195,12 +195,6 @@ void Orgelwerk::keyUp(int keycode)
 */
 void Orgelwerk::keyDownRaw(int keycode)
 {
-    /*
-    if (!this->list_of_keys_down.contains(keycode))
-    {
-        this->list_of_keys_down.append(keycode);
-    }
-    */
     int keyshift = this->key_shift_master->value();
     if (!this->map_of_keys_down[keyshift].contains(keycode))
     {
@@ -211,16 +205,6 @@ void Orgelwerk::keyDownRaw(int keycode)
 }
 void Orgelwerk::keyUpRaw(int keycode)
 {
-    /*
-    if (this->list_of_keys_down.contains(keycode))
-    {
-        int pos = this->list_of_keys_down.indexOf(keycode);
-        if (pos > -1)
-            this->list_of_keys_down.removeAt(pos);
-        
-        this->pc->keyUpRaw(keycode);
-    }
-    */
     QList<int> keys = this->map_of_keys_down.keys();
     for (int i=0; i < keys.length(); i++)
     {
@@ -270,7 +254,7 @@ void Orgelwerk::stopAllPressed()
     }
 }
 
-void Orgelwerk::keyMIDIHelper(int midicode, QString mode)
+void Orgelwerk::keyMIDIHelper(int midicode, MIDIMode mode)
 {
     //qDebug() << "################ " << this->number_of_keys_down;
     
@@ -295,12 +279,13 @@ void Orgelwerk::keyMIDIHelper(int midicode, QString mode)
             int tremolo = list_of_channels.at(c)["tremolo"].toInt();
             
             int m_code = keycode + list_of_keys.at(k);
-            int m_code_shifted = m_code + key_shift + master_key_shift;
             
-            if ((key_min <= m_code && key_max >= m_code) || mode == "pitch")
+            if ((key_min <= m_code && key_max >= m_code) || mode == MIDIMode::PitchBend)
             {
-                if (mode == "down")
+                if (mode == MIDIMode::Press)
                 {
+                    int m_code_shifted = m_code + key_shift + master_key_shift;
+                    
                     if (tremolo == 0)
                     {
                         this->list_of_audio_interfaces.at(interface_index)->keyPressEvent(channel, m_code_shifted);
@@ -334,24 +319,30 @@ void Orgelwerk::keyMIDIHelper(int midicode, QString mode)
                         this->notes->keyPressed(m_code_shifted);
                     }
                 }
-                else if (mode == "up")
+                else if (mode == MIDIMode::Release)
                 {
-                    this->list_of_audio_interfaces.at(interface_index)->keyReleaseEvent(channel, m_code_shifted);
-                    
-                    QString worker_code = QString::number(channel)+"_"+QString::number(m_code_shifted);
-                    if (this->map_of_tremolo_threads.contains(worker_code))
+                    QList<int> keys = this->map_of_keys_down.keys();
+                    for (int i=0; i < keys.length(); i++)
                     {
-                        this->map_of_tremolo_threads[worker_code]->quit();
-                        this->map_of_tremolo_threads[worker_code]->deleteLater();
-                        this->map_of_tremolo_threads.remove(worker_code);
-                    }
-                    
-                    if (this->notes)
-                    {
-                        this->notes->keyReleased(m_code_shifted);
+                        int m_code_shifted = m_code + key_shift + keys.at(i);
+                        
+                        this->list_of_audio_interfaces.at(interface_index)->keyReleaseEvent(channel, m_code_shifted);
+                        
+                        QString worker_code = QString::number(channel)+"_"+QString::number(m_code_shifted);
+                        if (this->map_of_tremolo_threads.contains(worker_code))
+                        {
+                            this->map_of_tremolo_threads[worker_code]->quit();
+                            this->map_of_tremolo_threads[worker_code]->deleteLater();
+                            this->map_of_tremolo_threads.remove(worker_code);
+                        }
+                        
+                        if (this->notes)
+                        {
+                            this->notes->keyReleased(m_code_shifted);
+                        }
                     }
                 }
-                else if (mode == "pitch")
+                else if (mode == MIDIMode::PitchBend)
                 {
                     this->list_of_audio_interfaces.at(interface_index)->keyPitchbendEvent(channel, midicode);
                 }
@@ -359,14 +350,14 @@ void Orgelwerk::keyMIDIHelper(int midicode, QString mode)
         }
     }
     
-    if (mode == "down")
+    if (mode == MIDIMode::Press)
     {
         if (this->piano)
         {
             this->piano->keyPressed(midicode);
         }
     }
-    else if (mode == "up")
+    else if (mode == MIDIMode::Release)
     {
         if (this->piano)
         {
@@ -376,11 +367,11 @@ void Orgelwerk::keyMIDIHelper(int midicode, QString mode)
 }
 void Orgelwerk::keyMIDIDown(int midicode)
 {
-    keyMIDIHelper(midicode, "down");
+    keyMIDIHelper(midicode, MIDIMode::Press);
 }
 void Orgelwerk::keyMIDIUp(int midicode)
 {
-    keyMIDIHelper(midicode, "up");
+    keyMIDIHelper(midicode, MIDIMode::Release);
 }
 
 void Orgelwerk::notePlay(int interface_index, int channel, int note)
@@ -399,7 +390,7 @@ void Orgelwerk::movePitchWheel(int key)
 }
 void Orgelwerk::pitchWheelMoved(int pitch)
 {
-    keyMIDIHelper(pitch, "pitch");
+    keyMIDIHelper(pitch, MIDIMode::PitchBend);
 }
 
 void Orgelwerk::keySustain(bool pressed)

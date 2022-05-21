@@ -124,19 +124,20 @@ private:
     MIDIChannelsSummary *midi_channels_summary;
     MIDIKeyShiftWidget *key_shift_master;
     
-    //InputKeyboardRaw *input_raw;
     QThread *thread_input;
-    //InputKeyboardRawThread *worker_input;
     
-    //InterfaceAudio *interface_audio;
     QList<InterfaceAudio*> list_of_audio_interfaces;
     QMap<QString, TremoloWorker*> map_of_tremolo_workers;
     QMap<QString, QThread*> map_of_tremolo_threads;
-    QList<int> list_of_keys_down;
-    // mapping octave to list_of_keys_down;
+    
+    // We want to be able to switch between tabs and keys smoothly during play
+    // The desired behaviour is:
+    // If a key is pressed and after than the tab or the key is switched,
+    // than the key-up signal has to be sent to the old tab/key, too.
+    // With map_of_keys_down we keep track of witch key is currently pressed and for which key.
     QMap<int, QList<int>> map_of_keys_down;
     
-    void keyMIDIHelper(int midicode, QString mode);
+    void keyMIDIHelper(int midicode, MIDIMode mode);
     
     void showChannelsSummary(int grid_row);
     void channelsSummaryUpdate();
