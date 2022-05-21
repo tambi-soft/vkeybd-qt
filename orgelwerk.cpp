@@ -195,15 +195,23 @@ void Orgelwerk::keyUp(int keycode)
 */
 void Orgelwerk::keyDownRaw(int keycode)
 {
+    /*
     if (!this->list_of_keys_down.contains(keycode))
     {
         this->list_of_keys_down.append(keycode);
+    }
+    */
+    int keyshift = this->key_shift_master->value();
+    if (!this->map_of_keys_down[keyshift].contains(keycode))
+    {
+        this->map_of_keys_down[keyshift].append(keycode);
     }
     
     this->pc->keyDownRaw(keycode);
 }
 void Orgelwerk::keyUpRaw(int keycode)
 {
+    /*
     if (this->list_of_keys_down.contains(keycode))
     {
         int pos = this->list_of_keys_down.indexOf(keycode);
@@ -211,6 +219,20 @@ void Orgelwerk::keyUpRaw(int keycode)
             this->list_of_keys_down.removeAt(pos);
         
         this->pc->keyUpRaw(keycode);
+    }
+    */
+    QList<int> keys = this->map_of_keys_down.keys();
+    for (int i=0; i < keys.length(); i++)
+    {
+        if (this->map_of_keys_down[keys.at(i)].contains(keycode))
+        {
+            qDebug() << "shift: " << keys.at(i) << " code: " << keycode;
+            this->pc->keyUpRaw(keycode);
+            
+            int pos = this->map_of_keys_down[keys.at(i)].indexOf(keycode);
+            if (pos > -1)
+                this->map_of_keys_down[keys.at(i)].removeAt(pos);
+        }
     }
 }
 

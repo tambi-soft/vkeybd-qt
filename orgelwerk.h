@@ -133,6 +133,8 @@ private:
     QMap<QString, TremoloWorker*> map_of_tremolo_workers;
     QMap<QString, QThread*> map_of_tremolo_threads;
     QList<int> list_of_keys_down;
+    // mapping octave to list_of_keys_down;
+    QMap<int, QList<int>> map_of_keys_down;
     
     void keyMIDIHelper(int midicode, QString mode);
     
