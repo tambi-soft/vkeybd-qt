@@ -222,7 +222,7 @@ void Orgelwerk::keyUpRaw(int keycode)
 
 void Orgelwerk::panicKeyPressed()
 {
-    this->list_of_keys_down.clear();
+    this->map_of_keys_down.clear();
     
     if (this->piano)
     {
