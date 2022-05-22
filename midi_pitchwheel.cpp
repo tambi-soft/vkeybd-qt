@@ -114,8 +114,10 @@ void MIDIPitchWheel::vibrSliderMoved(int position)
 {
     //this->slider_pitch->blockSignals(true);
     
+    /*
     pitchKeyPressed(KeysRaw::Right);
     this->worker->setVibAmp(position);
+    */
 }
 void MIDIPitchWheel::pitchKeyPressed(int key)
 {
@@ -222,9 +224,11 @@ void MIDIPitchWheelWorker::keyUp()
 
 void MIDIPitchWheelWorker::tick()
 {
+    /*
     // controlling vibrato
-    if (this->amp == 8192)
+    if (this->amp == 8192 && !this->key_pressed)
     {
+        //qDebug() << "00000000000000000: " << this->direction;
         this->amp_cooldown = true;
         
         this->pitch = 8192;
@@ -236,8 +240,9 @@ void MIDIPitchWheelWorker::tick()
         {
             this->direction = 1;
         }
-        else if (this->pitch >= this->amp)
+        else if (this->pitch > this->amp && !this->key_pressed)
         {
+            qDebug() << "aaaiaaa";
             this->direction = 0;
             this->amp_cooldown = true;
         }
@@ -246,7 +251,7 @@ void MIDIPitchWheelWorker::tick()
             this->amp_cooldown = false;
         }
     }
-    
+    */
     
     
     if (this->direction == 0)
