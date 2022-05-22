@@ -113,8 +113,9 @@ void MIDIPitchWheel::movePitchWheel(int key)
 void MIDIPitchWheel::vibrSliderMoved(int position)
 {
     //this->slider_pitch->blockSignals(true);
+    
+    pitchKeyPressed(KeysRaw::Right);
     this->worker->setVibAmp(position);
-    this->worker->keyDown(1);
 }
 void MIDIPitchWheel::pitchKeyPressed(int key)
 {
@@ -163,6 +164,8 @@ void MIDIPitchWheel::setData(QMap<QString,QVariant> data)
 
 
 
+
+
 MIDIPitchWheelWorker::MIDIPitchWheelWorker(QObject *parent) : QObject(parent)
 {
     this->timer = new QTimer(this);
@@ -193,11 +196,12 @@ void MIDIPitchWheelWorker::setPitch(int pitch)
 void MIDIPitchWheelWorker::setVibAmp(int amp)
 {
     this->amp = amp;
-    //this->amp_current = amp;
 }
 
 void MIDIPitchWheelWorker::keyDown(int direction)
 {
+    this->key_pressed = true;
+    
     this->direction = direction;
     
     if (this->direction < 0)
@@ -208,39 +212,37 @@ void MIDIPitchWheelWorker::keyDown(int direction)
     {
         this->sign_positive = true;
     }
-    
-    //this->timer->setInterval(3);
 }
 void MIDIPitchWheelWorker::keyUp()
 {
+    this->key_pressed = false;
+    
     this->direction = 0;
 }
 
 void MIDIPitchWheelWorker::tick()
 {
-    //qDebug() << this->pitch;
-    
     // controlling vibrato
     if (this->amp == 8192)
     {
         this->amp_cooldown = true;
+        
+        this->pitch = 8192;
+        
     }
     else
     {
-        if (this->pitch < this->amp && !this->amp_cooldown)
+        if ((this->pitch < this->amp) && !this->amp_cooldown)
         {
-            qDebug() << "1111111111";
             this->direction = 1;
         }
         else if (this->pitch >= this->amp)
         {
-            //qDebug() << "2222222222";
             this->direction = 0;
             this->amp_cooldown = true;
         }
         else if (this->pitch == 8192)
         {
-            qDebug() << "3333333333";
             this->amp_cooldown = false;
         }
     }
@@ -280,8 +282,8 @@ void MIDIPitchWheelWorker::tick()
         // forbid over/undershooting valid range
         if (this->pitch < 0)
             this->pitch = 0;
-        else if (this->pitch > 16384)
-            this->pitch = 16384;
+        else if (this->pitch > 16383)
+            this->pitch = 16383;
         
         emit movePitchSlider(this->pitch);
     }
