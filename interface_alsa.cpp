@@ -73,6 +73,11 @@ void InterfaceAlsa::keyStopAllEvent(int channel)
 
 void InterfaceAlsa::keyPitchbendEvent(int channel, int pitch)
 {
+    // In the midi-specs 8192 is defined as the neutral center.
+    // However in the ALSA docs it says:
+    // val: pitch bend; zero centered from -8192 to 8191 
+    pitch = pitch - 8192;
+    
     snd_seq_ev_set_pitchbend(&ev, channel, pitch);
     
     sendEvent(true);
