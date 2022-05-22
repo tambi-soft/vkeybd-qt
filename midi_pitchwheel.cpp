@@ -277,6 +277,12 @@ void MIDIPitchWheelWorker::tick()
         // pitch wheel moved as long as key pressed
         this->pitch = this->pitch + this->direction * this->tether;
         
+        // forbid over/undershooting valid range
+        if (this->pitch < 0)
+            this->pitch = 0;
+        else if (this->pitch > 16384)
+            this->pitch = 16384;
+        
         emit movePitchSlider(this->pitch);
     }
 }
