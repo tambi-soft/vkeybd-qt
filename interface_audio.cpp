@@ -55,11 +55,10 @@ void InterfaceAudio::keySostenutoEvent(int channel, bool pressed)
     Q_UNUSED(pressed);
 }
 
-void InterfaceAudio::keySoftEvent(int channel, bool pressed, int volume)
+void InterfaceAudio::keySoftEvent(int channel, bool pressed)
 {
     Q_UNUSED(channel);
     Q_UNUSED(pressed);
-    Q_UNUSED(volume);
 }
 
 void InterfaceAudio::setProgramChangeEvent(int channel, int program, int bank)

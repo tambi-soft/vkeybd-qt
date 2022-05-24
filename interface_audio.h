@@ -19,7 +19,7 @@ public:
     virtual void keyPitchbendEvent(int channel, int pitch);
     virtual void keySustainEvent(int channel, bool pressed);
     virtual void keySostenutoEvent(int channel, bool pressed);
-    virtual void keySoftEvent(int channel, bool pressed, int volume);
+    virtual void keySoftEvent(int channel, bool pressed);
     virtual void setProgramChangeEvent(int channel, int program, int bank);
     virtual void setVolumeChangeEvent(int channel, int volume);
     virtual void setPanChangeEvent(int channel, int value);

@@ -200,6 +200,7 @@ void Orgelwerk::keyDownRaw(int keycode)
     {
         this->map_of_keys_down[keyshift].append(keycode);
     }
+    qDebug() << "DOWN: " << this->map_of_keys_down;
     
     this->pc->keyDownRaw(keycode);
 }
@@ -218,6 +219,8 @@ void Orgelwerk::keyUpRaw(int keycode)
                 this->map_of_keys_down[keys.at(i)].removeAt(pos);
         }
     }
+    
+    qDebug() << "UP: " << this->map_of_keys_down;
 }
 
 void Orgelwerk::panicKeyPressed()
@@ -422,8 +425,7 @@ void Orgelwerk::keySoft(bool pressed)
     {
         int interface_index = list_of_channels.at(c)["interface_index"].toInt();
         int channel = list_of_channels.at(c)["channel"].toInt();
-        int volume = list_of_channels.at(c)["volume"].toInt();
-        this->list_of_audio_interfaces.at(interface_index)->keySoftEvent(channel, pressed, volume);
+        this->list_of_audio_interfaces.at(interface_index)->keySoftEvent(channel, pressed);
     }
 }
 
