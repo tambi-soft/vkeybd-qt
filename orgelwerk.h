@@ -138,6 +138,8 @@ private:
     QMap<int, QList<int>> map_of_keys_down;
     
     void keyMIDIHelper(int midicode, MIDIMode mode);
+    void tremoloThreadStart(int interface_index, int channel, int m_code_shifted, int tremolo);
+    void tremoloThreadStop(int channel, int m_code_shifted);
     
     void showChannelsSummary(int grid_row);
     void channelsSummaryUpdate();

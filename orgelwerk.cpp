@@ -259,8 +259,6 @@ void Orgelwerk::stopAllPressed()
 
 void Orgelwerk::keyMIDIHelper(int midicode, MIDIMode mode)
 {
-    //qDebug() << "################ " << this->number_of_keys_down;
-    
     // -12: The lower full octave on the keyboard is in the midi-range of 12 - 23.
     // For being able to add some even deeper notes to the left.
     // Therefore we get an offset of 12 we have to compensate here.
@@ -292,35 +290,14 @@ void Orgelwerk::keyMIDIHelper(int midicode, MIDIMode mode)
                     if (tremolo == 0)
                     {
                         this->list_of_audio_interfaces.at(interface_index)->keyPressEvent(channel, m_code_shifted);
-                        
-                        
                     }
                     else
                     {
-                        QString worker_code = QString::number(channel)+"_"+QString::number(m_code_shifted);
-                        if (!this->map_of_tremolo_threads.contains(worker_code))
-                        {
-                            TremoloWorker *worker = new TremoloWorker(
-                                        interface_index,
-                                        tremolo,
-                                        channel,
-                                        m_code_shifted
-                                        );
-                            connect(worker, &TremoloWorker::notePlay, this, &Orgelwerk::notePlay);
-                            connect(worker, &TremoloWorker::noteStop, this, &Orgelwerk::noteStop);
-                            
-                            QThread *thread = new QThread(this);
-                            worker->moveToThread(thread);
-                            thread->start();
-                            
-                            this->map_of_tremolo_threads[worker_code] = thread;
-                        }
+                        tremoloThreadStart(interface_index, channel, m_code_shifted, tremolo);
                     }
                     
-                    if (this->notes) 
-                    {
+                    if (this->notes)
                         this->notes->keyPressed(m_code_shifted);
-                    }
                 }
                 else if (mode == MIDIMode::Release)
                 {
@@ -331,18 +308,10 @@ void Orgelwerk::keyMIDIHelper(int midicode, MIDIMode mode)
                         
                         this->list_of_audio_interfaces.at(interface_index)->keyReleaseEvent(channel, m_code_shifted);
                         
-                        QString worker_code = QString::number(channel)+"_"+QString::number(m_code_shifted);
-                        if (this->map_of_tremolo_threads.contains(worker_code))
-                        {
-                            this->map_of_tremolo_threads[worker_code]->quit();
-                            this->map_of_tremolo_threads[worker_code]->deleteLater();
-                            this->map_of_tremolo_threads.remove(worker_code);
-                        }
+                        tremoloThreadStop(channel, m_code_shifted);
                         
                         if (this->notes)
-                        {
                             this->notes->keyReleased(m_code_shifted);
-                        }
                     }
                 }
                 else if (mode == MIDIMode::PitchBend)
@@ -356,16 +325,12 @@ void Orgelwerk::keyMIDIHelper(int midicode, MIDIMode mode)
     if (mode == MIDIMode::Press)
     {
         if (this->piano)
-        {
             this->piano->keyPressed(midicode);
-        }
     }
     else if (mode == MIDIMode::Release)
     {
         if (this->piano)
-        {
             this->piano->keyReleased(midicode);
-        }
     }
 }
 void Orgelwerk::keyMIDIDown(int midicode)
@@ -375,6 +340,37 @@ void Orgelwerk::keyMIDIDown(int midicode)
 void Orgelwerk::keyMIDIUp(int midicode)
 {
     keyMIDIHelper(midicode, MIDIMode::Release);
+}
+void Orgelwerk::tremoloThreadStart(int interface_index, int channel, int m_code_shifted, int tremolo)
+{
+    QString worker_code = QString::number(channel)+"_"+QString::number(m_code_shifted);
+    if (!this->map_of_tremolo_threads.contains(worker_code))
+    {
+        TremoloWorker *worker = new TremoloWorker(
+                    interface_index,
+                    tremolo,
+                    channel,
+                    m_code_shifted
+                    );
+        connect(worker, &TremoloWorker::notePlay, this, &Orgelwerk::notePlay);
+        connect(worker, &TremoloWorker::noteStop, this, &Orgelwerk::noteStop);
+        
+        QThread *thread = new QThread(this);
+        worker->moveToThread(thread);
+        thread->start();
+        
+        this->map_of_tremolo_threads[worker_code] = thread;
+    }
+}
+void Orgelwerk::tremoloThreadStop(int channel, int m_code_shifted)
+{
+    QString worker_code = QString::number(channel)+"_"+QString::number(m_code_shifted);
+    if (this->map_of_tremolo_threads.contains(worker_code))
+    {
+        this->map_of_tremolo_threads[worker_code]->quit();
+        this->map_of_tremolo_threads[worker_code]->deleteLater();
+        this->map_of_tremolo_threads.remove(worker_code);
+    }
 }
 
 void Orgelwerk::notePlay(int interface_index, int channel, int note)
