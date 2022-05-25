@@ -20,7 +20,6 @@ Orgelwerk::Orgelwerk(int id, OutputSystem output, QString label, QWidget *parent
     }
     
     drawGUI();
-    initInputThread();
     
     installEventFilter(this);
 }
@@ -71,8 +70,6 @@ void Orgelwerk::drawGUI()
     this->volume = new MIDIMasterVolume;
     connect(volume, &MIDIMasterVolume::sliderMoved, this, &Orgelwerk::volumeSliderMoved);
     
-    //showChannelsReal(0);
-    //showChannelsImage(1);
     showChannelsSummary(1);
     this->grid->addWidget(label_key_shift_master, 2, 0);
     this->grid->addWidget(this->key_shift_master, 3, 0);
@@ -144,17 +141,6 @@ void Orgelwerk::channelsSummaryUpdate()
     this->midi_channels_summary->showData(data);
 }
 
-void Orgelwerk::initInputThread()
-{
-    //this->thread_input = new QThread(this);
-    //this->worker_input = new InputKeyboardRawThread();
-    //this->worker_input->moveToThread(this->thread_input);
-    
-    //this->thread_input->start();
-    
-    //this->worker_input->start();
-}
-
 Orgelwerk::~Orgelwerk()
 {
     this->thread_input->exit();
@@ -173,54 +159,14 @@ void Orgelwerk::addNewAudioInterface(QString label)
     
     this->channels->setListOfAudioOutputs(this->list_of_audio_interfaces);
 }
-/*
-void Orgelwerk::keyDown(int keycode)
-{
-    
-    this->number_of_keys_down++;
-    
-    //qDebug() << "keyDown: "+this->label+" "+ QString::number(keycode);
-    this->pc->keyDown(keycode);
-}
-void Orgelwerk::keyUp(int keycode)
-{
-    if (this->number_of_keys_down >= 1)
-    {
-        this->number_of_keys_down--;
-    }
-    
-    //qDebug() << "keyUp:   "+this->label+" "+ QString::number(keycode);
-    this->pc->keyUp(keycode);
-}
-*/
+
 void Orgelwerk::keyDownRaw(int keycode)
 {
-    int keyshift = this->key_shift_master->value();
-    if (!this->map_of_keys_down[keyshift].contains(keycode))
-    {
-        this->map_of_keys_down[keyshift].append(keycode);
-    }
-    qDebug() << "DOWN: " << this->map_of_keys_down;
-    
     this->pc->keyDownRaw(keycode);
 }
 void Orgelwerk::keyUpRaw(int keycode)
 {
-    QList<int> keys = this->map_of_keys_down.keys();
-    for (int i=0; i < keys.length(); i++)
-    {
-        if (this->map_of_keys_down[keys.at(i)].contains(keycode))
-        {
-            qDebug() << "shift: " << keys.at(i) << " code: " << keycode;
-            this->pc->keyUpRaw(keycode);
-            
-            int pos = this->map_of_keys_down[keys.at(i)].indexOf(keycode);
-            if (pos > -1)
-                this->map_of_keys_down[keys.at(i)].removeAt(pos);
-        }
-    }
-    
-    qDebug() << "UP: " << this->map_of_keys_down;
+    this->pc->keyUpRaw(keycode);
 }
 
 void Orgelwerk::panicKeyPressed()
@@ -264,6 +210,9 @@ void Orgelwerk::keyMIDIHelper(int midicode, MIDIMode mode)
     // Therefore we get an offset of 12 we have to compensate here.
     int keycode = midicode - 12;
     
+    if (mode == MIDIMode::Press)
+        keyShiftMapAdd(keycode);
+    
     QList<QMap<QString,QVariant>> list_of_channels = this->channels->listOfChannels(true);
     
     int master_key_shift = this->key_shift_master->value();
@@ -301,10 +250,13 @@ void Orgelwerk::keyMIDIHelper(int midicode, MIDIMode mode)
                 }
                 else if (mode == MIDIMode::Release)
                 {
-                    QList<int> keys = this->map_of_keys_down.keys();
-                    for (int i=0; i < keys.length(); i++)
-                    {
-                        int m_code_shifted = m_code + key_shift + keys.at(i);
+                    //QList<int> keys = this->map_of_keys_down.keys();
+                    //for (int i=0; i < keys.length(); i++)
+                    //{
+                    //    keyShiftMapRemove(keys.at(i), keycode);
+                        
+                        //int m_code_shifted = m_code + key_shift + keys.at(i);
+                        int m_code_shifted = m_code + key_shift + master_key_shift;
                         
                         this->list_of_audio_interfaces.at(interface_index)->keyReleaseEvent(channel, m_code_shifted);
                         
@@ -312,7 +264,7 @@ void Orgelwerk::keyMIDIHelper(int midicode, MIDIMode mode)
                         
                         if (this->notes)
                             this->notes->keyReleased(m_code_shifted);
-                    }
+                    //}
                 }
                 else if (mode == MIDIMode::PitchBend)
                 {
@@ -371,6 +323,22 @@ void Orgelwerk::tremoloThreadStop(int channel, int m_code_shifted)
         this->map_of_tremolo_threads[worker_code]->deleteLater();
         this->map_of_tremolo_threads.remove(worker_code);
     }
+}
+void Orgelwerk::keyShiftMapAdd(int keycode)
+{
+    int keyshift = this->key_shift_master->value();
+    if (!this->map_of_keys_down[keyshift].contains(keycode))
+    {
+        this->map_of_keys_down[keyshift].append(keycode);
+    }
+    qDebug() << "DOWN: " << this->map_of_keys_down;
+}
+void Orgelwerk::keyShiftMapRemove(int key, int keycode)
+{
+    int pos = this->map_of_keys_down[key].indexOf(keycode);
+    if (pos > -1)
+        this->map_of_keys_down[key].removeAt(pos);
+    qDebug() << "UP: " << this->map_of_keys_down;
 }
 
 void Orgelwerk::notePlay(int interface_index, int channel, int note)

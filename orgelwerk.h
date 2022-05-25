@@ -66,8 +66,6 @@ public:
     explicit Orgelwerk(int id, OutputSystem output, QString label, QWidget *parent = nullptr);
     ~Orgelwerk();
     
-    //void keyDown(int keycode);
-    //void keyUp(int keycode);
     void keyDownRaw(int keycode);
     void keyUpRaw(int keycode);
     void panicKeyPressed();
@@ -109,7 +107,6 @@ private:
     void drawNotesKeyboard(int grid_row);
     void drawPianoKeyboard(int grid_row);
     void drawPCKeyboard(int grid_row);
-    void initInputThread();
     
     QGroupBox *group_keys;
     QGroupBox *group_pitch;
@@ -136,6 +133,8 @@ private:
     // than the key-up signal has to be sent to the old tab/key, too.
     // With map_of_keys_down we keep track of witch key is currently pressed and for which key.
     QMap<int, QList<int>> map_of_keys_down;
+    void keyShiftMapAdd(int keycode);
+    void keyShiftMapRemove(int key, int keycode);
     
     void keyMIDIHelper(int midicode, MIDIMode mode);
     void tremoloThreadStart(int interface_index, int channel, int m_code_shifted, int tremolo);
