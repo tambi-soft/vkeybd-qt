@@ -8,11 +8,9 @@ MIDIPitchWheel::MIDIPitchWheel(QWidget *parent) : QWidget(parent)
     
     QLabel *label_tether = new QLabel("Tether Strength");
     QLabel *label_pitch = new QLabel("Pitch");
-    QLabel *label_vibamp = new QLabel("Vibrato Amplitude");
     
     this->slider_tether = new QSlider(Qt::Horizontal, this);
     this->slider_pitch = new QSlider(Qt::Horizontal, this);
-    this->slider_vibamp = new QSlider(Qt::Horizontal, this);
     
     this->slider_tether->setRange(0, 254);
     this->slider_tether->setTickInterval(64);
@@ -27,17 +25,11 @@ MIDIPitchWheel::MIDIPitchWheel(QWidget *parent) : QWidget(parent)
     this->slider_pitch->setValue(8192);
     this->slider_pitch->setObjectName("slider_pitch");
     
-    this->slider_vibamp->setRange(8192, 16383);
-    //this->slider_vibamp->setRange(0, 8192);
-    
     grid->addWidget(label_tether, 0, 0);
     grid->addWidget(this->slider_tether, 1, 0);
     
     grid->addWidget(label_pitch, 2, 0);
     grid->addWidget(this->slider_pitch, 3, 0, 1, 2);
-    
-    grid->addWidget(label_vibamp, 0, 1);
-    grid->addWidget(this->slider_vibamp, 1, 1);
     
     this->slider_tether->setTracking(false);
     connect(this->slider_tether, &QSlider::valueChanged, this, &MIDIPitchWheel::startPitchThread);
@@ -45,10 +37,6 @@ MIDIPitchWheel::MIDIPitchWheel(QWidget *parent) : QWidget(parent)
     this->slider_pitch->setTracking(false);
     //connect(this->slider_pitch, &QSlider::valueChanged, this, &MIDIPitchWheel::startPitchThread);
     connect(this->slider_pitch, &QSlider::sliderMoved, this, &MIDIPitchWheel::sliderMoved);
-    
-    this->slider_vibamp->setTracking(false);
-    //connect(this->slider_vibamp, &QSlider::valueChanged, this, &MIDIPitchWheel::vibrSliderMoved);
-    connect(this->slider_vibamp, &QSlider::sliderMoved, this, &MIDIPitchWheel::vibrSliderMoved);
     
     this->worker = new MIDIPitchWheelWorker();
     connect(this->worker, &MIDIPitchWheelWorker::movePitchSlider, this, &MIDIPitchWheel::movePitchSlider);
@@ -67,11 +55,9 @@ void MIDIPitchWheel::startPitchThread()
 {
     int tether = this->slider_tether->value();
     int pitch = this->slider_pitch->value();
-    int amp = this->slider_vibamp->value();
     
     this->worker->setTether(tether);
     this->worker->setPitch(pitch);
-    this->worker->setVibAmp(amp);
 }
 
 void MIDIPitchWheel::movePitchSlider(int position)
@@ -110,24 +96,14 @@ void MIDIPitchWheel::movePitchWheel(int key)
     this->slider_pitch->setValue(value);
     //startPitchThread();
 }
-void MIDIPitchWheel::vibrSliderMoved(int position)
-{
-    //this->slider_pitch->blockSignals(true);
-    
-    /*
-    pitchKeyPressed(KeysRaw::Right);
-    this->worker->setVibAmp(position);
-    */
-}
+
 void MIDIPitchWheel::pitchKeyPressed(int key)
 {
     int tether = this->slider_tether->value();
     int pitch = this->slider_pitch->value();
-    int amp = this->slider_vibamp->value();
     
     this->worker->setTether(tether);
     this->worker->setPitch(pitch);
-    this->worker->setVibAmp(amp);
     
     int direction = 0;
     if (key == KeysRaw::Left)
@@ -152,7 +128,6 @@ QMap<QString,int> MIDIPitchWheel::getData()
     QMap<QString,int> result;
     
     result["pitchwheel_tether"] = this->slider_tether->value();
-    result["pitchwheel_vibamp"] = this->slider_vibamp->value();
     result["pitchwheel_pitch"] = this->slider_pitch->value();
     
     return result;
@@ -160,7 +135,6 @@ QMap<QString,int> MIDIPitchWheel::getData()
 void MIDIPitchWheel::setData(QMap<QString,QVariant> data)
 {
     this->slider_tether->setValue(data["pitchwheel_tether"].toInt());
-    this->slider_vibamp->setValue(data["pitchwheel_vibamp"].toInt());
     this->slider_pitch->setValue(data["pitchwheel_pitch"].toInt());
 }
 
@@ -194,10 +168,6 @@ void MIDIPitchWheelWorker::setPitch(int pitch)
     {
         this->sign_positive = true;
     }
-}
-void MIDIPitchWheelWorker::setVibAmp(int amp)
-{
-    this->amp = amp;
 }
 
 void MIDIPitchWheelWorker::keyDown(int direction)

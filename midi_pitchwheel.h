@@ -17,7 +17,6 @@ public:
     
     void setTether(int tether);
     void setPitch(int pitch);
-    void setVibAmp(int amp);
     void keyDown(int direction); // direction is either -1, 0, 1
     void keyUp();
     
@@ -26,7 +25,6 @@ private:
     
     int tether;
     int pitch = 8192;
-    int amp = 0;
     bool amp_cooldown = false;
     bool key_pressed = false;
     int direction = 0; // direction is either -1, 0, 1
@@ -68,7 +66,6 @@ public:
 private:
     QSlider *slider_tether;
     QSlider *slider_pitch;
-    QSlider *slider_vibamp;
     
     QThread *thread;
     MIDIPitchWheelWorker *worker;
@@ -76,7 +73,6 @@ private:
     void startPitchThread();
     void movePitchSlider(int position);
     void sliderMoved(int position);
-    void vibrSliderMoved(int position);
     
 signals:
     void pitchWheelMoved(int position);

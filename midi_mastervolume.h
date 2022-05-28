@@ -60,6 +60,8 @@ public:
     explicit MIDIMasterVolume(QWidget *parent = nullptr);
     ~MIDIMasterVolume();
     
+    QSlider *slider_volume;
+    
     void volumeKeyPressed(int key);
     void volumeKeyReleased();
     int getValue();
@@ -67,7 +69,6 @@ public:
     
 private:
     QLabel *label_volume;
-    QSlider *slider_volume;
     
     QThread *thread;
     MIDIMasterVolumeWorker *worker;
