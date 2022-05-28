@@ -49,17 +49,12 @@ void MenuBar::addViewMenu()
     this->showNetwork->setChecked(false);
     connect(this->showNetwork, &QAction::changed, this, &MenuBar::showNetworkActionChanged);
     
-    this->showKeyShift = new QAction("Show Key Shift Section");
-    this->showKeyShift->setCheckable(true);
-    this->showKeyShift->setChecked(true);
-    connect(this->showKeyShift, &QAction::changed, this, &MenuBar::showKeyShiftActionChanged);
-    
     this->showKeys = new QAction("Show Keys Section");
     this->showKeys->setCheckable(true);
     this->showKeys->setChecked(true);
     connect(this->showKeys, &QAction::changed, this, &MenuBar::showKeysActionChanged);
     
-    this->showPitch = new QAction("Show Pitchwheel Section");
+    this->showPitch = new QAction("Show Pitchwheel and Volume Section");
     this->showPitch->setCheckable(true);
     this->showPitch->setChecked(true);
     connect(this->showPitch, &QAction::changed, this, &MenuBar::showPitchActionChanged);
@@ -80,7 +75,6 @@ void MenuBar::addViewMenu()
     connect(this->showPianoKeyboard, &QAction::changed, this, &MenuBar::showPianoKeyboardActionChanged);
     
     menuView->addAction(showNetwork);
-    menuView->addAction(showKeyShift);
     menuView->addAction(showKeys);
     menuView->addAction(showPitch);
     menuView->addAction(showNotes);
@@ -101,29 +95,25 @@ void MenuBar::quitApplication()
 
 void MenuBar::showNetworkActionChanged()
 {
-    emit signalShowActionChanged("network", this->showNetwork->isChecked());
-}
-void MenuBar::showKeyShiftActionChanged()
-{
-    emit signalShowActionChanged("keyshift", this->showKeyShift->isChecked());
+    emit signalShowActionChanged(GUIElements::Network, this->showNetwork->isChecked());
 }
 void MenuBar::showKeysActionChanged()
 {
-    emit signalShowActionChanged("keys", this->showKeys->isChecked());
+    emit signalShowActionChanged(GUIElements::MIDIKeys, this->showKeys->isChecked());
 }
 void MenuBar::showPitchActionChanged()
 {
-    emit signalShowActionChanged("pitch", this->showPitch->isChecked());
+    emit signalShowActionChanged(GUIElements::PitchAndVolume, this->showPitch->isChecked());
 }
 void MenuBar::showNotesActionChanged()
 {
-    emit signalShowActionChanged("notes", this->showNotes->isChecked());
+    emit signalShowActionChanged(GUIElements::Notes, this->showNotes->isChecked());
 }
 void MenuBar::showPCKeyboardActionChanged()
 {
-    emit signalShowActionChanged("pc", this->showPCKeyboard->isChecked());
+    emit signalShowActionChanged(GUIElements::KeyboardPC, this->showPCKeyboard->isChecked());
 }
 void MenuBar::showPianoKeyboardActionChanged()
 {
-    emit signalShowActionChanged("piano", this->showPianoKeyboard->isChecked());
+    emit signalShowActionChanged(GUIElements::KeyboardPiano, this->showPianoKeyboard->isChecked());
 }

@@ -129,7 +129,7 @@ void MainTabs::restoreParams(QString tab, QMap<QString,QVariant> data)
     this->map_of_tabs[tab]->restoreParams(data);
 }
 
-void MainTabs::showHideGUIElements(QString name, bool show)
+void MainTabs::showHideGUIElements(GUIElements elements, bool show)
 {
     for (int i=0; i < count(); i++)
     {
@@ -137,7 +137,7 @@ void MainTabs::showHideGUIElements(QString name, bool show)
         if (! label.isEmpty())
         {
             Orgelwerk *o = static_cast<Orgelwerk*>(widget(i)->layout()->itemAt(0)->widget());
-            o->showHideGUIElements(name, show);
+            o->showHideGUIElements(elements, show);
         }
     }
     resize(10, 10);
@@ -434,6 +434,7 @@ void MainTabs::MIDISignal(MIDISignalTypes type)
     }
     else if (type == MIDISignalTypes::VolumeLowerPressed)
     {
+        qDebug() << "KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK";
         o->volume->volumeKeyPressed(KeysRaw::Down);
     }
     else if (type == MIDISignalTypes::VolumeLowerPressedPermanent)

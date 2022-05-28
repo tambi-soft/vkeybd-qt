@@ -10,6 +10,16 @@ enum OutputSystem : uint8_t
     Network,
 };
 
+enum class GUIElements
+{
+    Network,
+    MIDIKeys,
+    PitchAndVolume,
+    KeyboardPC,
+    KeyboardPiano,
+    Notes,
+};
+
 enum class MIDISignalTypes
 {
     KeyPress,

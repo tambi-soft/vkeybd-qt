@@ -30,7 +30,7 @@ public:
     void saveAllParams();
     void restoreParams(QString tab, QMap<QString,QVariant> data);
     
-    void showHideGUIElements(QString name, bool show);
+    void showHideGUIElements(GUIElements elements, bool show);
     
     void rawKeyPressed(int keycode);
     void rawKeyReleased(int keycode);

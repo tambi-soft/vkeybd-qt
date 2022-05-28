@@ -1,16 +1,12 @@
 #include "midi_pitchwheel.h"
 
-MIDIPitchWheel::MIDIPitchWheel(QWidget *parent) : QWidget(parent)
+MIDIPitchWheel::MIDIPitchWheel(QObject *parent) : QObject(parent)
 {
-    QGridLayout *grid = new QGridLayout;
-    setLayout(grid);
-    grid->setContentsMargins(0, 0, 0, 0);
+    this->label_tether = new QLabel("Pitch Tether Strength");
+    this->label_pitch = new QLabel("Pitch");
     
-    QLabel *label_tether = new QLabel("Tether Strength");
-    QLabel *label_pitch = new QLabel("Pitch");
-    
-    this->slider_tether = new QSlider(Qt::Horizontal, this);
-    this->slider_pitch = new QSlider(Qt::Horizontal, this);
+    this->slider_pitch = new QSlider(Qt::Horizontal);
+    this->slider_tether = new QSlider(Qt::Horizontal);
     
     this->slider_tether->setRange(0, 254);
     this->slider_tether->setTickInterval(64);
@@ -24,12 +20,6 @@ MIDIPitchWheel::MIDIPitchWheel(QWidget *parent) : QWidget(parent)
     this->slider_pitch->setTickPosition(QSlider::TicksBelow);
     this->slider_pitch->setValue(8192);
     this->slider_pitch->setObjectName("slider_pitch");
-    
-    grid->addWidget(label_tether, 0, 0);
-    grid->addWidget(this->slider_tether, 1, 0);
-    
-    grid->addWidget(label_pitch, 2, 0);
-    grid->addWidget(this->slider_pitch, 3, 0, 1, 2);
     
     this->slider_tether->setTracking(false);
     connect(this->slider_tether, &QSlider::valueChanged, this, &MIDIPitchWheel::startPitchThread);

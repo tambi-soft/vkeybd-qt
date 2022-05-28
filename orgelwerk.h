@@ -2,33 +2,6 @@
 #define ORGELWERK_H
 
 #include <QObject>
-#include <QWidget>
-
-#include <QVBoxLayout>
-#include <QGroupBox>
-#include <QScrollArea>
-#include <QThread>
-#include <QPixmap>
-#include <QIcon>
-#include <QDialog>
-#include <QSizePolicy>
-#include <QSpinBox>
-
-#include "midi_channel_selector.h"
-#include "midi_key_selector.h"
-#include "midi_pitchwheel.h"
-#include "midi_channels_summary.h"
-#include "midi_key_shift_widget.h"
-#include "midi_mastervolume.h"
-#include "keyboard_piano.h"
-#include "keyboard_pc.h"
-#include "keyboard_notes.h"
-
-#include "interface_audio.h"
-#include "interface_alsa.h"
-#include "interface_jack.h"
-
-#include "enums.h"
 
 #include <QThread>
 #include <QTimer>
@@ -58,6 +31,37 @@ signals:
 };
 
 
+
+
+
+#include <QObject>
+#include <QWidget>
+
+#include <QVBoxLayout>
+#include <QGroupBox>
+#include <QScrollArea>
+#include <QThread>
+#include <QPixmap>
+#include <QIcon>
+#include <QDialog>
+#include <QSizePolicy>
+#include <QSpinBox>
+
+#include "midi_channel_selector.h"
+#include "midi_key_selector.h"
+#include "midi_pitchwheel.h"
+#include "midi_channels_summary.h"
+#include "midi_key_shift_widget.h"
+#include "midi_mastervolume.h"
+#include "keyboard_piano.h"
+#include "keyboard_pc.h"
+#include "keyboard_notes.h"
+
+#include "interface_audio.h"
+#include "interface_alsa.h"
+#include "interface_jack.h"
+
+#include "enums.h"
 
 class Orgelwerk : public QWidget
 {
@@ -93,7 +97,7 @@ public:
     QMap<QString, QVariant> getParams();
     void restoreParams(QMap<QString,QVariant> data);
     
-    void showHideGUIElements(QString name, bool show);
+    void showHideGUIElements(GUIElements elements, bool show);
     
     void octaveDown();
     void octaveUp();

@@ -63,7 +63,7 @@ private slots:
     void restoreParams(int maintab, QString tab, QMap<QString, QVariant> data);
     void restoreGeneral(int maintab, QMap<QString,QVariant> data);
     
-    void showActionChanged(QString name, bool is_checked);
+    void showActionChanged(GUIElements elements, bool is_checked);
     
     void rawKeyPressed(int key);
     void rawKeyReleased(int key);

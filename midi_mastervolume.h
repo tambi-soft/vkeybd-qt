@@ -48,19 +48,21 @@ signals:
 
 
 #include <QObject>
-#include <QWidget>
 #include <QLabel>
 #include <QSlider>
 #include <QVBoxLayout>
 
-class MIDIMasterVolume : public QWidget
+class MIDIMasterVolume : public QObject
 {
     Q_OBJECT
 public:
-    explicit MIDIMasterVolume(QWidget *parent = nullptr);
+    explicit MIDIMasterVolume(QObject *parent = nullptr);
     ~MIDIMasterVolume();
     
+    QLabel *label_volume;
+    QLabel *label_tether;
     QSlider *slider_volume;
+    QSlider *slider_tether;
     
     void volumeKeyPressed(int key);
     void volumeKeyReleased();
@@ -68,8 +70,6 @@ public:
     void setValue(int value);
     
 private:
-    QLabel *label_volume;
-    
     QThread *thread;
     MIDIMasterVolumeWorker *worker;
     

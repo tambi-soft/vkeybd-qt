@@ -31,6 +31,8 @@ void Orgelwerk::drawGUI()
     connect(this->channels, &MIDIChannelSelector::newAudioInterfaceRequested, this, &Orgelwerk::addNewAudioInterface);
     this->keys = new MIDIKeySelector;
     this->pitch = new MIDIPitchWheel;
+    this->volume = new MIDIMasterVolume;
+    this->key_shift_master = new MIDIKeyShiftWidget;
     
     connect(this->channels, &MIDIChannelSelector::eventFiltered, this, &Orgelwerk::eventFilter);
     connect(this->channels, &MIDIChannelSelector::closed, this, &Orgelwerk::channelsSummaryUpdate);
@@ -44,13 +46,30 @@ void Orgelwerk::drawGUI()
     this->group_pitch = new QGroupBox("Pitch");
     
     QVBoxLayout *layout_keys = new QVBoxLayout;
-    QHBoxLayout *layout_pitch = new QHBoxLayout;
+    QGridLayout *layout_pitch = new QGridLayout;
     
     this->group_keys->setLayout(layout_keys);
     this->group_pitch->setLayout(layout_pitch);
     
+    QLabel *label_key_shift_master = new QLabel("Key Shift");
+    
     layout_keys->addWidget(this->keys);
-    layout_pitch->addWidget(this->pitch);
+    QGridLayout *layout_pitch_volume = new QGridLayout;
+    layout_pitch_volume->addWidget(label_key_shift_master, 0, 0);
+    layout_pitch_volume->addWidget(this->key_shift_master, 1, 0);
+    layout_pitch_volume->addWidget(this->volume->label_volume, 0, 1);
+    layout_pitch_volume->addWidget(this->volume->slider_volume, 1, 1);
+    
+    layout_pitch->addLayout(layout_pitch_volume, 0, 0, 1, 2);
+    //layout_pitch->addWidget(this->volume->label_volume, 1, 1);
+    layout_pitch->addWidget(this->pitch->label_tether, 1, 0);
+    layout_pitch->addWidget(this->pitch->slider_tether, 2, 0);    
+    
+    layout_pitch->addWidget(this->volume->label_tether, 1, 1);
+    layout_pitch->addWidget(this->volume->slider_tether, 2, 1);
+    
+    layout_pitch->addWidget(this->pitch->label_pitch, 3, 0);
+    layout_pitch->addWidget(this->pitch->slider_pitch, 4, 0, 1, 2);
     
     this->button_panic->setText("Panic! [Esc]");
     connect(this->button_panic, &QPushButton::clicked, this, &Orgelwerk::panicKeyPressed);
@@ -64,17 +83,17 @@ void Orgelwerk::drawGUI()
     layout_panic_stop->addWidget(this->button_panic);
     layout_panic_stop->addWidget(this->button_stop_all);
     
-    QLabel *label_key_shift_master = new QLabel("Key Shift");
-    this->key_shift_master = new MIDIKeyShiftWidget;
+    
+    //this->key_shift_master = new MIDIKeyShiftWidget;
     
     this->volume = new MIDIMasterVolume;
     connect(volume, &MIDIMasterVolume::sliderMoved, this, &Orgelwerk::volumeSliderMoved);
     
     showChannelsSummary(1);
-    this->grid->addWidget(label_key_shift_master, 2, 0);
-    this->grid->addWidget(this->key_shift_master, 3, 0);
+    //this->grid->addWidget(label_key_shift_master, 2, 0);
+    //this->grid->addWidget(this->key_shift_master, 3, 0);
     //this->grid->addWidget(key_shift_widget, 2, 0);
-    this->grid->addWidget(volume, 2, 1, 2, 1);
+    //this->grid->addWidget(volume, 2, 1, 2, 1);
     //this->grid->addWidget(label_volume_master, 2, 1);
     //this->grid->addWidget(this->slider_volume_master, 3, 1);
     this->grid->addWidget(this->group_keys, 4, 0, 1, 2);
@@ -449,48 +468,37 @@ void Orgelwerk::restoreParams(QMap<QString,QVariant> data)
     this->pitch->setData(main);
 }
 
-void Orgelwerk::showHideGUIElements(QString name, bool show)
+void Orgelwerk::showHideGUIElements(GUIElements elements, bool show)
 {
-    if (name == "keyshift")
-    {
-        if (show)
-        {
-            this->key_shift_master->show();
-        }
-        else
-        {
-            this->key_shift_master->hide();
-        }
-    }
-    else if (name == "keys")
+    if (elements == GUIElements::MIDIKeys)
     {
         if (show)
             this->group_keys->show();
         else
             this->group_keys->hide();
     }
-    else if (name == "pitch")
+    else if (elements == GUIElements::PitchAndVolume)
     {
         if (show)
             this->group_pitch->show();
         else
             this->group_pitch->hide();
     }
-    else if (name == "notes")
+    else if (elements == GUIElements::Notes)
     {
         if (show)
             this->notes->show();
         else
             this->notes->hide();
     }
-    else if (name == "pc")
+    else if (elements == GUIElements::KeyboardPC)
     {
         if (show)
             this->pc->show();
         else
             this->pc->hide();
     }
-    else if (name == "piano")
+    else if (elements == GUIElements::KeyboardPiano)
     {
         if (show)
             this->piano->show();

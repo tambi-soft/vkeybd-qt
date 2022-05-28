@@ -43,18 +43,22 @@ signals:
 
 
 #include <QObject>
-#include <QWidget>
-#include <QGridLayout>
 #include <QSlider>
 #include <QLabel>
 #include <QDebug>
 
-class MIDIPitchWheel : public QWidget
+class MIDIPitchWheel : public QObject
 {
     Q_OBJECT
 public:
-    explicit MIDIPitchWheel(QWidget *parent = nullptr);
+    explicit MIDIPitchWheel(QObject *parent = nullptr);
     ~MIDIPitchWheel();
+    
+    QLabel *label_tether;
+    QLabel *label_pitch;
+    
+    QSlider *slider_tether;
+    QSlider *slider_pitch;
     
     void movePitchWheel(int key);
     void pitchKeyPressed(int key);
@@ -64,9 +68,6 @@ public:
     void setData(QMap<QString,QVariant> data);
     
 private:
-    QSlider *slider_tether;
-    QSlider *slider_pitch;
-    
     QThread *thread;
     MIDIPitchWheelWorker *worker;
     

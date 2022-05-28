@@ -7,6 +7,8 @@
 #include <QAction>
 #include <QApplication>
 
+#include "enums.h"
+
 class MenuBar : public QMenuBar
 {
     Q_OBJECT
@@ -32,11 +34,10 @@ private:
 signals:
     void signalSave();
     void signalOpen();
-    void signalShowActionChanged(QString name, bool is_checked);
+    void signalShowActionChanged(GUIElements elements, bool is_checked);
 
 private slots:
     void showNetworkActionChanged();
-    void showKeyShiftActionChanged();
     void showKeysActionChanged();
     void showPitchActionChanged();
     void showNotesActionChanged();

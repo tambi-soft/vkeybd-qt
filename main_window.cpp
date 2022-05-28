@@ -159,9 +159,9 @@ void MainWindow::restoreGeneral(int maintab, QMap<QString,QVariant> data)
     }
 }
 
-void MainWindow::showActionChanged(QString name, bool is_checked)
+void MainWindow::showActionChanged(GUIElements elements, bool is_checked)
 {
-    if (name == "network")
+    if (elements == GUIElements::Network)
     {
         for (auto &line : this->list_of_line_udp_ips)
         {
@@ -193,7 +193,7 @@ void MainWindow::showActionChanged(QString name, bool is_checked)
     {
         for (auto &maintab : this->list_of_maintabs)
         {
-            maintab->showHideGUIElements(name, is_checked);
+            maintab->showHideGUIElements(elements, is_checked);
         }
     }
     
