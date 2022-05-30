@@ -46,7 +46,9 @@ enum class MIDISignalTypes
     VolumeReleased,
     
     PitchLowerPressed,
+    PitchLowerPressedPermanent,
     PitchHigherPressed,
+    PitchHigherPressedPermanent,
     PitchReleased,
     
     OctaveDownPressed,
@@ -93,6 +95,8 @@ enum KeysRaw : uint8_t
     Right = 106,
     PageUp = 104,
     PageDown = 109,
+    Home = 102,
+    End = 107,
     Control_L = 29,
     Control_R = 97,
     Super_L = 125,

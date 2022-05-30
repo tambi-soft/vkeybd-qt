@@ -43,7 +43,7 @@ void Orgelwerk::drawGUI()
     setLayout(this->grid);
     
     this->group_keys = new QGroupBox("Keys");
-    this->group_pitch = new QGroupBox("Pitch");
+    this->group_pitch = new QGroupBox("Pitch && Volume");
     
     QVBoxLayout *layout_keys = new QVBoxLayout;
     QGridLayout *layout_pitch = new QGridLayout;

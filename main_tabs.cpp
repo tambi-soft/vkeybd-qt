@@ -308,6 +308,14 @@ void MainTabs::rawKeyPressed(int keycode)
     {
         MIDISignal(MIDISignalTypes::VolumeHigherPressedPermanent);
     }
+    else if (keycode == KeysRaw::End)
+    {
+        MIDISignal(MIDISignalTypes::PitchLowerPressedPermanent);
+    }
+    else if (keycode == KeysRaw::Home)
+    {
+        MIDISignal(MIDISignalTypes::PitchHigherPressedPermanent);
+    }
     else if (keycode == KeysRaw::Control_L)
     {
         MIDISignal(MIDISignalTypes::OctaveDownPressed);
@@ -350,7 +358,7 @@ void MainTabs::rawKeyReleased(int keycode)
     {
         MIDISignal(MIDISignalTypes::SoftReleased);
     }
-    else if (keycode == KeysRaw::Left || keycode == KeysRaw::Right)
+    else if (keycode == KeysRaw::Left || keycode == KeysRaw::Right || keycode == KeysRaw::End || keycode == KeysRaw::Home)
     {
         MIDISignal(MIDISignalTypes::PitchReleased);
     }
@@ -434,7 +442,6 @@ void MainTabs::MIDISignal(MIDISignalTypes type)
     }
     else if (type == MIDISignalTypes::VolumeLowerPressed)
     {
-        qDebug() << "KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK";
         o->volume->volumeKeyPressed(KeysRaw::Down);
     }
     else if (type == MIDISignalTypes::VolumeLowerPressedPermanent)
@@ -457,9 +464,17 @@ void MainTabs::MIDISignal(MIDISignalTypes type)
     {
         o->pitch->pitchKeyPressed(KeysRaw::Left);
     }
+    else if (type == MIDISignalTypes::PitchLowerPressedPermanent)
+    {
+        o->pitch->pitchKeyPressed(KeysRaw::End);
+    }
     else if (type == MIDISignalTypes::PitchHigherPressed)
     {
         o->pitch->pitchKeyPressed(KeysRaw::Right);
+    }
+    else if (type == MIDISignalTypes::PitchHigherPressedPermanent)
+    {
+        o->pitch->pitchKeyPressed(KeysRaw::Home);
     }
     else if (type == MIDISignalTypes::PitchReleased)
     {

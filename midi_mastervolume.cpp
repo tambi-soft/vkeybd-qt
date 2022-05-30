@@ -10,18 +10,18 @@ MIDIMasterVolume::MIDIMasterVolume(QObject *parent)
     
     this->label_volume = new QLabel("Master Volume (DCA): 100%");
     this->slider_volume = new QSlider(Qt::Horizontal);
+    
+    this->label_tether = new QLabel("Volume Tether Strength");
+    this->slider_tether = new QSlider(Qt::Horizontal);
+    
     this->slider_volume->setRange(0, 120);
     this->slider_volume->setTickInterval(20);
     this->slider_volume->setTickPosition(QSlider::TicksBelow);
     this->slider_volume->setValue(100);
     
-    this->label_tether = new QLabel("Volume Tether Strength");
-    this->slider_tether = new QSlider(Qt::Horizontal);
+    
     
     connect(this->slider_volume, &QSlider::valueChanged, this, &MIDIMasterVolume::volumeSliderMoved);
-    
-    //layout->addWidget(this->label_volume);
-    //layout->addWidget(this->slider_volume);
     
     this->worker = new MIDIMasterVolumeWorker();
     connect(this->worker, &MIDIMasterVolumeWorker::moveVolumeSlider, this, &MIDIMasterVolume::moveVolumeSlider);
@@ -38,7 +38,6 @@ MIDIMasterVolume::~MIDIMasterVolume()
 
 void MIDIMasterVolume::moveVolumeSlider(int value)
 {
-    qDebug() << "MMMMMMMMMO";
     this->slider_volume->setValue(value);
     
     emit sliderMoved(value);

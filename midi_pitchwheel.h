@@ -17,6 +17,7 @@ public:
     
     void setTether(int tether);
     void setPitch(int pitch);
+    void shouldResetSlider(bool reset);
     void keyDown(int direction); // direction is either -1, 0, 1
     void keyUp();
     
@@ -26,10 +27,11 @@ private:
     int tether;
     int pitch = 8192;
     bool amp_cooldown = false;
-    bool key_pressed = false;
     int direction = 0; // direction is either -1, 0, 1
     
     bool sign_positive; // false: -, true: +
+    
+    bool reset_slider = true;
     
 //protected:
 public slots:
@@ -74,6 +76,7 @@ private:
     void startPitchThread();
     void movePitchSlider(int position);
     void sliderMoved(int position);
+    void updateLabel(int position);
     
 signals:
     void pitchWheelMoved(int position);

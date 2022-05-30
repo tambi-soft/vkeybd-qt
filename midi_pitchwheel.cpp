@@ -25,7 +25,6 @@ MIDIPitchWheel::MIDIPitchWheel(QObject *parent) : QObject(parent)
     connect(this->slider_tether, &QSlider::valueChanged, this, &MIDIPitchWheel::startPitchThread);
     
     this->slider_pitch->setTracking(false);
-    //connect(this->slider_pitch, &QSlider::valueChanged, this, &MIDIPitchWheel::startPitchThread);
     connect(this->slider_pitch, &QSlider::sliderMoved, this, &MIDIPitchWheel::sliderMoved);
     
     this->worker = new MIDIPitchWheelWorker();
@@ -54,11 +53,38 @@ void MIDIPitchWheel::movePitchSlider(int position)
 {
     this->slider_pitch->setValue(position);
     
+    updateLabel(position);
+    
     emit pitchWheelMoved(position);
+}
+void MIDIPitchWheel::updateLabel(int position)
+{
+    /*
+    Standard MIDI Files use a pitch wheel range of +/-2 semitones = 200 cents. MIDI pitch bend wheel resolution (according to the spec) is +8192/-8191. That means there are 8192/200 = 40.96 pitch bend units to 1 cent.
+    
+    http://www.elvenminstrel.com/music/tuning/reference/pitchbends.shtml
+    */
+    float CENT_FACTOR = 40.96;
+    float cent = position / CENT_FACTOR - 200; // -200 to center at 0
+    QString indicator = "";
+    if (position == 8192)
+        indicator = "";
+    else if (position < 8192 && position >= 4096)
+        indicator = "<<";
+    else if (position > 8192 && position <= 8192 + 4096)
+        indicator = ">>";
+    else if (position < 4096)
+        indicator = "<<<<";
+    else if (position > 8192 + 4096)
+        indicator = ">>>>";
+    
+    this->label_pitch->setText("Pitch: "+indicator+" "+QString::number(cent)+" Cents");// / "+QString::number(position-8192));
 }
 
 void MIDIPitchWheel::sliderMoved(int position)
 {
+    updateLabel(position);
+    
     emit pitchWheelMoved(position);
 }
 
@@ -99,11 +125,24 @@ void MIDIPitchWheel::pitchKeyPressed(int key)
     if (key == KeysRaw::Left)
     {
         direction = -1;
+        this->worker->shouldResetSlider(true);
     }
     else if (key == KeysRaw::Right)
     {
         direction = 1;
+        this->worker->shouldResetSlider(true);
     }
+    else if (key == KeysRaw::End)
+    {
+        direction = -1;
+        this->worker->shouldResetSlider(false);
+    }
+    else if (key == KeysRaw::Home)
+    {
+        direction = 1;
+        this->worker->shouldResetSlider(false);
+    }
+    
     this->slider_pitch->blockSignals(true);
     this->worker->keyDown(direction);
 }
@@ -160,10 +199,17 @@ void MIDIPitchWheelWorker::setPitch(int pitch)
     }
 }
 
+void MIDIPitchWheelWorker::shouldResetSlider(bool reset)
+{
+    if (!reset)
+        // we want to move the slider 8 times slower if using the home/end keys
+        this->tether = this->tether / 8;
+    
+    this->reset_slider = reset;
+}
+
 void MIDIPitchWheelWorker::keyDown(int direction)
 {
-    this->key_pressed = true;
-    
     this->direction = direction;
     
     if (this->direction < 0)
@@ -177,47 +223,15 @@ void MIDIPitchWheelWorker::keyDown(int direction)
 }
 void MIDIPitchWheelWorker::keyUp()
 {
-    this->key_pressed = false;
-    
     this->direction = 0;
 }
 
 void MIDIPitchWheelWorker::tick()
 {
-    /*
-    // controlling vibrato
-    if (this->amp == 8192 && !this->key_pressed)
-    {
-        //qDebug() << "00000000000000000: " << this->direction;
-        this->amp_cooldown = true;
-        
-        this->pitch = 8192;
-        
-    }
-    else
-    {
-        if ((this->pitch < this->amp) && !this->amp_cooldown)
-        {
-            this->direction = 1;
-        }
-        else if (this->pitch > this->amp && !this->key_pressed)
-        {
-            qDebug() << "aaaiaaa";
-            this->direction = 0;
-            this->amp_cooldown = true;
-        }
-        else if (this->pitch == 8192)
-        {
-            this->amp_cooldown = false;
-        }
-    }
-    */
-    
-    
     if (this->direction == 0)
     {
         // reset pitch wheel
-        if (this->pitch != 8192)
+        if (this->pitch != 8192 && this->reset_slider)
         {
             if (this->pitch < 8192)
             {
