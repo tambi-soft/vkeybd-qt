@@ -44,6 +44,7 @@ QList<QMap<QString,QString>> InputKeyboardRaw::detectKeyboards()
                             if (hand.at(j).startsWith("event"))
                             {
                                 device["devpath"] = "/dev/input/"+hand.at(j);
+                                device["dev"] = hand.at(j);
                             }
                         }
                     }
@@ -65,7 +66,9 @@ QList<QString> InputKeyboardRaw::getKeyboardNames()
     QList<QString> result;
     for (int i=0; i < keyboards.length(); i++)
     {
-        result.append(keyboards.at(i)["Name"]);
+        QString keyboard_name = getKeyboardName(keyboards.at(i));
+        //result.append(keyboards.at(i)["Name"]);
+        result.append(keyboard_name);
     }
     
     return result;
@@ -76,13 +79,18 @@ QString InputKeyboardRaw::getPathForName(QString name)
     
     for (int i=0; i < keyboards.length(); i++)
     {
-        if (keyboards.at(i)["Name"] == name)
+        QString keyboard_name = getKeyboardName(keyboards.at(i));
+        if (keyboard_name == name)
         {
             return keyboards.at(i)["devpath"];
         }
     }
     
     return "";
+}
+QString InputKeyboardRaw::getKeyboardName(QMap<QString,QString> keyboard)
+{
+    return keyboard["Name"] + "@" + keyboard["dev"];
 }
 
 void InputKeyboardRaw::keyboardListen(QString devpath)
@@ -150,6 +158,13 @@ void InputKeyboardRaw::rawKeyReleased(int keycode)
 {
     emit rawKeyReleasedSignal(keycode);
 }
+
+QString InputKeyboardRaw::autoDetectPressedKeyboard()
+{
+    
+}
+
+
 
 
 

@@ -502,18 +502,28 @@ void MainTabs::toggleKeyboardLock()
         
         this->combo_keyboard_input->setEnabled(true);
         
-        if (this->combo_keyboard_input->currentText() == this->combo_keyboard_input_labels[1])
+        //if (this->combo_keyboard_input->currentText() == this->combo_keyboard_input_labels[1])
+        if (this->combo_keyboard_input->currentIndex() == KeyboardEvent::None)
+        {
+            qDebug() << "NONE: AAAAAAAAAA";
+        }
+        //else if (this->combo_keyboard_input->currentText() == this->combo_keyboard_input_labels[0])
+        else if (this->combo_keyboard_input->currentIndex() == KeyboardEvent::Default)
+        {
+            this->input_kbd_qt_native = false;
+            qDebug() << "releasing Qt native";
+            releaseKeyboard();
+        }
+        else if (this->combo_keyboard_input->currentIndex() == KeyboardEvent::Native)
         {
             this->input_kbd_qt_default = false;
             qDebug() << "releasing Qt default";
             releaseKeyboard();
             //releaseMouse();
         }
-        else if (this->combo_keyboard_input->currentText() == this->combo_keyboard_input_labels[0])
+        else if (this->combo_keyboard_input->currentIndex() == KeyboardEvent::Detect)
         {
-            this->input_kbd_qt_native = false;
-            qDebug() << "releasing Qt native";
-            releaseKeyboard();
+            
         }
         else
         {
@@ -530,7 +540,12 @@ void MainTabs::toggleKeyboardLock()
         
         this->combo_keyboard_input->setEnabled(false);
         
-        if (this->combo_keyboard_input->currentText() == this->combo_keyboard_input_labels[1])
+        if (this->combo_keyboard_input->currentIndex() == KeyboardEvent::None)
+        {
+            qDebug() << "NONE: BBBBBBBBBB";
+        }
+        else if (this->combo_keyboard_input->currentIndex() == KeyboardEvent::Default)
+        //if (this->combo_keyboard_input->currentText() == this->combo_keyboard_input_labels[1])
         {
             this->input_kbd_qt_default = true;
             qDebug() << "grabbing Qt default";
@@ -538,11 +553,16 @@ void MainTabs::toggleKeyboardLock()
             // to avoid to mess around with the os like blocking taskbar-items, we need to grab the mouse aswell
             //grabMouse();
         }
-        else if (this->combo_keyboard_input->currentText() == this->combo_keyboard_input_labels[0])
+        else if (this->combo_keyboard_input->currentIndex() == KeyboardEvent::Native)
+        //else if (this->combo_keyboard_input->currentText() == this->combo_keyboard_input_labels[0])
         {
             this->input_kbd_qt_native = true;
             qDebug() << "grabbing Qt native";
             grabKeyboard();
+        }
+        else if (this->combo_keyboard_input->currentIndex() == KeyboardEvent::Detect)
+        {
+            
         }
         else
         {
@@ -561,8 +581,10 @@ void MainTabs::keyboardRescan()
     if (this->keyboard_locked)
         toggleKeyboardLock();
     
-    this->combo_keyboard_input_labels[0] = "Qt native";
-    this->combo_keyboard_input_labels[1] = "Qt default";
+    this->combo_keyboard_input_labels[KeyboardEvent::None] = "[Disabled]";
+    this->combo_keyboard_input_labels[KeyboardEvent::Native] = "Qt native";
+    this->combo_keyboard_input_labels[KeyboardEvent::Default] = "Qt default";
+    this->combo_keyboard_input_labels[KeyboardEvent::Detect] = "[Detect RAW event]";
     
     InputKeyboardRaw *keyboard_raw = new InputKeyboardRaw;
     QList<QString> keyboards = keyboard_raw->getKeyboardNames();

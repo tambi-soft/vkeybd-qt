@@ -16,7 +16,7 @@ MIDIPitchWheel::MIDIPitchWheel(QObject *parent) : QObject(parent)
     // see the midi-protocol, e.g:
     // https://sites.uci.edu/camp2014/2014/04/30/managing-midi-pitchbend-messages/
     this->slider_pitch->setRange(0, 16383);
-    this->slider_pitch->setTickInterval(8192);
+    this->slider_pitch->setTickInterval(4096);
     this->slider_pitch->setTickPosition(QSlider::TicksBelow);
     this->slider_pitch->setValue(8192);
     this->slider_pitch->setObjectName("slider_pitch");
@@ -60,7 +60,7 @@ void MIDIPitchWheel::movePitchSlider(int position)
 void MIDIPitchWheel::updateLabel(int position)
 {
     /*
-    Standard MIDI Files use a pitch wheel range of +/-2 semitones = 200 cents. MIDI pitch bend wheel resolution (according to the spec) is +8192/-8191. That means there are 8192/200 = 40.96 pitch bend units to 1 cent.
+    Standard MIDI uses a pitch wheel range of +/-2 semitones = 200 cents. MIDI pitch bend wheel resolution (according to the spec) is +8192/-8191. This means there are 8192/200 = 40.96 pitch bend units to 1 cent.
     
     http://www.elvenminstrel.com/music/tuning/reference/pitchbends.shtml
     */

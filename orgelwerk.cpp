@@ -26,7 +26,6 @@ Orgelwerk::Orgelwerk(int id, OutputSystem output, QString label, QWidget *parent
 
 void Orgelwerk::drawGUI()
 {
-    //this->channels = new MIDIChannelSelector(this->interface_audio);
     this->channels = new MIDIChannelSelector(this->list_of_audio_interfaces);
     connect(this->channels, &MIDIChannelSelector::newAudioInterfaceRequested, this, &Orgelwerk::addNewAudioInterface);
     this->keys = new MIDIKeySelector;
@@ -59,6 +58,7 @@ void Orgelwerk::drawGUI()
     layout_pitch_volume->addWidget(this->key_shift_master, 1, 0);
     layout_pitch_volume->addWidget(this->volume->label_volume, 0, 1);
     layout_pitch_volume->addWidget(this->volume->slider_volume, 1, 1);
+    //layout_pitch->addWidget(this->volume->slider_volume, 5, 0, 1, 2);
     
     layout_pitch->addLayout(layout_pitch_volume, 0, 0, 1, 2);
     //layout_pitch->addWidget(this->volume->label_volume, 1, 1);

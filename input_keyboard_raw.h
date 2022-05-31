@@ -58,6 +58,7 @@ public:
     void keyboardLock(QString devpath);
     void keyboardHelper(QString devpath, QString mode);
     void keyboardRelease();
+    QString autoDetectPressedKeyboard();
     
 private:
     // https://stackoverflow.com/questions/16695432/input-event-structure-description-from-linux-input-h
@@ -74,6 +75,9 @@ private:
     
     QThread *thread = nullptr;
     InputKeyboardRawWorker *worker;
+    
+    // in case we have two identical keyboards attached, it is helpful to see the /dev/input/eventXX - eventname as part of the device name
+    QString getKeyboardName(QMap<QString, QString> keyboard);
     
 private slots:
     void rawKeyPressed(int keycode);

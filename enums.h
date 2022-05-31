@@ -118,4 +118,12 @@ enum KeysRaw : uint8_t
     F12 = 88,
 };
 
+enum KeyboardEvent : uint8_t
+{
+    None,
+    Native,
+    Default,
+    Detect,
+};
+
 #endif // ENUMS_H
