@@ -37,10 +37,10 @@ void KeyboardPC::drawButtons()
                             30 * this->button_scale
                         );
             
-            float xpos = (static_cast<float>(col) + static_cast<float>(offset)) * static_cast<float>(30);
+            float xpos = (col + offset) * 30;
             button->move(
-                            xpos * this->button_scale,
-                            row * 30 * this->button_scale
+                            qRound(xpos * this->button_scale),
+                            qRound(row * 30 * this->button_scale)
                         );
             
             int midicode = midicodes.at(row).at(col);
