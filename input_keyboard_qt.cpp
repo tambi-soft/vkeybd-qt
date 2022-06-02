@@ -44,7 +44,7 @@ bool InputKeyboardQt::callEventFilter(QObject *obj, QEvent *ev)
 bool InputKeyboardQt::isAutoRepeat(QEvent *event, QKeyEvent *key)
 {
     bool autorepeat_detected = false;
-    if (event->type() == QEvent::KeyPress)
+    if (event->type() == QEvent::KeyPress || event->type() == QEvent::ShortcutOverride)
     {
         if (this->list_of_keypresses.contains(key->key()))
         {
