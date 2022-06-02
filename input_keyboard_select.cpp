@@ -5,6 +5,7 @@ InputKeyboardSelect::InputKeyboardSelect(ComboKeyboardSelect *combo_keyboard_sel
 {
     this->combo_keyboard_selector = combo_keyboard_selector;
     this->button_keyboard_lock = button_keyboard_lock;
+    this->button_keyboard_rescan = button_keyboard_rescan;
     
     connect(this->combo_keyboard_selector, &QComboBox::currentIndexChanged, this, &InputKeyboardSelect::keyboardSelectionChanged);
     
@@ -81,12 +82,16 @@ void InputKeyboardSelect::toggleKeyboardLock()
         this->locked = false;
         this->combo_keyboard_selector->setEnabled(true);
         this->button_keyboard_lock->setText("Lock");
+        
+        this->button_keyboard_rescan->setEnabled(true);
     }
     else
     {
         this->locked = true;
         this->combo_keyboard_selector->setEnabled(false);
         this->button_keyboard_lock->setText("Unlock");
+        
+        this->button_keyboard_rescan->setEnabled(false);
     }
     
     int index = this->combo_keyboard_selector->currentIndex();

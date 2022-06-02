@@ -6,6 +6,11 @@ InputKeyboardRaw::InputKeyboardRaw(QObject *parent)
     
 }
 
+InputKeyboardRaw::~InputKeyboardRaw()
+{
+    keyboardRelease();
+}
+
 QList<QMap<QString,QString>> InputKeyboardRaw::detectKeyboards()
 {
     QList<QMap<QString,QString>> keyboards;

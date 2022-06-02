@@ -401,7 +401,7 @@ void MainTabs::MIDISignal(MIDISignalTypes type)
     }
     else if (type == MIDISignalTypes::ShowMenu)
     {
-        o->button_channels_dialog->animateClick();
+        //o->button_channels_dialog->animateClick();
     }
     else if (type == MIDISignalTypes::ResendMIDISettings)
     {

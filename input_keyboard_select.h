@@ -24,6 +24,7 @@ public:
 private:
     ComboKeyboardSelect *combo_keyboard_selector;
     QPushButton *button_keyboard_lock;
+    QPushButton *button_keyboard_rescan;
     
     bool keyboard_locked = false;
     

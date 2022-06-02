@@ -48,7 +48,8 @@ QPushButton {
     background-color: #4fb6a3;
 }
 QPushButton:disabled {
-    background-color:#ff0000;
+    color: grey;
+    background-color:#c0c0c0;
 }
 QPushButton#button_grab {
     color: black;

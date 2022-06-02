@@ -50,6 +50,7 @@ class InputKeyboardRaw : public QObject
     Q_OBJECT
 public:
     explicit InputKeyboardRaw(QObject *parent = nullptr);
+    ~InputKeyboardRaw();
     
     QList<QMap<QString, QString> > detectKeyboards();
     QList<QString> getKeyboardNames();
