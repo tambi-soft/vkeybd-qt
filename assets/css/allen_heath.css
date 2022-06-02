@@ -47,6 +47,9 @@ QPushButton {
     color: black;
     background-color: #4fb6a3;
 }
+QPushButton:disabled {
+    background-color:#ff0000;
+}
 QPushButton#button_grab {
     color: black;
     background-color: #0d9788;
@@ -54,6 +57,10 @@ QPushButton#button_grab {
 QPushButton#button_grab:pressed {
     color: black;
     background-color: qradialgradient(cx: 0.5, cy: 0.5, radius: 1.5, fx: 0.75, fy: 0.75, stop: 0 #f3ffff, stop: 0.2 #94faff, stop: 0.4 #6592d7);
+}
+QPushButton#button_grab:disabled {
+    color: grey;
+    background-color:#c0c0c0;
 }
 QPushButton#button_panic {
     color: white;

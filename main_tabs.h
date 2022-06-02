@@ -15,8 +15,9 @@
 #include "orgelwerk.h"
 #include "config.h"
 #include "enums.h"
-#include "input_keyboard_qt.h"
-#include "input_keyboard_raw.h"
+
+#include "input_keyboard_select.h"
+//#include "combo_keyboard_select.h"
 
 #include "enums.h"
 
@@ -24,9 +25,9 @@ class MainTabs : public QTabWidget
 {
     Q_OBJECT
 public:
-    explicit MainTabs(int id, Config* config, OutputSystem output, QComboBox *combo_keyboard_input, QPushButton *button_lock, QPushButton *button_keyboard_rescan, QLineEdit *line_udp_ip, QSpinBox *spin_port, QTabWidget *parent = nullptr);
+    explicit MainTabs(int id, Config* config, OutputSystem output, InputKeyboardSelect *input_keyboard_select, QLineEdit *line_udp_ip, QSpinBox *spin_port, QTabWidget *parent = nullptr);
     
-    bool callEventFilter(QObject *obj, QEvent *ev);
+    //bool callEventFilter(QObject *obj, QEvent *ev);
     void saveAllParams();
     void restoreParams(QString tab, QMap<QString,QVariant> data);
     
@@ -45,21 +46,16 @@ private:
     QList<Orgelwerk*> list_of_tabs;
     QMap<QString,Orgelwerk*> map_of_tabs;
     
-    QMap<int,QString> combo_keyboard_input_labels;
-    bool input_kbd_qt_native = false;
-    bool input_kbd_qt_default = false;
-    bool input_kbd_linux_raw = false;
+    //bool input_kbd_qt_native = false;
+    //bool input_kbd_qt_default = false;
+    //bool input_kbd_linux_raw = false;
     
     int id;
     Config *config;
-    QComboBox *combo_keyboard_input;
-    QPushButton *button_lock;
+    InputKeyboardSelect *input_keyboard_select;
+    //QPushButton *button_lock;
     QLineEdit *line_udp_ip;
     QSpinBox *spin_port;
-    
-    bool keyboard_locked = false;
-    //InputKeyboardQt *keyboard_qt;
-    InputKeyboardRaw *keyboard_raw;
     
     QUdpSocket *socket;
     void rebindSocketIP(QString ip);
@@ -72,17 +68,19 @@ private:
     void addOrganTab(OutputSystem output, QString label, int number_of_orgelwerks=1);
 
 protected:
-    bool eventFilter(QObject *obj, QEvent *ev) override;
+    //bool eventFilter(QObject *obj, QEvent *ev) override;
     
 private slots:
-    void keyboardSelectionChanged(QString text);
+    //void keyboardSelectionChanged(QString text);
     void deviceNotAvailable(QString message);
-    void toggleKeyboardLock();
-    void keyboardRescan();
+    //void toggleKeyboardLock();
+    //void keyboardSelectionChangedSlot(int selection);
+    
     
 signals:
     void useInputKbdQtNativeSignal();
     void useInputKbdQtDefaultSignal();
+    //void keyboardSelectionChanged(int selection);
 };
 
 #endif // MAINTABS_H

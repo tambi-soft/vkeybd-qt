@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QWidget>
+#include <QEvent>
 #include <QKeyEvent>
 #include <QList>
 #include <QMap>
@@ -35,9 +36,8 @@ protected:
 signals:
     void keyPressSignal(int key);
     void keyReleaseSignal(int key);
-    void toggleKeyboardLockSignal();
+    //void toggleKeyboardLockSignal();
     
-    void MIDISignal(MIDISignalTypes type);
 };
 
 #endif // INPUTKEYBOARDQT_H

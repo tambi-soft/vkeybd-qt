@@ -20,11 +20,13 @@ DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs depr
 
 SOURCES += \
     button_piano.cpp \
+    combo_keyboard_select.cpp \
     config.cpp \
     help_about_widget.cpp \
     help_message.cpp \
     input_keyboard_qt.cpp \
     input_keyboard_raw.cpp \
+    input_keyboard_select.cpp \
     input_keyboard_udp.cpp \
     input_keyboard_xcb.cpp \
     input_midi.cpp \
@@ -49,12 +51,14 @@ SOURCES += \
 
 HEADERS += \
     button_piano.h \
+    combo_keyboard_select.h \
     config.h \
     enums.h \
     help_about_widget.h \
     help_message.h \
     input_keyboard_qt.h \
     input_keyboard_raw.h \
+    input_keyboard_select.h \
     input_keyboard_udp.h \
     input_keyboard_xcb.h \
     input_midi.h \

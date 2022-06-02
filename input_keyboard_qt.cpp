@@ -12,18 +12,13 @@ bool InputKeyboardQt::callEventFilter(QObject *obj, QEvent *ev)
 {
     Q_UNUSED(obj);
     
-    QKeyEvent *event = static_cast<QKeyEvent*>(ev);
-    bool is_auto_repeat = isAutoRepeat(ev, event);
-    
-    if (ev->type() == QEvent::KeyPress)
+    // as this object does not have focus when this function is called, Qt does not count this as a KeyPress but a ShortcutOverride instead
+    if (ev->type() == QEvent::KeyPress || ev->type() == QEvent::ShortcutOverride)
     {
+        QKeyEvent *event = static_cast<QKeyEvent*>(ev);
+        bool is_auto_repeat = isAutoRepeat(ev, event);
         if (!is_auto_repeat)
-        //if (!event->isAutoRepeat())       
         {
-            qDebug() << "KEY PRESS/RELEASE Qt";
-            
-            
-            //int key = mapFromKeyboardLayoutToLinuxRaw(event->key());
             int key = event->nativeScanCode() -8;
             emit keyPressSignal(key);
             
@@ -33,24 +28,14 @@ bool InputKeyboardQt::callEventFilter(QObject *obj, QEvent *ev)
     else if (ev->type() == QEvent::KeyRelease)
     {
         QKeyEvent *event = static_cast<QKeyEvent*>(ev);
-        
+        bool is_auto_repeat = isAutoRepeat(ev, event);
         if (!is_auto_repeat)
         {
-            //int key = mapFromKeyboardLayoutToLinuxRaw(event->key());
             int key = event->nativeScanCode() -8;
             emit keyReleaseSignal(key);
             
             return true;
         }
-    }
-    else if (ev->type() == QEvent::MouseButtonPress)
-    {
-        /*
-        if (this->keyboard_locked)
-        {
-            emit toggleKeyboardLockSignal();
-        }
-        */
     }
     
     return false;

@@ -35,8 +35,7 @@ MainWindow::MainWindow(OutputSystem output, int number_of_keyboards, QWidget *pa
     
     this->inputQt = new InputKeyboardQt;
     connect(this->inputQt, &InputKeyboardQt::keyPressSignal, this, &MainWindow::rawKeyPressed);
-    connect(this->inputQt, &InputKeyboardQt::keyReleaseSignal, this, &MainWindow::rawKeyReleased);
-    connect(this->inputQt, &InputKeyboardQt::MIDISignal, this, &MainWindow::MIDISignal);                        
+    connect(this->inputQt, &InputKeyboardQt::keyReleaseSignal, this, &MainWindow::rawKeyReleased);                    
 }
 
 MainWindow::~MainWindow()
@@ -56,14 +55,19 @@ QWidget* MainWindow::newKeyboardInstance(int id, OutputSystem output)
     connect(this->config, &Config::restoreParams, this, &MainWindow::restoreParams);
     connect(this->config, &Config::restoreGeneral, this, &MainWindow::restoreGeneral);
     
-    QPushButton *button_lock = new QPushButton("Lock");
-    button_lock->setObjectName("button_grab");
+    QPushButton *button_keyboard_lock = new QPushButton("Lock");
+    button_keyboard_lock->setObjectName("button_grab");
     
     QPushButton *button_keyboard_rescan = new QPushButton();
     button_keyboard_rescan->setIcon(QIcon::fromTheme("system-reboot"));
     button_keyboard_rescan->setToolTip("Rescan Keyboards");
     
-    QComboBox *combo_keyboard_input = new QComboBox();
+    ComboKeyboardSelect *combo_keyboard_selector = new ComboKeyboardSelect();
+    InputKeyboardSelect *input_keyboard_select = new InputKeyboardSelect(combo_keyboard_selector, button_keyboard_lock, button_keyboard_rescan);
+    connect(input_keyboard_select, &InputKeyboardSelect::keyboardSelectionChangedSignal, this, &MainWindow::keyboardSelectionChanged);
+    input_keyboard_select->keyboardRescan();
+    // set default value
+    //combo_keyboard_selector->setCurrentIndex(KeyboardSelection::Default);
     
     QLineEdit *line_udp_ip = new QLineEdit(this);
     line_udp_ip->setText("127.0.0.1");
@@ -81,9 +85,11 @@ QWidget* MainWindow::newKeyboardInstance(int id, OutputSystem output)
     //spin_port->hide();
     this->list_of_spin_ports.append(spin_port);
     
-    MainTabs *tabs = new MainTabs(id, this->config, output, combo_keyboard_input, button_lock, button_keyboard_rescan, line_udp_ip, spin_port);
-    connect(tabs, &MainTabs::useInputKbdQtNativeSignal, this, &MainWindow::useInputKbdQtNative);
-    connect(tabs, &MainTabs::useInputKbdQtDefaultSignal, this, &MainWindow::useInputKbdQtDefault);
+    MainTabs *tabs = new MainTabs(id, this->config, output, input_keyboard_select, line_udp_ip, spin_port);
+    //connect(tabs, &MainTabs::useInputKbdQtNativeSignal, this, &MainWindow::useInputKbdQtNative);
+    //connect(tabs, &MainTabs::useInputKbdQtDefaultSignal, this, &MainWindow::useInputKbdQtDefault);
+    //connect(tabs, &MainTabs::keyboardSelectionChanged, this, &MainWindow::keyboardSelectionChanged);
+    
     this->list_of_maintabs.append(tabs);
     
     QPushButton *button_lock_help = new QPushButton;
@@ -98,8 +104,8 @@ QWidget* MainWindow::newKeyboardInstance(int id, OutputSystem output)
     button_network_help->hide();
     this->list_of_network_help_buttons.append(button_network_help);
     
-    grid->addWidget(combo_keyboard_input, 1, 0);
-    grid->addWidget(button_lock, 1, 1);
+    grid->addWidget(combo_keyboard_selector, 1, 0);
+    grid->addWidget(button_keyboard_lock, 1, 1);
     grid->addWidget(button_keyboard_rescan, 1, 2);
     //grid->addWidget(button_lock_help, 1, 3);
     if (output == OutputSystem::Network)
@@ -314,7 +320,8 @@ bool MainWindow::nativeEvent(const QByteArray &eventType, void *message, long *r
 {
     Q_UNUSED(result);
     
-    if (this->input_kbd_qt_native)
+    //if (this->input_kbd_qt_native)
+    if (this->keyboard_selection == KeyboardSelection::Native)
     {
         return this->inputXCB->xcbEvent(eventType, message, result);
     }
@@ -322,6 +329,7 @@ bool MainWindow::nativeEvent(const QByteArray &eventType, void *message, long *r
     return false;
 }
 
+/*
 void MainWindow::useInputKbdQtNative()
 {
     this->input_kbd_qt_native = true;
@@ -338,6 +346,21 @@ void MainWindow::useInputKbdQtDefault()
     qDebug() << "installing event filter";
     installEventFilter(this);
 }
+*/
+void MainWindow::keyboardSelectionChanged(int selection)
+{
+    qDebug() << selection;
+    this->keyboard_selection = selection;
+    
+    if (selection == KeyboardSelection::Default)
+    {
+        installEventFilter(this);
+    }
+    else
+    {
+        removeEventFilter(this);
+    }
+}
 
 void MainWindow::rawKeyPressed(int key)
 {
@@ -351,7 +374,9 @@ void MainWindow::changeTab(int id)
 {
     this->list_of_maintabs.first()->changeTab(id);
 }
+/*
 void MainWindow::MIDISignal(MIDISignalTypes type)
 {
     this->list_of_maintabs.first()->MIDISignal(type);
 }
+*/

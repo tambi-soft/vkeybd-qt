@@ -13,14 +13,19 @@
 #include <QIcon>
 #include <QAbstractNativeEventFilter>
 #include <QAbstractEventDispatcher>
+#include <QStyle>
+#include <QStyledItemDelegate>
 
 #include "main_tabs.h"
 #include "menubar.h"
 #include "config.h"
 #include "help_message.h"
 #include "help_about_widget.h"
+
+#include "input_keyboard_qt.h"
 #include "input_keyboard_raw.h"
 #include "input_keyboard_xcb.h"
+#include "combo_keyboard_select.h"
 
 #include "enums.h"
 
@@ -44,11 +49,9 @@ private:
     
     QWidget* newKeyboardInstance(int id, OutputSystem output);
     
-    bool input_kbd_qt_native = true;
-    bool input_kbd_qt_default = false;
-    
-    void useInputKbdQtNative();
-    void useInputKbdQtDefault();
+    //bool input_kbd_qt_native = true;
+    //bool input_kbd_qt_default = false;
+    int keyboard_selection;
     
     InputKeyboardQt *inputQt;
     InputKeyboardXCB *inputXCB;
@@ -65,10 +68,14 @@ private slots:
     
     void showActionChanged(GUIElements elements, bool is_checked);
     
+    //void useInputKbdQtNative();
+    //void useInputKbdQtDefault();
+    void keyboardSelectionChanged(int selection);
+    
     void rawKeyPressed(int key);
     void rawKeyReleased(int key);
     void changeTab(int id);
-    void MIDISignal(MIDISignalTypes type);
+    //void MIDISignal(MIDISignalTypes type);
 
 };
 #endif // MAINWINDOW_H

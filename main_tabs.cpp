@@ -1,6 +1,6 @@
 #include "main_tabs.h"
 
-MainTabs::MainTabs(int id, Config *config, OutputSystem output, QComboBox *combo_keyboard_input, QPushButton *button_lock, QPushButton *button_keyboard_rescan, QLineEdit *line_udp_ip, QSpinBox *spin_port, QTabWidget *parent) : QTabWidget(parent)
+MainTabs::MainTabs(int id, Config *config, OutputSystem output, InputKeyboardSelect *input_keyboard_select, QLineEdit *line_udp_ip, QSpinBox *spin_port, QTabWidget *parent) : QTabWidget(parent)
 {
     this->id = id;
     this->config = config;
@@ -8,17 +8,18 @@ MainTabs::MainTabs(int id, Config *config, OutputSystem output, QComboBox *combo
     {
         this->send_udp = true;
     }
-    this->combo_keyboard_input = combo_keyboard_input;
-    connect(this->combo_keyboard_input, &QComboBox::currentTextChanged, this, &MainTabs::keyboardSelectionChanged);
-    this->keyboard_raw = new InputKeyboardRaw;
-    connect(this->keyboard_raw, &InputKeyboardRaw::deviceNotAvailable, this, &MainTabs::deviceNotAvailable);
-    connect(this->keyboard_raw, &InputKeyboardRaw::rawKeyPressedSignal, this, &MainTabs::rawKeyPressed);
-    connect(this->keyboard_raw, &InputKeyboardRaw::rawKeyReleasedSignal, this, &MainTabs::rawKeyReleased);
+    this->input_keyboard_select = input_keyboard_select;
     
-    this->button_lock = button_lock;
-    connect(this->button_lock, &QPushButton::clicked, this, &MainTabs::toggleKeyboardLock);
-    connect(button_keyboard_rescan, &QPushButton::clicked, this, &MainTabs::keyboardRescan);
-    keyboardRescan();
+    
+    //this->keyboard_select = new InputKeyboardSelect(this->combo_keyboard_selector, button_lock, button_keyboard_rescan);
+    
+    //connect(this->input_keyboard_select, &InputKeyboardSelect::keyboardSelectionChangedSignal, this, &MainTabs::keyboardSelectionChangedSlot);
+    
+    
+    
+    //this->button_lock = button_lock;
+    //connect(this->button_lock, &QPushButton::clicked, this, &MainTabs::toggleKeyboardLock);
+    
     this->line_udp_ip = line_udp_ip;
     this->spin_port = spin_port;
     
@@ -143,6 +144,7 @@ void MainTabs::showHideGUIElements(GUIElements elements, bool show)
     resize(10, 10);
 }
 
+/*
 bool MainTabs::callEventFilter(QObject *obj, QEvent *ev)
 {
     return eventFilter(obj, ev);
@@ -156,6 +158,7 @@ bool MainTabs::eventFilter(QObject *obj, QEvent *ev)
     
     //return this->keyboard_qt->callEventFilter(obj, ev);
 }
+*/
 
 void MainTabs::sendUDPMessage(QString message)
 {
@@ -208,6 +211,7 @@ void MainTabs::rebindSocket(int value)
     socket->bind(QHostAddress(this->line_udp_ip->text()), value);
 }
 
+/*
 void MainTabs::keyboardSelectionChanged(QString text)
 {
     if (this->keyboard_locked)
@@ -218,7 +222,6 @@ void MainTabs::keyboardSelectionChanged(QString text)
     // unlock the keyboard if selection changed and it was locked (probably this is not possible anymore anyways since the lock-button deactivates this->combo_keyboard_input, but it is better to leave this code in here, just in case ...)
     this->keyboard_raw->keyboardRelease();
     
-    //if (this->combo_keyboard_input->currentIndex() == 0)
     if (this->combo_keyboard_input->currentText() == this->combo_keyboard_input_labels[0])
     {
         emit useInputKbdQtNativeSignal();
@@ -234,10 +237,17 @@ void MainTabs::keyboardSelectionChanged(QString text)
         this->keyboard_raw->keyboardListen(devpath);
     }
 }
+*/
 void MainTabs::deviceNotAvailable(QString message)
 {
     qDebug() << "main_tabs: deviceNotAvailable";
 }
+/*
+void MainTabs::keyboardSelectionChangedSlot(int selection)
+{
+    emit keyboardSelectionChanged(selection);
+}
+*/
 
 void MainTabs::rawKeyPressed(int keycode)
 {
@@ -490,6 +500,7 @@ void MainTabs::MIDISignal(MIDISignalTypes type)
     }
 }
 
+/*
 void MainTabs::toggleKeyboardLock()
 {
     //this->keyboard_raw->keyboardRelease();
@@ -575,25 +586,4 @@ void MainTabs::toggleKeyboardLock()
         }
     }
 }
-
-void MainTabs::keyboardRescan()
-{
-    if (this->keyboard_locked)
-        toggleKeyboardLock();
-    
-    this->combo_keyboard_input_labels[KeyboardEvent::None] = "[Disabled]";
-    this->combo_keyboard_input_labels[KeyboardEvent::Native] = "Qt native";
-    this->combo_keyboard_input_labels[KeyboardEvent::Default] = "Qt default";
-    this->combo_keyboard_input_labels[KeyboardEvent::Detect] = "[Detect RAW event]";
-    
-    InputKeyboardRaw *keyboard_raw = new InputKeyboardRaw;
-    QList<QString> keyboards = keyboard_raw->getKeyboardNames();
-    for (int i=this->combo_keyboard_input_labels.size()-1; i >= 0; i--)
-    {
-        keyboards.prepend(this->combo_keyboard_input_labels[i]);
-    }
-    this->combo_keyboard_input->blockSignals(true);
-    this->combo_keyboard_input->clear();
-    this->combo_keyboard_input->addItems(keyboards);
-    this->combo_keyboard_input->blockSignals(false);
-}
+*/
