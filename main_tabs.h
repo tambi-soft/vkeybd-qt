@@ -52,7 +52,7 @@ private:
     
     int id;
     Config *config;
-    InputKeyboardSelect *input_keyboard_select;
+    //InputKeyboardSelect *input_keyboard_select;
     //QPushButton *button_lock;
     QLineEdit *line_udp_ip;
     QSpinBox *spin_port;
@@ -74,13 +74,12 @@ private slots:
     //void keyboardSelectionChanged(QString text);
     void deviceNotAvailable(QString message);
     //void toggleKeyboardLock();
-    //void keyboardSelectionChangedSlot(int selection);
-    
+   
     
 signals:
     void useInputKbdQtNativeSignal();
     void useInputKbdQtDefaultSignal();
-    //void keyboardSelectionChanged(int selection);
+    
 };
 
 #endif // MAINTABS_H

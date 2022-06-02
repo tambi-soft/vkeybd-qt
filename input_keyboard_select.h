@@ -29,15 +29,19 @@ private:
     
     QMap<int,QString> combo_keyboard_input_labels;
     
-    //InputKeyboardRaw *keyboard_raw;
+    InputKeyboardRaw *keyboard_raw;
     QMap<QString, InputKeyboardRaw*> map_of_raw_keyboards;
     void instantiateRawKeyboards(QList<QString> keyboard_names);
     void cleanupRawKeyboards();
     
+    void disconnectRawKeyboards();
+    
     void keyboardSelectionChanged(int index);
+    void toggleKeyboardLock();
     
 private slots:
-    
+    void keyRawPressed(int keycode);
+    void keyRawReleased(int keycode);
     
 signals:
     /*
@@ -47,8 +51,8 @@ signals:
     */
     void keyboardSelectionChangedSignal(int selection);
     
-    void keyRawPress(int keycode);
-    void keyRawRelease(int keycode);
+    void keyRawPressedSignal(int keycode);
+    void keyRawReleasedSignal(int keycode);
 };
 
 #endif // INPUTKEYBOARDSELECT_H

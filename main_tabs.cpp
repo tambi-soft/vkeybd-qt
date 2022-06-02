@@ -8,14 +8,9 @@ MainTabs::MainTabs(int id, Config *config, OutputSystem output, InputKeyboardSel
     {
         this->send_udp = true;
     }
-    this->input_keyboard_select = input_keyboard_select;
     
-    
-    //this->keyboard_select = new InputKeyboardSelect(this->combo_keyboard_selector, button_lock, button_keyboard_rescan);
-    
-    //connect(this->input_keyboard_select, &InputKeyboardSelect::keyboardSelectionChangedSignal, this, &MainTabs::keyboardSelectionChangedSlot);
-    
-    
+    connect(input_keyboard_select, &InputKeyboardSelect::keyRawPressedSignal, this, &MainTabs::rawKeyPressed);
+    connect(input_keyboard_select, &InputKeyboardSelect::keyRawReleasedSignal, this, &MainTabs::rawKeyReleased);
     
     //this->button_lock = button_lock;
     //connect(this->button_lock, &QPushButton::clicked, this, &MainTabs::toggleKeyboardLock);
@@ -242,12 +237,6 @@ void MainTabs::deviceNotAvailable(QString message)
 {
     qDebug() << "main_tabs: deviceNotAvailable";
 }
-/*
-void MainTabs::keyboardSelectionChangedSlot(int selection)
-{
-    emit keyboardSelectionChanged(selection);
-}
-*/
 
 void MainTabs::rawKeyPressed(int keycode)
 {
