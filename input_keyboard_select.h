@@ -37,6 +37,7 @@ private:
     void disconnectRawKeyboards();
     
     void keyboardSelectionChanged(int index);
+    bool locked = false;
     void toggleKeyboardLock();
     
 private slots:
@@ -49,7 +50,7 @@ signals:
     void keyboardSelectedNative();
     void KeyboardSeletedDefaul();
     */
-    void keyboardSelectionChangedSignal(int selection);
+    void keyboardSelectionChangedSignal(int selection, bool locked);
     
     void keyRawPressedSignal(int keycode);
     void keyRawReleasedSignal(int keycode);

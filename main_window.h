@@ -68,9 +68,7 @@ private slots:
     
     void showActionChanged(GUIElements elements, bool is_checked);
     
-    //void useInputKbdQtNative();
-    //void useInputKbdQtDefault();
-    void keyboardSelectionChanged(int selection);
+    void keyboardSelectionChanged(int selection, bool locked);
     
     void rawKeyPressed(int key);
     void rawKeyReleased(int key);

@@ -208,114 +208,9 @@ void MainWindow::showActionChanged(GUIElements elements, bool is_checked)
 
 bool MainWindow::eventFilter(QObject *obj, QEvent *ev)
 {
-    //return this->list_of_maintabs.first()->callEventFilter(obj, ev);
-    /*
-    qDebug() << "evfilter";
-    for (auto &maintab : this->list_of_maintabs)
-    {
-        qDebug() << "for";
-        //return maintab->callEventFilter(obj, ev);
-        
-        if (maintab->hasFocus())
-        {
-            //return maintab->callEventFilter(obj, ev);
-            qDebug() << "focus";
-        }
-        
-    }
-    */
-    
     return this->inputQt->callEventFilter(obj, ev);
-    
-    //return false;
 }
 
-/*
-bool MainWindow::eventFilter(QObject *obj, QEvent *ev)
-{
-    if (ev->type() == QEvent::KeyPress)
-    {
-        QKeyEvent *event = static_cast<QKeyEvent*>(ev);
-        
-        if (!event->isAutoRepeat())
-        {
-            if (event->key() == Qt::Key_Control)
-            {
-                this->ctrl_down = true;
-            }
-            else if (event->key() == Qt::Key_Shift)
-            {
-                if (this->ctrl_down)
-                {
-                    if (this->grabbing != nullptr)
-                    {
-                        grabButtonClicked(this->grabbing);
-                    }
-                    else if (this->grabbing_last != nullptr)
-                    {
-                        grabButtonClicked(this->grabbing_last);
-                    }
-                    else
-                    {
-                        grabButtonClicked(this->list_of_button_grabs.first());
-                    }
-                    
-                    return true;
-                }
-            }
-            else
-            {
-                //return this->tabs->callEventFilter(obj, ev);
-                
-                if (this->grabbing != nullptr)
-                {
-                    int index = this->list_of_button_grabs.indexOf(this->grabbing);
-                    return this->list_of_maintabs.at(index)->callEventFilter(obj, ev);
-                }
-                else
-                {
-                    return this->list_of_maintabs.first()->callEventFilter(obj, ev);
-                }
-            }
-        }
-    }
-    else if (ev->type() == QEvent::KeyRelease)
-    {
-        QKeyEvent *event = static_cast<QKeyEvent*>(ev);
-        
-        if (!event->isAutoRepeat())
-        {
-            if (event->key() == Qt::Key_Control)
-            {
-                this->ctrl_down = false;
-            }
-            else
-            {
-                //return this->tabs->callEventFilter(obj, ev);
-                
-                if (this->grabbing != nullptr)
-                {
-                    int index = this->list_of_button_grabs.indexOf(this->grabbing);
-                    return this->list_of_maintabs.at(index)->callEventFilter(obj, ev);
-                }
-                else
-                {
-                    return this->list_of_maintabs.first()->callEventFilter(obj, ev);
-                }
-            }
-        }
-    }
-    else if (ev->type() == QEvent::MouseButtonPress)
-    {
-        if (this->grabbing != nullptr)
-        {
-            grabButtonClicked(this->grabbing);
-        }
-    }
-    
-    return false;
-}
-*/
 bool MainWindow::nativeEvent(const QByteArray &eventType, void *message, long *result)
 {
     Q_UNUSED(result);
@@ -329,32 +224,25 @@ bool MainWindow::nativeEvent(const QByteArray &eventType, void *message, long *r
     return false;
 }
 
-/*
-void MainWindow::useInputKbdQtNative()
+void MainWindow::keyboardSelectionChanged(int selection, bool locked)
 {
-    this->input_kbd_qt_native = true;
-    this->input_kbd_qt_default = false;
-    
-    qDebug() << "removing event filter";
-    removeEventFilter(this);
-}
-void MainWindow::useInputKbdQtDefault()
-{
-    this->input_kbd_qt_default = true;
-    this->input_kbd_qt_native = false;
-    
-    qDebug() << "installing event filter";
-    installEventFilter(this);
-}
-*/
-void MainWindow::keyboardSelectionChanged(int selection)
-{
-    qDebug() << selection;
     this->keyboard_selection = selection;
     
     if (selection == KeyboardSelection::Default)
     {
         installEventFilter(this);
+        
+        if (locked)
+            grabKeyboard();
+        else
+            releaseKeyboard();
+    }
+    else if (selection == KeyboardSelection::Native)
+    {
+        if (locked)
+            grabKeyboard();
+        else
+            releaseKeyboard();
     }
     else
     {

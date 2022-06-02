@@ -17,42 +17,37 @@ void InputKeyboardSelect::keyboardSelectionChanged(int index)
 {
     if (index == KeyboardSelection::None)
     {
-        qDebug() << "NONE";
         this->button_keyboard_lock->setDisabled(true);
         disconnectRawKeyboards();
         
-        emit keyboardSelectionChangedSignal(index);
+        emit keyboardSelectionChangedSignal(index, this->locked);
     }
     else if (index == KeyboardSelection::Native)
     {
-        qDebug() << "Native";
         this->button_keyboard_lock->setDisabled(false);
         disconnectRawKeyboards();
         
-        emit keyboardSelectionChangedSignal(index);
+        emit keyboardSelectionChangedSignal(index, this->locked);
     }
     else if (index == KeyboardSelection::Default)
     {
-        qDebug() << "Default";
         this->button_keyboard_lock->setDisabled(false);
         disconnectRawKeyboards();
         
-        emit keyboardSelectionChangedSignal(index);
+        emit keyboardSelectionChangedSignal(index, this->locked);
     }
     else if (index == KeyboardSelection::Detect)
     {
-        qDebug() << "Detect";
         this->button_keyboard_lock->setDisabled(true);
         disconnectRawKeyboards();
         
-        emit keyboardSelectionChangedSignal(index);
+        emit keyboardSelectionChangedSignal(index, this->locked);
     }
     // some RAW-Keyboard selected
     else
     {
-        qDebug() << "RAW";
         this->button_keyboard_lock->setDisabled(false);
-        emit keyboardSelectionChangedSignal(index);
+        emit keyboardSelectionChangedSignal(index, this->locked);
         
         disconnectRawKeyboards();
         
@@ -64,7 +59,14 @@ void InputKeyboardSelect::keyboardSelectionChanged(int index)
         {
             if (name == keys.at(i))
             {
-                this->map_of_raw_keyboards[name]->keyboardListen(path);
+                if (this->locked)
+                {
+                    this->map_of_raw_keyboards[name]->keyboardLock(path);
+                }
+                else
+                {
+                    this->map_of_raw_keyboards[name]->keyboardListen(path);
+                }
                 
                 connect(this->map_of_raw_keyboards[name], &InputKeyboardRaw::rawKeyPressedSignal, this, &InputKeyboardSelect::keyRawPressed);
                 connect(this->map_of_raw_keyboards[name], &InputKeyboardRaw::rawKeyReleasedSignal, this, &InputKeyboardSelect::keyRawReleased);
@@ -74,7 +76,21 @@ void InputKeyboardSelect::keyboardSelectionChanged(int index)
 }
 void InputKeyboardSelect::toggleKeyboardLock()
 {
+    if (this->locked)
+    {
+        this->locked = false;
+        this->combo_keyboard_selector->setEnabled(true);
+        this->button_keyboard_lock->setText("Lock");
+    }
+    else
+    {
+        this->locked = true;
+        this->combo_keyboard_selector->setEnabled(false);
+        this->button_keyboard_lock->setText("Unlock");
+    }
     
+    int index = this->combo_keyboard_selector->currentIndex();
+    keyboardSelectionChanged(index);
 }
 
 void InputKeyboardSelect::disconnectRawKeyboards()
@@ -82,6 +98,7 @@ void InputKeyboardSelect::disconnectRawKeyboards()
     QList<QString> keys = this->map_of_raw_keyboards.keys();
     for (int i=0; i < keys.length(); i++)
     {
+        this->map_of_raw_keyboards[keys.at(i)]->keyboardRelease();
         this->map_of_raw_keyboards[keys.at(i)]->disconnect();
     }
 }
