@@ -125,7 +125,7 @@ private:
     MIDIChannelsSummary *midi_channels_summary;
     MIDIKeyShiftWidget *key_shift_master;
     
-    QThread *thread_input;
+    //QThread *thread_input;
     
     QList<InterfaceAudio*> list_of_audio_interfaces;
     QMap<QString, TremoloWorker*> map_of_tremolo_workers;

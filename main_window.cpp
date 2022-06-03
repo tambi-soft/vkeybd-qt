@@ -67,7 +67,9 @@ QWidget* MainWindow::newKeyboardInstance(int id, OutputSystem output)
     connect(input_keyboard_select, &InputKeyboardSelect::keyboardSelectionChangedSignal, this, &MainWindow::keyboardSelectionChanged);
     input_keyboard_select->keyboardRescan();
     // set default value
-    //combo_keyboard_selector->setCurrentIndex(KeyboardSelection::Default);
+    combo_keyboard_selector->setCurrentIndex(KeyboardSelection::Default);
+    //combo_keyboard_selector->currentIndexChanged(combo_keyboard_selector->currentIndex());
+    input_keyboard_select->keyboardSelectionChanged(combo_keyboard_selector->currentIndex());
     
     QLineEdit *line_udp_ip = new QLineEdit(this);
     line_udp_ip->setText("127.0.0.1");

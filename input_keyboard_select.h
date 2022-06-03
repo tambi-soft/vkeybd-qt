@@ -21,6 +21,8 @@ public:
     void keyboardRescan();
     bool isKeyboardLocked();
     
+    void keyboardSelectionChanged(int index);
+    
 private:
     ComboKeyboardSelect *combo_keyboard_selector;
     QPushButton *button_keyboard_lock;
@@ -37,9 +39,10 @@ private:
     
     void disconnectRawKeyboards();
     
-    void keyboardSelectionChanged(int index);
     bool locked = false;
     void toggleKeyboardLock();
+    
+    void autoSelectPressedKeyboard(QString name);
     
 private slots:
     void keyRawPressed(int keycode);

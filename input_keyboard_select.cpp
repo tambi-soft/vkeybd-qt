@@ -21,7 +21,7 @@ void InputKeyboardSelect::keyboardSelectionChanged(int index)
         this->button_keyboard_lock->setDisabled(true);
         disconnectRawKeyboards();
         
-        emit keyboardSelectionChangedSignal(index, this->locked);
+        emit keyboardSelectionChangedSignal(index, false);
     }
     else if (index == KeyboardSelection::Native)
     {
@@ -42,7 +42,9 @@ void InputKeyboardSelect::keyboardSelectionChanged(int index)
         this->button_keyboard_lock->setDisabled(true);
         disconnectRawKeyboards();
         
-        emit keyboardSelectionChangedSignal(index, this->locked);
+        emit keyboardSelectionChangedSignal(index, false);
+        
+        qDebug() << this->map_of_raw_keyboards;
     }
     // some RAW-Keyboard selected
     else
@@ -106,6 +108,14 @@ void InputKeyboardSelect::disconnectRawKeyboards()
         this->map_of_raw_keyboards[keys.at(i)]->keyboardRelease();
         this->map_of_raw_keyboards[keys.at(i)]->disconnect();
     }
+}
+
+void InputKeyboardSelect::autoSelectPressedKeyboard(QString name)
+{
+    this->combo_keyboard_selector->setCurrentText(name);
+    
+    int index = this->combo_keyboard_selector->currentIndex();
+    keyboardSelectionChanged(index);
 }
 
 void InputKeyboardSelect::keyboardRescan()
