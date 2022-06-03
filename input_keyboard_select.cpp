@@ -45,6 +45,17 @@ void InputKeyboardSelect::keyboardSelectionChanged(int index)
         emit keyboardSelectionChangedSignal(index, false);
         
         qDebug() << this->map_of_raw_keyboards;
+        QList<QString> keys = this->map_of_raw_keyboards.keys();
+        for (int i=0; i < keys.length(); i++)
+        {
+            QString name = keys.at(i);
+            QString path = this->keyboard_raw->getPathForName(name);
+            InputKeyboardRaw *keyboard = this->map_of_raw_keyboards[name];
+            keyboard->keyboardListen(path);
+            
+            qDebug() << name;
+            connect(keyboard, &InputKeyboardRaw::rawKeyPressedSignal, this, [this, name]{ this->autoSelectPressedKeyboard(name); });
+        }
     }
     // some RAW-Keyboard selected
     else
@@ -112,10 +123,17 @@ void InputKeyboardSelect::disconnectRawKeyboards()
 
 void InputKeyboardSelect::autoSelectPressedKeyboard(QString name)
 {
+    qDebug() << name;
     this->combo_keyboard_selector->setCurrentText(name);
     
     int index = this->combo_keyboard_selector->currentIndex();
     keyboardSelectionChanged(index);
+    
+    QList<QString> keys = this->map_of_raw_keyboards.keys();
+    for (int i=0; i < keys.length(); i++)
+    {
+        this->map_of_raw_keyboards[keys.at(i)]->disconnect();
+    }
 }
 
 void InputKeyboardSelect::keyboardRescan()

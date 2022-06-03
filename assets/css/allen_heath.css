@@ -116,8 +116,8 @@ QPushButton#pc_gold {
     border-radius: 0px;
 }
 QPushButton#pc_blue {
-    /*background-color: #5cc9fb;*/
-    background-color: #3c73ed;
+    /*background-color: #3c73ed;*/
+    background-color: #5cc9fb;
     font-size: 6pt;
     border-style: outset;
     border-width: 1px;

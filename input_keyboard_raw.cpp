@@ -173,6 +173,7 @@ void InputKeyboardRaw::keyboardRelease()
 
 void InputKeyboardRaw::rawKeyPressed(int keycode)
 {
+    qDebug() << keycode;
     emit rawKeyPressedSignal(keycode);
 }
 void InputKeyboardRaw::rawKeyReleased(int keycode)
