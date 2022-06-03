@@ -162,7 +162,7 @@ void Orgelwerk::channelsSummaryUpdate()
 
 Orgelwerk::~Orgelwerk()
 {
-    this->thread_input->exit();
+    
 }
 
 void Orgelwerk::addNewAudioInterface(QString label)
