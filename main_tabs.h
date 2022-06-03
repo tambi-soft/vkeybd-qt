@@ -46,10 +46,6 @@ private:
     QList<Orgelwerk*> list_of_tabs;
     QMap<QString,Orgelwerk*> map_of_tabs;
     
-    //bool input_kbd_qt_native = false;
-    //bool input_kbd_qt_default = false;
-    //bool input_kbd_linux_raw = false;
-    
     int id;
     Config *config;
     //InputKeyboardSelect *input_keyboard_select;

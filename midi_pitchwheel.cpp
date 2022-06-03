@@ -37,6 +37,7 @@ MIDIPitchWheel::MIDIPitchWheel(QObject *parent) : QObject(parent)
 
 MIDIPitchWheel::~MIDIPitchWheel()
 {
+    this->thread->quit();
     this->thread->exit();
 }
 

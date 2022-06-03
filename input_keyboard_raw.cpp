@@ -9,6 +9,15 @@ InputKeyboardRaw::InputKeyboardRaw(QObject *parent)
 InputKeyboardRaw::~InputKeyboardRaw()
 {
     keyboardRelease();
+    
+    this->thread->quit();
+    //this->thread->exit();
+    this->thread->deleteLater();
+    
+    //this->thread->requestInterruption();
+    //this->thread->wait();
+    
+    //this->thread->deleteLater();
 }
 
 QList<QMap<QString,QString>> InputKeyboardRaw::detectKeyboards()
@@ -145,7 +154,14 @@ void InputKeyboardRaw::keyboardRelease()
 {
     if (this->thread != nullptr)
     {
+        //this->thread->quit();
         this->thread->exit();
+        //this->thread->deleteLater();
+        
+        //this->thread->requestInterruption();
+        //this->thread->wait();
+        
+        //this->thread->deleteLater();
     }
     
     if (this->fd != -1)
