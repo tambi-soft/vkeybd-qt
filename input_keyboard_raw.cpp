@@ -3,7 +3,7 @@
 InputKeyboardRaw::InputKeyboardRaw(QObject *parent)
     : QObject{parent}
 {
-    
+    qDebug() << "0000000000000000000000000000000000000000000000000";
 }
 
 InputKeyboardRaw::~InputKeyboardRaw()
@@ -12,10 +12,10 @@ InputKeyboardRaw::~InputKeyboardRaw()
     
     this->thread->quit();
     //this->thread->exit();
-    this->thread->deleteLater();
+    //this->thread->deleteLater();
     
     //this->thread->requestInterruption();
-    //this->thread->wait();
+    this->thread->wait();
     
     //this->thread->deleteLater();
 }
@@ -142,6 +142,8 @@ void InputKeyboardRaw::keyboardHelper(QString devpath, QString mode)
         
         this->thread = new QThread(this);
         this->worker->moveToThread(this->thread);
+        connect(this->thread, &QThread::finished, this->worker, &QObject::deleteLater);
+        
         this->thread->start();
     }
     else
@@ -152,10 +154,11 @@ void InputKeyboardRaw::keyboardHelper(QString devpath, QString mode)
 
 void InputKeyboardRaw::keyboardRelease()
 {
+    qDebug() << "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAaaa";
     if (this->thread != nullptr)
     {
-        //this->thread->quit();
-        this->thread->exit();
+        this->thread->quit();
+        //this->thread->exit();
         //this->thread->deleteLater();
         
         //this->thread->requestInterruption();
@@ -164,6 +167,7 @@ void InputKeyboardRaw::keyboardRelease()
         //this->thread->deleteLater();
     }
     
+    qDebug() << "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBbbb";
     if (this->fd != -1)
     {
         close(this->fd);
@@ -181,11 +185,6 @@ void InputKeyboardRaw::rawKeyReleased(int keycode)
     emit rawKeyReleasedSignal(keycode);
 }
 
-QString InputKeyboardRaw::autoDetectPressedKeyboard()
-{
-    
-}
-
 
 
 
@@ -197,11 +196,18 @@ InputKeyboardRawWorker::InputKeyboardRawWorker(ssize_t n, int fd, QObject *paren
     this->fd = fd;
     
     this->timer = new QTimer(this);
-    this->timer->setInterval(1);
+    this->timer->setInterval(0);
     this->timer->setTimerType(Qt::PreciseTimer);
     connect(this->timer, &QTimer::timeout, this, &InputKeyboardRawWorker::tick, Qt::DirectConnection);
     
     this->timer->start();
+}
+
+InputKeyboardRawWorker::~InputKeyboardRawWorker()
+{
+    qDebug() << "RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR";
+    this->timer->disconnect();
+    this->timer->stop();
 }
 
 void InputKeyboardRawWorker::tick()

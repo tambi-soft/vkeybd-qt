@@ -43,6 +43,7 @@ private:
     void toggleKeyboardLock();
     
     void autoSelectPressedKeyboard(QString name);
+    void rawKeyboardSelected(int index);
     
 private slots:
     void keyRawPressed(int keycode);

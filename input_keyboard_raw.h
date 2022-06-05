@@ -15,6 +15,7 @@ class InputKeyboardRawWorker : public QObject
     Q_OBJECT
 public:
     explicit InputKeyboardRawWorker(ssize_t n, int fd, QObject *parent = nullptr);
+    ~InputKeyboardRawWorker();
     
 private:
     QTimer *timer;
@@ -59,7 +60,6 @@ public:
     void keyboardLock(QString devpath);
     void keyboardHelper(QString devpath, QString mode);
     void keyboardRelease();
-    QString autoDetectPressedKeyboard();
     
 private:
     // https://stackoverflow.com/questions/16695432/input-event-structure-description-from-linux-input-h
