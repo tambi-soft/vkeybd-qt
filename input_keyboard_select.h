@@ -32,8 +32,8 @@ private:
     
     QMap<int,QString> combo_keyboard_input_labels;
     
-    InputKeyboardRaw *keyboard_raw;
-    QMap<QString, InputKeyboardRaw*> map_of_raw_keyboards;
+    InputKeyboardRawMeta *keyboard_raw;
+    QMap<QString, InputKeyboardRawController*> map_of_raw_keyboards;
     void instantiateRawKeyboards(QList<QString> keyboard_names);
     void cleanupRawKeyboards();
     

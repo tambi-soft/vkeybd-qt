@@ -50,11 +50,11 @@ void InputKeyboardSelect::keyboardSelectionChanged(int index)
         {
             QString name = keys.at(i);
             QString path = this->keyboard_raw->getPathForName(name);
-            InputKeyboardRaw *keyboard = this->map_of_raw_keyboards[name];
+            InputKeyboardRawController *keyboard = this->map_of_raw_keyboards[name];
             keyboard->keyboardListen(path);
             
             qDebug() << name;
-            connect(keyboard, &InputKeyboardRaw::rawKeyPressedSignal, this, [this, name]{ this->autoSelectPressedKeyboard(name); });
+            connect(keyboard, &InputKeyboardRawController::rawKeyPressedSignal, this, [this, name]{ this->autoSelectPressedKeyboard(name); });
         }
     }
     // some RAW-Keyboard selected
@@ -101,7 +101,7 @@ void InputKeyboardSelect::autoSelectPressedKeyboard(QString name)
     QList<QString> keys = this->map_of_raw_keyboards.keys();
     for (int i=0; i < keys.length(); i++)
     {
-        InputKeyboardRaw *kbd = this->map_of_raw_keyboards[keys.at(i)];
+        InputKeyboardRawController *kbd = this->map_of_raw_keyboards[keys.at(i)];
         
         kbd->disconnect();
         //kbd->deleteLater();
@@ -148,8 +148,8 @@ void InputKeyboardSelect::rawKeyboardSelected(int index)
                 this->map_of_raw_keyboards[name]->keyboardListen(path);
             }
             
-            connect(this->map_of_raw_keyboards[name], &InputKeyboardRaw::rawKeyPressedSignal, this, &InputKeyboardSelect::keyRawPressed);
-            connect(this->map_of_raw_keyboards[name], &InputKeyboardRaw::rawKeyReleasedSignal, this, &InputKeyboardSelect::keyRawReleased);
+            connect(this->map_of_raw_keyboards[name], &InputKeyboardRawController::rawKeyPressedSignal, this, &InputKeyboardSelect::keyRawPressed);
+            connect(this->map_of_raw_keyboards[name], &InputKeyboardRawController::rawKeyReleasedSignal, this, &InputKeyboardSelect::keyRawReleased);
         }
     }
 }
@@ -168,7 +168,7 @@ void InputKeyboardSelect::keyboardRescan()
     this->combo_keyboard_input_labels[KeyboardSelection::Default] = "Qt default";
     this->combo_keyboard_input_labels[KeyboardSelection::Detect] = "[Detect RAW event]";
     
-    this->keyboard_raw = new InputKeyboardRaw;
+    this->keyboard_raw = new InputKeyboardRawMeta;
     QList<QString> keyboards = keyboard_raw->getKeyboardNames();
     
     instantiateRawKeyboards(keyboards);
@@ -194,7 +194,7 @@ void InputKeyboardSelect::instantiateRawKeyboards(QList<QString> keyboard_names)
     
     for (int i=0; i < keyboard_names.length(); i++)
     {
-        this->map_of_raw_keyboards[keyboard_names.at(i)] = new InputKeyboardRaw;
+        this->map_of_raw_keyboards[keyboard_names.at(i)] = new InputKeyboardRawController;
     }
 }
 void InputKeyboardSelect::cleanupRawKeyboards()

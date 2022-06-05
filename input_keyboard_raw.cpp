@@ -1,26 +1,12 @@
 #include "input_keyboard_raw.h"
 
-InputKeyboardRaw::InputKeyboardRaw(QObject *parent)
+InputKeyboardRawMeta::InputKeyboardRawMeta(QObject *parent)
     : QObject{parent}
 {
-    qDebug() << "0000000000000000000000000000000000000000000000000";
+    
 }
 
-InputKeyboardRaw::~InputKeyboardRaw()
-{
-    keyboardRelease();
-    
-    this->thread->quit();
-    //this->thread->exit();
-    //this->thread->deleteLater();
-    
-    //this->thread->requestInterruption();
-    this->thread->wait();
-    
-    //this->thread->deleteLater();
-}
-
-QList<QMap<QString,QString>> InputKeyboardRaw::detectKeyboards()
+QList<QMap<QString,QString>> InputKeyboardRawMeta::detectKeyboards()
 {
     QList<QMap<QString,QString>> keyboards;
     
@@ -73,7 +59,7 @@ QList<QMap<QString,QString>> InputKeyboardRaw::detectKeyboards()
     
     return keyboards;
 }
-QList<QString> InputKeyboardRaw::getKeyboardNames()
+QList<QString> InputKeyboardRawMeta::getKeyboardNames()
 {
     QList<QMap<QString,QString>> keyboards = detectKeyboards();
     
@@ -87,7 +73,7 @@ QList<QString> InputKeyboardRaw::getKeyboardNames()
     
     return result;
 }
-QString InputKeyboardRaw::getPathForName(QString name)
+QString InputKeyboardRawMeta::getPathForName(QString name)
 {
     QList<QMap<QString,QString>> keyboards = detectKeyboards();
     
@@ -102,22 +88,46 @@ QString InputKeyboardRaw::getPathForName(QString name)
     
     return "";
 }
-QString InputKeyboardRaw::getKeyboardName(QMap<QString,QString> keyboard)
+QString InputKeyboardRawMeta::getKeyboardName(QMap<QString,QString> keyboard)
 {
     return keyboard["Name"] + "@" + keyboard["dev"];
 }
 
-void InputKeyboardRaw::keyboardListen(QString devpath)
+
+
+
+
+InputKeyboardRawController::InputKeyboardRawController(QObject *parent)
+    : QObject{parent}
+{
+    qDebug() << "0000000000000000000000000000000000000000000000000";
+}
+
+InputKeyboardRawController::~InputKeyboardRawController()
+{
+    keyboardRelease();
+    
+    this->thread->quit();
+    //this->thread->exit();
+    //this->thread->deleteLater();
+    
+    //this->thread->requestInterruption();
+    this->thread->wait();
+    
+    //this->thread->deleteLater();
+}
+
+void InputKeyboardRawController::keyboardListen(QString devpath)
 {
     qDebug() << "listen";
     keyboardHelper(devpath, "listen");
 }
-void InputKeyboardRaw::keyboardLock(QString devpath)
+void InputKeyboardRawController::keyboardLock(QString devpath)
 {
     qDebug() << "lock";
     keyboardHelper(devpath, "lock");
 }
-void InputKeyboardRaw::keyboardHelper(QString devpath, QString mode)
+void InputKeyboardRawController::keyboardHelper(QString devpath, QString mode)
 {
     // https://stackoverflow.com/questions/29942421/read-barcodes-from-input-event-linux-c/29956584#29956584
     // https://www.reddit.com/r/Cplusplus/comments/rsgjwf/ioctl_in_c_c_wrapper_class_for_linuxjoystickh/
@@ -137,8 +147,8 @@ void InputKeyboardRaw::keyboardHelper(QString devpath, QString mode)
         }
         
         this->worker = new InputKeyboardRawWorker(this->n, this->fd);
-        connect(this->worker, &InputKeyboardRawWorker::rawKeyPressed, this, &InputKeyboardRaw::rawKeyPressed);
-        connect(this->worker, &InputKeyboardRawWorker::rawKeyReleased, this, &InputKeyboardRaw::rawKeyReleased);
+        connect(this->worker, &InputKeyboardRawWorker::rawKeyPressed, this, &InputKeyboardRawController::rawKeyPressed);
+        connect(this->worker, &InputKeyboardRawWorker::rawKeyReleased, this, &InputKeyboardRawController::rawKeyReleased);
         
         this->thread = new QThread(this);
         this->worker->moveToThread(this->thread);
@@ -152,7 +162,7 @@ void InputKeyboardRaw::keyboardHelper(QString devpath, QString mode)
     }
 }
 
-void InputKeyboardRaw::keyboardRelease()
+void InputKeyboardRawController::keyboardRelease()
 {
     qDebug() << "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAaaa";
     if (this->thread != nullptr)
@@ -175,12 +185,12 @@ void InputKeyboardRaw::keyboardRelease()
     }
 }
 
-void InputKeyboardRaw::rawKeyPressed(int keycode)
+void InputKeyboardRawController::rawKeyPressed(int keycode)
 {
     qDebug() << keycode;
     emit rawKeyPressedSignal(keycode);
 }
-void InputKeyboardRaw::rawKeyReleased(int keycode)
+void InputKeyboardRawController::rawKeyReleased(int keycode)
 {
     emit rawKeyReleasedSignal(keycode);
 }

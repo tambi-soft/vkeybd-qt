@@ -32,6 +32,25 @@ signals:
     void rawKeyReleased(int code);
 };
 
+
+
+class InputKeyboardRawMeta : public QObject
+{
+    Q_OBJECT
+public:
+    explicit InputKeyboardRawMeta(QObject *parent = nullptr);
+    
+    QList<QMap<QString, QString> > detectKeyboards();
+    QList<QString> getKeyboardNames();
+    QString getPathForName(QString name);
+    
+private:
+    // in case we have two identical keyboards attached, it is helpful to see the /dev/input/eventXX - eventname as part of the device name
+    QString getKeyboardName(QMap<QString, QString> keyboard);
+};
+
+
+
 #include <stdlib.h>
 #include <unistd.h>
 #include <fcntl.h>
@@ -46,16 +65,13 @@ signals:
 #include <QThread>
 #include <QDebug>
 
-class InputKeyboardRaw : public QObject
+class InputKeyboardRawController : public QObject
 {
     Q_OBJECT
 public:
-    explicit InputKeyboardRaw(QObject *parent = nullptr);
-    ~InputKeyboardRaw();
+    explicit InputKeyboardRawController(QObject *parent = nullptr);
+    ~InputKeyboardRawController();
     
-    QList<QMap<QString, QString> > detectKeyboards();
-    QList<QString> getKeyboardNames();
-    QString getPathForName(QString name);
     void keyboardListen(QString devpath);
     void keyboardLock(QString devpath);
     void keyboardHelper(QString devpath, QString mode);
@@ -76,9 +92,6 @@ private:
     
     QThread *thread = nullptr;
     InputKeyboardRawWorker *worker;
-    
-    // in case we have two identical keyboards attached, it is helpful to see the /dev/input/eventXX - eventname as part of the device name
-    QString getKeyboardName(QMap<QString, QString> keyboard);
     
 private slots:
     void rawKeyPressed(int keycode);
