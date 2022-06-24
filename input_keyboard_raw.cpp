@@ -107,6 +107,9 @@ InputKeyboardRawController::~InputKeyboardRawController()
 {
     keyboardRelease();
     
+    this->worker->finish();
+    
+    //disconnect(this->thread);
     this->thread->quit();
     //this->thread->exit();
     //this->thread->deleteLater();
@@ -147,12 +150,15 @@ void InputKeyboardRawController::keyboardHelper(QString devpath, QString mode)
         }
         
         this->worker = new InputKeyboardRawWorker(this->n, this->fd);
+        this->worker->initialize();
         connect(this->worker, &InputKeyboardRawWorker::rawKeyPressed, this, &InputKeyboardRawController::rawKeyPressed);
         connect(this->worker, &InputKeyboardRawWorker::rawKeyReleased, this, &InputKeyboardRawController::rawKeyReleased);
         
         this->thread = new QThread(this);
         this->worker->moveToThread(this->thread);
-        connect(this->thread, &QThread::finished, this->worker, &QObject::deleteLater);
+        connect(this->worker, &QObject::destroyed, this->thread, &QThread::quit);
+        connect(this->worker, &InputKeyboardRawWorker::finished, this->worker, &QObject::deleteLater);
+        connect(this->thread, &QThread::finished, this->thread, &QObject::deleteLater);
         
         this->thread->start();
     }
@@ -167,7 +173,8 @@ void InputKeyboardRawController::keyboardRelease()
     qDebug() << "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAaaa";
     if (this->thread != nullptr)
     {
-        this->thread->quit();
+        //disconnect(this->thread);
+        //this->thread->quit();
         //this->thread->exit();
         //this->thread->deleteLater();
         
@@ -204,7 +211,10 @@ InputKeyboardRawWorker::InputKeyboardRawWorker(ssize_t n, int fd, QObject *paren
 {
     this->n = n;
     this->fd = fd;
-    
+}
+
+void InputKeyboardRawWorker::initialize()
+{
     this->timer = new QTimer(this);
     this->timer->setInterval(0);
     this->timer->setTimerType(Qt::PreciseTimer);
@@ -212,14 +222,15 @@ InputKeyboardRawWorker::InputKeyboardRawWorker(ssize_t n, int fd, QObject *paren
     
     this->timer->start();
 }
-
+/*
 InputKeyboardRawWorker::~InputKeyboardRawWorker()
 {
     qDebug() << "RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR";
     this->timer->disconnect();
+    disconnect(this->timer);
     this->timer->stop();
 }
-
+*/
 void InputKeyboardRawWorker::tick()
 {
     // https://stackoverflow.com/questions/20943322/accessing-keys-from-linux-input-device
@@ -243,4 +254,13 @@ void InputKeyboardRawWorker::tick()
             }
         }
     }
+}
+
+void InputKeyboardRawWorker::finish()
+{
+    //this->timer->disconnect();
+    //disconnect(this->timer);
+    //this->timer->stop();
+    
+    //emit finished();
 }
