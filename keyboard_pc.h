@@ -34,8 +34,6 @@ private:
     void drawButtons();
     float calculateOffset(float row_offset, int row, int col, QList<QList<int>> sizes);
     
-    void buttonPressed(int midicode);
-    
 signals:
     void MIDIPress(int midicode);
     void MIDIRelease(int midicode);
