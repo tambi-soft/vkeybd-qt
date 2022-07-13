@@ -38,6 +38,8 @@ void Orgelwerk::drawGUI()
     
     connect(this->pitch, &MIDIPitchWheel::pitchWheelMoved, this, &Orgelwerk::pitchWheelMoved);
     
+    connect(volume, &MIDIMasterVolume::sliderMoved, this, &Orgelwerk::volumeSliderMoved);
+    
     this->grid = new QGridLayout;
     setLayout(this->grid);
     
@@ -82,12 +84,6 @@ void Orgelwerk::drawGUI()
     QLayout *layout_panic_stop = new QHBoxLayout;
     layout_panic_stop->addWidget(this->button_panic);
     layout_panic_stop->addWidget(this->button_stop_all);
-    
-    
-    //this->key_shift_master = new MIDIKeyShiftWidget;
-    
-    this->volume = new MIDIMasterVolume;
-    connect(volume, &MIDIMasterVolume::sliderMoved, this, &Orgelwerk::volumeSliderMoved);
     
     showChannelsSummary(1);
     //this->grid->addWidget(label_key_shift_master, 2, 0);
