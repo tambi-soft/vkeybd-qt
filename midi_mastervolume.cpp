@@ -14,12 +14,17 @@ MIDIMasterVolume::MIDIMasterVolume(QObject *parent)
     this->label_tether = new QLabel("Volume Tether Strength");
     this->slider_tether = new QSlider(Qt::Horizontal);
     
+    this->slider_tether->setRange(0, 150);
+    this->slider_tether->setTickInterval(20);
+    this->slider_tether->setTickPosition(QSlider::TicksBelow);
+    this->slider_tether->setValue(20);
+    
     this->slider_volume->setRange(0, 120);
     this->slider_volume->setTickInterval(20);
     this->slider_volume->setTickPosition(QSlider::TicksBelow);
     this->slider_volume->setValue(100);
     
-    
+    connect(this->slider_tether, &QSlider::valueChanged, this, &MIDIMasterVolume::startThread);
     
     connect(this->slider_volume, &QSlider::valueChanged, this, &MIDIMasterVolume::volumeSliderMoved);
     
@@ -34,6 +39,15 @@ MIDIMasterVolume::MIDIMasterVolume(QObject *parent)
 MIDIMasterVolume::~MIDIMasterVolume()
 {
     this->thread->exit();
+}
+
+void MIDIMasterVolume::startThread()
+{
+    int tether = this->slider_tether->value();
+    int pitch = this->slider_volume->value();
+    
+    this->worker->setTether(tether);
+    this->worker->setVolume(pitch);
 }
 
 void MIDIMasterVolume::moveVolumeSlider(int value)
@@ -61,7 +75,10 @@ void MIDIMasterVolume::updateSliderLabel(int value)
 
 void MIDIMasterVolume::volumeKeyPressed(int key)
 {
+    int tether = this->slider_tether->value();
     int volume = this->slider_volume->value();
+    
+    this->worker->setTether(tether);
     this->worker->setVolume(volume);
     this->worker->setVolumeMinMax(this->slider_volume->minimum(), this->slider_volume->maximum());
     
@@ -120,6 +137,10 @@ MIDIMasterVolumeWorker::MIDIMasterVolumeWorker(QObject *parent)
     this->timer->start();
 }
 
+void MIDIMasterVolumeWorker::setTether(int tether)
+{
+    this->tether = static_cast<float>(tether) / 200;
+}
 void MIDIMasterVolumeWorker::setVolume(int value)
 {
     this->volume = value;
@@ -169,7 +190,6 @@ void MIDIMasterVolumeWorker::tick()
         // reset volume slider
         if (this->volume != 100 && this->reset_slider)
         {
-            qDebug() << "aaaaaaaa";
             if (this->volume < 100)
             {
                 this->volume = this->volume + this->tether;
@@ -192,7 +212,6 @@ void MIDIMasterVolumeWorker::tick()
     }
     else
     {
-        qDebug() << "bbbbbbbb";
         // pitch wheel moved as long as key pressed
         if (this->volume >= this->volume_min && this->volume <= this->volume_max)
         {

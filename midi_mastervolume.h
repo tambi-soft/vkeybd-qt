@@ -15,6 +15,7 @@ class MIDIMasterVolumeWorker : public QObject
 public:
     explicit MIDIMasterVolumeWorker(QObject *parent = 0);
     
+    void setTether(int tether);
     void setVolume(int value);
     void setVolumeMinMax(int value_min, int value_max);
     void shouldResetSlider(bool reset);
@@ -73,6 +74,7 @@ private:
     QThread *thread;
     MIDIMasterVolumeWorker *worker;
     
+    void startThread();
     void moveVolumeSlider(int value);
     void updateSliderLabel(int value);
     
