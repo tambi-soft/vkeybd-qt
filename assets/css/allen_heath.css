@@ -11,6 +11,7 @@ QWidget#midi_channel_selector {
 }
 QMenuBar {
     color: white;
+    background-color: #2e353f;
 }
 QMenu {
     color: white;

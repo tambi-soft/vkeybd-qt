@@ -75,9 +75,9 @@ void MIDIPitchWheel::updateLabel(int position)
     else if (position > 8192 && position <= 8192 + 4096)
         indicator = ">>";
     else if (position < 4096)
-        indicator = "<<<<";
+        indicator = "<< <<";
     else if (position > 8192 + 4096)
-        indicator = ">>>>";
+        indicator = ">> >>";
     
     this->label_pitch->setText("Pitch: "+indicator+" "+QString::number(cent)+" Cents");// / "+QString::number(position-8192));
 }
