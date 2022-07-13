@@ -481,8 +481,11 @@ void MIDIChannelSelector::resendMIDIControls()
     {
         int channel = channels.at(i)["channel"].toInt();
         
+        // trigger sending current volume value
         volumeSliderMoved(channel, channels.at(i)["volume"].toInt());
+        // trigger sending current pan value
         panSliderMoved(channel, channels.at(i)["pan"].toInt());
+        
         InterfaceAudio *audio = selectedAudioInterface(channel);
         audio->setProgramChangeEvent(
                     channel,
