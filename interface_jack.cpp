@@ -12,9 +12,9 @@ InterfaceJack::InterfaceJack(QString label, InterfaceAudio *parent) : InterfaceA
         qDebug() << "Could not connect to the JACK server; run jackd first?";
         //exit(EX_UNAVAILABLE);
     }
-    /*
-    this->ringbuffer = jack_ringbuffer_create(RINGBUFFER_SIZE);
     
+    //this->ringbuffer = jack_ringbuffer_create(RINGBUFFER_SIZE);
+    /*
     if (ringbuffer == NULL) {
         qDebug() << "Cannot create JACK ringbuffer.";
         //exit(EX_SOFTWARE);

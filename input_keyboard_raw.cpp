@@ -33,6 +33,7 @@ QList<QMap<QString,QString>> InputKeyboardRawMeta::detectKeyboards()
             }
             else
             {
+                qDebug() << line;
                 QList<QString> splitted = line.split(": ").at(1).split("=");
                 if (splitted.length() > 1)
                 {
@@ -107,7 +108,7 @@ InputKeyboardRawController::~InputKeyboardRawController()
 {
     keyboardRelease();
     
-    QMetaObject::invokeMethod(this->thread, "finish", Qt::QueuedConnection);
+    QMetaObject::invokeMethod(this->worker, "finish", Qt::QueuedConnection);
     /*
     this->worker->finish();
     
@@ -120,7 +121,7 @@ InputKeyboardRawController::~InputKeyboardRawController()
     this->thread->wait();
     */
     //this->thread->deleteLater();
-    
+    //this->thread->wait();
 }
 
 void InputKeyboardRawController::keyboardListen(QString devpath)
