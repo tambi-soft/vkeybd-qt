@@ -216,7 +216,7 @@ void MIDIChannelSelector::drawGUI()
     QPushButton *button_test_note = new QPushButton("Play Test Note");
     connect(button_test_note, &QPushButton::pressed, this, &MIDIChannelSelector::playTestNote);
     connect(button_test_note, &QPushButton::released, this, &MIDIChannelSelector::stopTestNote);
-    grid->addWidget(button_test_note, 17, 0, 1, 14);
+    grid->addWidget(button_test_note, 17, 0, 1, 15);
 }
 
 QList<QMap<QString,QVariant>> MIDIChannelSelector::listOfChannels(bool only_activated)
