@@ -371,7 +371,6 @@ void MIDIChannelSelector::volumeSliderMoved(int channel, int volume)
 }
 void MIDIChannelSelector::volumeDCAChanged(int value)
 {
-    qDebug() << "ararararar";
     this->volume_dca = value;
     
     QList<QMap<QString,QVariant>> channels = listOfChannels(false);
