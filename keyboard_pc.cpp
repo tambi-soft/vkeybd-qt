@@ -170,11 +170,6 @@ QList<QList<int>> KeyboardPC::getMIDICodes()
     return list;
 }
 
-void KeyboardPC::buttonPressed(int midicode)
-{
-    emit MIDIPress(midicode);
-}
-
 void KeyboardPC::keyDownRaw(int keycode)
 {
     QList<QList<int>> keycodes = getButtonKeycodesRaw();
