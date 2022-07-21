@@ -25,15 +25,12 @@ Config::Config(QObject *parent) : QObject(parent)
 void Config::openSettingsFile(int number_of_keyboards)
 {
     QString path = "default/quicksave-path-n"+QString::number(number_of_keyboards);
-    qDebug() << path;
     if (!this->config->contains(path))
     {
         this->config->setValue(path, config_dir->absoluteFilePath("quicksave_n"+QString::number(number_of_keyboards)+".ini"));
     }
     
     this->settings = new QSettings(this->config->value(path).toString(), QSettings::IniFormat);
-    if (number_of_keyboards > 1)
-        qDebug() << this->settings->allKeys();
 }
 
 /*
