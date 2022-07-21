@@ -21,9 +21,13 @@ public:
     void saveChannelSettings(int id, QString label, QList<QMap<QString, QVariant> > channels);
     void loadChannelSettings();
     void saveParams(int id, QString label, QString channel, QMap<QString,QVariant> params);
+
+    void openSettingsFile(int number_of_keyboards);
     
+/*    
     QString getQuicksavePath();
     void setQuicksavePath(QString db_path);
+*/
     
     int getNumberOfKeyboards();
     void setNumberOfKeyboards(int number);
@@ -35,10 +39,10 @@ public:
     void setKeyboardConfig(QString file);
     
 private:
+    QDir *config_dir;
+    
     QSettings *config;
     QSettings *settings;
-    
-    void openSettingsFile();
     
 signals:
     void restoreParams(int maintab, QString tab, QMap<QString, QVariant> data);

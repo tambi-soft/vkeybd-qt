@@ -3,6 +3,8 @@
 MainWindow::MainWindow(OutputSystem output, int number_of_keyboards, QWidget *parent)
     : QMainWindow(parent)
 {
+    this->number_of_keyboards = number_of_keyboards;
+    
     QWidget *main_container_widget = new QWidget;
     QHBoxLayout *layout = new QHBoxLayout;
     layout->setContentsMargins(0, 0, 0, 0);
@@ -24,7 +26,7 @@ MainWindow::MainWindow(OutputSystem output, int number_of_keyboards, QWidget *pa
         setMenuBar(menu);
     }
     
-    for (int i=0; i < number_of_keyboards; i++)
+    for (int i=0; i < this->number_of_keyboards; i++)
     {
         layout->addWidget(newKeyboardInstance(i, output));
     }
@@ -52,6 +54,7 @@ QWidget* MainWindow::newKeyboardInstance(int id, OutputSystem output)
     widget->setLayout(grid);
     
     this->config = new Config;
+    this->config->openSettingsFile(this->number_of_keyboards);
     connect(this->config, &Config::restoreParams, this, &MainWindow::restoreParams);
     connect(this->config, &Config::restoreGeneral, this, &MainWindow::restoreGeneral);
     
