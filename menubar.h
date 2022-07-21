@@ -6,6 +6,7 @@
 #include <QMenuBar>
 #include <QAction>
 #include <QApplication>
+#include <QMessageBox>
 
 #include "enums.h"
 
@@ -37,6 +38,8 @@ signals:
     void signalShowActionChanged(GUIElements elements, bool is_checked);
 
 private slots:
+    void quickSave();
+    
     void showNetworkActionChanged();
     void showKeysActionChanged();
     void showPitchActionChanged();

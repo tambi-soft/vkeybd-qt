@@ -33,7 +33,6 @@ QList<QMap<QString,QString>> InputKeyboardRawMeta::detectKeyboards()
             }
             else
             {
-                qDebug() << line;
                 QList<QString> splitted = line.split(": ").at(1).split("=");
                 if (splitted.length() > 1)
                 {
