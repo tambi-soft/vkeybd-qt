@@ -15,6 +15,7 @@
 #include <QAbstractEventDispatcher>
 #include <QStyle>
 #include <QStyledItemDelegate>
+#include <QFrame>
 
 #include "main_tabs.h"
 #include "menubar.h"
@@ -26,6 +27,9 @@
 #include "input_keyboard_raw.h"
 #include "input_keyboard_xcb.h"
 #include "combo_keyboard_select.h"
+
+#include "midi_key_shift_widget.h"
+#include "midi_key_shift_global.h"
 
 #include "enums.h"
 
@@ -53,8 +57,10 @@ private:
     //bool input_kbd_qt_default = false;
     int keyboard_selection;
     
-    InputKeyboardQt *inputQt;
-    InputKeyboardXCB *inputXCB;
+    InputKeyboardQt *inputQt = new InputKeyboardQt;
+    InputKeyboardXCB *inputXCB = new InputKeyboardXCB;
+    
+    MIDIKeyShiftGlobal *global_key_shift_widget = new MIDIKeyShiftGlobal;
 
 protected:
     bool eventFilter(QObject *obj, QEvent *ev) override;
@@ -74,6 +80,9 @@ private slots:
     void rawKeyReleased(int key);
     void changeTab(int id);
     //void MIDISignal(MIDISignalTypes type);
+    
+    void showGlobalKeyShift();
+    void globalKeyShiftValueChanged(int value, bool is_relative);
 
 };
 #endif // MAINWINDOW_H

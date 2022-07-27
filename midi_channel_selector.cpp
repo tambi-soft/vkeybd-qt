@@ -10,7 +10,7 @@ MIDIChannelSelector::MIDIChannelSelector(QList<InterfaceAudio *> list_of_audio_i
     
     installEventFilter(this);
     
-    setObjectName("midi_channel_selector");
+    setObjectName("sub_window");
     //setAttribute(Qt::WA_TranslucentBackground);
     QFile css_file(":css_allen_heath");
     if (css_file.open(QIODevice::ReadOnly | QIODevice::Text))

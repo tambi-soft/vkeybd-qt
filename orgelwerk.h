@@ -101,6 +101,7 @@ public:
     
     void octaveDown();
     void octaveUp();
+    void globalPitchShiftChanged(int value, bool is_relative=false);
     
 private:
     int id;

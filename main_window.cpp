@@ -21,6 +21,7 @@ MainWindow::MainWindow(OutputSystem output, int number_of_keyboards, QWidget *pa
         connect(menu, &MenuBar::signalSave, this, &MainWindow::saveAllParams);
         connect(menu, &MenuBar::signalOpen, this, &MainWindow::openAllParams);
         connect(menu, &MenuBar::signalShowActionChanged, this, &MainWindow::showActionChanged);
+        connect(menu, &MenuBar::signalGlobalKeyShift, this, &MainWindow::showGlobalKeyShift);
         setMenuBar(menu);
     }
     
@@ -29,13 +30,13 @@ MainWindow::MainWindow(OutputSystem output, int number_of_keyboards, QWidget *pa
         layout->addWidget(newKeyboardInstance(i, output));
     }
     
-    this->inputXCB = new InputKeyboardXCB;
     connect(this->inputXCB, &InputKeyboardXCB::rawKeyPressedSignal, this, &MainWindow::rawKeyPressed);
     connect(this->inputXCB, &InputKeyboardXCB::rawKeyReleasedSignal, this, &MainWindow::rawKeyReleased);
     
-    this->inputQt = new InputKeyboardQt;
     connect(this->inputQt, &InputKeyboardQt::keyPressSignal, this, &MainWindow::rawKeyPressed);
     connect(this->inputQt, &InputKeyboardQt::keyReleaseSignal, this, &MainWindow::rawKeyReleased);                    
+    
+    connect(this->global_key_shift_widget, &MIDIKeyShiftGlobal::signalKeyShiftChanged, this, &MainWindow::globalKeyShiftValueChanged);
 }
 
 MainWindow::~MainWindow()
@@ -270,3 +271,18 @@ void MainWindow::MIDISignal(MIDISignalTypes type)
     this->list_of_maintabs.first()->MIDISignal(type);
 }
 */
+
+void MainWindow::showGlobalKeyShift()
+{
+    //connect(global_key_shift_widget, &MIDIKeyShiftGlobal::signalKeyShiftChanged, this, &MainWindow::globalPitchShiftValueChanged);
+    
+    global_key_shift_widget->show();
+}
+
+void MainWindow::globalKeyShiftValueChanged(int value, bool is_relative)
+{
+    for (int i=0; i < this->list_of_maintabs.length(); i++)
+    {
+        this->list_of_maintabs.at(i)->globalKeyShiftChanged(value, is_relative);
+    }
+}

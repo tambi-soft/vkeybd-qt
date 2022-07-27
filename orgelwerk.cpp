@@ -512,6 +512,20 @@ void Orgelwerk::octaveUp()
 {
     this->key_shift_master->higherShiftKeyPressed();
 }
+void Orgelwerk::globalPitchShiftChanged(int value, bool is_relative)
+{
+    if (! is_relative)
+    {
+        this->key_shift_master->setValue(value);
+    }
+    else
+    {
+        int value_current = this->key_shift_master->value();
+        qDebug() << "old: " << value << " new: " << value;
+        value_current += value;
+        this->key_shift_master->setValue(value_current);
+    }
+}
 
 bool Orgelwerk::eventFilter(QObject *obj, QEvent *ev)
 {

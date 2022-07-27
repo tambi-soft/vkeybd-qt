@@ -32,6 +32,9 @@ void MenuBar::addToolsMenu()
 {
     QMenu *menuTools = addMenu("Tools");
     
+    QAction *globalKeyShift = new QAction("Global Key Shift");
+    connect(globalKeyShift, &QAction::triggered, this, &MenuBar::globalKeyShift);
+    
     QAction *actionResetAll = new QAction();
     
     QAction *actionResetTab = new QAction();
@@ -39,6 +42,8 @@ void MenuBar::addToolsMenu()
     QAction *actionCopyTab = new QAction();
     
     QAction *actionPasteTab = new QAction();
+    
+    menuTools->addAction(globalKeyShift);
 }
 void MenuBar::addViewMenu()
 {
@@ -116,4 +121,9 @@ void MenuBar::showPCKeyboardActionChanged()
 void MenuBar::showPianoKeyboardActionChanged()
 {
     emit signalShowActionChanged(GUIElements::KeyboardPiano, this->showPianoKeyboard->isChecked());
+}
+
+void MenuBar::globalKeyShift()
+{
+    emit signalGlobalKeyShift();
 }

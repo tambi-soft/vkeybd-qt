@@ -6,6 +6,7 @@
 #include <QSpinBox>
 #include <QPushButton>
 #include <QHBoxLayout>
+#include <QDebug>
 
 class MIDIKeyShiftWidget : public QWidget
 {
@@ -20,6 +21,7 @@ private:
     QSpinBox *spin_key;
     
 signals:
+    void valueChanged(int value);
     
 public slots:
     void lowerShiftKeyPressed();

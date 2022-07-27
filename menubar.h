@@ -35,6 +35,8 @@ signals:
     void signalSave();
     void signalOpen();
     void signalShowActionChanged(GUIElements elements, bool is_checked);
+    
+    void signalGlobalKeyShift();
 
 private slots:
     void showNetworkActionChanged();
@@ -44,6 +46,7 @@ private slots:
     void showPCKeyboardActionChanged();
     void showPianoKeyboardActionChanged();
     
+    void globalKeyShift();
 };
 
 #endif // MENUBAR_H

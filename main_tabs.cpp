@@ -238,6 +238,14 @@ void MainTabs::deviceNotAvailable(QString message)
     qDebug() << "main_tabs: deviceNotAvailable";
 }
 
+void MainTabs::globalKeyShiftChanged(int value, bool is_relative)
+{
+    for (int i=0; i < this->list_of_tabs.length(); i++)
+    {
+        this->list_of_tabs.at(i)->globalPitchShiftChanged(value, is_relative);
+    }
+}
+
 void MainTabs::rawKeyPressed(int keycode)
 {
     qDebug() << "main_tabs: rawKeyPressed: " << keycode;

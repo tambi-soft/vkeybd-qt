@@ -38,6 +38,8 @@ public:
     void changeTab(int id);
     void MIDISignal(MIDISignalTypes type);
     
+    void globalKeyShiftChanged(int value, bool is_relative);
+    
 private:
     //QList<int> list_function_keys;
     QList<int> list_function_keys_raw;
@@ -70,7 +72,6 @@ private slots:
     //void keyboardSelectionChanged(QString text);
     void deviceNotAvailable(QString message);
     //void toggleKeyboardLock();
-   
     
 signals:
     void useInputKbdQtNativeSignal();

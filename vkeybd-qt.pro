@@ -43,6 +43,7 @@ SOURCES += \
     midi_channel_selector.cpp \
     midi_channels_summary.cpp \
     midi_key_selector.cpp \
+    midi_key_shift_global.cpp \
     midi_key_shift_widget.cpp \
     midi_mastervolume.cpp \
     midi_pitchwheel.cpp \
@@ -74,6 +75,7 @@ HEADERS += \
     midi_channel_selector.h \
     midi_channels_summary.h \
     midi_key_selector.h \
+    midi_key_shift_global.h \
     midi_key_shift_widget.h \
     midi_mastervolume.h \
     midi_pitchwheel.h \

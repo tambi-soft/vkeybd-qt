@@ -21,6 +21,7 @@ MIDIKeyShiftWidget::MIDIKeyShiftWidget(QWidget *parent) : QWidget(parent)
     this->spin_key->setMinimum(-64);
     this->spin_key->setMaximum(64);
     this->spin_key->setObjectName("key_shift_spin");
+    connect(this->spin_key, &QSpinBox::valueChanged, this, [this]{ emit valueChanged(this->spin_key->value()); });
     
     layout->addWidget(button_lower);
     layout->addWidget(this->spin_key);
@@ -38,6 +39,8 @@ void MIDIKeyShiftWidget::lowerShiftKeyPressed()
         val -= 12;
         this->spin_key->setValue(val);
     }
+    
+    emit valueChanged(val);
 }
 
 void MIDIKeyShiftWidget::higherShiftKeyPressed()
@@ -48,6 +51,8 @@ void MIDIKeyShiftWidget::higherShiftKeyPressed()
         val += 12;
         this->spin_key->setValue(val);
     }
+    
+    emit valueChanged(val);
 }
 
 int MIDIKeyShiftWidget::value()
@@ -56,5 +61,8 @@ int MIDIKeyShiftWidget::value()
 }
 void MIDIKeyShiftWidget::setValue(int value)
 {
+    qDebug() << "set value: " << value;
     this->spin_key->setValue(value);
+    
+    emit valueChanged(value);
 }
