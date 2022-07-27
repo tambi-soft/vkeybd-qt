@@ -44,6 +44,7 @@ public:
 private:
     QList<MainTabs*> list_of_maintabs;
     Config *config;
+    int number_of_keyboards;
     
     QList<QLineEdit*> list_of_line_udp_ips;
     QList<QSpinBox*> list_of_spin_ports;

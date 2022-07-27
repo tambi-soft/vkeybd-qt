@@ -2,7 +2,7 @@
 
 Config::Config(QObject *parent) : QObject(parent)
 {
-    QDir *config_dir = new QDir(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation));
+    this->config_dir = new QDir(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation));
     QFile *config_file = new QFile();
     
     if (! config_dir->exists())
@@ -15,20 +15,25 @@ Config::Config(QObject *parent) : QObject(parent)
     
     if (! config_file->exists())
     {
-        this->config->setValue("default/quicksave-path", config_dir->absoluteFilePath("quicksave.ini"));
+        this->config->setValue("default/quicksave-path-n1", config_dir->absoluteFilePath("quicksave_n1.ini"));
         this->config->setValue("default/number-of-keyboards", 1);
         this->config->setValue("default/output", "alsa");
         this->config->setValue("default/keyboard-config", "keyboard-default.json");
     }
-    
-    openSettingsFile();
 }
 
-void Config::openSettingsFile()
+void Config::openSettingsFile(int number_of_keyboards)
 {
-    this->settings = new QSettings(this->config->value("default/quicksave-path").toString(), QSettings::IniFormat);
+    QString path = "default/quicksave-path-n"+QString::number(number_of_keyboards);
+    if (!this->config->contains(path))
+    {
+        this->config->setValue(path, config_dir->absoluteFilePath("quicksave_n"+QString::number(number_of_keyboards)+".ini"));
+    }
+    
+    this->settings = new QSettings(this->config->value(path).toString(), QSettings::IniFormat);
 }
 
+/*
 QString Config::getQuicksavePath()
 {
     return this->config->value("default/quicksave-path").toString();
@@ -37,6 +42,7 @@ void Config::setQuicksavePath(QString db_path)
 {
     this->config->setValue("default/quicksave-path", db_path);
 }
+*/
 
 int Config::getNumberOfKeyboards()
 {

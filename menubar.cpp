@@ -19,7 +19,7 @@ void MenuBar::addFileMenu()
         
     QAction *quickSaveAction = new QAction(QIcon::fromTheme("application-save"), "Quick Save");
     //saveAction->setShortcut(QKeySequence::fromString("Ctrl+S"));
-    connect(quickSaveAction, &QAction::triggered, this, [this]{ emit signalSave(); });
+    connect(quickSaveAction, &QAction::triggered, this, &MenuBar::quickSave);
     
     QAction *quickLoadAction = new QAction(QIcon::fromTheme("application-open"), "Quick Load");
     connect(quickLoadAction, &QAction::triggered, this, [this]{ emit signalOpen(); });
@@ -96,6 +96,16 @@ void MenuBar::addHelpMenu()
 void MenuBar::quitApplication()
 {
     QApplication::quit();
+}
+
+void MenuBar::quickSave()
+{
+    QMessageBox::StandardButton reply;
+    reply = QMessageBox::question(this, "QuickSave", "Overwrite QuickSave?", QMessageBox::Yes|QMessageBox::No);
+    if (reply == QMessageBox::Yes)
+    {
+        emit signalSave();
+    }
 }
 
 void MenuBar::showNetworkActionChanged()
