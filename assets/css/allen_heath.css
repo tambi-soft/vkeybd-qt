@@ -32,6 +32,9 @@ QGroupBox:title {
     subcontrol-origin: margin;
     subcontrol-position: top left;
 }
+QMessageBox {
+    background: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #2e353f, stop: 1 #1a1b1d);
+}
 QLabel {
     color: #fafaf8;
     background: transparent;
