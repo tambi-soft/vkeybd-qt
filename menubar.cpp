@@ -35,6 +35,9 @@ void MenuBar::addToolsMenu()
     QAction *globalKeyShift = new QAction("Global Key Shift");
     connect(globalKeyShift, &QAction::triggered, this, &MenuBar::globalKeyShift);
     
+    QAction *globalResendMIDISettings = new QAction("Resend all MIDI Settings");
+    connect(globalResendMIDISettings, &QAction::triggered, this, &MenuBar::globalResendMIDISettings);
+    
     QAction *actionResetAll = new QAction();
     
     QAction *actionResetTab = new QAction();
@@ -44,6 +47,7 @@ void MenuBar::addToolsMenu()
     QAction *actionPasteTab = new QAction();
     
     menuTools->addAction(globalKeyShift);
+    menuTools->addAction(globalResendMIDISettings);
 }
 void MenuBar::addViewMenu()
 {
@@ -136,4 +140,9 @@ void MenuBar::showPianoKeyboardActionChanged()
 void MenuBar::globalKeyShift()
 {
     emit signalGlobalKeyShift();
+}
+
+void MenuBar::globalResendMIDISettings()
+{
+    emit signalResendMIDISettings();
 }

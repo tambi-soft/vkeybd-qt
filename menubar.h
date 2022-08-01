@@ -8,6 +8,8 @@
 #include <QApplication>
 #include <QMessageBox>
 
+#include <QDebug>
+
 #include "enums.h"
 
 class MenuBar : public QMenuBar
@@ -38,6 +40,7 @@ signals:
     void signalShowActionChanged(GUIElements elements, bool is_checked);
     
     void signalGlobalKeyShift();
+    void signalResendMIDISettings();
 
 private slots:
     void quickSave();
@@ -50,6 +53,7 @@ private slots:
     void showPianoKeyboardActionChanged();
     
     void globalKeyShift();
+    void globalResendMIDISettings();
 };
 
 #endif // MENUBAR_H

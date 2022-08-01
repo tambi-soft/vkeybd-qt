@@ -246,6 +246,14 @@ void MainTabs::globalKeyShiftChanged(int value, bool is_relative)
     }
 }
 
+void MainTabs::globalResendMIDISettings()
+{
+    for (int i=0; i < this->list_of_tabs.length(); i++)
+    {
+        this->list_of_tabs.at(i)->resendMIDIControls();
+    }
+}
+
 void MainTabs::rawKeyPressed(int keycode)
 {
     qDebug() << "main_tabs: rawKeyPressed: " << keycode;

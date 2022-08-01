@@ -39,6 +39,7 @@ public:
     void MIDISignal(MIDISignalTypes type);
     
     void globalKeyShiftChanged(int value, bool is_relative);
+    void globalResendMIDISettings();
     
 private:
     //QList<int> list_function_keys;

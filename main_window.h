@@ -84,6 +84,7 @@ private slots:
     
     void showGlobalKeyShift();
     void globalKeyShiftValueChanged(int value, bool is_relative);
-
+    
+    void globalResendMIDISettings();
 };
 #endif // MAINWINDOW_H
