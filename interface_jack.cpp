@@ -2,11 +2,11 @@
 
 InterfaceJack::InterfaceJack(QString label, InterfaceAudio *parent) : InterfaceAudio(label, parent)
 {
-    this->label = "jack-midi-"+label;
+    this->label_string = "jack-midi-"+label;
     
     int err;
     
-    this->jack_client = jack_client_open(this->label.toLatin1(), JackNoStartServer, NULL);
+    this->jack_client = jack_client_open(this->NAME.toLatin1(), JackNoStartServer, NULL);
     
     if (this->jack_client == NULL) {
         qDebug() << "Could not connect to the JACK server; run jackd first?";
@@ -62,18 +62,100 @@ InterfaceJack::~InterfaceJack()
     
 }
 
-void InterfaceJack::keyPressEvent(int midicode)
+QString InterfaceJack::label()
 {
+    return "";
+}
+
+void InterfaceJack::keyPressEvent(int channel, int midicode)
+{
+    Q_UNUSED(channel);
+    Q_UNUSED(midicode);
+    
     qDebug() << "jack pressed: "+QString::number(midicode);
 }
 
-void InterfaceJack::keyReleaseEvent(int midicode)
+void InterfaceJack::keyReleaseEvent(int channel, int midicode)
 {
+    Q_UNUSED(channel);
+    Q_UNUSED(midicode);
+    
     qDebug() << "jack released: "+QString::number(midicode);
 }
 
-void InterfaceJack::setProgramChangeEvent(int channel, int program)
+void InterfaceJack::keyPanicEvent(int channel)
+{
+    Q_UNUSED(channel);
+}
+
+void InterfaceJack::keyStopAllEvent(int channel)
+{
+    Q_UNUSED(channel);
+}
+
+void InterfaceJack::keyPitchbendEvent(int channel, int pitch)
+{
+    Q_UNUSED(channel);
+    Q_UNUSED(pitch);
+}
+
+void InterfaceJack::keySustainEvent(int channel, bool pressed)
+{
+    Q_UNUSED(channel);
+    Q_UNUSED(pressed);
+}
+
+void InterfaceJack::keySostenutoEvent(int channel, bool pressed)
+{
+    Q_UNUSED(channel);
+    Q_UNUSED(pressed);
+}
+
+void InterfaceJack::keySoftEvent(int channel, bool pressed)
+{
+    Q_UNUSED(channel);
+    Q_UNUSED(pressed);
+}
+
+void InterfaceJack::setProgramChangeEvent(int channel, int program, int bank)
 {
     Q_UNUSED(channel);
     Q_UNUSED(program);
+    Q_UNUSED(bank);
+}
+
+void InterfaceJack::setVolumeChangeEvent(int channel, int volume)
+{
+    Q_UNUSED(channel);
+    Q_UNUSED(volume);
+}
+
+void InterfaceJack::setPanChangeEvent(int channel, int value)
+{
+    Q_UNUSED(channel);
+    Q_UNUSED(value);
+}
+
+void InterfaceJack::setPortamentoChanged(int channel, int value)
+{
+    Q_UNUSED(channel);
+    Q_UNUSED(value);
+}
+
+void InterfaceJack::setAttackChanged(int channel, int value)
+{
+    Q_UNUSED(channel);
+    Q_UNUSED(value);
+}
+
+void InterfaceJack::setReleaseChanged(int channel, int value)
+{
+    Q_UNUSED(channel);
+    Q_UNUSED(value);
+}
+
+void InterfaceJack::setTremoloChanged(int channel, int value)
+{
+    Q_UNUSED(channel);
+    Q_UNUSED(value);
 }
