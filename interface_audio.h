@@ -12,6 +12,8 @@ public:
     
     virtual QString label();
     
+    virtual void createNewPort(QString label);
+    
     virtual void keyPressEvent(int channel, int midicode);
     virtual void keyReleaseEvent(int channel, int midicode);
     virtual void keyPanicEvent(int channel);

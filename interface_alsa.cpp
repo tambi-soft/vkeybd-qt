@@ -12,32 +12,37 @@ InterfaceAlsa::InterfaceAlsa(QString label, InterfaceAudio *parent) : InterfaceA
 {
     this->label_string = label;
     
-    snd_seq_open(&seq, "default", SND_SEQ_OPEN_DUPLEX, 0);
-    snd_seq_set_client_name(seq, this->NAME.toLatin1());
+    snd_seq_open(&this->seq, "default", SND_SEQ_OPEN_DUPLEX, 0);
+    snd_seq_set_client_name(this->seq, this->NAME.toLatin1());
     
     int port;
-    port = snd_seq_create_simple_port(seq, this->label_string.toLatin1(),
+    port = snd_seq_create_simple_port(this->seq, this->label_string.toLatin1(),
         SND_SEQ_PORT_CAP_READ | SND_SEQ_PORT_CAP_SUBS_READ | SND_SEQ_PORT_CAP_WRITE,
         SND_SEQ_PORT_TYPE_APPLICATION);
     Q_UNUSED(port);
     
-    snd_seq_ev_clear(&ev);
-    snd_seq_ev_set_direct(&ev);
+    snd_seq_ev_clear(&this->ev);
+    snd_seq_ev_set_direct(&this->ev);
     
     /* either */
-    //snd_seq_ev_set_dest(&ev, 64, 0); /* send to 64:0 */
+    //snd_seq_ev_set_dest(&this->ev, 64, 0); /* send to 64:0 */
     /* or */
-    snd_seq_ev_set_subs(&ev);        /* send to subscribers of source port */
+    snd_seq_ev_set_subs(&this->ev);        /* send to subscribers of source port */
+}
+
+void InterfaceAlsa::createNewPort(QString label)
+{
+    Q_UNUSED(label);
 }
 
 InterfaceAlsa::~InterfaceAlsa()
 {
     for (int i=0; i < 16; i++)
     {
-        snd_seq_ev_set_controller(&ev, i, MIDI_CTL_ALL_NOTES_OFF, 127);
+        snd_seq_ev_set_controller(&this->ev, i, MIDI_CTL_ALL_NOTES_OFF, 127);
         sendEvent(true);
     }
-    snd_seq_close(seq);
+    snd_seq_close(this->seq);
 }
 
 QString InterfaceAlsa::label()
@@ -47,27 +52,27 @@ QString InterfaceAlsa::label()
 
 void InterfaceAlsa::keyPressEvent(int channel, int midicode)
 {
-    snd_seq_ev_set_noteon(&ev, channel, midicode, 127);
+    snd_seq_ev_set_noteon(&this->ev, channel, midicode, 127);
     
     sendEvent(true);
 }
 
 void InterfaceAlsa::keyReleaseEvent(int channel, int midicode)
 {
-    snd_seq_ev_set_noteoff(&ev, channel, midicode, 127);
+    snd_seq_ev_set_noteoff(&this->ev, channel, midicode, 127);
     
     sendEvent(true);
 }
 
 void InterfaceAlsa::keyPanicEvent(int channel)
 {
-    snd_seq_ev_set_controller(&ev, channel, MIDI_CTL_ALL_NOTES_OFF, 127);
+    snd_seq_ev_set_controller(&this->ev, channel, MIDI_CTL_ALL_NOTES_OFF, 127);
     sendEvent(true);
 }
 
 void InterfaceAlsa::keyStopAllEvent(int channel)
 {
-    snd_seq_ev_set_controller(&ev, channel, MIDI_CTL_ALL_SOUNDS_OFF, 127);
+    snd_seq_ev_set_controller(&this->ev, channel, MIDI_CTL_ALL_SOUNDS_OFF, 127);
     sendEvent(true);
 }
 
@@ -78,7 +83,7 @@ void InterfaceAlsa::keyPitchbendEvent(int channel, int pitch)
     // val: pitch bend; zero centered from -8192 to 8191 
     pitch = pitch - 8192;
     
-    snd_seq_ev_set_pitchbend(&ev, channel, pitch);
+    snd_seq_ev_set_pitchbend(&this->ev, channel, pitch);
     
     sendEvent(true);
 }
@@ -125,13 +130,13 @@ void InterfaceAlsa::setProgramChangeEvent(int channel, int program, int bank)
 
 void InterfaceAlsa::setVolumeChangeEvent(int channel, int volume)
 {
-    snd_seq_ev_set_controller(&ev, channel, MIDI_CTL_MSB_MAIN_VOLUME, volume); // CC 7
+    snd_seq_ev_set_controller(&this->ev, channel, MIDI_CTL_MSB_MAIN_VOLUME, volume); // CC 7
     sendEvent(true);
 }
 
 void InterfaceAlsa::setPanChangeEvent(int channel, int value)
 {
-    snd_seq_ev_set_controller(&ev, channel, MIDI_CTL_MSB_PAN, value);
+    snd_seq_ev_set_controller(&this->ev, channel, MIDI_CTL_MSB_PAN, value);
     sendEvent(true);
 }
 

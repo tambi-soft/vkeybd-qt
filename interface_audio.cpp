@@ -10,6 +10,11 @@ InterfaceAudio::~InterfaceAudio()
     
 }
 
+void InterfaceAudio::createNewPort(QString label)
+{
+    Q_UNUSED(label);
+}
+
 QString InterfaceAudio::label()
 {
     return "";

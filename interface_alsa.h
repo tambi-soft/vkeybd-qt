@@ -30,6 +30,8 @@ public:
     
     QString label();
     
+    void createNewPort(QString label);
+    
     void keyPressEvent(int channel, int midicode);
     void keyReleaseEvent(int channel, int midicode);
     void keyPanicEvent(int channel);

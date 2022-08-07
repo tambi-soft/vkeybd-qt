@@ -57,6 +57,11 @@ InterfaceJack::InterfaceJack(QString label, InterfaceAudio *parent) : InterfaceA
     */
 }
 
+void InterfaceJack::createNewPort(QString label)
+{
+    Q_UNUSED(label);
+}
+
 InterfaceJack::~InterfaceJack()
 {
     
