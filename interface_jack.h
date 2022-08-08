@@ -41,14 +41,23 @@ public:
     
 private:
     QString label_string;
+    size_t RINGBUFFER_SIZE = 1024;
     
     jack_client_t *jack_client = NULL;
     jack_ringbuffer_t *ringbuffer;
     
-    void sendEvent(bool drain);
+    jack_port_t *output_port;
+    jack_port_t *input_port;
+    
+    void sendEvent(char type, int channel, int index, int value);
+    
+    static int jack_static_callback(jack_nframes_t nframes, void *arg);
+    int jack_callback(jack_nframes_t nframes);
+    
+    unsigned char ddd;
     
 signals:
-    
+    void midiEvent(int type, int ch, int index, int val);
 };
 
 #endif // INTERFACEJACK_H
