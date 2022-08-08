@@ -56,6 +56,7 @@ private:
     QList<QComboBox*> list_of_instrument_banks;
     QList<QSpinBox*> list_of_msb;
     QList<QSpinBox*> list_of_lsb;
+    QList<QComboBox*> list_of_velocities;
     QList<QSlider*> list_of_portamentos;
     QList<QSlider*> list_of_attacks;
     QList<QSlider*> list_of_releases;
@@ -65,6 +66,7 @@ protected:
     bool eventFilter(QObject *obj, QEvent *ev);
     
 private slots:
+    void checkToggled(QCheckBox *check_master, QCheckBox *check_slave);
     void addNewAudioInterface(QString text);
     void volumeSliderMoved(int channel, int volume);
     void panSliderMoved(int channel, int value);

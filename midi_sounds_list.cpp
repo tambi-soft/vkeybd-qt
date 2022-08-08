@@ -446,3 +446,12 @@ QList<QString> MIDISoundsList::getInstrumentsRAWData()
     
     return data;
 }
+
+QList<QString> MIDISoundsList::getNuanceVelocities()
+{
+    QList<QString> list;
+    
+    list << "008: pppp" << "020: ppp" << "031: pp" << "042: p" << "053: mp" << "064: mf" << "080: f" << "096: ff" << "112: fff" << "127: ffff";
+    
+    return list;
+}

@@ -30,7 +30,8 @@ void MIDIChannelSelector::drawGUI()
     setLayout(grid);
     grid->setSizeConstraint( QLayout::SetFixedSize );
     
-    QLabel *label_channel = new QLabel("Channel");
+    QLabel *label_channel_a = new QLabel("Channel");
+    QLabel *label_channel_b = new QLabel("Channel");
     QLabel *label_output = new QLabel("Output");
     QLabel *label_volume = new QLabel("Volume");
     QLabel *label_pan = new QLabel("Pan");
@@ -41,13 +42,14 @@ void MIDIChannelSelector::drawGUI()
     QLabel *label_instrument = new QLabel("Instrument");
     QLabel *label_midi_group = new QLabel("MSB");
     QLabel *label_midi_bank = new QLabel("LSB");
+    QLabel *label_midi_velocity = new QLabel("Velocity");
     QLabel *label_portamento_time = new QLabel("Port. Time");
     label_portamento_time->setToolTip("Portamento Time");
     QLabel *label_attack = new QLabel("Attack");
     QLabel *label_release = new QLabel("Release");
     QLabel *label_tremolo = new QLabel("Tremolo");
     
-    grid->addWidget(label_channel, 0, 0);
+    grid->addWidget(label_channel_a, 0, 0);
     grid->addWidget(label_output, 0, 1);
     grid->addWidget(label_volume, 0, 2);
     grid->addWidget(label_pan, 0, 3);
@@ -58,14 +60,19 @@ void MIDIChannelSelector::drawGUI()
     grid->addWidget(label_instrument, 0, 8);
     grid->addWidget(label_midi_group, 0, 9);
     grid->addWidget(label_midi_bank, 0, 10);
-    grid->addWidget(label_portamento_time, 0, 11);
-    grid->addWidget(label_attack, 0, 12);
-    grid->addWidget(label_release, 0, 13);
-    grid->addWidget(label_tremolo, 0, 14);
+    grid->addWidget(label_midi_velocity, 0, 11);
+    grid->addWidget(label_portamento_time, 0, 12);
+    grid->addWidget(label_attack, 0, 13);
+    grid->addWidget(label_release, 0, 14);
+    grid->addWidget(label_tremolo, 0, 15);
+    grid->addWidget(label_channel_b, 0, 16);
     
     for (int i=1; i <= 16; i++)
     {
-        QCheckBox *check = new QCheckBox(QString::number(i));
+        QCheckBox *check_a = new QCheckBox(QString::number(i));
+        QCheckBox *check_b = new QCheckBox(QString::number(i));
+        connect(check_a, &QCheckBox::toggled, this, [this, check_a, check_b]{ checkToggled(check_a, check_b); });
+        connect(check_b, &QCheckBox::toggled, this, [this, check_b, check_a]{ checkToggled(check_b, check_a); });
         
         QComboBox *combo_midi_output = new QComboBox;
         connect(combo_midi_output, &QComboBox::currentTextChanged, this, &MIDIChannelSelector::addNewAudioInterface);
@@ -148,6 +155,11 @@ void MIDIChannelSelector::drawGUI()
                     }
         );
         
+        QComboBox *combo_velocity = new QComboBox;
+        combo_velocity->addItems(this->midi_sounds_list->getNuanceVelocities());
+        combo_velocity->setCurrentIndex(7);
+        this->list_of_velocities.append(combo_velocity);
+        
         //QDial *dial_portamento = new QDial();
         //dial_portamento->resize(20, 20);
         QSlider *slider_portamento = new QSlider;
@@ -174,7 +186,7 @@ void MIDIChannelSelector::drawGUI()
         connect(slider_tremolo, &QSlider::valueChanged, this, [this, i, slider_tremolo]{ MIDIChannelSelector::tremoloChanged(i-1, slider_tremolo->value()); });
         this->list_of_tremolos.append(slider_tremolo);
         
-        grid->addWidget(check, i, 0);
+        grid->addWidget(check_a, i, 0);
         grid->addWidget(combo_midi_output, i, 1);
         grid->addWidget(slider_volume, i, 2);
         grid->addWidget(slider_pan, i, 3);
@@ -188,19 +200,24 @@ void MIDIChannelSelector::drawGUI()
         grid->addWidget(midi_instrument_msb, i, 9);
         grid->addWidget(midi_instrument_lsb, i, 10);
         
-        grid->addWidget(slider_portamento, i, 11);
+        grid->addWidget(combo_velocity, i, 11);
         
-        grid->addWidget(slider_attack, i, 12);
-        grid->addWidget(slider_release, i, 13);
+        grid->addWidget(slider_portamento, i, 12);
         
-        grid->addWidget(slider_tremolo, i, 14);
+        grid->addWidget(slider_attack, i, 13);
+        grid->addWidget(slider_release, i, 14);
+        
+        grid->addWidget(slider_tremolo, i, 15);
+        
+        grid->addWidget(check_b, i, 16);
         
         if (i==1)
         {
-            check->setChecked(true);
+            check_a->setChecked(true);
+            check_b->setChecked(true);
         }
         
-        this->list_of_checkboxes.append(check);
+        this->list_of_checkboxes.append(check_a);
         this->list_of_midi_output_combos.append(combo_midi_output);
         this->list_of_keyshifts.append(key_shift);
         this->list_of_key_mins.append(key_min);
@@ -575,3 +592,16 @@ void MIDIChannelSelector::stopTestNote()
         audio->keyReleaseEvent(i, 60);
     }
 }
+
+void MIDIChannelSelector::checkToggled(QCheckBox *check_master, QCheckBox *check_slave)
+{
+    if (check_master->isChecked())
+    {
+        check_slave->setChecked(true);
+    }
+    else
+    {
+        check_slave->setChecked(false);
+    }
+}
+

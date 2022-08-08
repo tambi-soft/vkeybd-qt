@@ -18,6 +18,8 @@ public:
     QMap<QString, int> getMIDICodesForInstrument(QString instrument);
     QMap<QString, QString> getInstrumentForMIDICodes(int msb, int lsb);
     
+    QList<QString> getNuanceVelocities();
+    
     //QString BANK_NO_NAME = "[None]";
     
 private:
