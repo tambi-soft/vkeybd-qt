@@ -43,8 +43,7 @@ void MIDIChannelSelector::drawGUI()
     QLabel *label_midi_group = new QLabel("MSB");
     QLabel *label_midi_bank = new QLabel("LSB");
     QLabel *label_midi_velocity = new QLabel("Velocity");
-    QLabel *label_portamento_time = new QLabel("Port. Time");
-    label_portamento_time->setToolTip("Portamento Time");
+    QLabel *label_portamento_time = new QLabel("Portamento");
     QLabel *label_attack = new QLabel("Attack");
     QLabel *label_release = new QLabel("Release");
     QLabel *label_tremolo = new QLabel("Tremolo");
@@ -157,7 +156,8 @@ void MIDIChannelSelector::drawGUI()
         
         QComboBox *combo_velocity = new QComboBox;
         combo_velocity->addItems(this->midi_sounds_list->getNuanceVelocities());
-        combo_velocity->setCurrentIndex(7);
+        combo_velocity->setCurrentIndex(5);
+        combo_velocity->setObjectName("velocity_selector");
         this->list_of_velocities.append(combo_velocity);
         
         //QDial *dial_portamento = new QDial();
@@ -277,6 +277,9 @@ QList<QMap<QString,QVariant>> MIDIChannelSelector::listOfChannels(bool only_acti
             QString instrument_name = this->list_of_instrument_banks.at(i)->currentText();
             map["instrument_name"] = instrument_name;
             
+            int velocity = this->list_of_velocities.at(i)->currentIndex();
+            map["velocity"] = velocity;
+            
             int portamento_time = this->list_of_portamentos.at(i)->value();
             map["portamento_time"] = portamento_time;
             
@@ -312,6 +315,7 @@ void MIDIChannelSelector::restoreParams(QMap<QString,QVariant> data)
         this->list_of_msb.at(i)->setValue(channel["instrument_msb"].toInt());
         this->list_of_lsb.at(i)->setValue(channel["instrument_lsb"].toInt());
         
+        this->list_of_velocities.at(i)->setCurrentIndex(channel["velocity"].toInt());
         this->list_of_portamentos.at(i)->setValue(channel["portamento_time"].toInt());
         this->list_of_attacks.at(i)->setValue(channel["attack"].toInt());
         this->list_of_releases.at(i)->setValue(channel["release"].toInt());
