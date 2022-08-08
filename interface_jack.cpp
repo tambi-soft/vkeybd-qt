@@ -217,13 +217,21 @@ void InterfaceJack::setTremoloChanged(int channel, int value)
 
 void InterfaceJack::sendEvent(char type, int channel, int index, int value)
 {
+    // https://github.com/falkTX/jack-midi-timing/blob/master/sender.c
+    
     jack_nframes_t event_index = 0;
     
     jack_nframes_t nframes = 0;
     void *output_port_buffer = jack_port_get_buffer(this->output_port, nframes);
     jack_midi_clear_buffer(output_port_buffer);
     
-    const jack_midi_data_t data[] = { type, 60, 127 };
+    char* index_ = const_cast<char*>(QString().number(index, 16).prepend("0x").toStdString().c_str());
+    char* value_ = const_cast<char*>(QString().number(value, 16).prepend("0x").toStdString().c_str());
+    //auto index_ = QByteArray::fromHex(QString::number(index));
+    //QString value_ = QByteArray::fromHex(QString::number(value));
+    
+    //const jack_midi_data_t data[3] = { type, reinterpret_cast<unsigned char&>(index_), reinterpret_cast<unsigned char&>(value_) };
+    const jack_midi_data_t data[3] = { type, index, value };
     qDebug() << data;
     jack_midi_event_write(output_port_buffer, event_index, data, sizeof(data));
     
