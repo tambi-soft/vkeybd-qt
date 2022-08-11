@@ -13,15 +13,16 @@ InterfaceJack::InterfaceJack(QString label, InterfaceAudio *parent) : InterfaceA
         //exit(EX_UNAVAILABLE);
     }
     
-    /*
     this->ringbuffer = jack_ringbuffer_create(RINGBUFFER_SIZE);
     if (this->ringbuffer == NULL) {
         qDebug() << "Cannot create JACK ringbuffer.";
         //exit(EX_SOFTWARE);
     }
+    else
+    {
+        jack_ringbuffer_mlock(this->ringbuffer);
+    }
     
-    jack_ringbuffer_mlock(this->ringbuffer);
-    */
     
     /*
     err = jack_set_process_callback(jack_client, process_callback, 0);
@@ -104,9 +105,7 @@ int InterfaceJack::jack_callback(jack_nframes_t nframes)
         qDebug() << "type: " << type << " ch: " << ch << " index: " << index << " val: " << val;
         emit midiEvent(type, ch, index, val);
         
-        this->ddd = *ev.buffer;
         keyPressEvent(0, 0);
-        
     }   
     return 0;
 }
@@ -118,12 +117,9 @@ QString InterfaceJack::label()
 
 void InterfaceJack::keyPressEvent(int channel, int midicode)
 {
-    Q_UNUSED(channel);
-    Q_UNUSED(midicode);
+    qDebug() << "jack pressed: "+QString::number(midicode) << " channel: " << channel;
     
-    qDebug() << "jack pressed: "+QString::number(midicode);
-    
-    sendEvent(0x90, channel, midicode, 127);
+    sendEvent("0x90", channel, midicode, 127);
 }
 
 void InterfaceJack::keyReleaseEvent(int channel, int midicode)
@@ -133,7 +129,7 @@ void InterfaceJack::keyReleaseEvent(int channel, int midicode)
     
     qDebug() << "jack released: "+QString::number(midicode);
     
-    sendEvent(0x80, channel, midicode, 0);
+    sendEvent("0x80", channel, midicode, 0);
 }
 
 void InterfaceJack::keyPanicEvent(int channel)
@@ -215,24 +211,37 @@ void InterfaceJack::setTremoloChanged(int channel, int value)
     Q_UNUSED(value);
 }
 
-void InterfaceJack::sendEvent(char type, int channel, int index, int value)
+void InterfaceJack::sendEvent(QString opcode, int channel, int value, int velocity)
 {
     // https://github.com/falkTX/jack-midi-timing/blob/master/sender.c
     
-    jack_nframes_t event_index = 0;
+    //jack_nframes_t event_index = 0;
+    jack_nframes_t event_index = jack_frames_since_cycle_start(this->jack_client);
     
     jack_nframes_t nframes = 0;
     void *output_port_buffer = jack_port_get_buffer(this->output_port, nframes);
     jack_midi_clear_buffer(output_port_buffer);
     
-    char* index_ = const_cast<char*>(QString().number(index, 16).prepend("0x").toStdString().c_str());
-    char* value_ = const_cast<char*>(QString().number(value, 16).prepend("0x").toStdString().c_str());
+    unsigned char value_ = *(unsigned char*)(QString().number(value, 16).prepend("0x").toStdString().c_str());
+    unsigned char velocity_ = *(unsigned char*)(QString().number(velocity, 16).prepend("0x").toStdString().c_str());
     //auto index_ = QByteArray::fromHex(QString::number(index));
     //QString value_ = QByteArray::fromHex(QString::number(value));
     
-    //const jack_midi_data_t data[3] = { type, reinterpret_cast<unsigned char&>(index_), reinterpret_cast<unsigned char&>(value_) };
-    const jack_midi_data_t data[3] = { type, index, value };
-    qDebug() << data;
+    /*
+    uint res = opcode.toUInt(nullptr, 16) + channel;
+    QString res_ = QString().number(res, 16).prepend("0x").toStdString().c_str();
+    QByteArray ba = QByteArray::fromHex(res_.toLatin1());
+    //unsigned char type = reinterpret_cast<unsigned char>(ba.data());
+    qDebug() << "res: " << res << " type: " << " ba: " << ba;
+    */
+    
+    unsigned int op = opcode.toUInt(nullptr, 16) + channel;
+    unsigned char type = *(unsigned char*)(QString().number(op, 16).prepend("0x").toStdString().c_str());
+    qDebug() << "type: " << type << " value: " << value_ << " velocity: " << velocity_;
+    
+    //const jack_midi_data_t data[3] = { type, value_, velocity_ };
+    const jack_midi_data_t data[3] = { op, value, velocity };
+    //qDebug() << data;
     jack_midi_event_write(output_port_buffer, event_index, data, sizeof(data));
     
     //jack_midi_clear_buffer(output_port_buffer);

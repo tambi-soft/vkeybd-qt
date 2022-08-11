@@ -455,3 +455,7 @@ QList<QString> MIDISoundsList::getNuanceVelocities()
     
     return list;
 }
+int MIDISoundsList::getVelocityForIndex(int index)
+{
+    
+}

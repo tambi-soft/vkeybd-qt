@@ -49,12 +49,10 @@ private:
     jack_port_t *output_port;
     jack_port_t *input_port;
     
-    void sendEvent(char type, int channel, int index, int value);
+    void sendEvent(QString opcode, int channel, int value, int velocity);
     
     static int jack_static_callback(jack_nframes_t nframes, void *arg);
     int jack_callback(jack_nframes_t nframes);
-    
-    unsigned char ddd;
     
 signals:
     void midiEvent(int type, int ch, int index, int val);
