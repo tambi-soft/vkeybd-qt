@@ -1,8 +1,8 @@
 #include "interface_audio.h"
 
-InterfaceAudio::InterfaceAudio(QString label, QObject *parent) : QObject(parent)
+InterfaceAudio::InterfaceAudio(QObject *parent) : QObject(parent)
 {
-    Q_UNUSED(label);
+    
 }
 
 InterfaceAudio::~InterfaceAudio()
@@ -15,96 +15,123 @@ void InterfaceAudio::createNewPort(QString label)
     Q_UNUSED(label);
 }
 
+QMap<int,QString> InterfaceAudio::getPorts()
+{
+    QMap<int,QString> result;
+    return result;
+}
+
+QMap<int,QString> InterfaceAudio::getLastCreatedPort()
+{
+    QMap<int,QString> result;
+    return result;
+}
+
 QString InterfaceAudio::label()
 {
     return "";
 }
 
-void InterfaceAudio::keyPressEvent(int channel, int midicode)
+void InterfaceAudio::keyPressEvent(int port, int channel, int midicode)
 {
+    Q_UNUSED(port);
     Q_UNUSED(channel);
     Q_UNUSED(midicode);
 }
 
-void InterfaceAudio::keyReleaseEvent(int channel, int midicode)
+void InterfaceAudio::keyReleaseEvent(int port, int channel, int midicode)
 {
+    Q_UNUSED(port);
     Q_UNUSED(channel);
     Q_UNUSED(midicode);
 }
 
-void InterfaceAudio::keyPanicEvent(int channel)
+void InterfaceAudio::keyPanicEvent(int port, int channel)
 {
+    Q_UNUSED(port);
     Q_UNUSED(channel);
 }
 
-void InterfaceAudio::keyStopAllEvent(int channel)
+void InterfaceAudio::keyStopAllEvent(int port, int channel)
 {
+    Q_UNUSED(port);
     Q_UNUSED(channel);
 }
 
-void InterfaceAudio::keyPitchbendEvent(int channel, int pitch)
+void InterfaceAudio::keyPitchbendEvent(int port, int channel, int pitch)
 {
+    Q_UNUSED(port);
     Q_UNUSED(channel);
     Q_UNUSED(pitch);
 }
 
-void InterfaceAudio::keySustainEvent(int channel, bool pressed)
+void InterfaceAudio::keySustainEvent(int port, int channel, bool pressed)
 {
+    Q_UNUSED(port);
     Q_UNUSED(channel);
     Q_UNUSED(pressed);
 }
 
-void InterfaceAudio::keySostenutoEvent(int channel, bool pressed)
+void InterfaceAudio::keySostenutoEvent(int port, int channel, bool pressed)
 {
+    Q_UNUSED(port);
     Q_UNUSED(channel);
     Q_UNUSED(pressed);
 }
 
-void InterfaceAudio::keySoftEvent(int channel, bool pressed)
+void InterfaceAudio::keySoftEvent(int port, int channel, bool pressed)
 {
+    Q_UNUSED(port);
     Q_UNUSED(channel);
     Q_UNUSED(pressed);
 }
 
-void InterfaceAudio::setProgramChangeEvent(int channel, int program, int bank)
+void InterfaceAudio::setProgramChangeEvent(int port, int channel, int program, int bank)
 {
+    Q_UNUSED(port);
     Q_UNUSED(channel);
     Q_UNUSED(program);
     Q_UNUSED(bank);
 }
 
-void InterfaceAudio::setVolumeChangeEvent(int channel, int volume)
+void InterfaceAudio::setVolumeChangeEvent(int port, int channel, int volume)
 {
+    Q_UNUSED(port);
     Q_UNUSED(channel);
     Q_UNUSED(volume);
 }
 
-void InterfaceAudio::setPanChangeEvent(int channel, int value)
+void InterfaceAudio::setPanChangeEvent(int port, int channel, int value)
 {
+    Q_UNUSED(port);
     Q_UNUSED(channel);
     Q_UNUSED(value);
 }
 
-void InterfaceAudio::setPortamentoChanged(int channel, int value)
+void InterfaceAudio::setPortamentoChanged(int port, int channel, int value)
 {
+    Q_UNUSED(port);
     Q_UNUSED(channel);
     Q_UNUSED(value);
 }
 
-void InterfaceAudio::setAttackChanged(int channel, int value)
+void InterfaceAudio::setAttackChanged(int port, int channel, int value)
 {
+    Q_UNUSED(port);
     Q_UNUSED(channel);
     Q_UNUSED(value);
 }
 
-void InterfaceAudio::setReleaseChanged(int channel, int value)
+void InterfaceAudio::setReleaseChanged(int port, int channel, int value)
 {
+    Q_UNUSED(port);
     Q_UNUSED(channel);
     Q_UNUSED(value);
 }
 
-void InterfaceAudio::setTremoloChanged(int channel, int value)
+void InterfaceAudio::setTremoloChanged(int port, int channel, int value)
 {
+    Q_UNUSED(port);
     Q_UNUSED(channel);
     Q_UNUSED(value);
 }

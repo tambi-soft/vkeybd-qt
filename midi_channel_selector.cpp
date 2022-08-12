@@ -1,10 +1,9 @@
 #include "midi_channel_selector.h"
 
-MIDIChannelSelector::MIDIChannelSelector(QList<InterfaceAudio *> list_of_audio_interfaces, QWidget *parent) : QWidget(parent)
+MIDIChannelSelector::MIDIChannelSelector(InterfaceAudio *interface_audio, int port, QWidget *parent) : QWidget(parent)
 {
-    //this->audio = audio;
-    //this->list_of_midi_outputs.append(list_of_audio_interfaces);
-    this->list_of_midi_outputs = list_of_audio_interfaces;
+    this->interface_audio = interface_audio;
+    this->port = port;
     
     drawGUI();
     
@@ -17,11 +16,6 @@ MIDIChannelSelector::MIDIChannelSelector(QList<InterfaceAudio *> list_of_audio_i
     {
         setStyleSheet(css_file.readAll());
     }
-}
-
-void MIDIChannelSelector::setListOfAudioOutputs(QList<InterfaceAudio *> list_of_audio_interfaces)
-{
-    this->list_of_midi_outputs = list_of_audio_interfaces;
 }
 
 void MIDIChannelSelector::drawGUI()
@@ -332,10 +326,15 @@ void MIDIChannelSelector::restoreParams(QMap<QString,QVariant> data)
 
 void MIDIChannelSelector::populateAudioCombos()
 {
+    QMap<int,QString> map_of_ports = this->interface_audio->getLastCreatedPort();
+    
     QList<QString> list_of_audio_output_labels;
-    for (int i=0; i < this->list_of_midi_outputs.length(); i++)
+    //for (int i=0; i < this->list_of_midi_outputs.length(); i++)
+    for (int i=0; i < map_of_ports.keys().length(); i++)
     {
-        list_of_audio_output_labels.append(this->list_of_midi_outputs.at(i)->label());
+        //list_of_audio_output_labels.append(this->list_of_midi_outputs.at(i)->label());
+        QString port_name = map_of_ports[map_of_ports.keys().at(0)];
+        list_of_audio_output_labels.append(port_name);
     }
     list_of_audio_output_labels.append(ADD_NEW_AUDIO_OUTPUT_LABEL);
     
@@ -360,6 +359,7 @@ void MIDIChannelSelector::populateAudioCombos()
 
 void MIDIChannelSelector::addNewAudioInterface(QString text)
 {
+    /*
     if (text == ADD_NEW_AUDIO_OUTPUT_LABEL)
     {
         QString label = this->list_of_midi_outputs.at(0)->label();
@@ -371,12 +371,14 @@ void MIDIChannelSelector::addNewAudioInterface(QString text)
         qDebug() << text << "aaaaaaaaaaaaaaaaaaaaaa";
         populateAudioCombos();
     }
+    */
 }
 
 InterfaceAudio* MIDIChannelSelector::selectedAudioInterface(int channel)
 {
     QComboBox *combo = this->list_of_midi_output_combos.at(channel);
-    return this->list_of_midi_outputs.at(combo->currentIndex());
+    //return this->list_of_midi_outputs.at(combo->currentIndex());
+    
 }
 
 void MIDIChannelSelector::volumeSliderMoved(int channel, int volume)
@@ -388,7 +390,7 @@ void MIDIChannelSelector::volumeSliderMoved(int channel, int volume)
     }
     
     InterfaceAudio *audio = selectedAudioInterface(channel);
-    audio->setVolumeChangeEvent(channel, volume);
+    audio->setVolumeChangeEvent(this->port, channel, volume);
 }
 void MIDIChannelSelector::volumeDCAChanged(int value)
 {
@@ -407,7 +409,7 @@ void MIDIChannelSelector::volumeDCAChanged(int value)
 void MIDIChannelSelector::panSliderMoved(int channel, int value)
 {
     InterfaceAudio *audio = selectedAudioInterface(channel);
-    audio->setPanChangeEvent(channel, value);
+    audio->setPanChangeEvent(this->port, channel, value);
 }
 
 void MIDIChannelSelector::instrumentGroupChanged(int channel, QComboBox *combo_group, QComboBox *combo_instrument)
@@ -440,10 +442,10 @@ void MIDIChannelSelector::instrumentChanged(int channel, QString instrument)
 void MIDIChannelSelector::instrumentChangedNumeric(int channel, int instrument_msb, int instrument_lsb)
 {
     InterfaceAudio *audio = selectedAudioInterface(channel);
-    audio->setProgramChangeEvent(channel, instrument_msb, instrument_lsb);
+    audio->setProgramChangeEvent(this->port, channel, instrument_msb, instrument_lsb);
     
     qDebug() << "changed+: "+QString::number(channel)+" "+QString::number(instrument_msb)+" "+QString::number(instrument_lsb);
-    audio->setProgramChangeEvent(channel, instrument_msb, instrument_lsb);
+    audio->setProgramChangeEvent(this->port, channel, instrument_msb, instrument_lsb);
     
     // change spin boxes for group and bank accordingly
     QMap<QString,QString> names = this->midi_sounds_list->getInstrumentForMIDICodes(instrument_msb, instrument_lsb);
@@ -473,25 +475,25 @@ void MIDIChannelSelector::instrumentChangedNumeric(int channel, int instrument_m
 void MIDIChannelSelector::portamentoChanged(int channel, int value)
 {
     InterfaceAudio *audio = selectedAudioInterface(channel);
-    audio->setPortamentoChanged(channel, value);
+    audio->setPortamentoChanged(this->port, channel, value);
 }
 
 void MIDIChannelSelector::attackChanged(int channel, int value)
 {
     InterfaceAudio *audio = selectedAudioInterface(channel);
-    audio->setAttackChanged(channel, value);
+    audio->setAttackChanged(this->port, channel, value);
 }
 
 void MIDIChannelSelector::releaseChanged(int channel, int value)
 {
     InterfaceAudio *audio = selectedAudioInterface(channel);
-    audio->setReleaseChanged(channel, value);
+    audio->setReleaseChanged(this->port, channel, value);
 }
 
 void MIDIChannelSelector::tremoloChanged(int channel, int value)
 {
     InterfaceAudio *audio = selectedAudioInterface(channel);
-    audio->setTremoloChanged(channel, value);
+    audio->setTremoloChanged(this->port, channel, value);
 }
 
 void MIDIChannelSelector::resendMIDIControls()
@@ -508,6 +510,7 @@ void MIDIChannelSelector::resendMIDIControls()
         
         InterfaceAudio *audio = selectedAudioInterface(channel);
         audio->setProgramChangeEvent(
+                    this->port,
                     channel,
                     channels.at(i)["instrument_msb"].toInt(),
                     channels.at(i)["instrument_lsb"].toInt()
@@ -584,7 +587,7 @@ void MIDIChannelSelector::playTestNote()
     for (int i=0; i < channels.length(); i++)
     {
         InterfaceAudio *audio = selectedAudioInterface(i);
-        audio->keyPressEvent(i, 60);
+        //audio->keyPressEvent(i, 60);
     }
 }
 void MIDIChannelSelector::stopTestNote()
@@ -593,7 +596,7 @@ void MIDIChannelSelector::stopTestNote()
     for (int i=0; i < channels.length(); i++)
     {
         InterfaceAudio *audio = selectedAudioInterface(i);
-        audio->keyReleaseEvent(i, 60);
+        audio->keyReleaseEvent(this->port, i, 60);
     }
 }
 

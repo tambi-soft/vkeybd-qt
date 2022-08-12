@@ -67,7 +67,7 @@ class Orgelwerk : public QWidget
 {
     Q_OBJECT
 public:
-    explicit Orgelwerk(int id, OutputSystem output, QString label, QWidget *parent = nullptr);
+    explicit Orgelwerk(int keyboard_id, int tab_id, InterfaceAudio *interface_audio, QString label, QWidget *parent = nullptr);
     ~Orgelwerk();
     
     void keyDownRaw(int keycode);
@@ -104,8 +104,8 @@ public:
     void globalPitchShiftChanged(int value, bool is_relative=false);
     
 private:
-    int id;
-    OutputSystem audio_system;
+    int keyboard_id;
+    int tab_id;
     QString label;
     
     void drawGUI();
@@ -127,8 +127,7 @@ private:
     MIDIKeyShiftWidget *key_shift_master;
     
     //QThread *thread_input;
-    
-    QList<InterfaceAudio*> list_of_audio_interfaces;
+    InterfaceAudio *interface_audio;
     QMap<QString, TremoloWorker*> map_of_tremolo_workers;
     QMap<QString, QThread*> map_of_tremolo_threads;
     

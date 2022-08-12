@@ -1,23 +1,14 @@
 #include "orgelwerk.h"
 
-Orgelwerk::Orgelwerk(int id, OutputSystem output, QString label, QWidget *parent) : QWidget(parent)
+Orgelwerk::Orgelwerk(int keyboard_id, int tab_id, InterfaceAudio *interface_audio, QString label, QWidget *parent) : QWidget(parent)
 {
-    this->id = id;
-    this->audio_system = output;
+    this->keyboard_id = keyboard_id;
+    this->tab_id = tab_id;
+    qDebug() << "ID: " << this->keyboard_id << " id: " << keyboard_id << " TAB_ID: " << this->tab_id << " tab_id: " << tab_id;
+    this->interface_audio = interface_audio;
     this->label = label;
     
-    if (output == OutputSystem::Alsa)
-    {
-        this->list_of_audio_interfaces.append(new InterfaceAlsa("alsa-midi-"+QString::number(id+1)+"-"+label));
-    }
-    else if (output == OutputSystem::Jack)
-    {
-        this->list_of_audio_interfaces.append(new InterfaceJack("jack-midi-"+QString::number(id+1)+"-"+label));
-    }
-    else
-    {
-        this->list_of_audio_interfaces.append(new InterfaceAudio(""));
-    }
+    this->interface_audio->createNewPort(QString::number(keyboard_id+1)+"-"+label);
     
     drawGUI();
     
@@ -26,7 +17,7 @@ Orgelwerk::Orgelwerk(int id, OutputSystem output, QString label, QWidget *parent
 
 void Orgelwerk::drawGUI()
 {
-    this->channels = new MIDIChannelSelector(this->list_of_audio_interfaces);
+    this->channels = new MIDIChannelSelector(this->interface_audio, this->tab_id);
     connect(this->channels, &MIDIChannelSelector::newAudioInterfaceRequested, this, &Orgelwerk::addNewAudioInterface);
     this->keys = new MIDIKeySelector;
     this->pitch = new MIDIPitchWheel;
@@ -60,10 +51,8 @@ void Orgelwerk::drawGUI()
     layout_pitch_volume->addWidget(this->key_shift_master, 1, 0);
     layout_pitch_volume->addWidget(this->volume->label_volume, 0, 1);
     layout_pitch_volume->addWidget(this->volume->slider_volume, 1, 1);
-    //layout_pitch->addWidget(this->volume->slider_volume, 5, 0, 1, 2);
     
     layout_pitch->addLayout(layout_pitch_volume, 0, 0, 1, 2);
-    //layout_pitch->addWidget(this->volume->label_volume, 1, 1);
     layout_pitch->addWidget(this->pitch->label_tether, 1, 0);
     layout_pitch->addWidget(this->pitch->slider_tether, 2, 0);    
     
@@ -86,12 +75,6 @@ void Orgelwerk::drawGUI()
     layout_panic_stop->addWidget(this->button_stop_all);
     
     showChannelsSummary(1);
-    //this->grid->addWidget(label_key_shift_master, 2, 0);
-    //this->grid->addWidget(this->key_shift_master, 3, 0);
-    //this->grid->addWidget(key_shift_widget, 2, 0);
-    //this->grid->addWidget(volume, 2, 1, 2, 1);
-    //this->grid->addWidget(label_volume_master, 2, 1);
-    //this->grid->addWidget(this->slider_volume_master, 3, 1);
     this->grid->addWidget(this->group_keys, 4, 0, 1, 2);
     this->grid->addWidget(this->group_pitch, 5, 0, 1, 2);
     drawNotesKeyboard(6);
@@ -140,7 +123,6 @@ void Orgelwerk::showChannelsSummary(int grid_row)
     this->button_resend_midi->setText("Resend MIDI Settings [Ins]");
     connect(button_resend_midi, &QPushButton::clicked, this, &Orgelwerk::resendMIDIControls);
     
-    //layout_channels->addWidget(scroll, 0, 0, 1, 2);
     layout_channels->addWidget(this->midi_channels_summary, 0, 0, 1, 2);
     layout_channels->addWidget(button_channels_dialog, 1, 0);
     layout_channels->addWidget(button_resend_midi, 1, 1);
@@ -164,6 +146,7 @@ Orgelwerk::~Orgelwerk()
 
 void Orgelwerk::addNewAudioInterface(QString label)
 {
+    /*
     if (this->audio_system == OutputSystem::Alsa)
     {
         this->list_of_audio_interfaces.append(new InterfaceAlsa(label));
@@ -174,6 +157,7 @@ void Orgelwerk::addNewAudioInterface(QString label)
     }
     
     this->channels->setListOfAudioOutputs(this->list_of_audio_interfaces);
+    */
 }
 
 void Orgelwerk::keyDownRaw(int keycode)
@@ -204,9 +188,9 @@ void Orgelwerk::panicKeyPressed()
     QList<QMap<QString,QVariant>> list_of_channels = this->channels->listOfChannels(true);
     for (int c=0; c < list_of_channels.length(); c++)
     {
-        //this->interface_audio->keyPanicEvent(list_of_channels.at(c)["channel"].toInt());
-        int channel = list_of_channels.at(c)["channel"].toInt();
-        this->list_of_audio_interfaces.at(list_of_channels.at(c)["interface_index"].toInt())->keyPanicEvent(channel);
+        this->interface_audio->keyPanicEvent(this->tab_id, list_of_channels.at(c)["channel"].toInt());
+        //int channel = list_of_channels.at(c)["channel"].toInt();
+        //this->list_of_audio_interfaces.at(list_of_channels.at(c)["interface_index"].toInt())->keyPanicEvent(channel);
     }
 }
 void Orgelwerk::stopAllPressed()
@@ -215,7 +199,7 @@ void Orgelwerk::stopAllPressed()
     for (int c=0; c < list_of_channels.length(); c++)
     {
         int channel = list_of_channels.at(c)["channel"].toInt();
-        this->list_of_audio_interfaces.at(list_of_channels.at(c)["interface_index"].toInt())->keyStopAllEvent(channel);
+        //this->list_of_audio_interfaces.at(list_of_channels.at(c)["interface_index"].toInt())->keyStopAllEvent(channel);
     }
 }
 
@@ -254,7 +238,8 @@ void Orgelwerk::keyMIDIHelper(int midicode, MIDIMode mode)
                     
                     if (tremolo == 0)
                     {
-                        this->list_of_audio_interfaces.at(interface_index)->keyPressEvent(channel, m_code_shifted);
+                        //this->list_of_audio_interfaces.at(interface_index)->keyPressEvent(channel, m_code_shifted);
+                        this->interface_audio->keyPressEvent(this->tab_id, channel, m_code_shifted);
                     }
                     else
                     {
@@ -274,7 +259,7 @@ void Orgelwerk::keyMIDIHelper(int midicode, MIDIMode mode)
                         //int m_code_shifted = m_code + key_shift + keys.at(i);
                         int m_code_shifted = m_code + key_shift + master_key_shift;
                         
-                        this->list_of_audio_interfaces.at(interface_index)->keyReleaseEvent(channel, m_code_shifted);
+                        this->interface_audio->keyReleaseEvent(this->tab_id, channel, m_code_shifted);
                         
                         tremoloThreadStop(channel, m_code_shifted);
                         
@@ -284,7 +269,7 @@ void Orgelwerk::keyMIDIHelper(int midicode, MIDIMode mode)
                 }
                 else if (mode == MIDIMode::PitchBend)
                 {
-                    this->list_of_audio_interfaces.at(interface_index)->keyPitchbendEvent(channel, midicode);
+                    this->interface_audio->keyPitchbendEvent(this->tab_id, channel, midicode);
                 }
             }
         }
@@ -359,11 +344,11 @@ void Orgelwerk::keyShiftMapRemove(int key, int keycode)
 
 void Orgelwerk::notePlay(int interface_index, int channel, int note)
 {
-    this->list_of_audio_interfaces.at(interface_index)->keyPressEvent(channel, note);
+    //this->list_of_audio_interfaces.at(interface_index)->keyPressEvent(channel, note);
 }
 void Orgelwerk::noteStop(int interface_index, int channel, int note)
 {
-    this->list_of_audio_interfaces.at(interface_index)->keyReleaseEvent(channel, note);
+    //this->list_of_audio_interfaces.at(interface_index)->keyReleaseEvent(channel, note);
 }
 
 // to move pitch wheel by keyboard
@@ -383,7 +368,7 @@ void Orgelwerk::keySustain(bool pressed)
     {
         int interface_index = list_of_channels.at(c)["interface_index"].toInt();
         int channel = list_of_channels.at(c)["channel"].toInt();
-        this->list_of_audio_interfaces.at(interface_index)->keySustainEvent(channel, pressed);
+        this->interface_audio->keySustainEvent(this->tab_id, channel, pressed);
     }
 }
 
@@ -394,7 +379,7 @@ void Orgelwerk::keySostenuto(bool pressed)
     {
         int interface_index = list_of_channels.at(c)["interface_index"].toInt();
         int channel = list_of_channels.at(c)["channel"].toInt();
-        this->list_of_audio_interfaces.at(interface_index)->keySostenutoEvent(channel, pressed);
+        this->interface_audio->keySostenutoEvent(this->tab_id, channel, pressed);
     }
 }
 
@@ -405,7 +390,7 @@ void Orgelwerk::keySoft(bool pressed)
     {
         int interface_index = list_of_channels.at(c)["interface_index"].toInt();
         int channel = list_of_channels.at(c)["channel"].toInt();
-        this->list_of_audio_interfaces.at(interface_index)->keySoftEvent(channel, pressed);
+        this->interface_audio->keySoftEvent(this->tab_id, channel, pressed);
     }
 }
 

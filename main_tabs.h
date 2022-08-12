@@ -43,6 +43,8 @@ public:
     
 private:
     //QList<int> list_function_keys;
+    InterfaceAudio *interface_audio;
+    
     QList<int> list_function_keys_raw;
     //QList<int> list_function_keys_native;
     QList<QString> list_labels;
@@ -64,7 +66,7 @@ private:
     void receiveUDPMessage();
     
     void initializeTabs(OutputSystem output);
-    void addOrganTab(OutputSystem output, QString label, int number_of_orgelwerks=1);
+    void addOrganTab(OutputSystem output, int tab_id, QString label);
 
 protected:
     //bool eventFilter(QObject *obj, QEvent *ev) override;

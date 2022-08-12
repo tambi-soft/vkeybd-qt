@@ -22,9 +22,7 @@ class MIDIChannelSelector : public QWidget
 {
     Q_OBJECT
 public:
-    explicit MIDIChannelSelector(QList<InterfaceAudio*> list_of_audio_interfaces, QWidget *parent = nullptr);
-    
-    void setListOfAudioOutputs(QList<InterfaceAudio*> list_of_audio_interfaces);
+    explicit MIDIChannelSelector(InterfaceAudio *interface_audio, int port, QWidget *parent = nullptr);
     
     QList<QMap<QString, QVariant> > listOfChannels(bool only_activated=true);
     void restoreParams(QMap<QString,QVariant> data);
@@ -33,8 +31,8 @@ public:
     
 private:
     MIDISoundsList *midi_sounds_list = new MIDISoundsList;
-    //InterfaceAudio *audio;
-    QList<InterfaceAudio*> list_of_midi_outputs;
+    int port;
+    InterfaceAudio *interface_audio;
     
     int volume_dca = 100;
     

@@ -1,8 +1,8 @@
 #include "interface_jack.h"
 
-InterfaceJack::InterfaceJack(QString label, InterfaceAudio *parent) : InterfaceAudio(label, parent)
+InterfaceJack::InterfaceJack(InterfaceAudio *parent) : InterfaceAudio(parent)
 {
-    this->label_string = "jack-midi-"+label;
+    //this->label_string = "jack-midi-"+label;
     
     int err;
     
@@ -41,19 +41,21 @@ InterfaceJack::InterfaceJack(QString label, InterfaceAudio *parent) : InterfaceA
     */
     
     
-    this->createNewPort("bla");
+    //this->createNewPort("bla");
     
+    /*
     if (jack_activate(this->jack_client)) {
         qDebug() << "Cannot activate JACK client.";
         //exit(EX_UNAVAILABLE);
     }
     
-    
+    */
 }
 
 void InterfaceJack::createNewPort(QString label)
 {
-    this->output_port = jack_port_register(this->jack_client, this->label_string.toLocal8Bit(), JACK_DEFAULT_MIDI_TYPE,
+    qDebug() << "RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR: " << label;
+    this->output_port = jack_port_register(this->jack_client, label.toLocal8Bit(), JACK_DEFAULT_MIDI_TYPE,
         JackPortIsOutput, 0);
     
     if (this->output_port == NULL) {
@@ -61,7 +63,7 @@ void InterfaceJack::createNewPort(QString label)
         //exit(EX_UNAVAILABLE);
     }
     
-    this->input_port = jack_port_register(this->jack_client, this->label_string.toLocal8Bit(), JACK_DEFAULT_MIDI_TYPE,
+    this->input_port = jack_port_register(this->jack_client, label.toLocal8Bit(), JACK_DEFAULT_MIDI_TYPE,
         JackPortIsInput, 0);
     
     if (this->input_port == NULL) {
@@ -72,6 +74,11 @@ void InterfaceJack::createNewPort(QString label)
     jack_set_process_callback(this->jack_client, jack_static_callback, (void *)this);
     
     Q_UNUSED(label);
+}
+
+QMap<int,QString> InterfaceJack::getPorts()
+{
+    
 }
 
 InterfaceJack::~InterfaceJack()
@@ -105,7 +112,7 @@ int InterfaceJack::jack_callback(jack_nframes_t nframes)
         qDebug() << "type: " << type << " ch: " << ch << " index: " << index << " val: " << val;
         emit midiEvent(type, ch, index, val);
         
-        keyPressEvent(0, 0);
+        //keyPressEvent(0, 0);
     }   
     return 0;
 }
@@ -115,14 +122,14 @@ QString InterfaceJack::label()
     return "";
 }
 
-void InterfaceJack::keyPressEvent(int channel, int midicode)
+void InterfaceJack::keyPressEvent(int port, int channel, int midicode)
 {
     qDebug() << "jack pressed: "+QString::number(midicode) << " channel: " << channel;
     
     sendEvent("0x90", channel, midicode, 127);
 }
 
-void InterfaceJack::keyReleaseEvent(int channel, int midicode)
+void InterfaceJack::keyReleaseEvent(int port, int channel, int midicode)
 {
     Q_UNUSED(channel);
     Q_UNUSED(midicode);
@@ -132,17 +139,17 @@ void InterfaceJack::keyReleaseEvent(int channel, int midicode)
     sendEvent("0x80", channel, midicode, 0);
 }
 
-void InterfaceJack::keyPanicEvent(int channel)
+void InterfaceJack::keyPanicEvent(int port, int channel)
 {
     Q_UNUSED(channel);
 }
 
-void InterfaceJack::keyStopAllEvent(int channel)
+void InterfaceJack::keyStopAllEvent(int port, int channel)
 {
     Q_UNUSED(channel);
 }
 
-void InterfaceJack::keyPitchbendEvent(int channel, int pitch)
+void InterfaceJack::keyPitchbendEvent(int port, int channel, int pitch)
 {
     Q_UNUSED(channel);
     Q_UNUSED(pitch);
@@ -150,62 +157,62 @@ void InterfaceJack::keyPitchbendEvent(int channel, int pitch)
     
 }
 
-void InterfaceJack::keySustainEvent(int channel, bool pressed)
+void InterfaceJack::keySustainEvent(int port, int channel, bool pressed)
 {
     Q_UNUSED(channel);
     Q_UNUSED(pressed);
 }
 
-void InterfaceJack::keySostenutoEvent(int channel, bool pressed)
+void InterfaceJack::keySostenutoEvent(int port, int channel, bool pressed)
 {
     Q_UNUSED(channel);
     Q_UNUSED(pressed);
 }
 
-void InterfaceJack::keySoftEvent(int channel, bool pressed)
+void InterfaceJack::keySoftEvent(int port, int channel, bool pressed)
 {
     Q_UNUSED(channel);
     Q_UNUSED(pressed);
 }
 
-void InterfaceJack::setProgramChangeEvent(int channel, int program, int bank)
+void InterfaceJack::setProgramChangeEvent(int port, int channel, int program, int bank)
 {
     Q_UNUSED(channel);
     Q_UNUSED(program);
     Q_UNUSED(bank);
 }
 
-void InterfaceJack::setVolumeChangeEvent(int channel, int volume)
+void InterfaceJack::setVolumeChangeEvent(int port, int channel, int volume)
 {
     Q_UNUSED(channel);
     Q_UNUSED(volume);
 }
 
-void InterfaceJack::setPanChangeEvent(int channel, int value)
+void InterfaceJack::setPanChangeEvent(int port, int channel, int value)
 {
     Q_UNUSED(channel);
     Q_UNUSED(value);
 }
 
-void InterfaceJack::setPortamentoChanged(int channel, int value)
+void InterfaceJack::setPortamentoChanged(int port, int channel, int value)
 {
     Q_UNUSED(channel);
     Q_UNUSED(value);
 }
 
-void InterfaceJack::setAttackChanged(int channel, int value)
+void InterfaceJack::setAttackChanged(int port, int channel, int value)
 {
     Q_UNUSED(channel);
     Q_UNUSED(value);
 }
 
-void InterfaceJack::setReleaseChanged(int channel, int value)
+void InterfaceJack::setReleaseChanged(int port, int channel, int value)
 {
     Q_UNUSED(channel);
     Q_UNUSED(value);
 }
 
-void InterfaceJack::setTremoloChanged(int channel, int value)
+void InterfaceJack::setTremoloChanged(int port, int channel, int value)
 {
     Q_UNUSED(channel);
     Q_UNUSED(value);

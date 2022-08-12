@@ -4,9 +4,22 @@ MainTabs::MainTabs(int id, Config *config, OutputSystem output, InputKeyboardSel
 {
     this->id = id;
     this->config = config;
-    if (output == OutputSystem::Network)
+    
+    if (output == OutputSystem::Alsa)
+    {
+        this->interface_audio = new InterfaceAlsa();
+    }
+    else if (output == OutputSystem::Jack)
+    {
+        this->interface_audio = new InterfaceJack();
+    }
+    else if (output == OutputSystem::Network)
     {
         this->send_udp = true;
+    }
+    else
+    {
+        this->interface_audio = new InterfaceAudio();
     }
     
     connect(input_keyboard_select, &InputKeyboardSelect::keyRawPressedSignal, this, &MainTabs::rawKeyPressed);
@@ -52,6 +65,7 @@ void MainTabs::initializeTabs(OutputSystem output)
     
     int number_of_tabs = this->list_labels.length();
     //number_of_tabs = 4;
+    int tab_id = 0;
     for (int i=0; i < number_of_tabs; i++)
     {
         if (this->list_labels.at(i) == "spacer")
@@ -65,12 +79,13 @@ void MainTabs::initializeTabs(OutputSystem output)
         }
         else
         {
-            addOrganTab(output, this->list_labels.at(i), 1);
+            addOrganTab(output, tab_id, this->list_labels.at(i));
+            tab_id++;
         }
     }
 }
 
-void MainTabs::addOrganTab(OutputSystem output, QString label, int number_of_orgelwerks)
+void MainTabs::addOrganTab(OutputSystem output, int tab_id, QString label)
 {
     QWidget *widget = new QWidget;
     QHBoxLayout *layout = new QHBoxLayout;
@@ -78,21 +93,14 @@ void MainTabs::addOrganTab(OutputSystem output, QString label, int number_of_org
     layout->setContentsMargins(0, 0, 0, 0);
     
     QString midi_port_label = label;
-    for (int i=0; i < number_of_orgelwerks; i++)
-    {
-        if (number_of_orgelwerks > 1)
-        {
-            midi_port_label = label + "-" + QString::number(i);
-        }
-        
-        Orgelwerk *o = new Orgelwerk(this->id, output, midi_port_label);
-        connect(o, &Orgelwerk::eventFiltered, this, &MainTabs::eventFilter);
-        
-        layout->addWidget(o);
-        
-        this->list_of_tabs.append(o);
-        this->map_of_tabs[label] = o;
-    }
+    
+    Orgelwerk *o = new Orgelwerk(this->id, tab_id, this->interface_audio, midi_port_label);
+    connect(o, &Orgelwerk::eventFiltered, this, &MainTabs::eventFilter);
+    
+    layout->addWidget(o);
+    
+    this->list_of_tabs.append(o);
+    this->map_of_tabs[label] = o;
     
     addTab(widget, label);
 }
