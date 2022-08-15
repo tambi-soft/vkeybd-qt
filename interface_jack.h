@@ -20,7 +20,6 @@ public:
     QString label();
     
     void createNewPort(QString label);
-    QMap<int,QString> getPorts();
     
     void keyPressEvent(int port, int channel, int midicode);
     void keyReleaseEvent(int port, int channel, int midicode);

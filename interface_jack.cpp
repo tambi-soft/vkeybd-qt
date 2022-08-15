@@ -54,7 +54,6 @@ InterfaceJack::InterfaceJack(InterfaceAudio *parent) : InterfaceAudio(parent)
 
 void InterfaceJack::createNewPort(QString label)
 {
-    qDebug() << "RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR: " << label;
     this->output_port = jack_port_register(this->jack_client, label.toLocal8Bit(), JACK_DEFAULT_MIDI_TYPE,
         JackPortIsOutput, 0);
     
@@ -72,13 +71,6 @@ void InterfaceJack::createNewPort(QString label)
     }
     
     jack_set_process_callback(this->jack_client, jack_static_callback, (void *)this);
-    
-    Q_UNUSED(label);
-}
-
-QMap<int,QString> InterfaceJack::getPorts()
-{
-    
 }
 
 InterfaceJack::~InterfaceJack()

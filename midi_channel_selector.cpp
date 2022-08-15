@@ -67,9 +67,11 @@ void MIDIChannelSelector::drawGUI()
         connect(check_a, &QCheckBox::toggled, this, [this, check_a, check_b]{ checkToggled(check_a, check_b); });
         connect(check_b, &QCheckBox::toggled, this, [this, check_b, check_a]{ checkToggled(check_b, check_a); });
         
+        /*
         QComboBox *combo_midi_output = new QComboBox;
         connect(combo_midi_output, &QComboBox::currentTextChanged, this, &MIDIChannelSelector::addNewAudioInterface);
         combo_midi_output->setObjectName("midi_output_selector");
+        */
         
         QSlider *slider_volume = new QSlider;
         slider_volume->setOrientation(Qt::Horizontal);
@@ -181,7 +183,7 @@ void MIDIChannelSelector::drawGUI()
         this->list_of_tremolos.append(slider_tremolo);
         
         grid->addWidget(check_a, i, 0);
-        grid->addWidget(combo_midi_output, i, 1);
+        //grid->addWidget(combo_midi_output, i, 1);
         grid->addWidget(slider_volume, i, 2);
         grid->addWidget(slider_pan, i, 3);
         grid->addWidget(key_shift, i, 4);
@@ -212,7 +214,7 @@ void MIDIChannelSelector::drawGUI()
         }
         
         this->list_of_checkboxes.append(check_a);
-        this->list_of_midi_output_combos.append(combo_midi_output);
+        //this->list_of_midi_output_combos.append(combo_midi_output);
         this->list_of_keyshifts.append(key_shift);
         this->list_of_key_mins.append(key_min);
         this->list_of_key_maxs.append(key_max);
@@ -222,7 +224,7 @@ void MIDIChannelSelector::drawGUI()
         this->list_of_lsb.append(midi_instrument_lsb);
     }
     
-    populateAudioCombos();
+    //populateAudioCombos();
     
     QPushButton *button_test_note = new QPushButton("Play Test Note");
     connect(button_test_note, &QPushButton::pressed, this, &MIDIChannelSelector::playTestNote);
@@ -243,7 +245,7 @@ QList<QMap<QString,QVariant>> MIDIChannelSelector::listOfChannels(bool only_acti
             
             map["channel"] = i;
             
-            map["interface_index"] = this->list_of_midi_output_combos.at(i)->currentIndex();
+            //map["interface_index"] = this->list_of_midi_output_combos.at(i)->currentIndex();
             
             map["activated"] = this->list_of_checkboxes.at(i)->isChecked();
             
@@ -324,6 +326,7 @@ void MIDIChannelSelector::restoreParams(QMap<QString,QVariant> data)
     }
 }
 
+/*
 void MIDIChannelSelector::populateAudioCombos()
 {
     QMap<int,QString> map_of_ports = this->interface_audio->getLastCreatedPort();
@@ -356,6 +359,7 @@ void MIDIChannelSelector::populateAudioCombos()
         combo->blockSignals(false);
     }
 }
+*/
 
 void MIDIChannelSelector::addNewAudioInterface(QString text)
 {
@@ -376,8 +380,9 @@ void MIDIChannelSelector::addNewAudioInterface(QString text)
 
 InterfaceAudio* MIDIChannelSelector::selectedAudioInterface(int channel)
 {
-    QComboBox *combo = this->list_of_midi_output_combos.at(channel);
+    //QComboBox *combo = this->list_of_midi_output_combos.at(channel);
     //return this->list_of_midi_outputs.at(combo->currentIndex());
+    return this->interface_audio;
     
 }
 

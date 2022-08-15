@@ -38,20 +38,6 @@ void InterfaceAlsa::createNewPort(QString label)
     port = snd_seq_create_simple_port(this->seq, label.toLatin1(),
         SND_SEQ_PORT_CAP_READ | SND_SEQ_PORT_CAP_SUBS_READ | SND_SEQ_PORT_CAP_WRITE,
         SND_SEQ_PORT_TYPE_APPLICATION);
-    
-    this->ports[port] = label;
-    
-    this->port_last.clear();
-    this->port_last[port] = label;
-}
-
-QMap<int,QString> InterfaceAlsa::getPorts()
-{
-    return this->ports;
-}
-QMap<int,QString> InterfaceAlsa::getLastCreatedPort()
-{
-    return this->port_last;
 }
 
 InterfaceAlsa::~InterfaceAlsa()

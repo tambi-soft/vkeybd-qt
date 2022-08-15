@@ -14,8 +14,6 @@ public:
     virtual QString label();
     
     virtual void createNewPort(QString label);
-    virtual QMap<int,QString> getPorts();
-    virtual QMap<int,QString> getLastCreatedPort();
     
     virtual void keyPressEvent(int port, int channel, int midicode);
     virtual void keyReleaseEvent(int port, int channel, int midicode);

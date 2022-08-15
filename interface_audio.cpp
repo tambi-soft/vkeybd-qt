@@ -15,18 +15,6 @@ void InterfaceAudio::createNewPort(QString label)
     Q_UNUSED(label);
 }
 
-QMap<int,QString> InterfaceAudio::getPorts()
-{
-    QMap<int,QString> result;
-    return result;
-}
-
-QMap<int,QString> InterfaceAudio::getLastCreatedPort()
-{
-    QMap<int,QString> result;
-    return result;
-}
-
 QString InterfaceAudio::label()
 {
     return "";

@@ -29,8 +29,6 @@ public:
     ~InterfaceAlsa();
     
     void createNewPort(QString label);
-    QMap<int,QString> getPorts();
-    QMap<int,QString> getLastCreatedPort();
     
     void keyPressEvent(int port, int channel, int midicode);
     void keyReleaseEvent(int port, int channel, int midicode);
@@ -53,9 +51,6 @@ public:
 private:
     snd_seq_t *seq;
     snd_seq_event_t ev;
-    
-    QMap<int,QString> ports;
-    QMap<int,QString> port_last;
     
     void sendEvent(bool drain);
     

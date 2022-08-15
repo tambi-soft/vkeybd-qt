@@ -44,7 +44,7 @@ private:
     
     QList<QCheckBox*> list_of_checkboxes;
     QList<QComboBox*> list_of_midi_output_combos;
-    void populateAudioCombos();
+    //void populateAudioCombos();
     QList<MIDIKeyShiftWidget*> list_of_keyshifts;
     QList<QSpinBox*> list_of_key_mins;
     QList<QSpinBox*> list_of_key_maxs;
