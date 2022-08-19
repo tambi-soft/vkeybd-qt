@@ -10,7 +10,7 @@
 
 #include <QDebug>
 
-#include "enums.h"
+#include "enums_structs.h"
 
 class MenuBar : public QMenuBar
 {

@@ -31,7 +31,7 @@
 #include "midi_key_shift_widget.h"
 #include "midi_key_shift_global.h"
 
-#include "enums.h"
+#include "enums_structs.h"
 
 class MainWindow : public QMainWindow
 {

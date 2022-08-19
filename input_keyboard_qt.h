@@ -10,7 +10,7 @@
 #include <QLocale>
 #include <QDebug>
 
-#include "enums.h"
+#include "enums_structs.h"
 
 class InputKeyboardQt : public QObject
 {

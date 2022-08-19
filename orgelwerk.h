@@ -61,7 +61,7 @@ signals:
 #include "interface_alsa.h"
 #include "interface_jack.h"
 
-#include "enums.h"
+#include "enums_structs.h"
 
 class Orgelwerk : public QWidget
 {

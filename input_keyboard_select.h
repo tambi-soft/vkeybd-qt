@@ -8,7 +8,7 @@
 
 #include <QDebug>
 
-#include "enums.h"
+#include "enums_structs.h"
 #include "input_keyboard_raw.h"
 #include "combo_keyboard_select.h"
 

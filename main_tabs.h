@@ -14,12 +14,12 @@
 
 #include "orgelwerk.h"
 #include "config.h"
-#include "enums.h"
+#include "enums_structs.h"
 
 #include "input_keyboard_select.h"
 //#include "combo_keyboard_select.h"
 
-#include "enums.h"
+#include "enums_structs.h"
 
 class MainTabs : public QTabWidget
 {

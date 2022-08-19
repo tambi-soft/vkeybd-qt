@@ -45,10 +45,13 @@ private:
     jack_client_t *jack_client = NULL;
     jack_ringbuffer_t *ringbuffer;
     
-    jack_port_t *output_port;
+    //jack_port_t *output_port;
     jack_port_t *input_port;
     
-    void sendEvent(QString opcode, int channel, int value, int velocity);
+    int new_port_counter = 0;
+    QMap<int, jack_port_t*> map_of_ports;
+    
+    void sendEvent(int port, QString opcode, int channel, int value, int velocity);
     
     static int jack_static_callback(jack_nframes_t nframes, void *arg);
     int jack_callback(jack_nframes_t nframes);

@@ -6,7 +6,7 @@
 #include <QTimer>
 #include <QDebug>
 
-#include "enums.h"
+#include "enums_structs.h"
 
 class MIDIMasterVolumeWorker : public QObject
 {

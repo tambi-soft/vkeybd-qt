@@ -6,7 +6,7 @@
 
 #include <interface_audio.h>
 
-#include "enums.h"
+#include "enums_structs.h"
 
 class MIDIPitchWheelWorker : public QObject
 {

@@ -54,7 +54,7 @@ HEADERS += \
     button_piano.h \
     combo_keyboard_select.h \
     config.h \
-    enums.h \
+    enums_structs.h \
     help_about_widget.h \
     help_message.h \
     input_keyboard_qt.h \

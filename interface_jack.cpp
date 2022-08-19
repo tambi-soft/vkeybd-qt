@@ -48,16 +48,21 @@ InterfaceJack::InterfaceJack(InterfaceAudio *parent) : InterfaceAudio(parent)
         qDebug() << "Cannot activate JACK client.";
         //exit(EX_UNAVAILABLE);
     }
-    
     */
+    
 }
 
 void InterfaceJack::createNewPort(QString label)
 {
-    this->output_port = jack_port_register(this->jack_client, label.toLocal8Bit(), JACK_DEFAULT_MIDI_TYPE,
+    if (jack_deactivate(this->jack_client)) {
+        qDebug() << "Cannot deactivate JACK client.";
+        //exit(EX_UNAVAILABLE);
+    }
+    
+    jack_port_t *output_port = jack_port_register(this->jack_client, label.toLocal8Bit(), JACK_DEFAULT_MIDI_TYPE,
         JackPortIsOutput, 0);
     
-    if (this->output_port == NULL) {
+    if (output_port == NULL) {
         qDebug() << "Could not register JACK output port.";
         //exit(EX_UNAVAILABLE);
     }
@@ -65,12 +70,20 @@ void InterfaceJack::createNewPort(QString label)
     this->input_port = jack_port_register(this->jack_client, label.toLocal8Bit(), JACK_DEFAULT_MIDI_TYPE,
         JackPortIsInput, 0);
     
-    if (this->input_port == NULL) {
+    if (input_port == NULL) {
         qDebug() << "Could not register JACK input port.";
         //exit(EX_UNAVAILABLE);
     }
     
     jack_set_process_callback(this->jack_client, jack_static_callback, (void *)this);
+    
+    this->map_of_ports[this->new_port_counter] = output_port;
+    this->new_port_counter++;
+    
+    if (jack_activate(this->jack_client)) {
+        qDebug() << "Cannot activate JACK client.";
+        //exit(EX_UNAVAILABLE);
+    }
 }
 
 InterfaceJack::~InterfaceJack()
@@ -118,7 +131,7 @@ void InterfaceJack::keyPressEvent(int port, int channel, int midicode)
 {
     qDebug() << "jack pressed: "+QString::number(midicode) << " channel: " << channel;
     
-    sendEvent("0x90", channel, midicode, 127);
+    sendEvent(port, "0x90", channel, midicode, 127);
 }
 
 void InterfaceJack::keyReleaseEvent(int port, int channel, int midicode)
@@ -128,7 +141,7 @@ void InterfaceJack::keyReleaseEvent(int port, int channel, int midicode)
     
     qDebug() << "jack released: "+QString::number(midicode);
     
-    sendEvent("0x80", channel, midicode, 0);
+    sendEvent(port, "0x80", channel, midicode, 0);
 }
 
 void InterfaceJack::keyPanicEvent(int port, int channel)
@@ -210,16 +223,9 @@ void InterfaceJack::setTremoloChanged(int port, int channel, int value)
     Q_UNUSED(value);
 }
 
-void InterfaceJack::sendEvent(QString opcode, int channel, int value, int velocity)
+void InterfaceJack::sendEvent(int port, QString opcode, int channel, int value, int velocity)
 {
     // https://github.com/falkTX/jack-midi-timing/blob/master/sender.c
-    
-    //jack_nframes_t event_index = 0;
-    jack_nframes_t event_index = jack_frames_since_cycle_start(this->jack_client);
-    
-    jack_nframes_t nframes = 0;
-    void *output_port_buffer = jack_port_get_buffer(this->output_port, nframes);
-    jack_midi_clear_buffer(output_port_buffer);
     
     unsigned char value_ = *(unsigned char*)(QString().number(value, 16).prepend("0x").toStdString().c_str());
     unsigned char velocity_ = *(unsigned char*)(QString().number(velocity, 16).prepend("0x").toStdString().c_str());
@@ -234,13 +240,21 @@ void InterfaceJack::sendEvent(QString opcode, int channel, int value, int veloci
     qDebug() << "res: " << res << " type: " << " ba: " << ba;
     */
     
+    //jack_nframes_t event_index = 0;
+    jack_nframes_t event_index = jack_frames_since_cycle_start(this->jack_client);
+    
+    jack_nframes_t nframes = 0;
+    //void *output_port_buffer = jack_port_get_buffer(this->output_port, nframes);
+    void *output_port_buffer = jack_port_get_buffer(this->map_of_ports[port], nframes);
+    jack_midi_clear_buffer(output_port_buffer);
+    
     unsigned int op = opcode.toUInt(nullptr, 16) + channel;
     unsigned char type = *(unsigned char*)(QString().number(op, 16).prepend("0x").toStdString().c_str());
     qDebug() << "type: " << type << " value: " << value_ << " velocity: " << velocity_;
     
     //const jack_midi_data_t data[3] = { type, value_, velocity_ };
     const jack_midi_data_t data[3] = { op, value, velocity };
-    //qDebug() << data;
+    qDebug() << data;
     jack_midi_event_write(output_port_buffer, event_index, data, sizeof(data));
     
     //jack_midi_clear_buffer(output_port_buffer);

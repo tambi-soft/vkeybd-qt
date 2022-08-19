@@ -7,7 +7,7 @@
 #include <QDebug>
 
 #include "config.h"
-#include "enums.h"
+#include "enums_structs.h"
 
 int main(int argc, char *argv[])
 {

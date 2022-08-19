@@ -1,7 +1,7 @@
 #ifndef INPUTKEYBOARDXCB_H
 #define INPUTKEYBOARDXCB_H
 
-#include "enums.h"
+#include "enums_structs.h"
 
 #include "qmetatype.h"
 #include "qtextstream.h"
