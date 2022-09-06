@@ -59,7 +59,7 @@ private:
     int keyboard_selection;
     
     InputKeyboardQt *inputQt = new InputKeyboardQt;
-    InputKeyboardXCB *inputXCB = new InputKeyboardXCB;
+    InputKeyboardXCB *inputXCB = nullptr;
     
     MIDIKeyShiftGlobal *global_key_shift_widget = new MIDIKeyShiftGlobal;
 
