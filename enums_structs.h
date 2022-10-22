@@ -126,6 +126,15 @@ enum KeyboardSelection : uint8_t
     Detect,
 };
 
+enum DisplayInput
+{
+    Unsupported,
+    X11,
+    Wayland,
+    Windows,
+    
+};
+
 struct KeyStroke
 {
     uint8_t octave;

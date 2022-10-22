@@ -15,7 +15,7 @@
 #undef Bool
 
 #include <QObject>
-#include <QX11Info> 
+#include <QX11Info>
 #include <QMap>
 #include <QDebug>
 
@@ -26,11 +26,14 @@ public:
     explicit InputKeyboardXCB(QObject *parent = nullptr);
     
     bool xcbEvent(const QByteArray &eventType, void *message, long *result);
+    bool isX11Running();
     
 private:
     bool isAutoRepeat(xcb_generic_event_t* xev, void *message);
     
     QList<int> list_of_keypresses;
+    
+    bool is_x11_running;
     
 signals:
     void rawKeyPressedSignal(int key);

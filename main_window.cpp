@@ -33,12 +33,9 @@ MainWindow::MainWindow(OutputSystem output, int number_of_keyboards, QWidget *pa
         layout->addWidget(newKeyboardInstance(i, output));
     }
     
-    if (qgetenv("XDG_SESSION_TYPE") == "x11")
-    {
-        this->inputXCB = new InputKeyboardXCB;
-        connect(this->inputXCB, &InputKeyboardXCB::rawKeyPressedSignal, this, &MainWindow::rawKeyPressed);
-        connect(this->inputXCB, &InputKeyboardXCB::rawKeyReleasedSignal, this, &MainWindow::rawKeyReleased);
-    }
+    this->inputXCB = new InputKeyboardXCB;
+    connect(this->inputXCB, &InputKeyboardXCB::rawKeyPressedSignal, this, &MainWindow::rawKeyPressed);
+    connect(this->inputXCB, &InputKeyboardXCB::rawKeyReleasedSignal, this, &MainWindow::rawKeyReleased);
     
     connect(this->inputQt, &InputKeyboardQt::keyPressSignal, this, &MainWindow::rawKeyPressed);
     connect(this->inputQt, &InputKeyboardQt::keyReleaseSignal, this, &MainWindow::rawKeyReleased);                    
@@ -227,7 +224,7 @@ bool MainWindow::nativeEvent(const QByteArray &eventType, void *message, long *r
     Q_UNUSED(result);
     
     //if (this->input_kbd_qt_native)
-    if (this->keyboard_selection == KeyboardSelection::Native && this->inputXCB != nullptr)
+    if (this->keyboard_selection == KeyboardSelection::Native && this->inputXCB->isX11Running())
     {
         return this->inputXCB->xcbEvent(eventType, message, result);
     }

@@ -59,10 +59,10 @@ void InterfaceJack::createNewPort(QString label)
         //exit(EX_UNAVAILABLE);
     }
     
-    jack_port_t *output_port = jack_port_register(this->jack_client, label.toLocal8Bit(), JACK_DEFAULT_MIDI_TYPE,
+    this->output_port = jack_port_register(this->jack_client, label.toLocal8Bit(), JACK_DEFAULT_MIDI_TYPE,
         JackPortIsOutput, 0);
     
-    if (output_port == NULL) {
+    if (this->output_port == NULL) {
         qDebug() << "Could not register JACK output port.";
         //exit(EX_UNAVAILABLE);
     }
@@ -70,7 +70,7 @@ void InterfaceJack::createNewPort(QString label)
     this->input_port = jack_port_register(this->jack_client, label.toLocal8Bit(), JACK_DEFAULT_MIDI_TYPE,
         JackPortIsInput, 0);
     
-    if (input_port == NULL) {
+    if (this->input_port == NULL) {
         qDebug() << "Could not register JACK input port.";
         //exit(EX_UNAVAILABLE);
     }
@@ -94,10 +94,14 @@ InterfaceJack::~InterfaceJack()
 
 int InterfaceJack::jack_static_callback(jack_nframes_t nframes, void *arg)
 {
-  return ((InterfaceJack *) arg)->jack_callback(nframes);
+    ((InterfaceJack *) arg)->jack_process_midi_input(nframes);
+    ((InterfaceJack *) arg)->jack_process_midi_output(nframes);
+    
+    return 0;
+    //return ((InterfaceJack *) arg)->jack_process_midi_input(nframes);
 }
 
-int InterfaceJack::jack_callback(jack_nframes_t nframes)
+int InterfaceJack::jack_process_midi_input(jack_nframes_t nframes)
 {
     jack_midi_event_t ev;
     jack_nframes_t ev_count;
@@ -120,6 +124,82 @@ int InterfaceJack::jack_callback(jack_nframes_t nframes)
         //keyPressEvent(0, 0);
     }   
     return 0;
+}
+int InterfaceJack::jack_process_midi_output(jack_nframes_t nframes)
+{
+    int read, t, bytes_remaining;
+    unsigned char *buffer;
+    void *port_buffer;
+    jack_nframes_t last_frame_time;
+    struct MidiMessage ev;
+    
+    last_frame_time = jack_last_frame_time(this->jack_client);
+    
+    port_buffer = jack_port_get_buffer(this->output_port, nframes);
+    if (port_buffer == NULL)
+    {
+        qDebug() << "jack_port_get_buffer failed, cannot send anything";
+        return 0;
+    }
+    
+    jack_midi_clear_buffer(port_buffer);
+    
+    // we may push at most one byte per 0.32ms to stay below the 31.25 kbaud limit.
+    bytes_remaining = jack_nframes_to_ms(nframes) * this->RATE_LIMIT;
+    
+    while (jack_ringbuffer_read_space(this->ringbuffer))
+    {
+        read = jack_ringbuffer_peek(ringbuffer, (char *)&ev, sizeof(ev));
+        
+        if (read != sizeof(ev))
+        {
+            qDebug() << "short read from ringbuffer, possible note loss";
+            continue;
+        }
+        
+        bytes_remaining -= ev.len;
+        
+        if (this->RATE_LIMIT > 0.0 && bytes_remaining <= 0)
+        {
+            qDebug() << "rate limit in effect";
+            break;
+        }
+        
+        t = ev.time + nframes - last_frame_time;
+        
+        // if computed time is too much into the future, we need to send it later
+        if (t >= (int)nframes)
+            break;
+        
+        // if computed time is < 0, we missed a cycle because of xrun
+        if (t < 0)
+            t = 0;
+        
+        if (this->TIME_OFFSETS_ARE_ZERO)
+            t = 0;
+        
+        jack_ringbuffer_read_advance(this->ringbuffer, sizeof(ev));
+        
+        buffer = jack_midi_event_reserve(port_buffer, t, ev.len);
+        
+        if (buffer == NULL)
+        {
+            qDebug() << "jack_midi_event_reserve failed, NOTE LOST";
+            break;
+        }
+        
+        memcpy(buffer, ev.data, ev.len);
+    }
+}
+double InterfaceJack::jack_nframes_to_ms(jack_nframes_t nframes)
+{
+    jack_nframes_t sr;
+    
+    sr = jack_get_sample_rate(this->jack_client);
+    
+    assert(sr > 0);
+    
+    return ((nframes * 1000.0) / (double)sr);
 }
 
 QString InterfaceJack::label()
@@ -232,6 +312,14 @@ void InterfaceJack::sendEvent(int port, QString opcode, int channel, int value, 
     //auto index_ = QByteArray::fromHex(QString::number(index));
     //QString value_ = QByteArray::fromHex(QString::number(value));
     
+    unsigned int op = opcode.toUInt(nullptr, 16) + channel;
+    unsigned char type = *(unsigned char*)(QString().number(op, 16).prepend("0x").toStdString().c_str());
+    qDebug() << "type: " << type << " value: " << value_ << " velocity: " << velocity_;
+    
+    //const jack_midi_data_t data[3] = { type, value_, velocity_ };
+    const jack_midi_data_t data[3] = { op, value, velocity };
+    qDebug() << data;
+    
     /*
     uint res = opcode.toUInt(nullptr, 16) + channel;
     QString res_ = QString().number(res, 16).prepend("0x").toStdString().c_str();
@@ -241,21 +329,31 @@ void InterfaceJack::sendEvent(int port, QString opcode, int channel, int value, 
     */
     
     //jack_nframes_t event_index = 0;
-    jack_nframes_t event_index = jack_frames_since_cycle_start(this->jack_client);
+    //jack_nframes_t event_index = jack_frames_since_cycle_start(this->jack_client);
+    jack_nframes_t event_index = jack_midi_get_event_count(this->jack_client);
     
-    jack_nframes_t nframes = 0;
-    //void *output_port_buffer = jack_port_get_buffer(this->output_port, nframes);
-    void *output_port_buffer = jack_port_get_buffer(this->map_of_ports[port], nframes);
+    void *output_port_buffer = jack_port_get_buffer(this->map_of_ports[port], event_index);
     jack_midi_clear_buffer(output_port_buffer);
+    //jack_midi_event_write(output_port_buffer, event_index, data, sizeof(data));
+    //const char* data[3] =  {op, value, velocity};
     
-    unsigned int op = opcode.toUInt(nullptr, 16) + channel;
-    unsigned char type = *(unsigned char*)(QString().number(op, 16).prepend("0x").toStdString().c_str());
-    qDebug() << "type: " << type << " value: " << value_ << " velocity: " << velocity_;
+    struct MidiMessage ev;
+    ev.data[0] = op;
+    ev.data[1] = value;
+    ev.data[2] = velocity;
+    ev.time = jack_frame_time(this->jack_client);
     
-    //const jack_midi_data_t data[3] = { type, value_, velocity_ };
-    const jack_midi_data_t data[3] = { op, value, velocity };
-    qDebug() << data;
-    jack_midi_event_write(output_port_buffer, event_index, data, sizeof(data));
+    int written;
     
-    //jack_midi_clear_buffer(output_port_buffer);
+    if (jack_ringbuffer_write_space(this->ringbuffer) < sizeof(ev))
+    {
+        qDebug() << "not enough space in the ringbuffer, NOTE LOST";
+    }
+    
+    written = jack_ringbuffer_write(this->ringbuffer, (char *)&ev, sizeof(ev));
+    
+    if (written != sizeof(ev))
+    {
+        qDebug() << "jack_ringbuffer_write failed, NOTE LOST";
+    }
 }

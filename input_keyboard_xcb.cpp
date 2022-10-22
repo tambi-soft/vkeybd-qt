@@ -3,18 +3,32 @@
 InputKeyboardXCB::InputKeyboardXCB(QObject *parent)
     : QObject{parent}
 {
-    Display * display;
-    display = QX11Info::display();
-    
-    // https://stackoverflow.com/questions/38102221/qkeyevent-isautorepeat-not-working#38122074
-    int supported;
-    int result = XkbSetDetectableAutoRepeat(display, true, &supported);
-    XFlush(display);
-    if(!supported || !result) {
-        qDebug() << "ERROR: Set Detectable Autorepeat FAILED";
-    } else {
-        qDebug() << "Setting Detectable Autorepeat SUCCESSFUL";
+    if (qgetenv("XDG_SESSION_TYPE") == "x11")
+    {
+        this->is_x11_running = true;
+        
+        Display * display;
+        display = QX11Info::display();
+        
+        // https://stackoverflow.com/questions/38102221/qkeyevent-isautorepeat-not-working#38122074
+        int supported;
+        int result = XkbSetDetectableAutoRepeat(display, true, &supported);
+        XFlush(display);
+        if(!supported || !result) {
+            qDebug() << "ERROR: Set Detectable Autorepeat FAILED";
+        } else {
+            qDebug() << "Setting Detectable Autorepeat SUCCESSFUL";
+        }
     }
+    else
+    {
+        this->is_x11_running = false;
+    }
+}
+
+bool InputKeyboardXCB::isX11Running()
+{
+    return this->is_x11_running;
 }
 
 bool InputKeyboardXCB::xcbEvent(const QByteArray &eventType, void *message, long *result)

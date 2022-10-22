@@ -40,12 +40,21 @@ public:
     QString NAME = "vkeybd-qt";
     
 private:
-    size_t RINGBUFFER_SIZE = 1024;
+    struct MidiMessage
+    {
+        jack_nframes_t time;
+        int len; // length of MIDI message in bytes
+        unsigned char data[3];
+    };
+    //size_t RINGBUFFER_SIZE = 1024;
+    size_t RINGBUFFER_SIZE = 1024 * sizeof(struct MidiMessage);
+    double RATE_LIMIT = 0.0;
+    int TIME_OFFSETS_ARE_ZERO = 0;
     
     jack_client_t *jack_client = NULL;
     jack_ringbuffer_t *ringbuffer;
     
-    //jack_port_t *output_port;
+    jack_port_t *output_port;
     jack_port_t *input_port;
     
     int new_port_counter = 0;
@@ -54,7 +63,9 @@ private:
     void sendEvent(int port, QString opcode, int channel, int value, int velocity);
     
     static int jack_static_callback(jack_nframes_t nframes, void *arg);
-    int jack_callback(jack_nframes_t nframes);
+    int jack_process_midi_input(jack_nframes_t nframes);
+    int jack_process_midi_output(jack_nframes_t nframes);
+    double jack_nframes_to_ms(jack_nframes_t nframes);
     
 signals:
     void midiEvent(int type, int ch, int index, int val);

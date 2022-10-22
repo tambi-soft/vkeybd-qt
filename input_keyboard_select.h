@@ -5,12 +5,14 @@
 #include <QComboBox>
 #include <QPushButton>
 #include <QMap>
+#include <QModelIndex>
 
 #include <QDebug>
 
 #include "enums_structs.h"
 #include "input_keyboard_raw.h"
 #include "combo_keyboard_select.h"
+#include "enums_structs.h"
 
 class InputKeyboardSelect : public QObject
 {
@@ -44,6 +46,9 @@ private:
     
     void autoSelectPressedKeyboard(QString name);
     void rawKeyboardSelected(int index);
+    
+    int display_input_type;
+    void detectDisplayInput();
     
 private slots:
     void keyRawPressed(int keycode);
