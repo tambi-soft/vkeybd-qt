@@ -503,6 +503,7 @@ void MIDIChannelSelector::tremoloChanged(int channel, int value)
 
 void MIDIChannelSelector::resendMIDIControls()
 {
+    qDebug() << "resend";
     QList<QMap<QString,QVariant>> channels = listOfChannels(true);
     for (int i=0; i < channels.length(); i++)
     {

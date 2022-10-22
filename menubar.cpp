@@ -17,11 +17,11 @@ void MenuBar::addFileMenu()
     exitAction->setStatusTip("Exit Application");
     connect(exitAction, &QAction::triggered, this, &MenuBar::quitApplication);
         
-    QAction *quickSaveAction = new QAction(QIcon::fromTheme("application-save"), "Quick Save");
+    QAction *quickSaveAction = new QAction(QIcon::fromTheme("document-save"), "Quick Save");
     //saveAction->setShortcut(QKeySequence::fromString("Ctrl+S"));
     connect(quickSaveAction, &QAction::triggered, this, &MenuBar::quickSave);
     
-    QAction *quickLoadAction = new QAction(QIcon::fromTheme("application-open"), "Quick Load");
+    QAction *quickLoadAction = new QAction(QIcon::fromTheme("document-open"), "Quick Load");
     connect(quickLoadAction, &QAction::triggered, this, [this]{ emit signalOpen(); });
     
     menuFile->addAction(quickSaveAction);
