@@ -123,9 +123,12 @@ void Orgelwerk::showChannelsSummary(int grid_row)
     this->button_resend_midi->setText("Resend MIDI Settings [Ins]");
     connect(button_resend_midi, &QPushButton::clicked, this, &Orgelwerk::resendMIDIControls);
     
-    layout_channels->addWidget(this->midi_channels_summary, 0, 0, 1, 2);
+    this->check_resend_midi_auto->setToolTip("Automatically resend MIDI settings if tab activated");
+    
+    layout_channels->addWidget(this->midi_channels_summary, 0, 0, 1, 3);
     layout_channels->addWidget(button_channels_dialog, 1, 0);
     layout_channels->addWidget(button_resend_midi, 1, 1);
+    layout_channels->addWidget(this->check_resend_midi_auto, 1, 2);
     
     this->grid->addWidget(group_channels, grid_row, 0, 1, 2);
     
@@ -448,6 +451,7 @@ void Orgelwerk::restoreParams(QMap<QString,QVariant> data)
     this->volume->setValue(main["volume"].toInt());
     this->keys->restoreBitmaskOfKeys(main["keys"].toString());
     this->pitch->setData(main);
+    this->check_resend_midi_auto->setChecked(main["resend_midi_auto"].toBool());
 }
 
 void Orgelwerk::showHideGUIElements(GUIElements elements, bool show)

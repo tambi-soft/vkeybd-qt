@@ -119,6 +119,11 @@ void MainTabs::saveAllParams()
             
             QMap<QString,QVariant> params = o->getParams();
             this->config->saveParams(this->id, label, "main", params);
+            
+            bool resend_midi_auto = o->check_resend_midi_auto->isChecked();
+            QMap<QString,QVariant> resend_midi_auto_struct;
+            resend_midi_auto_struct["resend_midi_auto"] = QVariant(resend_midi_auto);
+            this->config->saveParams(this->id, label, "main", resend_midi_auto_struct);
         }
     }
     

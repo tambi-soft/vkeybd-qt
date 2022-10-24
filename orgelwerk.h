@@ -92,6 +92,7 @@ public:
     QSpinBox *spin_udp_port;
     QPushButton *button_channels_dialog = new QPushButton;
     QPushButton *button_resend_midi = new QPushButton;
+    QCheckBox *check_resend_midi_auto = new QCheckBox("auto");
     
     QList<QMap<QString,QVariant>> listOfChannels(bool only_activated);
     QMap<QString, QVariant> getParams();
