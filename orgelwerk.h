@@ -104,6 +104,8 @@ public:
     void octaveUp();
     void globalPitchShiftChanged(int value, bool is_relative=false);
     
+    void activated();
+    
 private:
     int keyboard_id;
     int tab_id;
