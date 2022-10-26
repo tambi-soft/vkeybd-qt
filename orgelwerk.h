@@ -104,7 +104,6 @@ public:
     void octaveUp();
     void globalPitchShiftChanged(int value, bool is_relative=false);
     
-    void activated();
     
 private:
     int keyboard_id;
@@ -149,6 +148,8 @@ private:
     
     void showChannelsSummary(int grid_row);
     void channelsSummaryUpdate();
+    
+    void showEvent(QShowEvent *event);
     
 private slots:
     void addNewAudioInterface(QString label);

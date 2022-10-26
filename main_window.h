@@ -79,7 +79,6 @@ private slots:
     
     void rawKeyPressed(int key);
     void rawKeyReleased(int key);
-    void changeTab(int id);
     //void MIDISignal(MIDISignalTypes type);
     
     void showGlobalKeyShift();

@@ -35,7 +35,6 @@ public:
     
     void rawKeyPressed(int keycode);
     void rawKeyReleased(int keycode);
-    void changeTab(int id);
     void MIDISignal(MIDISignalTypes type);
     
     void globalKeyShiftChanged(int value, bool is_relative);
@@ -67,6 +66,7 @@ private:
     
     void initializeTabs(OutputSystem output);
     void addOrganTab(OutputSystem output, int tab_id, QString label);
+    
 
 protected:
     //bool eventFilter(QObject *obj, QEvent *ev) override;

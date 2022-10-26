@@ -266,16 +266,6 @@ void MainWindow::rawKeyReleased(int key)
 {
     this->list_of_maintabs.first()->rawKeyReleased(key);
 }
-void MainWindow::changeTab(int id)
-{
-    this->list_of_maintabs.first()->changeTab(id);
-}
-/*
-void MainWindow::MIDISignal(MIDISignalTypes type)
-{
-    this->list_of_maintabs.first()->MIDISignal(type);
-}
-*/
 
 void MainWindow::showGlobalKeyShift()
 {

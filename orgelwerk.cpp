@@ -516,13 +516,13 @@ void Orgelwerk::globalPitchShiftChanged(int value, bool is_relative)
     }
 }
 
-void Orgelwerk::activated()
+void Orgelwerk::showEvent(QShowEvent *event)
 {
-    //if (this->check_resend_midi_auto->isChecked())
-    //{
+    if (this->check_resend_midi_auto->isChecked())
+    {
         resendMIDIControls();
         qDebug() << "RESEND MIDI CONTROLS";
-    //}
+    }
 }
 
 bool Orgelwerk::eventFilter(QObject *obj, QEvent *ev)

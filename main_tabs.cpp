@@ -404,16 +404,6 @@ void MainTabs::rawKeyReleased(int keycode)
     }
 }
 
-void MainTabs::changeTab(int id)
-{
-    qDebug() << "change tab";
-    this->setCurrentIndex(id);
-    
-    Orgelwerk *o = static_cast<Orgelwerk*>(currentWidget());
-    //o->resendMIDIControls();
-    o->activated();
-}
-
 void MainTabs::MIDISignal(MIDISignalTypes type)
 {
     Orgelwerk *o = static_cast<Orgelwerk*>(currentWidget()->layout()->itemAt(0)->widget());
