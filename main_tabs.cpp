@@ -263,6 +263,8 @@ void MainTabs::globalResendMIDISettings()
 {
     for (int i=0; i < this->list_of_tabs.length(); i++)
     {
+        // with ALSA backend we have to wait between the MIDI signals or otherwise they will be dropped. 
+        usleep(10000);
         this->list_of_tabs.at(i)->resendMIDIControls();
     }
 }

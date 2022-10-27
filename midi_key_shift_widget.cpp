@@ -61,7 +61,6 @@ int MIDIKeyShiftWidget::value()
 }
 void MIDIKeyShiftWidget::setValue(int value)
 {
-    qDebug() << "set value: " << value;
     this->spin_key->setValue(value);
     
     emit valueChanged(value);
