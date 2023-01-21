@@ -30,8 +30,8 @@ public:
     
     void createNewPort(QString label);
     
-    void keyPressEvent(int port, int channel, int midicode);
-    void keyReleaseEvent(int port, int channel, int midicode);
+    void keyPressEvent(int port, int channel, int midicode, int velocity);
+    void keyReleaseEvent(int port, int channel, int midicode, int velocity);
     void keyPanicEvent(int port, int channel);
     void keyStopAllEvent(int port, int channel);
     void keyPitchbendEvent(int port, int channel, int pitch);

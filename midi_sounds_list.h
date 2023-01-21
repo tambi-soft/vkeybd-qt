@@ -19,7 +19,8 @@ public:
     QMap<QString, QString> getInstrumentForMIDICodes(int msb, int lsb);
     
     QList<QString> getNuanceVelocities();
-    int getVelocityForIndex(int index);
+    int getVelocityForString(QString value);
+    QString getStringForVelocity(int value);
     
     //QString BANK_NO_NAME = "[None]";
     

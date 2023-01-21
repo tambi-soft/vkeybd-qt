@@ -55,6 +55,7 @@ private:
     QList<QSpinBox*> list_of_msb;
     QList<QSpinBox*> list_of_lsb;
     QList<QComboBox*> list_of_velocities;
+    QList<QSpinBox*> list_of_pitches;
     QList<QSlider*> list_of_portamentos;
     QList<QSlider*> list_of_attacks;
     QList<QSlider*> list_of_releases;
@@ -71,6 +72,8 @@ private slots:
     void instrumentGroupChanged(int channel, QComboBox *combo_group, QComboBox *combo_instrument);
     void instrumentChanged(int channel, QString instrument);
     void instrumentChangedNumeric(int channel, int instrument_msb, int instrument_lsb);
+    void velocityChanged(int channel, QString value);
+    void pitchChanged(int channel, int value);
     void portamentoChanged(int channel, int value);
     void attackChanged(int channel, int value);
     void releaseChanged(int channel, int value);

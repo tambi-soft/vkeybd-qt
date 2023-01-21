@@ -20,18 +20,20 @@ QString InterfaceAudio::label()
     return "";
 }
 
-void InterfaceAudio::keyPressEvent(int port, int channel, int midicode)
+void InterfaceAudio::keyPressEvent(int port, int channel, int midicode, int velocity)
 {
     Q_UNUSED(port);
     Q_UNUSED(channel);
     Q_UNUSED(midicode);
+    Q_UNUSED(velocity);
 }
 
-void InterfaceAudio::keyReleaseEvent(int port, int channel, int midicode)
+void InterfaceAudio::keyReleaseEvent(int port, int channel, int midicode, int velocity)
 {
     Q_UNUSED(port);
     Q_UNUSED(channel);
     Q_UNUSED(midicode);
+    Q_UNUSED(velocity);
 }
 
 void InterfaceAudio::keyPanicEvent(int port, int channel)

@@ -50,18 +50,18 @@ InterfaceAlsa::~InterfaceAlsa()
     snd_seq_close(this->seq);
 }
 
-void InterfaceAlsa::keyPressEvent(int port, int channel, int midicode)
+void InterfaceAlsa::keyPressEvent(int port, int channel, int midicode, int velocity)
 {
     snd_seq_ev_set_source(&this->ev, port);
-    snd_seq_ev_set_noteon(&this->ev, channel, midicode, 127);
+    snd_seq_ev_set_noteon(&this->ev, channel, midicode, velocity);
     
     sendEvent(true);
 }
 
-void InterfaceAlsa::keyReleaseEvent(int port, int channel, int midicode)
+void InterfaceAlsa::keyReleaseEvent(int port, int channel, int midicode, int velocity)
 {
     snd_seq_ev_set_source(&this->ev, port);
-    snd_seq_ev_set_noteoff(&this->ev, channel, midicode, 127);
+    snd_seq_ev_set_noteoff(&this->ev, channel, midicode, velocity);
     
     sendEvent(true);
 }

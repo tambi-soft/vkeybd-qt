@@ -230,6 +230,8 @@ void Orgelwerk::keyMIDIHelper(int midicode, MIDIMode mode)
             int key_min = list_of_channels.at(c)["key_min"].toInt();
             int key_max = list_of_channels.at(c)["key_max"].toInt();
             int tremolo = list_of_channels.at(c)["tremolo"].toInt();
+            int velocity = list_of_channels.at(c)["velocity"].toInt();
+            qDebug() << "velocity: " << velocity;
             
             int m_code = keycode + list_of_keys.at(k);
             
@@ -242,7 +244,7 @@ void Orgelwerk::keyMIDIHelper(int midicode, MIDIMode mode)
                     if (tremolo == 0)
                     {
                         //this->list_of_audio_interfaces.at(interface_index)->keyPressEvent(channel, m_code_shifted);
-                        this->interface_audio->keyPressEvent(this->tab_id, channel, m_code_shifted);
+                        this->interface_audio->keyPressEvent(this->tab_id, channel, m_code_shifted, velocity);
                     }
                     else
                     {
@@ -262,7 +264,7 @@ void Orgelwerk::keyMIDIHelper(int midicode, MIDIMode mode)
                         //int m_code_shifted = m_code + key_shift + keys.at(i);
                         int m_code_shifted = m_code + key_shift + master_key_shift;
                         
-                        this->interface_audio->keyReleaseEvent(this->tab_id, channel, m_code_shifted);
+                        this->interface_audio->keyReleaseEvent(this->tab_id, channel, m_code_shifted, velocity);
                         
                         tremoloThreadStop(channel, m_code_shifted);
                         

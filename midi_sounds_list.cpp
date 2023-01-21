@@ -455,7 +455,33 @@ QList<QString> MIDISoundsList::getNuanceVelocities()
     
     return list;
 }
-int MIDISoundsList::getVelocityForIndex(int index)
+int MIDISoundsList::getVelocityForString(QString value)
 {
+    QList<QString> list_velocities = this->getNuanceVelocities();
+    for (int i=0; i < list_velocities.length(); i++)
+    {
+        if (list_velocities.at(i) == value)
+        {
+            int velocity = list_velocities.at(i).split(":")[0].toInt();
+            return velocity;
+        }
+    }
     
+    // in case something went wrong, fall back to a default
+    return 64;
+}
+QString MIDISoundsList::getStringForVelocity(int value)
+{
+    QList<QString> list_velocities = this->getNuanceVelocities();
+    for (int i=0; i < list_velocities.length(); i++)
+    {
+        int velocity = list_velocities.at(i).split(":")[0].toInt();
+        if (velocity == value)
+        {
+            return list_velocities.at(i);
+        }
+    }
+    
+    // in case something went wrong, fall back to a default
+    return list_velocities.at(5);
 }

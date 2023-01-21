@@ -37,6 +37,7 @@ void MIDIChannelSelector::drawGUI()
     QLabel *label_midi_group = new QLabel("MSB");
     QLabel *label_midi_bank = new QLabel("LSB");
     QLabel *label_midi_velocity = new QLabel("Velocity");
+    QLabel *label_midi_pitch = new QLabel("Pitch");
     QLabel *label_portamento_time = new QLabel("Portamento");
     QLabel *label_attack = new QLabel("Attack");
     QLabel *label_release = new QLabel("Release");
@@ -54,11 +55,12 @@ void MIDIChannelSelector::drawGUI()
     grid->addWidget(label_midi_group, 0, 9);
     grid->addWidget(label_midi_bank, 0, 10);
     grid->addWidget(label_midi_velocity, 0, 11);
-    grid->addWidget(label_portamento_time, 0, 12);
-    grid->addWidget(label_attack, 0, 13);
-    grid->addWidget(label_release, 0, 14);
-    grid->addWidget(label_tremolo, 0, 15);
-    grid->addWidget(label_channel_b, 0, 16);
+    grid->addWidget(label_midi_pitch, 0, 12);
+    grid->addWidget(label_portamento_time, 0, 13);
+    grid->addWidget(label_attack, 0, 14);
+    grid->addWidget(label_release, 0, 15);
+    grid->addWidget(label_tremolo, 0, 16);
+    grid->addWidget(label_channel_b, 0, 17);
     
     for (int i=1; i <= 16; i++)
     {
@@ -154,10 +156,16 @@ void MIDIChannelSelector::drawGUI()
         combo_velocity->addItems(this->midi_sounds_list->getNuanceVelocities());
         combo_velocity->setCurrentIndex(5);
         combo_velocity->setObjectName("velocity_selector");
+        connect(combo_velocity, &QComboBox::currentTextChanged, this, [this, i, combo_velocity]{ MIDIChannelSelector::velocityChanged(i-1, combo_velocity->currentText()); });
         this->list_of_velocities.append(combo_velocity);
         
-        //QDial *dial_portamento = new QDial();
-        //dial_portamento->resize(20, 20);
+        QSpinBox *spin_pitch = new QSpinBox;
+        spin_pitch->setRange(-8192, 8191);
+        spin_pitch->setValue(0);
+        spin_pitch->setObjectName("pitch_selector");
+        connect(spin_pitch, &QSpinBox::textChanged, this, [this, i, spin_pitch]{ MIDIChannelSelector::pitchChanged(i-1, spin_pitch->value()); });
+        this->list_of_pitches.append(spin_pitch);
+        
         QSlider *slider_portamento = new QSlider;
         slider_portamento->setOrientation(Qt::Horizontal);
         slider_portamento->setRange(0, 127);
@@ -198,14 +206,16 @@ void MIDIChannelSelector::drawGUI()
         
         grid->addWidget(combo_velocity, i, 11);
         
-        grid->addWidget(slider_portamento, i, 12);
+        grid->addWidget(spin_pitch, i, 12);
         
-        grid->addWidget(slider_attack, i, 13);
-        grid->addWidget(slider_release, i, 14);
+        grid->addWidget(slider_portamento, i, 13);
         
-        grid->addWidget(slider_tremolo, i, 15);
+        grid->addWidget(slider_attack, i, 14);
+        grid->addWidget(slider_release, i, 15);
         
-        grid->addWidget(check_b, i, 16);
+        grid->addWidget(slider_tremolo, i, 16);
+        
+        grid->addWidget(check_b, i, 17);
         
         if (i==1)
         {
@@ -229,7 +239,7 @@ void MIDIChannelSelector::drawGUI()
     QPushButton *button_test_note = new QPushButton("Play Test Note");
     connect(button_test_note, &QPushButton::pressed, this, &MIDIChannelSelector::playTestNote);
     connect(button_test_note, &QPushButton::released, this, &MIDIChannelSelector::stopTestNote);
-    grid->addWidget(button_test_note, 17, 0, 1, 15);
+    grid->addWidget(button_test_note, 18, 0, 1, 18);
 }
 
 QList<QMap<QString,QVariant>> MIDIChannelSelector::listOfChannels(bool only_activated)
@@ -273,8 +283,12 @@ QList<QMap<QString,QVariant>> MIDIChannelSelector::listOfChannels(bool only_acti
             QString instrument_name = this->list_of_instrument_banks.at(i)->currentText();
             map["instrument_name"] = instrument_name;
             
-            int velocity = this->list_of_velocities.at(i)->currentIndex();
+            QString str_velocity = this->list_of_velocities.at(i)->currentText();
+            int velocity = this->midi_sounds_list->getVelocityForString(str_velocity);
             map["velocity"] = velocity;
+            
+            int pitch = this->list_of_pitches.at(i)->value();
+            map["pitch"] = pitch;
             
             int portamento_time = this->list_of_portamentos.at(i)->value();
             map["portamento_time"] = portamento_time;
@@ -311,7 +325,9 @@ void MIDIChannelSelector::restoreParams(QMap<QString,QVariant> data)
         this->list_of_msb.at(i)->setValue(channel["instrument_msb"].toInt());
         this->list_of_lsb.at(i)->setValue(channel["instrument_lsb"].toInt());
         
-        this->list_of_velocities.at(i)->setCurrentIndex(channel["velocity"].toInt());
+        //this->list_of_velocities.at(i)->setCurrentIndex(channel["velocity"].toInt());
+        this->list_of_velocities.at(i)->setCurrentText(this->midi_sounds_list->getStringForVelocity(channel["velocity"].toInt()));
+        this->list_of_pitches.at(i)->setValue(channel["pitch"].toInt());
         this->list_of_portamentos.at(i)->setValue(channel["portamento_time"].toInt());
         this->list_of_attacks.at(i)->setValue(channel["attack"].toInt());
         this->list_of_releases.at(i)->setValue(channel["release"].toInt());
@@ -477,6 +493,20 @@ void MIDIChannelSelector::instrumentChangedNumeric(int channel, int instrument_m
     this->list_of_instrument_banks.at(channel)->blockSignals(false);
 }
 
+void MIDIChannelSelector::velocityChanged(int channel, QString value)
+{
+    qDebug() << "velocity changed: " << value;
+    this->midi_sounds_list->getVelocityForString(value);
+}
+
+void MIDIChannelSelector::pitchChanged(int channel, int value)
+{
+    InterfaceAudio *audio = selectedAudioInterface(channel);
+    value = value + 8192;
+    qDebug() << value;
+    audio->keyPitchbendEvent(this->port, channel, value);
+}
+
 void MIDIChannelSelector::portamentoChanged(int channel, int value)
 {
     InterfaceAudio *audio = selectedAudioInterface(channel);
@@ -602,7 +632,7 @@ void MIDIChannelSelector::stopTestNote()
     for (int i=0; i < channels.length(); i++)
     {
         InterfaceAudio *audio = selectedAudioInterface(i);
-        audio->keyReleaseEvent(this->port, i, 60);
+        audio->keyReleaseEvent(this->port, i, 60, 127);
     }
 }
 

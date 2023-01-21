@@ -259,6 +259,9 @@ QComboBox#midi_output_selector QAbstractItemView {
 QComboBox#velocity_selector {
     background-color: #3c73ed;
 }
+QSpinBox#pitch_selector {
+    background-color: #3cb2ed;
+}
 #network_select {
     color: black;
     background-color: #5cc9fb;

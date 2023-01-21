@@ -15,8 +15,8 @@ public:
     
     virtual void createNewPort(QString label);
     
-    virtual void keyPressEvent(int port, int channel, int midicode);
-    virtual void keyReleaseEvent(int port, int channel, int midicode);
+    virtual void keyPressEvent(int port, int channel, int midicode, int velocity);
+    virtual void keyReleaseEvent(int port, int channel, int midicode, int velocity);
     virtual void keyPanicEvent(int port, int channel);
     virtual void keyStopAllEvent(int port, int channel);
     virtual void keyPitchbendEvent(int port, int channel, int pitch);
