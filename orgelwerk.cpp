@@ -26,6 +26,7 @@ void Orgelwerk::drawGUI()
     
     connect(this->channels, &MIDIChannelSelector::eventFiltered, this, &Orgelwerk::eventFilter);
     connect(this->channels, &MIDIChannelSelector::closed, this, &Orgelwerk::channelsSummaryUpdate);
+    connect(this->channels, &MIDIChannelSelector::destroyed, this, &Orgelwerk::channelsSummaryUpdate);
     
     connect(this->pitch, &MIDIPitchWheel::pitchWheelMoved, this, &Orgelwerk::pitchWheelMoved);
     
@@ -34,6 +35,10 @@ void Orgelwerk::drawGUI()
     this->scroll_channels = new QScrollArea;
     this->scroll_channels->setWidget(this->channels);
     this->scroll_channels->setWidgetResizable(false);
+    this->scroll_channels->setWindowTitle("Keyboard " + QString::number(this->keyboard_id) + "-" + this->label);
+    connect(this->scroll_channels, &QScrollArea::destroyed, this, &Orgelwerk::channelsSummaryUpdate);
+    //connect(this->scroll_channels, &QScrollArea::, this, &Orgelwerk::channelsSummaryUpdate);
+    //this->scroll_channels->isVisible()
     
     this->grid = new QGridLayout;
     setLayout(this->grid);
@@ -143,6 +148,7 @@ void Orgelwerk::channelsSummaryUpdate()
     QList<QMap<QString,QVariant>> data = this->channels->listOfChannels(true);
     
     this->midi_channels_summary->showData(data);
+    this->scroll_channels->hide();
 }
 
 Orgelwerk::~Orgelwerk()
@@ -412,10 +418,7 @@ void Orgelwerk::showChannelDetails()
 {
     QDesktopWidget *desktop = new QDesktopWidget;
     int screen_number = desktop->screenNumber(this);
-    qDebug() << screen_number;
     QSize screen_size = QGuiApplication::screens().at(screen_number)->size();
-    
-    QSize scroll_size = this->scroll_channels->size();
     
     QMargins margins = this->scroll_channels->contentsMargins();
     
@@ -440,6 +443,7 @@ void Orgelwerk::showChannelDetails()
 
 void Orgelwerk::channelsDialogRejected()
 {
+    qDebug() << "REJECTED";
     channelsSummaryUpdate();
 }
 

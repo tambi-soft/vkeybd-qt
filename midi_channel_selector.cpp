@@ -502,7 +502,6 @@ void MIDIChannelSelector::pitchChanged(int channel, int value)
 {
     InterfaceAudio *audio = selectedAudioInterface(channel);
     value = value + 8192;
-    qDebug() << value;
     audio->keyPitchbendEvent(this->port, channel, value);
 }
 
@@ -532,7 +531,6 @@ void MIDIChannelSelector::tremoloChanged(int channel, int value)
 
 void MIDIChannelSelector::resendMIDIControls()
 {
-    qDebug() << "resend";
     QList<QMap<QString,QVariant>> channels = listOfChannels(true);
     for (int i=0; i < channels.length(); i++)
     {
@@ -592,7 +590,7 @@ bool MIDIChannelSelector::eventFilter(QObject *obj, QEvent *ev)
             }
             else if (event->key() == Qt::Key_Escape)
             {
-                this->hide();
+                //this->hide();
                 emit closed();
                 
                 return true;
@@ -614,6 +612,11 @@ bool MIDIChannelSelector::eventFilter(QObject *obj, QEvent *ev)
     }
     
     return false;
+}
+
+void MIDIChannelSelector::hideEvent(QHideEvent *ev)
+{
+    emit closed();
 }
 
 void MIDIChannelSelector::playTestNote()

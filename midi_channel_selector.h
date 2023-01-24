@@ -14,6 +14,8 @@
 #include <QKeyEvent>
 #include <QVariant>
 
+#include <QHideEvent>
+
 #include "midi_sounds_list.h"
 #include "interface_audio.h"
 #include "midi_key_shift_widget.h"
@@ -63,6 +65,7 @@ private:
     
 protected:
     bool eventFilter(QObject *obj, QEvent *ev);
+    void hideEvent(QHideEvent *ev);
     
 private slots:
     void checkToggled(QCheckBox *check_master, QCheckBox *check_slave);
