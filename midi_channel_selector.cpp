@@ -325,7 +325,6 @@ void MIDIChannelSelector::restoreParams(QMap<QString,QVariant> data)
         this->list_of_msb.at(i)->setValue(channel["instrument_msb"].toInt());
         this->list_of_lsb.at(i)->setValue(channel["instrument_lsb"].toInt());
         
-        //this->list_of_velocities.at(i)->setCurrentIndex(channel["velocity"].toInt());
         this->list_of_velocities.at(i)->setCurrentText(this->midi_sounds_list->getStringForVelocity(channel["velocity"].toInt()));
         this->list_of_pitches.at(i)->setValue(channel["pitch"].toInt());
         this->list_of_portamentos.at(i)->setValue(channel["portamento_time"].toInt());

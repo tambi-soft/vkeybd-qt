@@ -47,6 +47,13 @@ signals:
 #include <QSizePolicy>
 #include <QSpinBox>
 
+#include <QDebug>
+//#include <QApplication>
+#include <QDesktopWidget>
+#include <QGuiApplication>
+#include <QScrollBar>
+#include <QScreen>
+
 #include "midi_channel_selector.h"
 #include "midi_key_selector.h"
 #include "midi_pitchwheel.h"

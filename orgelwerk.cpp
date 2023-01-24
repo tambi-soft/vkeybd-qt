@@ -31,6 +31,10 @@ void Orgelwerk::drawGUI()
     
     connect(volume, &MIDIMasterVolume::sliderMoved, this, &Orgelwerk::volumeSliderMoved);
     
+    this->scroll_channels = new QScrollArea;
+    this->scroll_channels->setWidget(this->channels);
+    this->scroll_channels->setWidgetResizable(false);
+    
     this->grid = new QGridLayout;
     setLayout(this->grid);
     
@@ -406,7 +410,32 @@ void Orgelwerk::volumeSliderMoved(int value)
 
 void Orgelwerk::showChannelDetails()
 {
-    this->channels->show();
+    QDesktopWidget *desktop = new QDesktopWidget;
+    int screen_number = desktop->screenNumber(this);
+    qDebug() << screen_number;
+    QSize screen_size = QGuiApplication::screens().at(screen_number)->size();
+    
+    QSize scroll_size = this->scroll_channels->size();
+    
+    QMargins margins = this->scroll_channels->contentsMargins();
+    
+    if (this->channels->size().width() > screen_size.width())
+    {
+        int scroll_bar_height = this->scroll_channels->horizontalScrollBar()->sizeHint().height();
+        this->scroll_channels->resize(
+                    screen_size.width(),
+                    this->channels->height() + margins.top() + margins.bottom() + scroll_bar_height
+                    );
+    }
+    else
+    {
+        this->scroll_channels->resize(
+                    this->channels->width() + margins.left() + margins.right(),
+                    this->channels->height() + margins.top() + margins.bottom()
+                    );
+    }
+    
+    this->scroll_channels->show();
 }
 
 void Orgelwerk::channelsDialogRejected()
