@@ -235,11 +235,6 @@ void MIDIChannelSelector::drawGUI()
     }
     
     //populateAudioCombos();
-    
-    QPushButton *button_test_note = new QPushButton("Play Test Note");
-    connect(button_test_note, &QPushButton::pressed, this, &MIDIChannelSelector::playTestNote);
-    connect(button_test_note, &QPushButton::released, this, &MIDIChannelSelector::stopTestNote);
-    grid->addWidget(button_test_note, 18, 0, 1, 18);
 }
 
 QList<QMap<QString,QVariant>> MIDIChannelSelector::listOfChannels(bool only_activated)
@@ -617,25 +612,6 @@ bool MIDIChannelSelector::eventFilter(QObject *obj, QEvent *ev)
 void MIDIChannelSelector::hideEvent(QHideEvent *ev)
 {
     emit closed();
-}
-
-void MIDIChannelSelector::playTestNote()
-{
-    QList<QMap<QString,QVariant>> channels = listOfChannels(true);
-    for (int i=0; i < channels.length(); i++)
-    {
-        InterfaceAudio *audio = selectedAudioInterface(i);
-        //audio->keyPressEvent(i, 60);
-    }
-}
-void MIDIChannelSelector::stopTestNote()
-{
-    QList<QMap<QString,QVariant>> channels = listOfChannels(true);
-    for (int i=0; i < channels.length(); i++)
-    {
-        InterfaceAudio *audio = selectedAudioInterface(i);
-        audio->keyReleaseEvent(this->port, i, 60, 127);
-    }
 }
 
 void MIDIChannelSelector::checkToggled(QCheckBox *check_master, QCheckBox *check_slave)

@@ -81,8 +81,6 @@ private slots:
     void attackChanged(int channel, int value);
     void releaseChanged(int channel, int value);
     void tremoloChanged(int channel, int value);
-    void playTestNote();
-    void stopTestNote();
     
 signals:
     void newAudioInterfaceRequested(QString label);
