@@ -4,7 +4,6 @@ Orgelwerk::Orgelwerk(int keyboard_id, int tab_id, InterfaceAudio *interface_audi
 {
     this->keyboard_id = keyboard_id;
     this->tab_id = tab_id;
-    qDebug() << "ID: " << this->keyboard_id << " id: " << keyboard_id << " TAB_ID: " << this->tab_id << " tab_id: " << tab_id;
     this->interface_audio = interface_audio;
     this->label = label;
     
@@ -37,8 +36,6 @@ void Orgelwerk::drawGUI()
     this->scroll_channels->setWidgetResizable(false);
     this->scroll_channels->setWindowTitle("Keyboard " + QString::number(this->keyboard_id) + "-" + this->label);
     connect(this->scroll_channels, &QScrollArea::destroyed, this, &Orgelwerk::channelsSummaryUpdate);
-    //connect(this->scroll_channels, &QScrollArea::, this, &Orgelwerk::channelsSummaryUpdate);
-    //this->scroll_channels->isVisible()
     
     this->grid = new QGridLayout;
     setLayout(this->grid);
