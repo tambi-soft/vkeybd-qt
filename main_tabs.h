@@ -28,7 +28,7 @@ public:
     explicit MainTabs(int id, Config* config, OutputSystem output, InputKeyboardSelect *input_keyboard_select, QLineEdit *line_udp_ip, QSpinBox *spin_port, QTabWidget *parent = nullptr);
     
     //bool callEventFilter(QObject *obj, QEvent *ev);
-    void saveAllParams();
+    void saveParams();
     void restoreParams(QString tab, QMap<QString,QVariant> data);
     
     void showHideGUIElements(GUIElements elements, bool show);

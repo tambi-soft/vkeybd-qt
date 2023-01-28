@@ -18,7 +18,6 @@ int main(int argc, char *argv[])
     //app.inputMethod()->show();
     
     Config *config = new Config;
-    config->openSettingsFile(1);
     int config_number_of_keyboards = config->getNumberOfKeyboards();
     QString config_output_system = config->getOutputSystem();
     QString config_keyboard_config = config->getKeyboardConfig();

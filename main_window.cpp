@@ -20,7 +20,7 @@ MainWindow::MainWindow(OutputSystem output, int number_of_keyboards, QWidget *pa
     if (output != OutputSystem::Network)
     {
         MenuBar *menu = new MenuBar;
-        connect(menu, &MenuBar::signalSaveQuick, this, &MainWindow::saveAllParams);
+        connect(menu, &MenuBar::signalSaveQuick, this, &MainWindow::saveParamsQuick);
         connect(menu, &MenuBar::signalLoadQuick, this, &MainWindow::loadParamsQuick);
         connect(menu, &MenuBar::signalSave, this, &MainWindow::saveParams);
         connect(menu, &MenuBar::signalLoad, this, &MainWindow::loadParams);
@@ -59,7 +59,7 @@ QWidget* MainWindow::newKeyboardInstance(int id, OutputSystem output)
     widget->setLayout(grid);
     
     this->config = new Config;
-    this->config->openSettingsFile(this->number_of_keyboards);
+    this->config->openQuicksaveFile(this->number_of_keyboards);
     connect(this->config, &Config::restoreParams, this, &MainWindow::restoreParams);
     connect(this->config, &Config::restoreGeneral, this, &MainWindow::restoreGeneral);
     
@@ -149,22 +149,22 @@ QWidget* MainWindow::newKeyboardInstance(int id, OutputSystem output)
 
 void MainWindow::saveParams()
 {
-    QString filename = QFileDialog::getOpenFileName(this, tr("Choose Save File"), "/home/", tr("INI Files (*.ini)"));
+    QString filename = QFileDialog::getSaveFileName(this, tr("Save Settings"), "/home/", tr("INI Files (*.ini)"));
     
     
 }
 void MainWindow::loadParams()
 {
-    QString filename = QFileDialog::getOpenFileName(this, tr("Choose Save File"), "/home/", tr("INI Files (*.ini)"));
+    QString filename = QFileDialog::getOpenFileName(this, tr("Load Settings"), "/home/", tr("INI Files (*.ini)"));
     
     
 }
 
-void MainWindow::saveAllParams()
+void MainWindow::saveParamsQuick()
 {
     for (int i=0; i < this->list_of_maintabs.length(); i++)
     {
-        this->list_of_maintabs.at(i)->saveAllParams();
+        this->list_of_maintabs.at(i)->saveParams();
     }
 }
 void MainWindow::loadParamsQuick()

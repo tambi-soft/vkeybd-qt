@@ -69,7 +69,7 @@ protected:
     bool nativeEvent(const QByteArray &eventType, void *message, long *result) override;
 
 private slots:
-    void saveAllParams();
+    void saveParamsQuick();
     void loadParamsQuick();
     void saveParams();
     void loadParams();

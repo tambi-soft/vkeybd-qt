@@ -22,7 +22,7 @@ public:
     void loadChannelSettings();
     void saveParams(int id, QString label, QString channel, QMap<QString,QVariant> params);
 
-    void openSettingsFile(int number_of_keyboards);
+    void openQuicksaveFile(int number_of_keyboards);
     
 /*    
     QString getQuicksavePath();

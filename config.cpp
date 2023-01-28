@@ -22,7 +22,7 @@ Config::Config(QObject *parent) : QObject(parent)
     }
 }
 
-void Config::openSettingsFile(int number_of_keyboards)
+void Config::openQuicksaveFile(int number_of_keyboards)
 {
     QString path = "default/quicksave-path-n"+QString::number(number_of_keyboards);
     if (!this->config->contains(path))

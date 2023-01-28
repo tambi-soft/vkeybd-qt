@@ -105,7 +105,7 @@ void MainTabs::addOrganTab(OutputSystem output, int tab_id, QString label)
     addTab(widget, label);
 }
 
-void MainTabs::saveAllParams()
+void MainTabs::saveParams()
 {
     for (int i=0; i < count(); i++)
     {
