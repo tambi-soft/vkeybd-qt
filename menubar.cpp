@@ -22,10 +22,20 @@ void MenuBar::addFileMenu()
     connect(quickSaveAction, &QAction::triggered, this, &MenuBar::quickSave);
     
     QAction *quickLoadAction = new QAction(QIcon::fromTheme("document-open"), "Quick Load");
-    connect(quickLoadAction, &QAction::triggered, this, [this]{ emit signalOpen(); });
+    connect(quickLoadAction, &QAction::triggered, this, [this]{ emit signalLoadQuick(); });
+    
+    QAction *saveAction = new QAction(QIcon::fromTheme("document-save"), "Save");
+    connect(saveAction, &QAction::triggered, this, [this]{ emit signalSave(); });
+    
+    QAction *loadAction = new QAction(QIcon::fromTheme("document-open"), "Load");
+    connect(loadAction, &QAction::triggered, this, [this]{ emit signalLoad(); });
     
     menuFile->addAction(quickSaveAction);
     menuFile->addAction(quickLoadAction);
+    menuFile->addSeparator();
+    menuFile->addAction(saveAction);
+    menuFile->addAction(loadAction);
+    menuFile->addSeparator();
     menuFile->addAction(exitAction);
 }
 void MenuBar::addToolsMenu()
@@ -108,7 +118,7 @@ void MenuBar::quickSave()
     reply = QMessageBox::question(this, "QuickSave", "Overwrite QuickSave?", QMessageBox::Yes|QMessageBox::No);
     if (reply == QMessageBox::Yes)
     {
-        emit signalSave();
+        emit signalSaveQuick();
     }
 }
 

@@ -16,6 +16,7 @@
 #include <QStyle>
 #include <QStyledItemDelegate>
 #include <QFrame>
+#include <QFileDialog>
 
 #include "main_tabs.h"
 #include "menubar.h"
@@ -69,7 +70,10 @@ protected:
 
 private slots:
     void saveAllParams();
-    void openAllParams();
+    void loadParamsQuick();
+    void saveParams();
+    void loadParams();
+    //void openAllParams();
     void restoreParams(int maintab, QString tab, QMap<QString, QVariant> data);
     void restoreGeneral(int maintab, QMap<QString,QVariant> data);
     

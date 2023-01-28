@@ -20,8 +20,10 @@ MainWindow::MainWindow(OutputSystem output, int number_of_keyboards, QWidget *pa
     if (output != OutputSystem::Network)
     {
         MenuBar *menu = new MenuBar;
-        connect(menu, &MenuBar::signalSave, this, &MainWindow::saveAllParams);
-        connect(menu, &MenuBar::signalOpen, this, &MainWindow::openAllParams);
+        connect(menu, &MenuBar::signalSaveQuick, this, &MainWindow::saveAllParams);
+        connect(menu, &MenuBar::signalLoadQuick, this, &MainWindow::loadParamsQuick);
+        connect(menu, &MenuBar::signalSave, this, &MainWindow::saveParams);
+        connect(menu, &MenuBar::signalLoad, this, &MainWindow::loadParams);
         connect(menu, &MenuBar::signalShowActionChanged, this, &MainWindow::showActionChanged);
         connect(menu, &MenuBar::signalGlobalKeyShift, this, &MainWindow::showGlobalKeyShift);
         connect(menu, &MenuBar::signalResendMIDISettings, this, &MainWindow::globalResendMIDISettings);
@@ -145,6 +147,19 @@ QWidget* MainWindow::newKeyboardInstance(int id, OutputSystem output)
     return widget;
 }
 
+void MainWindow::saveParams()
+{
+    QString filename = QFileDialog::getOpenFileName(this, tr("Choose Save File"), "/home/", tr("INI Files (*.ini)"));
+    
+    
+}
+void MainWindow::loadParams()
+{
+    QString filename = QFileDialog::getOpenFileName(this, tr("Choose Save File"), "/home/", tr("INI Files (*.ini)"));
+    
+    
+}
+
 void MainWindow::saveAllParams()
 {
     for (int i=0; i < this->list_of_maintabs.length(); i++)
@@ -152,7 +167,7 @@ void MainWindow::saveAllParams()
         this->list_of_maintabs.at(i)->saveAllParams();
     }
 }
-void MainWindow::openAllParams()
+void MainWindow::loadParamsQuick()
 {
     this->config->loadChannelSettings();
 }

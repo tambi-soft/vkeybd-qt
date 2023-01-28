@@ -238,7 +238,6 @@ void Orgelwerk::keyMIDIHelper(int midicode, MIDIMode mode)
             int key_max = list_of_channels.at(c)["key_max"].toInt();
             int tremolo = list_of_channels.at(c)["tremolo"].toInt();
             int velocity = list_of_channels.at(c)["velocity"].toInt();
-            qDebug() << "velocity: " << velocity;
             
             int m_code = keycode + list_of_keys.at(k);
             

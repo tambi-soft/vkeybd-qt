@@ -35,8 +35,10 @@ private:
     QAction *showPianoKeyboard;
     
 signals:
+    void signalSaveQuick();
+    void signalLoadQuick();
     void signalSave();
-    void signalOpen();
+    void signalLoad();
     void signalShowActionChanged(GUIElements elements, bool is_checked);
     
     void signalGlobalKeyShift();
