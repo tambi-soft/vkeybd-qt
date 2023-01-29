@@ -32,6 +32,8 @@
 #include "midi_key_shift_widget.h"
 #include "midi_key_shift_global.h"
 
+#include "main_tabs_switcher.h"
+
 #include "enums_structs.h"
 
 class MainWindow : public QMainWindow
@@ -43,6 +45,7 @@ public:
     ~MainWindow();
 
 private:
+    QList<MainTabsSwitcher*> list_of_maintab_switchers;
     QList<MainTabs*> list_of_maintabs;
     Config *config;
     int number_of_keyboards;
@@ -52,6 +55,10 @@ private:
     QList<QPushButton*> list_of_network_help_buttons;
     
     QMap<QString, QString> key_keycode_map = {};
+    
+    MainTabsSwitcher *switcher;
+    void changeCurrentTab(int keyboard_id, int tab_id);
+    void currentTabChanged(int keyboard_id, int tab_id);
     
     QWidget* newKeyboardInstance(int id, OutputSystem output);
     

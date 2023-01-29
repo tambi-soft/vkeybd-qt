@@ -26,7 +26,7 @@ class MainTabs : public QTabWidget
 {
     Q_OBJECT
 public:
-    explicit MainTabs(int id, Config* config, OutputSystem output, InputKeyboardSelect *input_keyboard_select, QLineEdit *line_udp_ip, QSpinBox *spin_port, QTabWidget *parent = nullptr);
+    explicit MainTabs(QList<QString> labels, int id, Config* config, OutputSystem output, InputKeyboardSelect *input_keyboard_select, QLineEdit *line_udp_ip, QSpinBox *spin_port, QTabWidget *parent = nullptr);
     
     //bool callEventFilter(QObject *obj, QEvent *ev);
     void saveParams(QSettings *settings);
@@ -68,6 +68,7 @@ private:
     void initializeTabs(OutputSystem output);
     void addOrganTab(OutputSystem output, int tab_id, QString label);
     
+    bool is_space_pressed = false;
 
 protected:
     //bool eventFilter(QObject *obj, QEvent *ev) override;

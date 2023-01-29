@@ -19,6 +19,7 @@ int main(int argc, char *argv[])
     
     Config *config = new Config;
     int config_number_of_keyboards = config->getNumberOfKeyboards();
+    int config_number_of_layers = config->getNumberOfLayers();
     QString config_output_system = config->getOutputSystem();
     QString config_keyboard_config = config->getKeyboardConfig();
     delete config;
@@ -33,6 +34,8 @@ int main(int argc, char *argv[])
     parser.addOptions({
         {{"n", "number-of-keyboards"},
             QCoreApplication::translate("main", "Number of Keyboards. Should not be too high, because your soundsystem may be overwhelmed."), "number", "-1"},
+        {{"l", "number-of-layers"},
+            QCoreApplication::translate("main", "Nubmer of Layers. '1' gives you 12 layers, '2' gives 24 layers"), "number", "-1"},
         {{"o", "output"},
             QCoreApplication::translate("main", "Which Audio System to use: \"alsa\" (default), \"jack\" (not implemented yet) or \"network\" (remote control another vkeybd-qt instance)"), "string", "config"},
         {{"k", "keyboard-config"},
@@ -61,6 +64,12 @@ int main(int argc, char *argv[])
         number_of_keyboards = 10;
         
         fprintf(stderr, "%s\n", qPrintable(QCoreApplication::translate("main", "ERROR: --number-of-keyboards higher than 10 is probably not a good idea. Defaulting to \"10\".")));
+    }
+    
+    int number_of_layers = parser.value("number-of-layers").toInt();
+    if (number_of_layers == -1)
+    {
+        number_of_layers = config_number_of_layers;
     }
     
     QString output_system = QString::fromStdString(parser.value("output").toStdString());

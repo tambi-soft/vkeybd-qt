@@ -133,6 +133,21 @@ QPushButton#pc_white:pressed,#pc_black:pressed,#pc_grey:pressed,#pc_gold:pressed
     background-color: qradialgradient(cx: 0.5, cy: 0.5, radius: 1.5, fx: 0.75, fy: 0.75, stop: 0 #f3ffff, stop: 0.2 #94faff, stop: 0.4 #6592d7);
     border: 0px;
 }
+QPushButton#main_tab_switcher_button_a {
+    color: #000000;
+    background-color: #8b9d9f;
+    font-size: 7pt;
+}
+QPushButton#main_tab_switcher_button_b {
+    color: #ffffff;
+    background-color: #3a3e44;
+    font-size: 7pt;
+}
+QPushButton#main_tab_switcher_button_a:pressed,#main_tab_switcher_button_b:pressed,#main_tab_switcher_button_a:checked,#main_tab_switcher_button_b:checked {
+    color: black;
+    background-color: qradialgradient(cx: 0.5, cy: 0.5, radius: 1.5, fx: 0.75, fy: 0.75, stop: 0 #f3ffff, stop: 0.2 #94faff, stop: 0.4 #6592d7);
+    border: 0px;
+}
 QTabWidget:pane {
     border: 1px solid #94969a;
     border-top: 0px;

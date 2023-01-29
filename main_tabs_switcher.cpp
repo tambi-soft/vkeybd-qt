@@ -1,0 +1,78 @@
+#include "main_tabs_switcher.h"
+
+MainTabsSwitcher::MainTabsSwitcher(int keyboard_id, Config *config, QWidget *parent)
+    : QWidget{parent}
+{
+    this->keyboard_id = keyboard_id;
+    this->config = config;
+    
+    this->grid = new QGridLayout;
+    setLayout(this->grid);
+    this->grid->setContentsMargins(0, 0, 0, 0);
+    this->grid->setHorizontalSpacing(0);
+    this->grid->setVerticalSpacing(0);
+    
+    int tab_id = -1;
+    int number_of_layers = this->config->getNumberOfLayers();
+    for (int x=0; x < number_of_layers; x++)
+    {
+        for (int y=0; y < 12; y++)
+        {
+            tab_id++;
+            
+            QString label = "F" +
+                    QString::number(y+1).rightJustified(2, '0') +
+                    "-" +
+                    QString::number(x+1);
+            
+            QPushButton *button = new QPushButton(label);
+            button->setMaximumSize(33, 18);
+            button->setCheckable(true);
+            this->list_of_buttons.append(button);
+            this->list_labels.append(label);
+            
+            if (y >= 4 & y <= 7)
+                button->setObjectName("main_tab_switcher_button_b");
+            else
+                button->setObjectName("main_tab_switcher_button_a");
+            
+            this->grid->addWidget(button, x, y);
+            
+            connect(button, &QPushButton::pressed, this, [this, button, tab_id]{ buttonPressed(button, tab_id); });
+        }
+    }
+    
+    // to activate first tab on startup
+    this->list_of_buttons.first()->setChecked(true);
+}
+
+void MainTabsSwitcher::buttonPressed(QPushButton *button, int tab_id)
+{
+    qDebug() << tab_id;
+    emit signalTabSwitched(keyboard_id, tab_id);
+    
+    // uncheck all the other buttons
+    for (int i=0; i < this->list_of_buttons.length(); i++)
+    {
+        QPushButton *button_current = this->list_of_buttons.at(i);
+        if (button_current != button)
+        {
+            button_current->setChecked(false);
+        }
+    }
+}
+
+void MainTabsSwitcher::pressButton(int button_id)
+{
+    for (int i=0; i < this->list_of_buttons.length(); i++)
+    {
+        this->list_of_buttons.at(i)->setChecked(false);
+    }
+    
+    this->list_of_buttons.at(button_id)->setChecked(true);
+}
+
+QList<QString> MainTabsSwitcher::getLabelsList()
+{
+    return this->list_labels;
+}

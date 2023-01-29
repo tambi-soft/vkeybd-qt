@@ -94,7 +94,15 @@ QWidget* MainWindow::newKeyboardInstance(int id, OutputSystem output)
     //spin_port->hide();
     this->list_of_spin_ports.append(spin_port);
     
-    MainTabs *tabs = new MainTabs(id, this->config, output, input_keyboard_select, line_udp_ip, spin_port);
+    this->switcher = new MainTabsSwitcher(id, this->config, this);
+    connect(this->switcher, &MainTabsSwitcher::signalTabSwitched, this, &MainWindow::changeCurrentTab);
+    this->list_of_maintab_switchers.append(this->switcher);
+    
+    QList<QString> labels = this->switcher->getLabelsList();
+    
+    MainTabs *tabs = new MainTabs(labels, id, this->config, output, input_keyboard_select, line_udp_ip, spin_port);
+    //connect(tabs, &MainTabs::currentChanged, this, [this, id](MainTabs::currentChanged index){ currentTabChanged(index, id); });
+    connect(tabs, &MainTabs::currentChanged, this, [this, tabs, id](int index){ currentTabChanged(id, index); });
     //connect(tabs, &MainTabs::useInputKbdQtNativeSignal, this, &MainWindow::useInputKbdQtNative);
     //connect(tabs, &MainTabs::useInputKbdQtDefaultSignal, this, &MainWindow::useInputKbdQtDefault);
     //connect(tabs, &MainTabs::keyboardSelectionChanged, this, &MainWindow::keyboardSelectionChanged);
@@ -132,9 +140,12 @@ QWidget* MainWindow::newKeyboardInstance(int id, OutputSystem output)
     }
     grid->addWidget(line_udp_ip, 3, 0);
     grid->addWidget(spin_port, 3, 1, 1, 2);
+    
+    grid->addWidget(switcher, 4, 0, 1, 3);
+    
     if (output != OutputSystem::Network)
     {
-        grid->addWidget(tabs, 4, 0, 1, 3);
+        grid->addWidget(tabs, 5, 0, 1, 3);
     }
     
     //int width = this->width();
@@ -144,6 +155,19 @@ QWidget* MainWindow::newKeyboardInstance(int id, OutputSystem output)
     qDebug() << "native parent: " << nativeParentWidget();
     
     return widget;
+}
+
+void MainWindow::changeCurrentTab(int keyboard_id, int tab_id)
+{
+    this->list_of_maintabs.at(keyboard_id)->blockSignals(true);
+    this->list_of_maintabs.at(keyboard_id)->setCurrentIndex(tab_id);
+    this->list_of_maintabs.at(keyboard_id)->blockSignals(false);
+}
+void MainWindow::currentTabChanged(int keyboard_id, int tab_id)
+{
+    //this->list_of_maintab_switchers.at(keyboard_id)->blockSignals(true);
+    this->list_of_maintab_switchers.at(keyboard_id)->pressButton(tab_id);
+    //this->list_of_maintab_switchers.at(keyboard_id)->blockSignals(false);
 }
 
 void MainWindow::saveParams()

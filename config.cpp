@@ -17,6 +17,7 @@ Config::Config(QObject *parent) : QObject(parent)
     {
         this->config->setValue("default/quicksave-path-n1", config_dir->absoluteFilePath("quicksave_n1.ini"));
         this->config->setValue("default/number-of-keyboards", 1);
+        this->config->setValue("default/number-of-layers", 2);
         this->config->setValue("default/output", "alsa");
         this->config->setValue("default/keyboard-config", "keyboard-default.json");
     }
@@ -64,6 +65,22 @@ int Config::getNumberOfKeyboards()
 void Config::setNumberOfKeyboards(int number)
 {
     this->config->setValue("default/number-of-keyboards", number);
+}
+
+int Config::getNumberOfLayers()
+{
+    int result = this->config->value("default/number-of-layers").toInt();
+    if (result == 0)
+    {
+        result = 2;
+        setNumberOfLayers(result);
+    }
+    
+    return result;
+}
+void Config::setNumberOfLayers(int number)
+{
+    this->config->setValue("default/number-of-layers", number);
 }
 
 QString Config::getKeyboardConfig()

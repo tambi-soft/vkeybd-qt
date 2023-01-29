@@ -489,7 +489,6 @@ void MIDIChannelSelector::instrumentChangedNumeric(int channel, int instrument_m
 
 void MIDIChannelSelector::velocityChanged(int channel, QString value)
 {
-    qDebug() << "velocity changed: " << value;
     this->midi_sounds_list->getVelocityForString(value);
 }
 

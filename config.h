@@ -30,6 +30,9 @@ public:
     int getNumberOfKeyboards();
     void setNumberOfKeyboards(int number);
     
+    int getNumberOfLayers();
+    void setNumberOfLayers(int number);
+    
     QString getOutputSystem();
     void setOutputSystem(QString output);
     

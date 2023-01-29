@@ -38,6 +38,7 @@ SOURCES += \
     keyboard_piano.cpp \
     main.cpp \
     main_tabs.cpp \
+    main_tabs_switcher.cpp \
     main_window.cpp \
     menubar.cpp \
     midi_channel_selector.cpp \
@@ -70,6 +71,7 @@ HEADERS += \
     keyboard_pc.h \
     keyboard_piano.h \
     main_tabs.h \
+    main_tabs_switcher.h \
     main_window.h \
     menubar.h \
     midi_channel_selector.h \

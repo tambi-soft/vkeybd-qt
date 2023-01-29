@@ -1,7 +1,8 @@
 #include "main_tabs.h"
 
-MainTabs::MainTabs(int id, Config *config, OutputSystem output, InputKeyboardSelect *input_keyboard_select, QLineEdit *line_udp_ip, QSpinBox *spin_port, QTabWidget *parent) : QTabWidget(parent)
+MainTabs::MainTabs(QList<QString> labels, int id, Config *config, OutputSystem output, InputKeyboardSelect *input_keyboard_select, QLineEdit *line_udp_ip, QSpinBox *spin_port, QTabWidget *parent) : QTabWidget(parent)
 {
+    this->list_labels = labels;
     this->id = id;
     this->config = config;
     
@@ -54,14 +55,17 @@ MainTabs::MainTabs(int id, Config *config, OutputSystem output, InputKeyboardSel
     
     //installEventFilter(this);
     
+    tabBar()->hide();
 }
 
 void MainTabs::initializeTabs(OutputSystem output)
 {
     //this->list_function_keys = {Qt::Key_F1, Qt::Key_F2, Qt::Key_F3, Qt::Key_F4, -1, Qt::Key_F5, Qt::Key_F6, Qt::Key_F7, Qt::Key_F8, -1, Qt::Key_F9, Qt::Key_F10, Qt::Key_F11, Qt::Key_F12};
-    this->list_function_keys_raw = {KeysRaw::F1, KeysRaw::F2, KeysRaw::F3, KeysRaw::F4, -1, KeysRaw::F5, KeysRaw::F6, KeysRaw::F7, KeysRaw::F8, -1, KeysRaw::F9, KeysRaw::F10, KeysRaw::F11, KeysRaw::F12};
+    //this->list_function_keys_raw = {KeysRaw::F1, KeysRaw::F2, KeysRaw::F3, KeysRaw::F4, -1, KeysRaw::F5, KeysRaw::F6, KeysRaw::F7, KeysRaw::F8, -1, KeysRaw::F9, KeysRaw::F10, KeysRaw::F11, KeysRaw::F12};
+    this->list_function_keys_raw = {KeysRaw::F1, KeysRaw::F2, KeysRaw::F3, KeysRaw::F4, KeysRaw::F5, KeysRaw::F6, KeysRaw::F7, KeysRaw::F8, KeysRaw::F9, KeysRaw::F10, KeysRaw::F11, KeysRaw::F12};
     //this->list_function_keys_native = {67, 68, 69, 70, -1, 71, 72, 73, 74, -1, 75, 76, 95, 96};
-    this->list_labels = {"F1", "F2", "F3", "F4", "spacer", "F5", "F6", "F7", "F8", "spacer", "F9", "F10", "F11", "F12"};
+    //this->list_labels = {"F1", "F2", "F3", "F4", "spacer", "F5", "F6", "F7", "F8", "spacer", "F9", "F10", "F11", "F12"};
+    //this->list_labels = {"F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10", "F11", "F12"};
     
     int number_of_tabs = this->list_labels.length();
     //number_of_tabs = 4;
@@ -281,8 +285,13 @@ void MainTabs::rawKeyPressed(int keycode)
     {
         if (this->list_function_keys_raw.at(i) == keycode)
         {
-            // activate new tab
-            this->setCurrentIndex(i);
+            if (this->is_space_pressed)
+            {
+                MIDISignal(MIDISignalTypes::SustainReleased);
+                this->setCurrentIndex(i+12);
+            }
+            else
+                this->setCurrentIndex(i);
         }
     }
     
@@ -304,6 +313,8 @@ void MainTabs::rawKeyPressed(int keycode)
     }
     else if (keycode == KeysRaw::Space)
     {
+        this->is_space_pressed = true;
+        
         MIDISignal(MIDISignalTypes::SustainPressed);
     }
     else if (keycode == KeysRaw::Alt)
@@ -378,6 +389,8 @@ void MainTabs::rawKeyReleased(int keycode)
     
     if (keycode == KeysRaw::Space)
     {
+        this->is_space_pressed = false;
+        
         MIDISignal(MIDISignalTypes::SustainReleased);
     }
     else if (keycode == KeysRaw::Alt)
