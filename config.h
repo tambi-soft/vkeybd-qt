@@ -17,17 +17,15 @@ class Config : public QObject
 public:
     explicit Config(QObject *parent = nullptr);
     
-    void setValue(QString key, QVariant value);
-    void saveChannelSettings(int id, QString label, QList<QMap<QString, QVariant> > channels);
-    void loadChannelSettings();
-    void saveParams(int id, QString label, QString channel, QMap<QString,QVariant> params);
+    //void setValue(QString key, QVariant value);
+    void saveChannelSettings(QSettings *settings, int id, QString label, QList<QMap<QString, QVariant> > channels);
+    void loadChannelSettings(QSettings *settings);
+    void saveParams(QSettings *settings, int id, QString label, QString channel, QMap<QString,QVariant> params);
 
-    void openQuicksaveFile(int number_of_keyboards);
-    
-/*    
-    QString getQuicksavePath();
-    void setQuicksavePath(QString db_path);
-*/
+    QSettings *openQuicksaveFile(int number_of_keyboards);
+    QSettings *openSaveFile(QString filepath);
+    void saveLastSavePath(QString path);
+    QString getLastSavePath();
     
     int getNumberOfKeyboards();
     void setNumberOfKeyboards(int number);
@@ -41,8 +39,10 @@ public:
 private:
     QDir *config_dir;
     
+    // this is the main config.ini
     QSettings *config;
-    QSettings *settings;
+    // this is the file we use to save/restore our saved presets
+    //QSettings *settings;
     
 signals:
     void restoreParams(int maintab, QString tab, QMap<QString, QVariant> data);

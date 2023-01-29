@@ -22,7 +22,7 @@ Config::Config(QObject *parent) : QObject(parent)
     }
 }
 
-void Config::openQuicksaveFile(int number_of_keyboards)
+QSettings *Config::openQuicksaveFile(int number_of_keyboards)
 {
     QString path = "default/quicksave-path-n"+QString::number(number_of_keyboards);
     if (!this->config->contains(path))
@@ -30,7 +30,20 @@ void Config::openQuicksaveFile(int number_of_keyboards)
         this->config->setValue(path, config_dir->absoluteFilePath("quicksave_n"+QString::number(number_of_keyboards)+".ini"));
     }
     
-    this->settings = new QSettings(this->config->value(path).toString(), QSettings::IniFormat);
+    return new QSettings(this->config->value(path).toString(), QSettings::IniFormat);
+}
+QSettings *Config::openSaveFile(QString filepath)
+{
+    return new QSettings(filepath, QSettings::IniFormat);
+}
+
+void Config::saveLastSavePath(QString path)
+{
+    this->config->setValue("runtime/last_path", path);
+}
+QString Config::getLastSavePath()
+{
+    return this->config->value("runtime/last_path").toString();
 }
 
 /*
@@ -70,13 +83,13 @@ void Config::setOutputSystem(QString output)
 {
     this->config->setValue("default/output", output);
 }
-
+/*
 void Config::setValue(QString key, QVariant value)
 {
     this->settings->setValue(key, value);
 }
-
-void Config::saveChannelSettings(int id, QString label, QList<QMap<QString,QVariant>> channels)
+*/
+void Config::saveChannelSettings(QSettings *settings, int id, QString label, QList<QMap<QString,QVariant>> channels)
 {
     for (int c=0; c < channels.length(); c++)
     {
@@ -85,14 +98,14 @@ void Config::saveChannelSettings(int id, QString label, QList<QMap<QString,QVari
         for (int k=0; k < keys.length(); k++)
         {
             QString key = keys.at(k);
-            this->settings->setValue(
+            settings->setValue(
                         QString::number(id)+"/"+label+"/"+QString::number(c)+"/"+key,
                         channels.at(c)[key]
                     );
         }
     }
 }
-void Config::saveParams(int id, QString label, QString channel, QMap<QString,QVariant> params)
+void Config::saveParams(QSettings *settings, int id, QString label, QString channel, QMap<QString,QVariant> params)
 {
     for (int i=0; i < params.size(); i++)
     {
@@ -104,23 +117,23 @@ void Config::saveParams(int id, QString label, QString channel, QMap<QString,QVa
             path = QString::number(id)+"/"+label+"/"+channel+"/"+key;
         }
                 
-        this->settings->setValue(
+        settings->setValue(
                     path,
                     params[key]
                     );
     }
 }
 
-void Config::loadChannelSettings()
+void Config::loadChannelSettings(QSettings *settings)
 {
     // maintabs is something like ["0", "1"] if vkeybd-qt sarted with -n=2
-    QList<QString> maintabs = this->settings->childGroups();
+    QList<QString> maintabs = settings->childGroups();
     for (auto &maintab : maintabs)
     {
-        this->settings->beginGroup(maintab);
+        settings->beginGroup(maintab);
         // tabs is something like ["F1", "F2", ... "F12", "general"]
-        QList<QString> tabs = this->settings->childGroups();
-        this->settings->endGroup();
+        QList<QString> tabs = settings->childGroups();
+        settings->endGroup();
         
         for (auto &tab : tabs)
         {
@@ -128,23 +141,23 @@ void Config::loadChannelSettings()
             {
                 QMap<QString, QVariant> channels_;
                 
-                this->settings->beginGroup(maintab+"/"+tab);
+                settings->beginGroup(maintab+"/"+tab);
                 // channels is something like ["1", "2", ... "16"]
-                QList<QString> channels = this->settings->childGroups();
-                this->settings->endGroup();
+                QList<QString> channels = settings->childGroups();
+                settings->endGroup();
                 
                 for (auto &channel : channels)
                 {
-                    this->settings->beginGroup(maintab+"/"+tab+"/"+channel);
+                    settings->beginGroup(maintab+"/"+tab+"/"+channel);
                     // keys is something like ["tremolo", "volume", "msb", "lsb" ...]
-                    QList<QString> keys = this->settings->childKeys();
-                    this->settings->endGroup();
+                    QList<QString> keys = settings->childKeys();
+                    settings->endGroup();
                     
                     QMap<QString, QVariant> value_;
                     
                     for (auto &key : keys)
                     {
-                        QVariant value = this->settings->value(maintab+"/"+tab+"/"+channel+"/"+key);
+                        QVariant value = settings->value(maintab+"/"+tab+"/"+channel+"/"+key);
                         
                         value_[key] = value; // e.g: "volume" -> "127"
                     }
@@ -160,14 +173,14 @@ void Config::loadChannelSettings()
             }
             else if (tab == "general")
             {
-                this->settings->beginGroup(maintab+"/"+tab);
-                QList<QString> generals = this->settings->childKeys();
-                this->settings->endGroup();
+                settings->beginGroup(maintab+"/"+tab);
+                QList<QString> generals = settings->childKeys();
+                settings->endGroup();
                 
                 QMap<QString,QVariant> generals_;
                 for (auto &general : generals)
                 {
-                    QVariant value = this->settings->value(maintab+"/"+tab+"/"+general);
+                    QVariant value = settings->value(maintab+"/"+tab+"/"+general);
                     generals_[general] = value;
                 }
                 

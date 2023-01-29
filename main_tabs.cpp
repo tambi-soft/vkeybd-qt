@@ -105,7 +105,7 @@ void MainTabs::addOrganTab(OutputSystem output, int tab_id, QString label)
     addTab(widget, label);
 }
 
-void MainTabs::saveParams()
+void MainTabs::saveParams(QSettings *settings)
 {
     for (int i=0; i < count(); i++)
     {
@@ -115,15 +115,15 @@ void MainTabs::saveParams()
             Orgelwerk *o = static_cast<Orgelwerk*>(widget(i)->layout()->itemAt(0)->widget());
             
             QList<QMap<QString,QVariant>> channels = o->listOfChannels(false);
-            this->config->saveChannelSettings(this->id, label, channels);
+            this->config->saveChannelSettings(settings, this->id, label, channels);
             
             QMap<QString,QVariant> params = o->getParams();
-            this->config->saveParams(this->id, label, "main", params);
+            this->config->saveParams(settings, this->id, label, "main", params);
             
             bool resend_midi_auto = o->check_resend_midi_auto->isChecked();
             QMap<QString,QVariant> resend_midi_auto_struct;
             resend_midi_auto_struct["resend_midi_auto"] = QVariant(resend_midi_auto);
-            this->config->saveParams(this->id, label, "main", resend_midi_auto_struct);
+            this->config->saveParams(settings, this->id, label, "main", resend_midi_auto_struct);
         }
     }
     
@@ -131,7 +131,7 @@ void MainTabs::saveParams()
     params["network_ip"] = this->line_udp_ip->text();
     params["network_port"] = this->spin_port->value();
     
-    this->config->saveParams(this->id, "general", "", params);
+    this->config->saveParams(settings, this->id, "general", "", params);
 }
 void MainTabs::restoreParams(QString tab, QMap<QString,QVariant> data)
 {

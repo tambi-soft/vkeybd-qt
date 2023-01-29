@@ -59,7 +59,6 @@ QWidget* MainWindow::newKeyboardInstance(int id, OutputSystem output)
     widget->setLayout(grid);
     
     this->config = new Config;
-    this->config->openQuicksaveFile(this->number_of_keyboards);
     connect(this->config, &Config::restoreParams, this, &MainWindow::restoreParams);
     connect(this->config, &Config::restoreGeneral, this, &MainWindow::restoreGeneral);
     
@@ -149,27 +148,45 @@ QWidget* MainWindow::newKeyboardInstance(int id, OutputSystem output)
 
 void MainWindow::saveParams()
 {
-    QString filename = QFileDialog::getSaveFileName(this, tr("Save Settings"), "/home/", tr("INI Files (*.ini)"));
+    QString filepath = this->config->getLastSavePath();
+    QString filename = QFileDialog::getSaveFileName(this, tr("Save Settings"), filepath, tr("INI Files (*.ini)"));
     
+    if (filename.length() > 0)
+        this->config->saveLastSavePath(filename);
     
+    QSettings *settings = this->config->openSaveFile(filename);
+    
+    for (int i=0; i < this->list_of_maintabs.length(); i++)
+    {
+        this->list_of_maintabs.at(i)->saveParams(settings);
+    }
 }
 void MainWindow::loadParams()
 {
-    QString filename = QFileDialog::getOpenFileName(this, tr("Load Settings"), "/home/", tr("INI Files (*.ini)"));
+    QString filepath = this->config->getLastSavePath();
+    QString filename = QFileDialog::getOpenFileName(this, tr("Load Settings"), filepath, tr("INI Files (*.ini)"));
     
+    if (filename.length() > 0)
+        this->config->saveLastSavePath(filename);
     
+    QSettings *settings = this->config->openSaveFile(filename);
+    
+    this->config->loadChannelSettings(settings);
 }
 
 void MainWindow::saveParamsQuick()
 {
+    QSettings *settings = this->config->openQuicksaveFile(this->number_of_keyboards);
+    
     for (int i=0; i < this->list_of_maintabs.length(); i++)
     {
-        this->list_of_maintabs.at(i)->saveParams();
+        this->list_of_maintabs.at(i)->saveParams(settings);
     }
 }
 void MainWindow::loadParamsQuick()
 {
-    this->config->loadChannelSettings();
+    QSettings *settings = this->config->openQuicksaveFile(this->number_of_keyboards);
+    this->config->loadChannelSettings(settings);
 }
 void MainWindow::restoreParams(int maintab, QString tab, QMap<QString, QVariant> data)
 {
