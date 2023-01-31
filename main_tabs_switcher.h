@@ -1,3 +1,32 @@
+#ifndef QRIGHTCLICKBUTTON_H
+#define QRIGHTCLICKBUTTON_H
+
+#include <QObject>
+#include <QWidget>
+
+#include <QPushButton>
+#include <QMouseEvent>
+
+class QRightClickButton : public QPushButton
+{
+    Q_OBJECT
+    
+public:
+    explicit QRightClickButton(QString label, QWidget *parent = 0);
+    
+private slots:
+    void mousePressEvent(QMouseEvent *e);
+    
+signals:
+    void rightClicked();
+    
+public slots:
+    
+};
+#endif // QRIGHTCLICKBUTTON_H
+
+
+
 #ifndef MAINTABSSWITCHER_H
 #define MAINTABSSWITCHER_H
 
@@ -26,10 +55,11 @@ private:
     Config *config;
     QGridLayout *grid;
     
-    QList<QPushButton*> list_of_buttons;
+    QList<QRightClickButton*> list_of_buttons;
     QList<QString> list_labels;
     
-    void buttonPressed(QPushButton *button, int tab_id);
+    void buttonPressed(QRightClickButton *button, int tab_id);
+    void rightClicked(QRightClickButton *button, int tab_id);
     
 signals:
     void signalTabSwitched(int keyboard_id, int tab_id);

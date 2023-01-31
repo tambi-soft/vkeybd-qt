@@ -1,5 +1,22 @@
 #include "main_tabs_switcher.h"
 
+
+QRightClickButton::QRightClickButton(QString label, QWidget *parent)
+    : QPushButton{parent}
+{
+    setText(label);
+}
+
+void QRightClickButton::mousePressEvent(QMouseEvent *e)
+{
+    if (e->button() == Qt::RightButton)
+        emit rightClicked();
+    else
+        QPushButton::mousePressEvent(e);
+}
+
+
+
 MainTabsSwitcher::MainTabsSwitcher(int keyboard_id, Config *config, QWidget *parent)
     : QWidget{parent}
 {
@@ -25,7 +42,7 @@ MainTabsSwitcher::MainTabsSwitcher(int keyboard_id, Config *config, QWidget *par
                     "-" +
                     QString::number(x+1);
             
-            QPushButton *button = new QPushButton(label);
+            QRightClickButton *button = new QRightClickButton(label);
             button->setMaximumSize(33, 18);
             button->setCheckable(true);
             this->list_of_buttons.append(button);
@@ -38,7 +55,8 @@ MainTabsSwitcher::MainTabsSwitcher(int keyboard_id, Config *config, QWidget *par
             
             this->grid->addWidget(button, x, y);
             
-            connect(button, &QPushButton::pressed, this, [this, button, tab_id]{ buttonPressed(button, tab_id); });
+            connect(button, &QRightClickButton::pressed, this, [this, button, tab_id]{ buttonPressed(button, tab_id); });
+            connect(button, &QRightClickButton::rightClicked, this, [this, button, tab_id]{ rightClicked(button, tab_id); });
         }
     }
     
@@ -46,20 +64,26 @@ MainTabsSwitcher::MainTabsSwitcher(int keyboard_id, Config *config, QWidget *par
     this->list_of_buttons.first()->setChecked(true);
 }
 
-void MainTabsSwitcher::buttonPressed(QPushButton *button, int tab_id)
+void MainTabsSwitcher::buttonPressed(QRightClickButton *button, int tab_id)
 {
-    qDebug() << tab_id;
     emit signalTabSwitched(keyboard_id, tab_id);
     
     // uncheck all the other buttons
     for (int i=0; i < this->list_of_buttons.length(); i++)
     {
-        QPushButton *button_current = this->list_of_buttons.at(i);
+        QRightClickButton *button_current = this->list_of_buttons.at(i);
         if (button_current != button)
         {
             button_current->setChecked(false);
         }
     }
+}
+void MainTabsSwitcher::rightClicked(QRightClickButton *button, int tab_id)
+{
+    if (button->isChecked())
+        button->setChecked(false);
+    else
+        button->setChecked(true);
 }
 
 void MainTabsSwitcher::pressButton(int button_id)
