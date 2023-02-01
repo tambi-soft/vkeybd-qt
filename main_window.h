@@ -54,11 +54,15 @@ private:
     QList<QSpinBox*> list_of_spin_ports;
     QList<QPushButton*> list_of_network_help_buttons;
     
+    // we want to allow multiple tabs to be checked at once. they all shall sound simultaniously.
+    QList<int> list_of_checked_tabs;
+    
     QMap<QString, QString> key_keycode_map = {};
     
     MainTabsSwitcher *switcher;
     void changeCurrentTab(int keyboard_id, int tab_id);
     void currentTabChanged(int keyboard_id, int tab_id);
+    void tabsCheckChanged(QList<int> list_of_tab_ids);
     
     QWidget* newKeyboardInstance(int id, OutputSystem output);
     

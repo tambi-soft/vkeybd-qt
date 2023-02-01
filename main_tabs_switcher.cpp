@@ -55,7 +55,7 @@ MainTabsSwitcher::MainTabsSwitcher(int keyboard_id, Config *config, QWidget *par
             
             this->grid->addWidget(button, x, y);
             
-            connect(button, &QRightClickButton::pressed, this, [this, button, tab_id]{ buttonPressed(button, tab_id); });
+            connect(button, &QRightClickButton::clicked, this, [this, button, tab_id]{ leftClicked(button, tab_id); });
             connect(button, &QRightClickButton::rightClicked, this, [this, button, tab_id]{ rightClicked(button, tab_id); });
         }
     }
@@ -64,9 +64,11 @@ MainTabsSwitcher::MainTabsSwitcher(int keyboard_id, Config *config, QWidget *par
     this->list_of_buttons.first()->setChecked(true);
 }
 
-void MainTabsSwitcher::buttonPressed(QRightClickButton *button, int tab_id)
+void MainTabsSwitcher::leftClicked(QRightClickButton *button, int tab_id)
 {
     emit signalTabSwitched(keyboard_id, tab_id);
+    
+    QList<int> tabs_checked;
     
     // uncheck all the other buttons
     for (int i=0; i < this->list_of_buttons.length(); i++)
@@ -76,7 +78,15 @@ void MainTabsSwitcher::buttonPressed(QRightClickButton *button, int tab_id)
         {
             button_current->setChecked(false);
         }
+        else
+        {
+            tabs_checked.append(i);
+        }
     }
+    
+    button->setChecked(true);
+    
+    emit signalTabCheckChanged(tabs_checked);
 }
 void MainTabsSwitcher::rightClicked(QRightClickButton *button, int tab_id)
 {
@@ -84,6 +94,9 @@ void MainTabsSwitcher::rightClicked(QRightClickButton *button, int tab_id)
         button->setChecked(false);
     else
         button->setChecked(true);
+    
+    QList<int> tabs = getCheckedTabsList();
+    emit signalTabCheckChanged(tabs);
 }
 
 void MainTabsSwitcher::pressButton(int button_id)
@@ -99,4 +112,19 @@ void MainTabsSwitcher::pressButton(int button_id)
 QList<QString> MainTabsSwitcher::getLabelsList()
 {
     return this->list_labels;
+}
+
+QList<int> MainTabsSwitcher::getCheckedTabsList()
+{
+    QList<int> result;
+    
+    for (int i=0; i < this->list_of_buttons.length(); i++)
+    {
+        if (this->list_of_buttons.at(i)->isChecked())
+        {
+            result.append(i);
+        }
+    }
+    
+    return result;
 }

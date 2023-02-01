@@ -47,8 +47,11 @@ class MainTabsSwitcher : public QWidget
 public:
     explicit MainTabsSwitcher(int keyboard_id = 0, Config *config = nullptr, QWidget *parent = nullptr);
     
+    // called if tab was changed by hotkey to keep this widget synchronised
     void pressButton(int button_id);
     QList<QString> getLabelsList();
+    
+    QList<int> getCheckedTabsList();
     
 private:
     int keyboard_id;
@@ -58,11 +61,12 @@ private:
     QList<QRightClickButton*> list_of_buttons;
     QList<QString> list_labels;
     
-    void buttonPressed(QRightClickButton *button, int tab_id);
+    void leftClicked(QRightClickButton *button, int tab_id);
     void rightClicked(QRightClickButton *button, int tab_id);
     
 signals:
     void signalTabSwitched(int keyboard_id, int tab_id);
+    void signalTabCheckChanged(QList<int> list_of_tab_ids);
 };
 
 #endif // MAINTABSSWITCHER_H
