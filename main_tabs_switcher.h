@@ -64,6 +64,8 @@ private:
     void leftClicked(QRightClickButton *button, int tab_id);
     void rightClicked(QRightClickButton *button, int tab_id);
     
+    void activateLeftmostTab();
+    
 signals:
     void signalTabSwitched(int keyboard_id, int tab_id);
     void signalTabCheckChanged(QList<int> list_of_tab_ids);

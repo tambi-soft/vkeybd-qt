@@ -66,7 +66,7 @@ MainTabsSwitcher::MainTabsSwitcher(int keyboard_id, Config *config, QWidget *par
 
 void MainTabsSwitcher::leftClicked(QRightClickButton *button, int tab_id)
 {
-    emit signalTabSwitched(keyboard_id, tab_id);
+    emit signalTabSwitched(this->keyboard_id, tab_id);
     
     QList<int> tabs_checked;
     
@@ -91,9 +91,16 @@ void MainTabsSwitcher::leftClicked(QRightClickButton *button, int tab_id)
 void MainTabsSwitcher::rightClicked(QRightClickButton *button, int tab_id)
 {
     if (button->isChecked())
+    {
         button->setChecked(false);
+        
+        // we need to check if the currently active tab became inactive. if this happens, change to the first active tab instead
+        activateLeftmostTab();
+    }
     else
+    {
         button->setChecked(true);
+    }
     
     QList<int> tabs = getCheckedTabsList();
     emit signalTabCheckChanged(tabs);
@@ -130,4 +137,12 @@ QList<int> MainTabsSwitcher::getCheckedTabsList()
     }
     
     return result;
+}
+
+void MainTabsSwitcher::activateLeftmostTab()
+{
+    QList<int> checked_tabs = getCheckedTabsList();
+    int tab_id = checked_tabs.first();
+    
+    emit signalTabSwitched(this->keyboard_id, tab_id);
 }
