@@ -1,6 +1,6 @@
 #include "main_tabs.h"
 
-MainTabs::MainTabs(QList<QString> labels, int id, Config *config, OutputSystem output, InputKeyboardSelect *input_keyboard_select, QLineEdit *line_udp_ip, QSpinBox *spin_port, QTabWidget *parent) : QTabWidget(parent)
+MainTabs::MainTabs(QList<QString> labels, int id, Config *config, OutputSystem output, InputKeyboardSelect *input_keyboard_select, QLineEdit *line_udp_ip, QSpinBox *spin_port, QWidget *parent) : QTabWidget(parent)
 {
     this->list_labels = labels;
     this->id = id;
@@ -98,15 +98,39 @@ void MainTabs::addOrganTab(OutputSystem output, int tab_id, QString label)
     
     QString midi_port_label = label;
     
-    Orgelwerk *o = new Orgelwerk(this->id, tab_id, this->interface_audio, midi_port_label);
-    connect(o, &Orgelwerk::eventFiltered, this, &MainTabs::eventFilter);
+    Orgelwerk *orgelwerk = new Orgelwerk(this->id, tab_id, this->interface_audio, midi_port_label);
+    connect(orgelwerk, &Orgelwerk::eventFiltered, this, &MainTabs::eventFilter);
+    connect(orgelwerk, &Orgelwerk::signalMIDIEvent, this, &MainTabs::multiplexMIDIEventToTabs);
     
-    layout->addWidget(o);
+    layout->addWidget(orgelwerk);
     
-    this->list_of_tabs.append(o);
-    this->map_of_tabs[label] = o;
+    this->list_of_tabs.append(orgelwerk);
+    this->map_of_tabs[label] = orgelwerk;
     
     addTab(widget, label);
+}
+
+void MainTabs::listOfCheckTabsChanged(QList<int> list_of_tab_ids)
+{
+    this->list_of_checked_tabs = list_of_tab_ids;
+}
+void MainTabs::multiplexMIDIEventToTabs(int tab_id, int midicode, MIDIMode mode)
+{
+    // if there is only one checked tab, that will process everything neccessary already. we do not have to do anything here
+    if (this->list_of_checked_tabs.length() > 1)
+    {
+        for (int i=0; i < this->list_of_checked_tabs.length(); i++)
+        {
+            int current_checked_tab_id = this->list_of_checked_tabs.at(i);
+            if (tab_id != current_checked_tab_id)
+            {
+                qDebug() << "#############################ü";
+                qDebug() << this->list_of_tabs;
+                qDebug() << current_checked_tab_id;
+                this->list_of_tabs.at(current_checked_tab_id)->injectExternalMIDIEvent(midicode, mode);
+            }
+        }
+    }
 }
 
 void MainTabs::saveParams(QSettings *settings)

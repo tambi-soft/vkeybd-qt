@@ -111,6 +111,8 @@ public:
     void octaveUp();
     void globalPitchShiftChanged(int value, bool is_relative=false);
     
+    // to be called if we have multiple tabs activated (using right mouse button on tab buttons)
+    void injectExternalMIDIEvent(int midicode, MIDIMode mode);
     
 private:
     int keyboard_id;
@@ -149,7 +151,7 @@ private:
     void keyShiftMapAdd(int keycode);
     void keyShiftMapRemove(int key, int keycode);
     
-    void keyMIDIHelper(int midicode, MIDIMode mode);
+    void keyMIDIHelper(int midicode, MIDIMode mode, MIDIOrigin origin);
     void tremoloThreadStart(int interface_index, int channel, int m_code_shifted, int tremolo);
     void tremoloThreadStop(int channel, int m_code_shifted);
     
@@ -176,7 +178,7 @@ protected:
     
 signals:
     void eventFiltered(QObject *obj, QEvent *ev);
-    
+    void signalMIDIEvent(int tab_id, int midicode, MIDIMode mode);
 };
 
 #endif // ORGELWERK_H

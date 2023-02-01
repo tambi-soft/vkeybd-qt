@@ -26,7 +26,7 @@ class MainTabs : public QTabWidget
 {
     Q_OBJECT
 public:
-    explicit MainTabs(QList<QString> labels, int id, Config* config, OutputSystem output, InputKeyboardSelect *input_keyboard_select, QLineEdit *line_udp_ip, QSpinBox *spin_port, QTabWidget *parent = nullptr);
+    explicit MainTabs(QList<QString> labels, int id, Config* config, OutputSystem output, InputKeyboardSelect *input_keyboard_select, QLineEdit *line_udp_ip, QSpinBox *spin_port, QWidget *parent = nullptr);
     
     //bool callEventFilter(QObject *obj, QEvent *ev);
     void saveParams(QSettings *settings);
@@ -41,6 +41,8 @@ public:
     void globalKeyShiftChanged(int value, bool is_relative);
     void globalResendMIDISettings();
     
+    void listOfCheckTabsChanged(QList<int> list_of_tab_ids);
+    
 private:
     //QList<int> list_function_keys;
     InterfaceAudio *interface_audio;
@@ -50,6 +52,9 @@ private:
     QList<QString> list_labels;
     QList<Orgelwerk*> list_of_tabs;
     QMap<QString,Orgelwerk*> map_of_tabs;
+    
+    // we want to allow multiple tabs to be checked at once. they all shall sound simultaniously.
+    QList<int> list_of_checked_tabs;
     
     int id;
     Config *config;
@@ -67,6 +72,8 @@ private:
     
     void initializeTabs(OutputSystem output);
     void addOrganTab(OutputSystem output, int tab_id, QString label);
+    
+    void multiplexMIDIEventToTabs(int tab_id, int midicode, MIDIMode mode);
     
     bool is_space_pressed = false;
 

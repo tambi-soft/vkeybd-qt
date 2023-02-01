@@ -101,7 +101,7 @@ QWidget* MainWindow::newKeyboardInstance(int id, OutputSystem output)
     
     QList<QString> labels = this->switcher->getLabelsList();
     
-    MainTabs *tabs = new MainTabs(labels, id, this->config, output, input_keyboard_select, line_udp_ip, spin_port);
+    MainTabs *tabs = new MainTabs(labels, id, this->config, output, input_keyboard_select, line_udp_ip, spin_port, this);
     //connect(tabs, &MainTabs::currentChanged, this, [this, id](MainTabs::currentChanged index){ currentTabChanged(index, id); });
     connect(tabs, &MainTabs::currentChanged, this, [this, tabs, id](int index){ currentTabChanged(id, index); });
     //connect(tabs, &MainTabs::useInputKbdQtNativeSignal, this, &MainWindow::useInputKbdQtNative);
@@ -174,7 +174,11 @@ void MainWindow::currentTabChanged(int keyboard_id, int tab_id)
 void MainWindow::tabsCheckChanged(QList<int> list_of_tab_ids)
 {
     qDebug() << "CHECK CHANGED" << list_of_tab_ids;
-    this->list_of_checked_tabs = list_of_tab_ids;
+    //this->list_of_checked_tabs = list_of_tab_ids;
+    for (int i=0; i < this->list_of_maintabs.length(); i++)
+    {
+        this->list_of_maintabs.at(i)->listOfCheckTabsChanged(list_of_tab_ids);
+    }
 }
 
 void MainWindow::saveParams()

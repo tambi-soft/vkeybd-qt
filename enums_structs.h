@@ -61,6 +61,11 @@ enum class MIDIMode
     Release,
     PitchBend,
 };
+enum class MIDIOrigin
+{
+    This,
+    External,
+};
 
 enum class TabNames
 {

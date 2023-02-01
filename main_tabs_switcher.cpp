@@ -107,6 +107,9 @@ void MainTabsSwitcher::pressButton(int button_id)
     }
     
     this->list_of_buttons.at(button_id)->setChecked(true);
+    
+    QList<int> tabs = getCheckedTabsList();
+    emit signalTabCheckChanged(tabs);
 }
 
 QList<QString> MainTabsSwitcher::getLabelsList()

@@ -213,7 +213,7 @@ void Orgelwerk::stopAllPressed()
     }
 }
 
-void Orgelwerk::keyMIDIHelper(int midicode, MIDIMode mode)
+void Orgelwerk::keyMIDIHelper(int midicode, MIDIMode mode, MIDIOrigin origin)
 {
     // -12: The lower full octave on the keyboard is in the midi-range of 12 - 23.
     // For being able to add some even deeper notes to the left.
@@ -296,14 +296,22 @@ void Orgelwerk::keyMIDIHelper(int midicode, MIDIMode mode)
         if (this->piano)
             this->piano->keyReleased(midicode);
     }
+    
+    // to avioid loops: we want to send this event only the signal originated from this instance
+    if (origin == MIDIOrigin::This)
+        emit signalMIDIEvent(this->tab_id, midicode, mode);
 }
 void Orgelwerk::keyMIDIDown(int midicode)
 {
-    keyMIDIHelper(midicode, MIDIMode::Press);
+    keyMIDIHelper(midicode, MIDIMode::Press, MIDIOrigin::This);
 }
 void Orgelwerk::keyMIDIUp(int midicode)
 {
-    keyMIDIHelper(midicode, MIDIMode::Release);
+    keyMIDIHelper(midicode, MIDIMode::Release, MIDIOrigin::This);
+}
+void Orgelwerk::injectExternalMIDIEvent(int midicode, MIDIMode mode)
+{
+    keyMIDIHelper(midicode, mode, MIDIOrigin::External);
 }
 void Orgelwerk::tremoloThreadStart(int interface_index, int channel, int m_code_shifted, int tremolo)
 {
@@ -369,7 +377,7 @@ void Orgelwerk::movePitchWheel(int key)
 }
 void Orgelwerk::pitchWheelMoved(int pitch)
 {
-    keyMIDIHelper(pitch, MIDIMode::PitchBend);
+    keyMIDIHelper(pitch, MIDIMode::PitchBend, MIDIOrigin::This);
 }
 
 void Orgelwerk::keySustain(bool pressed)
