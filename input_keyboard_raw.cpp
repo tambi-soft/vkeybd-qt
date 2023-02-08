@@ -204,11 +204,11 @@ void InputKeyboardRawController::keyboardRelease()
 void InputKeyboardRawController::rawKeyPressed(int keycode)
 {
     qDebug() << keycode;
-    emit rawKeyPressedSignal(keycode);
+    emit signalRawKeyPressed(keycode);
 }
 void InputKeyboardRawController::rawKeyReleased(int keycode)
 {
-    emit rawKeyReleasedSignal(keycode);
+    emit signalRawKeyReleased(keycode);
 }
 
 

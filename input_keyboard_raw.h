@@ -109,8 +109,8 @@ private slots:
     
 signals:
     void deviceNotAvailable(QString message);
-    void rawKeyPressedSignal(int keycode);
-    void rawKeyReleasedSignal(int keycode);
+    void signalRawKeyPressed(int keycode);
+    void signalRawKeyReleased(int keycode);
 };
 
 #endif // INPUTKEYBOARDRAW_H

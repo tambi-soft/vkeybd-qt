@@ -54,7 +54,7 @@ void InputKeyboardSelect::keyboardSelectionChanged(int index)
             keyboard->keyboardListen(path);
             
             qDebug() << name;
-            connect(keyboard, &InputKeyboardRawController::rawKeyPressedSignal, this, [this, name]{ this->autoSelectPressedKeyboard(name); });
+            connect(keyboard, &InputKeyboardRawController::signalRawKeyPressed, this, [this, name]{ this->autoSelectPressedKeyboard(name); });
         }
     }
     // some RAW-Keyboard selected
@@ -148,8 +148,8 @@ void InputKeyboardSelect::rawKeyboardSelected(int index)
                 this->map_of_raw_keyboards[name]->keyboardListen(path);
             }
             
-            connect(this->map_of_raw_keyboards[name], &InputKeyboardRawController::rawKeyPressedSignal, this, &InputKeyboardSelect::keyRawPressed);
-            connect(this->map_of_raw_keyboards[name], &InputKeyboardRawController::rawKeyReleasedSignal, this, &InputKeyboardSelect::keyRawReleased);
+            connect(this->map_of_raw_keyboards[name], &InputKeyboardRawController::signalRawKeyPressed, this, &InputKeyboardSelect::keyRawPressed);
+            connect(this->map_of_raw_keyboards[name], &InputKeyboardRawController::signalRawKeyReleased, this, &InputKeyboardSelect::keyRawReleased);
         }
     }
 }
