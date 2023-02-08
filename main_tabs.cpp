@@ -163,7 +163,10 @@ void MainTabs::saveParams(QSettings *settings)
 }
 void MainTabs::restoreParams(QString tab, QMap<QString,QVariant> data)
 {
-    this->map_of_tabs[tab]->restoreParams(data);
+    if (this->list_labels.contains(tab))
+    {
+        this->map_of_tabs[tab]->restoreParams(data);
+    }
 }
 
 void MainTabs::showHideGUIElements(GUIElements elements, bool show)
