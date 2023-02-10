@@ -39,6 +39,12 @@ signals:
     void signalLoadQuick();
     void signalSave();
     void signalLoad();
+    
+    void signalJackSaveQuick();
+    void signalJackLoadQuick();
+    void signalJackSave();
+    void signalJackLoad();
+    
     void signalShowActionChanged(GUIElements elements, bool is_checked);
     
     void signalGlobalKeyShift();

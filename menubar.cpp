@@ -12,31 +12,51 @@ void MenuBar::addFileMenu()
 {
     QMenu *menuFile = addMenu("File");
     
-    QAction *exitAction = new QAction(QIcon::fromTheme("application-exit"), "Exit");
+    QAction *actionExit = new QAction(QIcon::fromTheme("application-exit"), "Exit");
     //exitAction->setShortcut(QKeySequence::fromString("Ctrl+Q"));
-    exitAction->setStatusTip("Exit Application");
-    connect(exitAction, &QAction::triggered, this, &MenuBar::quitApplication);
+    actionExit->setStatusTip("Exit Application");
+    connect(actionExit, &QAction::triggered, this, &MenuBar::quitApplication);
         
-    QAction *quickSaveAction = new QAction(QIcon::fromTheme("document-save"), "Quick Save");
+    QAction *actionQuickSave = new QAction(QIcon::fromTheme("document-save"), "QuickSave Instruments");
     //saveAction->setShortcut(QKeySequence::fromString("Ctrl+S"));
-    connect(quickSaveAction, &QAction::triggered, this, &MenuBar::quickSave);
+    connect(actionQuickSave, &QAction::triggered, this, &MenuBar::quickSave);
     
-    QAction *quickLoadAction = new QAction(QIcon::fromTheme("document-open"), "Quick Load");
-    connect(quickLoadAction, &QAction::triggered, this, [this]{ emit signalLoadQuick(); });
+    QAction *actionQuickLoad = new QAction(QIcon::fromTheme("document-open"), "QuickLoad Instruments");
+    connect(actionQuickLoad, &QAction::triggered, this, [this]{ emit signalLoadQuick(); });
     
-    QAction *saveAction = new QAction(QIcon::fromTheme("document-save"), "Save");
-    connect(saveAction, &QAction::triggered, this, [this]{ emit signalSave(); });
+    QAction *actionSave = new QAction(QIcon::fromTheme("document-save"), "Save Instruments");
+    connect(actionSave, &QAction::triggered, this, [this]{ emit signalSave(); });
     
-    QAction *loadAction = new QAction(QIcon::fromTheme("document-open"), "Load");
-    connect(loadAction, &QAction::triggered, this, [this]{ emit signalLoad(); });
+    QAction *actionLoad = new QAction(QIcon::fromTheme("document-open"), "Load Instruments");
+    connect(actionLoad, &QAction::triggered, this, [this]{ emit signalLoad(); });
     
-    menuFile->addAction(quickSaveAction);
-    menuFile->addAction(quickLoadAction);
+    
+    
+    QAction *actionSaveJackQuick = new QAction(QIcon::fromTheme("document-save"), "QuickSave JACK Connections");
+    connect(actionSaveJackQuick, &QAction::triggered, this, [this]{ emit signalJackSaveQuick(); });
+    
+    QAction *actionLoadJackQuick = new QAction(QIcon::fromTheme("document-open"), "QuickLoad JACK Connections");
+    connect(actionLoadJackQuick, &QAction::triggered, this, [this]{ emit signalJackLoadQuick(); });
+    
+    QAction *actionSaveJack = new QAction(QIcon::fromTheme("document-save"), "Save JACK Connections");
+    connect(actionSaveJack, &QAction::triggered, this, [this]{ emit signalJackSave(); });
+    
+    QAction *actionLoadJack = new QAction(QIcon::fromTheme("document-open"), "Load JACK Connections");
+    connect(actionLoadJack, &QAction::triggered, this, [this]{ emit signalJackLoad(); });
+    
+    menuFile->addAction(actionQuickSave);
+    menuFile->addAction(actionQuickLoad);
+    //menuFile->addSeparator();
+    menuFile->addAction(actionSave);
+    menuFile->addAction(actionLoad);
     menuFile->addSeparator();
-    menuFile->addAction(saveAction);
-    menuFile->addAction(loadAction);
+    menuFile->addAction(actionSaveJackQuick);
+    menuFile->addAction(actionLoadJackQuick);
+    //menuFile->addSeparator();
+    menuFile->addAction(actionSaveJack);
+    menuFile->addAction(actionLoadJack);
     menuFile->addSeparator();
-    menuFile->addAction(exitAction);
+    menuFile->addAction(actionExit);
 }
 void MenuBar::addToolsMenu()
 {
