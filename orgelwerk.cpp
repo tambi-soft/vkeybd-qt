@@ -114,7 +114,11 @@ void Orgelwerk::drawPCKeyboard(int grid_row)
     connect(this->pc, &KeyboardPC::octaveDown, this, &Orgelwerk::octaveDown);
     connect(this->pc, &KeyboardPC::octaveUp, this, &Orgelwerk::octaveUp);
     
+    this->pc->adjustSize();
+    this->pc->setFixedSize(this->pc->size());
+    
     this->grid->addWidget(this->pc, grid_row, 0, 1, 2);
+    this->grid->setAlignment(this->pc, Qt::AlignHCenter);
 }
 
 void Orgelwerk::showChannelsSummary(int grid_row)
