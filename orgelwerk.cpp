@@ -94,6 +94,7 @@ void Orgelwerk::drawGUI()
 void Orgelwerk::drawNotesKeyboard(int grid_row)
 {
     this->notes = new KeyboardNotes;
+    this->notes->setToolTip("Shows witch Notes are actually played");
     
     this->grid->addWidget(this->notes, grid_row, 0, 1, 2);
 }
@@ -107,6 +108,7 @@ void Orgelwerk::drawPianoKeyboard(int grid_row)
 void Orgelwerk::drawPCKeyboard(int grid_row)
 {
     this->pc = new KeyboardPC;
+    this->pc->setToolTip("Shows what keys are pressed");
     connect(this->pc, &KeyboardPC::MIDIPress, this, &Orgelwerk::keyMIDIDown);
     connect(this->pc, &KeyboardPC::MIDIRelease, this, &Orgelwerk::keyMIDIUp);
     connect(this->pc, &KeyboardPC::octaveDown, this, &Orgelwerk::octaveDown);

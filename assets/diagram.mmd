@@ -1,0 +1,21 @@
+classDiagram
+main <|-- MainWindow
+MainWindow <|-- MainTabs
+MainWindow <|-- Menubar
+MainWindow <|-- Config
+MainWindow <|-- HelpMessage
+MainWindow <|-- HelpAboutWidget
+
+MainWindow <|-- InputKeyboardQt
+MainWindow <|-- InputKeyboardRAW
+MainWindow <|-- InputKeyboardXCB
+MainWindow <|-- InputKeyboardSelect
+
+MainWindow <|-- MainTabsSwitcher
+
+MainWindow <|-- JACKSaveLoad
+
+class MainWindow {
+    + bool eventFilter
+    + bool nativeEvent
+} 

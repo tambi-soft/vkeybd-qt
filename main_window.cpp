@@ -24,6 +24,12 @@ MainWindow::MainWindow(OutputSystem output, int number_of_keyboards, QWidget *pa
         connect(menu, &MenuBar::signalLoadQuick, this, &MainWindow::loadParamsQuick);
         connect(menu, &MenuBar::signalSave, this, &MainWindow::saveParams);
         connect(menu, &MenuBar::signalLoad, this, &MainWindow::loadParams);
+        
+        connect(menu, &MenuBar::signalJackSaveQuick, this, &MainWindow::saveJACKQuick);
+        connect(menu, &MenuBar::signalJackLoadQuick, this, &MainWindow::loadJACKQuick);
+        connect(menu, &MenuBar::signalJackSave, this, &MainWindow::saveJACK);
+        connect(menu, &MenuBar::signalJackLoad, this, &MainWindow::loadJACK);
+        
         connect(menu, &MenuBar::signalShowActionChanged, this, &MainWindow::showActionChanged);
         connect(menu, &MenuBar::signalGlobalKeyShift, this, &MainWindow::showGlobalKeyShift);
         connect(menu, &MenuBar::signalResendMIDISettings, this, &MainWindow::globalResendMIDISettings);
@@ -238,6 +244,23 @@ void MainWindow::restoreGeneral(int maintab, QMap<QString,QVariant> data)
         this->list_of_line_udp_ips.at(maintab)->setText(data["network_ip"].toString());
         this->list_of_spin_ports.at(maintab)->setValue(data["network_port"].toInt());
     }
+}
+
+void MainWindow::saveJACKQuick()
+{
+    
+}
+void MainWindow::loadJACKQuick()
+{
+    
+}
+void MainWindow::saveJACK()
+{
+    
+}
+void MainWindow::loadJACK()
+{
+    
 }
 
 void MainWindow::showActionChanged(GUIElements elements, bool is_checked)

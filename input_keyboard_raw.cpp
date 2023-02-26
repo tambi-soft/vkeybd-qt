@@ -179,7 +179,7 @@ void InputKeyboardRawController::keyboardHelper(QString devpath, QString mode)
 
 void InputKeyboardRawController::keyboardRelease()
 {
-    qDebug() << "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAaaa";
+    //qDebug() << "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAaaa";
     if (this->thread != nullptr)
     {
         //disconnect(this->thread);
@@ -193,7 +193,7 @@ void InputKeyboardRawController::keyboardRelease()
         //this->thread->deleteLater();
     }
     
-    qDebug() << "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBbbb";
+    //qDebug() << "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBbbb";
     if (this->fd != -1)
     {
         close(this->fd);

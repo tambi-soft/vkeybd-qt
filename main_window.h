@@ -34,6 +34,8 @@
 
 #include "main_tabs_switcher.h"
 
+#include "jack_save_load.h"
+
 #include "enums_structs.h"
 
 class MainWindow : public QMainWindow
@@ -84,6 +86,11 @@ private slots:
     //void openAllParams();
     void restoreParams(int maintab, QString tab, QMap<QString, QVariant> data);
     void restoreGeneral(int maintab, QMap<QString,QVariant> data);
+    
+    void saveJACKQuick();
+    void loadJACKQuick();
+    void saveJACK();
+    void loadJACK();
     
     void showActionChanged(GUIElements elements, bool is_checked);
     
