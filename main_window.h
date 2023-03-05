@@ -38,6 +38,8 @@
 
 #include "enums_structs.h"
 
+#include "help_about_widget.h"
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -104,5 +106,7 @@ private slots:
     void globalKeyShiftValueChanged(int value, bool is_relative);
     
     void globalResendMIDISettings();
+    
+    void helpAbout();
 };
 #endif // MAINWINDOW_H

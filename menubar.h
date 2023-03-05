@@ -49,6 +49,8 @@ signals:
     
     void signalGlobalKeyShift();
     void signalResendMIDISettings();
+    
+    void signalHelpAbout();
 
 private slots:
     void quickSave();

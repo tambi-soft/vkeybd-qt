@@ -33,6 +33,8 @@ MainWindow::MainWindow(OutputSystem output, int number_of_keyboards, QWidget *pa
         connect(menu, &MenuBar::signalShowActionChanged, this, &MainWindow::showActionChanged);
         connect(menu, &MenuBar::signalGlobalKeyShift, this, &MainWindow::showGlobalKeyShift);
         connect(menu, &MenuBar::signalResendMIDISettings, this, &MainWindow::globalResendMIDISettings);
+        
+        connect(menu, &MenuBar::signalHelpAbout, this, &MainWindow::helpAbout);
         setMenuBar(menu);
     }
     
@@ -377,4 +379,10 @@ void MainWindow::globalResendMIDISettings()
     {
         this->list_of_maintabs.at(i)->globalResendMIDISettings();
     }
+}
+
+void MainWindow::helpAbout()
+{
+    HelpAboutWidget *about = new HelpAboutWidget;
+    about->show();
 }

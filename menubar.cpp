@@ -124,7 +124,10 @@ void MenuBar::addHelpMenu()
 {
     QMenu *menuHelp = addMenu("Help");
     
-    //QAction *helpAction = new QAction();
+    QAction *actionAbout = new QAction("About");
+    connect(actionAbout, &QAction::triggered, this, [this]{ emit signalHelpAbout();} );
+    
+    menuHelp->addAction(actionAbout);
 }
 
 void MenuBar::quitApplication()
