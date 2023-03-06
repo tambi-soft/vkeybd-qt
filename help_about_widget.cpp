@@ -18,7 +18,7 @@ HelpAboutWidget::HelpAboutWidget(QWidget *parent)
 void HelpAboutWidget::showAbout()
 {
     QTextEdit *text = new QTextEdit();
-    text->setText("vkeybd-qt - Software MIDI controller with a LOT of features\n\n\
+    text->setText("vkeybd-qt - Software MIDI controller with a LOT of features allowing you to use your PC with one or multiple keyboards to be used as a Church Organ. You can also use it as a MIDI-Multiplexer.\n\n\
 - Early Alpha Version -\n\n\
 (c) 2021-2023 The vkeybd-qt Author(s)\n\n");
     
