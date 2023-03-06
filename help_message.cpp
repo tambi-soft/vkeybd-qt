@@ -6,7 +6,7 @@ HelpMessage::HelpMessage(QString filename, QDialog *parent) : QDialog(parent)
     setMinimumWidth(500);
     setMinimumHeight(500);
     
-    setWindowTitle("trinitrotoluol - help");
+    setWindowTitle("vkeybd-qt - help");
     
     QVBoxLayout *layout = new QVBoxLayout;
     setLayout(layout);

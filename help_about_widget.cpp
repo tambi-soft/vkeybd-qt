@@ -18,10 +18,9 @@ HelpAboutWidget::HelpAboutWidget(QWidget *parent)
 void HelpAboutWidget::showAbout()
 {
     QTextEdit *text = new QTextEdit();
-    text->setText("Trinitrotoluol - Database Application for managing your supporters and contacts\n\n\
+    text->setText("vkeybd-qt - Software MIDI controller with a LOT of features\n\n\
 - Early Alpha Version -\n\n\
-(c) 2019-2020 The vkeybd-qt Author(s)\n\n\
-http://tambi-soft.github.io");
+(c) 2021-2023 The vkeybd-qt Author(s)\n\n");
     
     text->setReadOnly(true);
     this->tab_widget->addTab(text, "About");
@@ -30,9 +29,10 @@ http://tambi-soft.github.io");
 void HelpAboutWidget::showLibraries()
 {
     QTextEdit *text = new QTextEdit();
-    text->setText("Qt (5.15.3)\n\
-sqlite\n\
-curl");
+    text->setText("Qt (5.15.8 / 6.4.2)\n\
+asound\n\
+jack\n\
+X11");
     
     text->setReadOnly(true);
     this->tab_widget->addTab(text, "Libraries");

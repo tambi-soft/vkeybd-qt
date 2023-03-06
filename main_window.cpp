@@ -384,5 +384,6 @@ void MainWindow::globalResendMIDISettings()
 void MainWindow::helpAbout()
 {
     HelpAboutWidget *about = new HelpAboutWidget;
+    about->setMinimumSize(530, 530);
     about->show();
 }
