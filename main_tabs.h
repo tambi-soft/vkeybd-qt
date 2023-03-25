@@ -37,6 +37,7 @@ public:
     void rawKeyPressed(int keycode);
     void rawKeyReleased(int keycode);
     void MIDISignal(MIDISignalTypes type);
+    //void 
     
     void globalKeyShiftChanged(int value, bool is_relative);
     void globalResendMIDISettings();

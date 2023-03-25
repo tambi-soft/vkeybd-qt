@@ -22,34 +22,6 @@ InterfaceJack::InterfaceJack(InterfaceAudio *parent) : InterfaceAudio(parent)
     {
         jack_ringbuffer_mlock(this->ringbuffer);
     }
-    
-    
-    /*
-    err = jack_set_process_callback(jack_client, process_callback, 0);
-    if (err) {
-        qDebug() << "Could not register JACK process callback.";
-        //exit(EX_UNAVAILABLE);
-    }
-    */
-    
-    /*
-    err = jack_set_graph_order_callback(jack_client, graph_order_callback, 0);
-    if (err) {
-        qDebug() << "Could not register JACK graph order callback.";
-        //exit(EX_UNAVAILABLE);
-    }
-    */
-    
-    
-    //this->createNewPort("bla");
-    
-    /*
-    if (jack_activate(this->jack_client)) {
-        qDebug() << "Cannot activate JACK client.";
-        //exit(EX_UNAVAILABLE);
-    }
-    */
-    
 }
 
 void InterfaceJack::createNewPort(QString label)

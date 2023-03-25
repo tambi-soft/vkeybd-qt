@@ -32,17 +32,17 @@ void MenuBar::addFileMenu()
     
     
     
-    QAction *actionSaveJackQuick = new QAction(QIcon::fromTheme("document-save"), "QuickSave JACK Connections");
-    connect(actionSaveJackQuick, &QAction::triggered, this, [this]{ emit signalJackSaveQuick(); });
+    QAction *actionSaveJackQuick = new QAction(QIcon::fromTheme("document-save"), "QuickSave MIDI Connections");
+    connect(actionSaveJackQuick, &QAction::triggered, this, [this]{ emit signalMIDISaveQuick(); });
     
-    QAction *actionLoadJackQuick = new QAction(QIcon::fromTheme("document-open"), "QuickLoad JACK Connections");
-    connect(actionLoadJackQuick, &QAction::triggered, this, [this]{ emit signalJackLoadQuick(); });
+    QAction *actionLoadJackQuick = new QAction(QIcon::fromTheme("document-open"), "QuickLoad MIDI Connections");
+    connect(actionLoadJackQuick, &QAction::triggered, this, [this]{ emit signalMIDILoadQuick(); });
     
-    QAction *actionSaveJack = new QAction(QIcon::fromTheme("document-save"), "Save JACK Connections");
-    connect(actionSaveJack, &QAction::triggered, this, [this]{ emit signalJackSave(); });
+    QAction *actionSaveJack = new QAction(QIcon::fromTheme("document-save"), "Save MIDI Connections");
+    connect(actionSaveJack, &QAction::triggered, this, [this]{ emit signalMIDISave(); });
     
-    QAction *actionLoadJack = new QAction(QIcon::fromTheme("document-open"), "Load JACK Connections");
-    connect(actionLoadJack, &QAction::triggered, this, [this]{ emit signalJackLoad(); });
+    QAction *actionLoadJack = new QAction(QIcon::fromTheme("document-open"), "Load MIDI Connections");
+    connect(actionLoadJack, &QAction::triggered, this, [this]{ emit signalMIDILoad(); });
     
     menuFile->addAction(actionQuickSave);
     menuFile->addAction(actionQuickLoad);

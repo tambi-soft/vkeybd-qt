@@ -3,6 +3,9 @@
 
 #include <QObject>
 
+#include <jack/jack.h>
+#include <jack/midiport.h>
+
 class JACKSaveLoad : public QObject
 {
     Q_OBJECT

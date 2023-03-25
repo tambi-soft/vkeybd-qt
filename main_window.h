@@ -89,10 +89,10 @@ private slots:
     void restoreParams(int maintab, QString tab, QMap<QString, QVariant> data);
     void restoreGeneral(int maintab, QMap<QString,QVariant> data);
     
-    void saveJACKQuick();
-    void loadJACKQuick();
-    void saveJACK();
-    void loadJACK();
+    void saveMIDIQuick();
+    void loadMIDIQuick();
+    void saveMIDI();
+    void loadMIDI();
     
     void showActionChanged(GUIElements elements, bool is_checked);
     

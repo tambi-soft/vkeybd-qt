@@ -25,10 +25,10 @@ MainWindow::MainWindow(OutputSystem output, int number_of_keyboards, QWidget *pa
         connect(menu, &MenuBar::signalSave, this, &MainWindow::saveParams);
         connect(menu, &MenuBar::signalLoad, this, &MainWindow::loadParams);
         
-        connect(menu, &MenuBar::signalJackSaveQuick, this, &MainWindow::saveJACKQuick);
-        connect(menu, &MenuBar::signalJackLoadQuick, this, &MainWindow::loadJACKQuick);
-        connect(menu, &MenuBar::signalJackSave, this, &MainWindow::saveJACK);
-        connect(menu, &MenuBar::signalJackLoad, this, &MainWindow::loadJACK);
+        connect(menu, &MenuBar::signalMIDISaveQuick, this, &MainWindow::saveMIDIQuick);
+        connect(menu, &MenuBar::signalMIDILoadQuick, this, &MainWindow::loadMIDIQuick);
+        connect(menu, &MenuBar::signalMIDISave, this, &MainWindow::saveMIDI);
+        connect(menu, &MenuBar::signalMIDILoad, this, &MainWindow::loadMIDI);
         
         connect(menu, &MenuBar::signalShowActionChanged, this, &MainWindow::showActionChanged);
         connect(menu, &MenuBar::signalGlobalKeyShift, this, &MainWindow::showGlobalKeyShift);
@@ -248,19 +248,24 @@ void MainWindow::restoreGeneral(int maintab, QMap<QString,QVariant> data)
     }
 }
 
-void MainWindow::saveJACKQuick()
+void MainWindow::saveMIDIQuick()
+{
+    for (int i=0; i < this->list_of_maintabs.length(); i++)
+    {
+        MainTabs* tab = this->list_of_maintabs.at(i);
+        
+        
+    }
+}
+void MainWindow::loadMIDIQuick()
 {
     
 }
-void MainWindow::loadJACKQuick()
+void MainWindow::saveMIDI()
 {
     
 }
-void MainWindow::saveJACK()
-{
-    
-}
-void MainWindow::loadJACK()
+void MainWindow::loadMIDI()
 {
     
 }
@@ -384,6 +389,6 @@ void MainWindow::globalResendMIDISettings()
 void MainWindow::helpAbout()
 {
     HelpAboutWidget *about = new HelpAboutWidget;
-    about->setMinimumSize(530, 530);
+    about->setMinimumSize(600, 600);
     about->show();
 }
