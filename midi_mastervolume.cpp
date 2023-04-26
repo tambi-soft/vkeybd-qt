@@ -28,10 +28,13 @@ MIDIMasterVolume::MIDIMasterVolume(QObject *parent)
     
     connect(this->slider_volume, &QSlider::valueChanged, this, &MIDIMasterVolume::volumeSliderMoved);
     
+    this->thread = new QThread(this);
+    
     this->worker = new MIDIMasterVolumeWorker();
+    connect(this->thread, &QThread::started, this->worker, &MIDIMasterVolumeWorker::initTimer);
+    connect(this->worker, &MIDIMasterVolumeWorker::timerNeedToStart, this->worker, &MIDIMasterVolumeWorker::startTimer);
     connect(this->worker, &MIDIMasterVolumeWorker::moveVolumeSlider, this, &MIDIMasterVolume::moveVolumeSlider);
     
-    this->thread = new QThread(this);
     this->worker->moveToThread(this->thread);
     this->thread->start();
 }
@@ -129,12 +132,14 @@ void MIDIMasterVolume::setValue(int value)
 MIDIMasterVolumeWorker::MIDIMasterVolumeWorker(QObject *parent)
     : QObject{parent}
 {
+    /*
     this->timer = new QTimer(this);
     this->timer->setInterval(5);
     this->timer->setTimerType(Qt::PreciseTimer);
     connect(this->timer, &QTimer::timeout, this, &MIDIMasterVolumeWorker::tick, Qt::DirectConnection);
     
     this->timer->start();
+    */
 }
 
 void MIDIMasterVolumeWorker::setTether(int tether)
@@ -167,6 +172,8 @@ void MIDIMasterVolumeWorker::shouldResetSlider(bool reset)
 
 void MIDIMasterVolumeWorker::keyDown(int direction)
 {
+    emit timerNeedToStart();
+    
     this->direction = direction;
     
     if (this->direction < 0)
@@ -181,6 +188,17 @@ void MIDIMasterVolumeWorker::keyDown(int direction)
 void MIDIMasterVolumeWorker::keyUp()
 {
     this->direction = 0;
+}
+void MIDIMasterVolumeWorker::initTimer()
+{
+    this->timer = new QTimer(this);
+    this->timer->setInterval(3);
+    this->timer->setTimerType(Qt::PreciseTimer);
+    connect(this->timer, &QTimer::timeout, this, &MIDIMasterVolumeWorker::tick, Qt::DirectConnection);
+}
+void MIDIMasterVolumeWorker::startTimer()
+{
+    this->timer->start();
 }
 
 void MIDIMasterVolumeWorker::tick()
@@ -204,10 +222,14 @@ void MIDIMasterVolumeWorker::tick()
             {
                 this->volume = 100;
                 
-                //this->timer->setInterval(100);
+                this->timer->stop();
             }
             
             emit moveVolumeSlider(this->volume);
+        }
+        else
+        {
+            this->timer->stop();
         }
     }
     else

@@ -38,9 +38,12 @@ private:
 //protected:
 public slots:
     void tick();
+    void initTimer();
+    void startTimer();
     
 signals:
     void moveVolumeSlider(int step);
+    void timerNeedToStart();
     
 };
 
