@@ -36,10 +36,12 @@ private:
 //protected:
 public slots:
     void tick();
+    void initTimer();
+    void startTimer();
     
 signals:
     void movePitchSlider(int step);
-    
+    void timerNeedToStart();
 };
 
 

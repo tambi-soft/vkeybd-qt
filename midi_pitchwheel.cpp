@@ -27,10 +27,14 @@ MIDIPitchWheel::MIDIPitchWheel(QObject *parent) : QObject(parent)
     this->slider_pitch->setTracking(false);
     connect(this->slider_pitch, &QSlider::sliderMoved, this, &MIDIPitchWheel::sliderMoved);
     
+    this->thread = new QThread(this);
+    
     this->worker = new MIDIPitchWheelWorker();
+    // we need to be careful starting/stoping the timer in a thread-safe way
+    connect(this->thread, &QThread::started, this->worker, &MIDIPitchWheelWorker::initTimer);
+    connect(this->worker, &MIDIPitchWheelWorker::timerNeedToStart, this->worker, &MIDIPitchWheelWorker::startTimer);
     connect(this->worker, &MIDIPitchWheelWorker::movePitchSlider, this, &MIDIPitchWheel::movePitchSlider);
     
-    this->thread = new QThread(this);
     this->worker->moveToThread(this->thread);
     this->thread->start();
 }
@@ -111,7 +115,6 @@ void MIDIPitchWheel::movePitchWheel(int key)
     }
     
     this->slider_pitch->setValue(value);
-    //startPitchThread();
 }
 
 void MIDIPitchWheel::pitchKeyPressed(int key)
@@ -174,12 +177,7 @@ void MIDIPitchWheel::setData(QMap<QString,QVariant> data)
 
 MIDIPitchWheelWorker::MIDIPitchWheelWorker(QObject *parent) : QObject(parent)
 {
-    this->timer = new QTimer(this);
-    this->timer->setInterval(3);
-    this->timer->setTimerType(Qt::PreciseTimer);
-    connect(this->timer, &QTimer::timeout, this, &MIDIPitchWheelWorker::tick, Qt::DirectConnection);
     
-    this->timer->start();
 }
 
 void MIDIPitchWheelWorker::setTether(int tether)
@@ -211,6 +209,8 @@ void MIDIPitchWheelWorker::shouldResetSlider(bool reset)
 
 void MIDIPitchWheelWorker::keyDown(int direction)
 {
+    emit timerNeedToStart();
+    
     this->direction = direction;
     
     if (this->direction < 0)
@@ -225,6 +225,17 @@ void MIDIPitchWheelWorker::keyDown(int direction)
 void MIDIPitchWheelWorker::keyUp()
 {
     this->direction = 0;
+}
+void MIDIPitchWheelWorker::initTimer()
+{
+    this->timer = new QTimer(this);
+    this->timer->setInterval(3);
+    this->timer->setTimerType(Qt::PreciseTimer);
+    connect(this->timer, &QTimer::timeout, this, &MIDIPitchWheelWorker::tick, Qt::DirectConnection);
+}
+void MIDIPitchWheelWorker::startTimer()
+{
+    this->timer->start();
 }
 
 void MIDIPitchWheelWorker::tick()
@@ -248,10 +259,14 @@ void MIDIPitchWheelWorker::tick()
             {
                 this->pitch = 8192;
                 
-                //this->timer->setInterval(100);
+                this->timer->stop();
             }
             
             emit movePitchSlider(this->pitch);
+        }
+        else
+        {
+            this->timer->stop();
         }
     }
     else
