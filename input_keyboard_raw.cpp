@@ -159,10 +159,11 @@ void InputKeyboardRawController::keyboardHelper(QString devpath, QString mode)
         
         this->thread = new QThread(this);
         this->worker->moveToThread(this->thread);
-        connect(this->thread, SIGNAL(started()), this->worker, SLOT(initialize()));
-        connect(this->worker, SIGNAL(finished()), this->thread, SLOT(quit()));
-        connect(this->worker, SIGNAL(finished()), this->worker, SLOT(deleteLater()));
-        connect(this->thread, SIGNAL(finished()), this->thread, SLOT(deleteLater()));
+        connect(this->worker, SIGNAL(error(QString)), this, SLOT(errorString(QString)));
+        connect(this->thread, &QThread::started, this->worker, &InputKeyboardRawWorker::initialize);
+        connect(this->worker, &InputKeyboardRawWorker::finished, this->thread, &QThread::quit);
+        connect(this->worker, &InputKeyboardRawWorker::finished, this->worker, &InputKeyboardRawWorker::deleteLater);
+        connect(this->thread, &QThread::finished, this->thread, &InputKeyboardRawWorker::deleteLater);
         /*
         connect(this->worker, &QObject::destroyed, this->thread, &QThread::quit);
         connect(this->worker, &InputKeyboardRawWorker::finished, this->worker, &QObject::deleteLater);
@@ -179,7 +180,7 @@ void InputKeyboardRawController::keyboardHelper(QString devpath, QString mode)
 
 void InputKeyboardRawController::keyboardRelease()
 {
-    //qDebug() << "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAaaa";
+    qDebug() << "release: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAaaa";
     if (this->thread != nullptr)
     {
         //disconnect(this->thread);
