@@ -37,6 +37,9 @@ public:
     void setReleaseChanged(int port, int channel, int value);
     void setTremoloChanged(int port, int channel, int value);
     
+    void saveMIDISettings();
+    void loadMIDISettings();
+    
     QString NAME = "vkeybd-qt";
     
 private:
@@ -56,6 +59,8 @@ private:
     
     jack_port_t *output_port;
     jack_port_t *input_port;
+    QList<jack_port_t*> list_of_output_ports;
+    QList<jack_port_t*> list_of_input_ports;
     
     int new_port_counter = 0;
     QMap<int, jack_port_t*> map_of_ports;

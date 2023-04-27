@@ -39,6 +39,8 @@ void InterfaceJack::createNewPort(QString label)
         //exit(EX_UNAVAILABLE);
     }
     
+    this->list_of_output_ports.append(this->output_port);
+    
     this->input_port = jack_port_register(this->jack_client, label.toLocal8Bit(), JACK_DEFAULT_MIDI_TYPE,
         JackPortIsInput, 0);
     
@@ -46,6 +48,8 @@ void InterfaceJack::createNewPort(QString label)
         qDebug() << "Could not register JACK input port.";
         //exit(EX_UNAVAILABLE);
     }
+    
+    this->list_of_input_ports.append(this->input_port);
     
     jack_set_process_callback(this->jack_client, jack_static_callback, (void *)this);
     
@@ -273,6 +277,27 @@ void InterfaceJack::setTremoloChanged(int port, int channel, int value)
 {
     Q_UNUSED(channel);
     Q_UNUSED(value);
+}
+
+void InterfaceJack::saveMIDISettings()
+{
+    qDebug() << "SAVING MIDI SETTINGS";
+    for (int i=0; i < this->list_of_input_ports.length(); i++)
+    {
+        qDebug() << jack_port_type(this->list_of_output_ports[i]);
+        
+        const char **ports = jack_port_get_all_connections(this->jack_client, this->list_of_output_ports[i]);
+        if (ports != NULL)
+        {
+            qDebug() << "Connections for " << this->list_of_input_ports[i] << ":";
+            
+        }
+        //qDebug() << "Connections for " << this->list_of_input_ports[i] << ":";
+    }
+}
+void InterfaceJack::loadMIDISettings()
+{
+    
 }
 
 void InterfaceJack::sendEvent(int port, QString opcode, int channel, int value, int velocity)

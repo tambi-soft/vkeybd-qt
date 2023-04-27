@@ -33,6 +33,8 @@ public slots:
     void finish();
     
     void tick();
+    void timerStart();
+    void timerStop();
     
 signals:
     void finished();

@@ -252,14 +252,15 @@ void MainWindow::saveMIDIQuick()
 {
     for (int i=0; i < this->list_of_maintabs.length(); i++)
     {
-        MainTabs* tab = this->list_of_maintabs.at(i);
-        
-        
+        this->list_of_maintabs.at(i)->saveMIDIConnections();
     }
 }
 void MainWindow::loadMIDIQuick()
 {
-    
+    for (int i=0; i < this->list_of_maintabs.length(); i++)
+    {
+        this->list_of_maintabs.at(i)->loadMIDIConnections();
+    }
 }
 void MainWindow::saveMIDI()
 {

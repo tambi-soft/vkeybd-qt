@@ -235,6 +235,14 @@ void InputKeyboardRawWorker::initialize()
         this->timer->start();
     }
 }
+void InputKeyboardRawWorker::timerStart()
+{
+    this->timer->start();
+}
+void InputKeyboardRawWorker::timerStop()
+{
+    this->timer->stop();
+}
 /*
 InputKeyboardRawWorker::~InputKeyboardRawWorker()
 {

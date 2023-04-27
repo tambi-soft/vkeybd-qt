@@ -558,6 +558,15 @@ void MainTabs::MIDISignal(MIDISignalTypes type)
     }
 }
 
+void MainTabs::saveMIDIConnections()
+{
+    this->interface_audio->saveMIDISettings();
+}
+void MainTabs::loadMIDIConnections()
+{
+    this->interface_audio->loadMIDISettings();
+}
+
 /*
 void MainTabs::toggleKeyboardLock()
 {
