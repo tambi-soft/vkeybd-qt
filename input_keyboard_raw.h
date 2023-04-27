@@ -75,6 +75,8 @@ private:
 #include <QMetaObject>
 #include <QDebug>
 
+#include "enums_structs.h"
+
 class InputKeyboardRawController : public QObject
 {
     Q_OBJECT
@@ -84,7 +86,7 @@ public:
     
     void keyboardListen(QString devpath);
     void keyboardLock(QString devpath);
-    void keyboardHelper(QString devpath, QString mode);
+    void keyboardHelper(QString devpath, KeyboardMode mode);
     void keyboardRelease();
     
 private:

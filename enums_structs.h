@@ -130,6 +130,11 @@ enum KeyboardSelection : uint8_t
     Default,
     Detect,
 };
+enum KeyboardMode
+{
+    listen,
+    lock
+};
 
 enum DisplayInput
 {

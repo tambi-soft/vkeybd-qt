@@ -126,14 +126,14 @@ InputKeyboardRawController::~InputKeyboardRawController()
 void InputKeyboardRawController::keyboardListen(QString devpath)
 {
     qDebug() << "listen";
-    keyboardHelper(devpath, "listen");
+    keyboardHelper(devpath, KeyboardMode::listen);
 }
 void InputKeyboardRawController::keyboardLock(QString devpath)
 {
     qDebug() << "lock";
-    keyboardHelper(devpath, "lock");
+    keyboardHelper(devpath, KeyboardMode::lock);
 }
-void InputKeyboardRawController::keyboardHelper(QString devpath, QString mode)
+void InputKeyboardRawController::keyboardHelper(QString devpath, KeyboardMode mode)
 {
     // https://stackoverflow.com/questions/29942421/read-barcodes-from-input-event-linux-c/29956584#29956584
     // https://www.reddit.com/r/Cplusplus/comments/rsgjwf/ioctl_in_c_c_wrapper_class_for_linuxjoystickh/
@@ -143,7 +143,7 @@ void InputKeyboardRawController::keyboardHelper(QString devpath, QString mode)
     {
         errno = 0;
         // to consume the event and not let it passed through to any other software
-        if (mode == "lock")
+        if (mode == KeyboardMode::lock)
         {
             if (ioctl(this->fd, EVIOCGRAB, 1)) {
                 //const int saved_errno = errno;
