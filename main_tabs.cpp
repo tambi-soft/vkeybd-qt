@@ -400,6 +400,18 @@ void MainTabs::rawKeyPressed(int keycode)
         Orgelwerk *o = static_cast<Orgelwerk*>(currentWidget()->layout()->itemAt(0)->widget());
         o->keyDownRaw(keycode);
     }
+    else if (keycode == KeysRaw::Print)
+    {
+        emit signalKeyShiftChanged(-1, true);
+    }
+    else if (keycode == KeysRaw::Scroll)
+    {
+        emit signalKeyShiftChanged(0, true);
+    }
+    else if (keycode == KeysRaw::Pause)
+    {
+        emit signalKeyShiftChanged(1, true);
+    }
     else
     {
         Orgelwerk *o = static_cast<Orgelwerk*>(currentWidget()->layout()->itemAt(0)->widget());

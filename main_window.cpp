@@ -115,6 +115,7 @@ QWidget* MainWindow::newKeyboardInstance(int id, OutputSystem output)
     //connect(tabs, &MainTabs::useInputKbdQtNativeSignal, this, &MainWindow::useInputKbdQtNative);
     //connect(tabs, &MainTabs::useInputKbdQtDefaultSignal, this, &MainWindow::useInputKbdQtDefault);
     //connect(tabs, &MainTabs::keyboardSelectionChanged, this, &MainWindow::keyboardSelectionChanged);
+    connect(tabs, &MainTabs::signalKeyShiftChanged, this, &MainWindow::globalKeyShiftValueChanged);
     
     this->list_of_maintabs.append(tabs);
     

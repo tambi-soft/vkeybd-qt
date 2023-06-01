@@ -14,14 +14,21 @@ class MIDIKeyShiftWidget : public QWidget
 public:
     explicit MIDIKeyShiftWidget(QWidget *parent = nullptr);
     
+    int valueStart();
+    void setValueStart(int value);
+    
     int value();
     void setValue(int value);
+    void setValueFromGlobal(int value);
+    
+    void valueChanged(int value);
     
 private:
     QSpinBox *spin_key;
+    int value_start = 0;
     
 signals:
-    void valueChanged(int value);
+    void signalValueChanged(int value);
     
 public slots:
     void lowerShiftKeyPressed();

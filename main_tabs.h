@@ -91,6 +91,8 @@ signals:
     void useInputKbdQtNativeSignal();
     void useInputKbdQtDefaultSignal();
     
+    void signalKeyShiftChanged(int value, bool is_relative);
+    
 };
 
 #endif // MAINTABS_H

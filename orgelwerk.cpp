@@ -493,6 +493,7 @@ void Orgelwerk::restoreParams(QMap<QString,QVariant> data)
     
     QMap<QString,QVariant> main = data["main"].toMap();
     this->key_shift_master->setValue(main["key_shift"].toInt());
+    this->key_shift_master->setValueStart(main["key_shift"].toInt());
     this->volume->setValue(main["volume"].toInt());
     this->keys->restoreBitmaskOfKeys(main["keys"].toString());
     this->pitch->setData(main);
@@ -550,14 +551,23 @@ void Orgelwerk::globalPitchShiftChanged(int value, bool is_relative)
 {
     if (! is_relative)
     {
-        this->key_shift_master->setValue(value);
+        this->key_shift_master->setValueFromGlobal(value);
     }
     else
     {
-        int value_current = this->key_shift_master->value();
-        qDebug() << "old: " << value << " new: " << value;
-        value_current += value;
-        this->key_shift_master->setValue(value_current);
+        if (value == 0)
+        {
+            int value_start = this->key_shift_master->valueStart();
+            int value_current = this->key_shift_master->value();
+            value_current += value_start - value_current;
+            this->key_shift_master->setValueFromGlobal(value_current);
+        }
+        else
+        {
+            int value_current = this->key_shift_master->value();
+            value_current += value;
+            this->key_shift_master->setValueFromGlobal(value_current);
+        }
     }
 }
 

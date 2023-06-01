@@ -53,6 +53,10 @@ enum class MIDISignalTypes
     
     OctaveDownPressed,
     OctaveUpPressed,
+    
+    GlobalKeyShiftRelativeDownPressed,
+    GlobalKeyShiftRelativeUpPressed,
+    GlobalKeySihftRelativeResetPressed
 };
 
 enum class MIDIMode
@@ -121,6 +125,10 @@ enum KeysRaw : uint8_t
     F10 = 68,
     F11 = 87,
     F12 = 88,
+    
+    Print = 99,
+    Scroll = 70,
+    Pause = 119
 };
 
 enum KeyboardSelection : uint8_t

@@ -21,7 +21,7 @@ MIDIKeyShiftWidget::MIDIKeyShiftWidget(QWidget *parent) : QWidget(parent)
     this->spin_key->setMinimum(-64);
     this->spin_key->setMaximum(64);
     this->spin_key->setObjectName("key_shift_spin");
-    connect(this->spin_key, &QSpinBox::valueChanged, this, [this]{ emit valueChanged(this->spin_key->value()); });
+    connect(this->spin_key, &QSpinBox::valueChanged, this, &MIDIKeyShiftWidget::valueChanged);
     
     layout->addWidget(button_lower);
     layout->addWidget(this->spin_key);
@@ -40,7 +40,7 @@ void MIDIKeyShiftWidget::lowerShiftKeyPressed()
         this->spin_key->setValue(val);
     }
     
-    emit valueChanged(val);
+    emit signalValueChanged(val);
 }
 
 void MIDIKeyShiftWidget::higherShiftKeyPressed()
@@ -52,7 +52,7 @@ void MIDIKeyShiftWidget::higherShiftKeyPressed()
         this->spin_key->setValue(val);
     }
     
-    emit valueChanged(val);
+    emit signalValueChanged(val);
 }
 
 int MIDIKeyShiftWidget::value()
@@ -63,5 +63,29 @@ void MIDIKeyShiftWidget::setValue(int value)
 {
     this->spin_key->setValue(value);
     
-    emit valueChanged(value);
+    emit signalValueChanged(value);
+}
+void MIDIKeyShiftWidget::setValueFromGlobal(int value)
+{
+    // block signal to avoid sending setValueStart in valueChanged(int value)
+    this->spin_key->blockSignals(true);
+    this->spin_key->setValue(value);
+    this->spin_key->blockSignals(false);
+    
+    emit signalValueChanged(value);
+}
+void MIDIKeyShiftWidget::valueChanged(int value)
+{
+    emit signalValueChanged(this->spin_key->value());
+    
+    setValueStart(value);
+}
+
+int MIDIKeyShiftWidget::valueStart()
+{
+    return this->value_start;
+}
+void MIDIKeyShiftWidget::setValueStart(int value)
+{
+    this->value_start = value;
 }
