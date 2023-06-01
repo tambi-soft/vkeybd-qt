@@ -37,10 +37,15 @@ void MIDIKeyShiftWidget::lowerShiftKeyPressed()
     if (val >= -64+12)
     {
         val -= 12;
+        
+        this->spin_key->blockSignals(true);
         this->spin_key->setValue(val);
+        this->spin_key->blockSignals(false);
     }
     
     emit signalValueChanged(val);
+    
+    setValueStart(val);
 }
 
 void MIDIKeyShiftWidget::higherShiftKeyPressed()
@@ -49,10 +54,15 @@ void MIDIKeyShiftWidget::higherShiftKeyPressed()
     if (val <= 64-12)
     {
         val += 12;
+        
+        this->spin_key->blockSignals(true);
         this->spin_key->setValue(val);
+        this->spin_key->blockSignals(false);
     }
     
     emit signalValueChanged(val);
+    
+    setValueStart(val);
 }
 
 int MIDIKeyShiftWidget::value()

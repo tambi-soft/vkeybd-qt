@@ -14,10 +14,10 @@ MIDIKeyShiftGlobal::MIDIKeyShiftGlobal(QWidget *parent)
     }
     
     MIDIKeyShiftWidget *key_shift_absolute = new MIDIKeyShiftWidget();
-    connect(key_shift_absolute, &MIDIKeyShiftWidget::valueChanged, this, [this, key_shift_absolute]{ valueChanged(key_shift_absolute->value(), false); });
+    connect(key_shift_absolute, &MIDIKeyShiftWidget::signalValueChanged, this, [this, key_shift_absolute]{ valueChanged(key_shift_absolute->value(), false); });
     
     MIDIKeyShiftWidget *key_shift_relative = new MIDIKeyShiftWidget();
-    connect(key_shift_relative, &MIDIKeyShiftWidget::valueChanged, this, [this, key_shift_relative]{ valueChanged(key_shift_relative->value(), true); });
+    connect(key_shift_relative, &MIDIKeyShiftWidget::signalValueChanged, this, [this, key_shift_relative]{ valueChanged(key_shift_relative->value(), true); });
     
     QFrame *line = new QFrame;
     line->setFrameShape(QFrame::HLine);
@@ -32,6 +32,7 @@ MIDIKeyShiftGlobal::MIDIKeyShiftGlobal(QWidget *parent)
 
 void MIDIKeyShiftGlobal::valueChanged(int value, bool is_relative)
 {
+    qDebug() << value;
     if (! is_relative)
     {
         emit signalKeyShiftChanged(value, is_relative);
